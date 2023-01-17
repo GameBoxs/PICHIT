@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import InfiniteLoopSlider from "../component/InfiniteLoopSlider";
+import InfiniteLoopSlider from "../../component/InfiniteLoopSlider";
 
 const sentence = [
   "면접관이 들어옵니다",
