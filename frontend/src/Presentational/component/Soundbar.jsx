@@ -2,16 +2,37 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
 
-const Soundbar = ({ onChange, percentage, timeline }) => {
-  const [position, setPosition] = useState(0);  //Thumb 위치 지정
-  const [marginLeft, setMarginLeft] = useState(0);  //Thumb 좌측 margin 설정
-  const [progressBarWidth, setProgressBarWidth] = useState(0);  //재생 시 바의 길이 조정
+const Soundbar = ({ onChange, percentage, timeline, duration }) => {
+  const [position, setPosition] = useState(0); //Thumb 위치 지정
+  const [marginLeft, setMarginLeft] = useState(0); //Thumb 좌측 margin 설정
+  const [progressBarWidth, setProgressBarWidth] = useState(0); //재생 시 바의 길이 조정
+  const [timeStamp, setTimeStamp] = useState([]);
 
   const rangeRef = useRef();
   const thumbRef = useRef();
+  const prograssbarRef = useRef();
 
   useEffect(() => {
-    const rangeWidth = rangeRef.current.getBoundingClientRect().width;    //현재 너비를 가져옴
+    const rangeWidth = rangeRef.current.getBoundingClientRect().width; //현재 너비를 가져옴
+
+    setTimeStamp(() => {
+      return timeline.map((el) => {
+        const thisTime = el.split(":").map((el) => parseFloat(el));
+        let start = 0;
+
+        if (thisTime.length === 2) {
+          start = thisTime[0] * 60 + thisTime[1];
+        } else {
+          start = thisTime[0] * 3600 + thisTime[1] * 60 + thisTime[2];
+        }
+
+        return ((start / duration) * rangeWidth);
+      });
+    });
+  }, [timeline]);
+
+  useEffect(() => {
+    const rangeWidth = rangeRef.current.getBoundingClientRect().width; //현재 너비를 가져옴
     const thumbWidth = 20;
     const centerThumb = (thumbWidth / 100) * percentage * -1;
     const centerProgressBar =
@@ -24,23 +45,14 @@ const Soundbar = ({ onChange, percentage, timeline }) => {
     setProgressBarWidth(centerProgressBar);
   }, [percentage]);
 
-  const timeStamp = timeline.map((el) => {
-    const thisTime = el.split(":").map((el) => parseFloat(el));
-    let start = 0
-
-    if (thisTime.length === 2) {
-      start = thisTime[0] *60 + thisTime[1];
-    } else {
-      start = thisTime[0] * 3600 + thisTime[1] * 60 + thisTime[2];
-    }
-
-    console.log()
-  })
-
   return (
     <SliderContainer>
       <GlobalStyle />
-      <ProgressBar width={progressBarWidth} />
+      <ProgressBar ref={prograssbarRef} width={progressBarWidth}>
+        {timeStamp.map((el, idx) => {
+          return <TimeStampBox key={idx} timeStampMargin={el}/>;
+        })}
+      </ProgressBar>
       <Thumb position={position} ref={thumbRef} marginLeft={marginLeft} />
       <Range
         type={"range"}
@@ -54,6 +66,15 @@ const Soundbar = ({ onChange, percentage, timeline }) => {
 };
 
 export default Soundbar;
+
+const TimeStampBox = styled.div`
+  position: absolute;
+  height: 1em;
+  width: 2px;
+  background-color: white;
+  margin-left: ${(props) => props.timeStampMargin}px;
+  display: inline-block;
+`;
 
 const Range = styled.input`
   -webkit-appearance: none;
@@ -82,7 +103,7 @@ const Thumb = styled.div`
 `;
 
 const ProgressBar = styled.div`
-  background-color: rgb(218, 55, 145);
+  background-color: rgb(172, 172, 172);
   width: ${(props) => props.width}px;
   height: var(--progress-bar-height);
   display: block;

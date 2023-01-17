@@ -14,17 +14,24 @@ const ReviewPage = (props) => {
   const [currentTime, setCurrectTime] = useState(0);
 
   const audioRef = useRef();
-  
+
   // 피드백 타이틀 텍스트
-  const titleText = 
-  // <div style={{fontSize:'50px'}}>안녕하세요 <br /> {props.userName}님</div>;
-  <div>안녕하세요 <br /> 김지훈님</div>;
-  
+  const titleText = (
+    // <div style={{fontSize:'50px'}}>안녕하세요 <br /> {props.userName}님</div>;
+    <div>
+      안녕하세요 <br /> 김지훈님
+    </div>
+  );
+
   // 피드백 서브타이틀 텍스트
-  const subtitleText =
-  <div className="HIHI" style={{fontSize:'25px', marginTop:'50px', fontWeight:'bold'}}>기록 선택하기</div>;
-
-
+  const subtitleText = (
+    <div
+      className="HIHI"
+      style={{ fontSize: "25px", marginTop: "50px", fontWeight: "bold" }}
+    >
+      기록 선택하기
+    </div>
+  );
 
   //바 움직이면 그 위치에서 재생할 수 있게 해주는 함수
   const onChange = (e) => {
@@ -38,7 +45,6 @@ const ReviewPage = (props) => {
   const play = () => {
     const audio = audioRef.current;
     audio.volume = 0.1;
-    console.log(audio.currentTime);
 
     if (!isPlaying) {
       setIsPlaying(true);
@@ -68,15 +74,14 @@ const ReviewPage = (props) => {
   const playTime = (time) => {
     //받아온 시간을 바탕으로 duration에 맞는 값으로 계산
     const thisTime = time.split(":").map((el) => parseFloat(el));
-    let start = 0
+    let start = 0;
 
     if (thisTime.length === 2) {
-      start = thisTime[0] *60 + thisTime[1];
+      start = thisTime[0] * 60 + thisTime[1];
     } else {
       start = thisTime[0] * 3600 + thisTime[1] * 60 + thisTime[2];
     }
 
-    console.log(time, thisTime, start)
     //현재 재생 시간을 selectTime으로 맞춤
     audioRef.current.currentTime = start;
 
@@ -92,7 +97,14 @@ const ReviewPage = (props) => {
       <Line></Line>
       Review
       {/* 보이는 사운드 바 */}
-      <Soundbar onChange={onChange} percentage={percentage} timeline={timeline}/>
+
+      <Soundbar
+        onChange={onChange}
+        percentage={percentage}
+        duration={duration}
+        timeline={timeline}
+      />
+
       {/* 소리 재생하게 해주는 태그 */}
       <audio
         ref={audioRef}
@@ -100,6 +112,7 @@ const ReviewPage = (props) => {
         onLoadedData={loadedData}
         onTimeUpdate={getCurrentDuration}
       ></audio>
+
       {/* 시간표시/재생 on off 버튼 */}
       <ControlPanel
         play={play}
@@ -107,6 +120,7 @@ const ReviewPage = (props) => {
         duration={duration}
         currentTime={currentTime}
       />
+
       {timeline.map((el, idx) => {
         return (
           <button
@@ -119,7 +133,7 @@ const ReviewPage = (props) => {
           </button>
         );
       })}
-    </ ReviewMainBody>
+    </ReviewMainBody>
   );
 };
 
@@ -127,17 +141,17 @@ export default ReviewPage;
 
 const Line = styled.hr`
   margin-top: 10px;
-`
+`;
 
 const ReviewMainBody = styled.div`
   margin: 0 4.5em 0 4.5em;
   height: 100%;
 
-  &  {
+  & {
     .SubTitle {
-    font-size:'25px';
-    margin-top:'50px';
-    font-weight:'bold';
+      font-size: "25px";
+      margin-top: "50px";
+      font-weight: "bold";
     }
 
     /* > div:nth-child(1) {
@@ -150,4 +164,4 @@ const ReviewMainBody = styled.div`
       font-weight: bolder;
     }
   }
-`
+`;
