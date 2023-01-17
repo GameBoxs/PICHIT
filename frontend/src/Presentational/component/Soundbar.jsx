@@ -3,9 +3,11 @@ import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
 
 const Soundbar = ({ onChange, percentage, timeline, duration }) => {
-  const [position, setPosition] = useState(0); //Thumb 위치 지정
-  const [marginLeft, setMarginLeft] = useState(0); //Thumb 좌측 margin 설정
-  const [progressBarWidth, setProgressBarWidth] = useState(0); //재생 시 바의 길이 조정
+  const [style, setStyle] = useState({
+    position: 0,          //Thumb 위치 지정
+    marginLeft: 0,        //Thumb 좌측 margin 설정
+    progressBarWidth: 0,  //재생 시 바의 길이 조정
+  });
   const [timeStamp, setTimeStamp] = useState([]);
 
   const rangeRef = useRef();
@@ -13,7 +15,23 @@ const Soundbar = ({ onChange, percentage, timeline, duration }) => {
   const prograssbarRef = useRef();
 
   useEffect(() => {
+    console.log("percentage");
     const rangeWidth = rangeRef.current.getBoundingClientRect().width; //현재 너비를 가져옴
+    const thumbWidth = 20;
+    const centerThumb = (thumbWidth / 100) * percentage * -1;
+    const centerProgressBar =
+      thumbWidth +
+      (rangeWidth / 100) * percentage -
+      (thumbWidth / 100) * percentage;
+
+    setStyle(() => {
+      return {
+        position: percentage,
+        marginLeft: centerThumb,
+        progressBarWidth: centerProgressBar,
+      };
+    });
+    // console.log("timeline");
 
     setTimeStamp(() => {
       return timeline.map((el) => {
@@ -26,40 +44,31 @@ const Soundbar = ({ onChange, percentage, timeline, duration }) => {
           start = thisTime[0] * 3600 + thisTime[1] * 60 + thisTime[2];
         }
 
-        return ((start / duration) * rangeWidth);
+        return (start / duration) * rangeWidth;
       });
     });
-  }, [timeline]);
+  }, [percentage, timeline]);
 
-  useEffect(() => {
-    const rangeWidth = rangeRef.current.getBoundingClientRect().width; //현재 너비를 가져옴
-    const thumbWidth = 20;
-    const centerThumb = (thumbWidth / 100) * percentage * -1;
-    const centerProgressBar =
-      thumbWidth +
-      (rangeWidth / 100) * percentage -
-      (thumbWidth / 100) * percentage;
-
-    setPosition(percentage);
-    setMarginLeft(centerThumb);
-    setProgressBarWidth(centerProgressBar);
-  }, [percentage]);
+  console.log("HIHI")
 
   return (
     <SliderContainer>
       <GlobalStyle />
-      <ProgressBar ref={prograssbarRef} width={progressBarWidth}>
+
+      <ProgressBar ref={prograssbarRef} width={style.progressBarWidth}>
         {timeStamp.map((el, idx) => {
-          return <TimeStampBox key={idx} timeStampMargin={el}/>;
+          return <TimeStampBox key={idx} timeStampMargin={el} />;
         })}
       </ProgressBar>
-      <Thumb position={position} ref={thumbRef} marginLeft={marginLeft} />
+
+      <Thumb position={style.position} ref={thumbRef} marginLeft={style.marginLeft} />
+
       <Range
         type={"range"}
         ref={rangeRef}
         step={"0.01"}
         onChange={onChange}
-        value={position}
+        value={style.position}
       />
     </SliderContainer>
   );
@@ -69,8 +78,8 @@ export default Soundbar;
 
 const TimeStampBox = styled.div`
   position: absolute;
-  height: 1em;
-  width: 2px;
+  height: var(--progress-bar-height);
+  width: 2.5px;
   background-color: white;
   margin-left: ${(props) => props.timeStampMargin}px;
   display: inline-block;

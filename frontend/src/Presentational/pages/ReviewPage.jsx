@@ -85,6 +85,7 @@ const ReviewPage = (props) => {
     //현재 재생 시간을 selectTime으로 맞춤
     audioRef.current.currentTime = start;
 
+    setIsPlaying(true);
     audioRef.current.play();
   };
 
