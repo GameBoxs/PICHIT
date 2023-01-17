@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import IntervieweePage from "./IntervieweePage";
+import IntervieweePage from "./IntervieweePage"
 import InterviewerPage from "./InterviewerPage";
 import SelectIntervieweePage from "./SelectIntervieweePage";
 import PrepareInterview from "./PrepareInterview";
