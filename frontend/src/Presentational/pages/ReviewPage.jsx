@@ -1,3 +1,4 @@
+//#region import
 import React, { useEffect } from "react";
 import Soundbar from "../component/Soundbar";
 import Sampling from "../../store/asset/HypeBoy.mp3";
@@ -6,18 +7,27 @@ import ControlPanel from "../component/ControlPanel";
 import styled from "styled-components";
 import Title from "../common/Title";
 import SubTitle from "../common/SubTitle";
+//#endregion
 
 const ReviewPage = (props) => {
+  //#region Hook
+
+  //#region useState Hook
   const [percentage, setPercentage] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrectTime] = useState(0);
+  //#endregion
 
+  //#region useRef Hook
   const audioRef = useRef();
+  //#endregion
 
+  //#endregion
+
+  //#region 타이틀 텍스트 변수
   // 피드백 타이틀 텍스트
   const titleText = (
-    // <div style={{fontSize:'50px'}}>안녕하세요 <br /> {props.userName}님</div>;
     <div>
       안녕하세요 <br /> 김지훈님
     </div>
@@ -26,22 +36,23 @@ const ReviewPage = (props) => {
   // 피드백 서브타이틀 텍스트
   const subtitleText = (
     <div
-      className="HIHI"
       style={{ fontSize: "25px", marginTop: "50px", fontWeight: "bold" }}
     >
       기록 선택하기
     </div>
   );
+  //#endregion
 
-  //바 움직이면 그 위치에서 재생할 수 있게 해주는 함수
+  //#region 오디오 Bar 클릭시 해당 위치에서 음악 재생
   const onChange = (e) => {
     const audio = audioRef.current;
     audio.currentTime = (audio.duration / 100) * e.target.value;
 
     setPercentage(e.target.value);
   };
+  //#endregion
 
-  //오디오 재생시키는 함수
+  //#region 오디오 재생함수
   const play = () => {
     const audio = audioRef.current;
     audio.volume = 0.1;
@@ -54,7 +65,9 @@ const ReviewPage = (props) => {
       audio.pause();
     }
   };
-
+  //#endregion
+  
+  //#region 진행 시간, 퍼센트 구하는 함수
   const getCurrentDuration = (e) => {
     const currentTime = e.currentTarget.currentTime; //현재 재생되고 있는 위치 반환
     const duration = e.currentTarget.duration; //현재 오디오바의 전체 길이를 초단위로 반환
@@ -65,12 +78,16 @@ const ReviewPage = (props) => {
     //toFixed:지정된 소수 자릿수로 반올림
     setCurrectTime(currentTime.toFixed(2));
   };
+  //#endregion
 
+  //#region 로깅 완료시 실행할 이벤트
   const loadedData = (e) => {
     //toFixed:지정된 소수 자릿수로 반올림
     setDuration(e.currentTarget.duration.toFixed(2));
   };
+  //#endregion
 
+  //#region 재생시간구하는 함수
   const playTime = (time) => {
     //받아온 시간을 바탕으로 duration에 맞는 값으로 계산
     const thisTime = time.split(":").map((el) => parseFloat(el));
@@ -88,14 +105,19 @@ const ReviewPage = (props) => {
     setIsPlaying(true);
     audioRef.current.play();
   };
+  //#endregion
 
+  //#region Variable
   const timeline = ["00:18", "1:09", "2:00"];
+  //#endregion
 
   return (
     <ReviewMainBody>
       <Title title={titleText}></Title>
       <SubTitle title={subtitleText}></SubTitle>
       <Line></Line>
+
+
       Review
       {/* 보이는 사운드 바 */}
 
@@ -155,12 +177,7 @@ const ReviewMainBody = styled.div`
       font-weight: "bold";
     }
 
-    /* > div:nth-child(1) {
-      font-size: 50px;
-      font-weight: bolder;
-    } */
-
-    .Title {
+    > div:nth-child(1) {
       font-size: 50px;
       font-weight: bolder;
     }
