@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-const Button = () => {
+const Button = ({text, handler}) => {
 
     return (
-        <Btn>
-            <BtnText></BtnText>
+        <Btn onClick={handler}>
+            <BtnText>{text}</BtnText>
         </Btn>
     
     )
@@ -15,8 +15,6 @@ export default Button ;
 const BtnText = styled.span`
     display: flex;  
     text-align: center;
-
-
 `
 
 const Btn = styled.div`
@@ -26,10 +24,10 @@ const Btn = styled.div`
     padding: 0;
     border: none;
     margin: 20px;
-    width: 13px;
+    width: fit-content;
     height: 4px;
     border-radius: 5px;
-    padding: 10px 25px;
+    padding: 16px 25px;
     cursor: pointer;
     position: relative;
     display: inline-block;
