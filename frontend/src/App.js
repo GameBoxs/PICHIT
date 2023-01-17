@@ -1,14 +1,3 @@
-// import RoomPage from "./page/RoomPage";
-
-// function App() {
-
-// return (
-//   <div className="App">
-//     <RoomPage
-//       items={expenses} />
-//   </div>
-// );
-
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 import Footer from "./Presentational/common/Footer";
@@ -39,7 +28,7 @@ function App() {
           <Route path="/review" element={<ReviewPage />} />
           <Route path="/room/*" element={<RoomPage items={expenses}/>} />
         </Routes>
-        {/* <Footer /> */}
+        <Footer />
       </AppContainer>
     </BrowserRouter>
   );
@@ -47,4 +36,11 @@ function App() {
 
 export default App;
 
-const AppContainer = styled.div``;
+const AppContainer = styled.div`
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 960px;
+`;
+
+// footer 고정할려고 padding-bottom을 줬는데, 간격이 너무 넒어져서 
+// 고칠 필요가 있음...

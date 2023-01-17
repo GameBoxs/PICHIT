@@ -1,9 +1,14 @@
 import styled from "styled-components";
 import Title from "../../common/Title"
-import Button from "../../common/Button"
 import PlanTime from "../../component/PlanTime"
+import React from "react";
 
 function RoomHeader(props) {
+
+  const joinHandler = () => {
+    props.joinRoom(!props.join)
+  }
+
     return (
         <>
         <Layout>
@@ -11,7 +16,7 @@ function RoomHeader(props) {
             <Title title={props.title} />
             <PlanTime date={props.date} />
           </Left>
-          <Button></Button>
+          <button onClick={joinHandler}>참여하기</button>
         </Layout>
         </>
     )
