@@ -18,30 +18,28 @@ const QuestionInsert = ({onInsert}) => {
 
   return (
     <>
-      {/* <BackGround>
-        <InsertForm onSubmit={onSubmit}>
+      <form onSubmit={onSubmit}>
           <Input
-            placeholder="질문을 입력 해주세요"
             value={value}
             onChange={onChange}
           ></Input>
-          <Button type="submit" />
-        </InsertForm>
-      </BackGround> */}
-    <form onSubmit={onSubmit}>
+          <Button>작성</Button>
+        </form>
+        
+
+    {/* <form onSubmit={onSubmit}>
       <input 
       type='text'
       placeholder="질문을 입력 해주세요"
       value={value}
       onChange={onChange} ></input>
        <button type="submit">작성</button>    
-    </form>
+    </form> */}
     </>
   );
 };
 export default QuestionInsert;
 
-const BackGround = styled.div``;
-const InsertForm = styled.form``;
-const Input = styled.input``;
-const Button = styled.button;
+
+const Input = styled.input.attrs({type:"text"})``;
+const Button = styled.button.attrs({type:"submit"})``;

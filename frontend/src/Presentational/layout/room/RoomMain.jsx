@@ -2,6 +2,7 @@ import styled from "styled-components";
 import SubTitle from "../../common/SubTitle";
 import React,{ useState,useEffect } from "react";
 import QuestionBox from "./QuestionBox";
+import Resume from "./Resume";
 
 
 function RoomMain({join, content}) {
@@ -13,7 +14,7 @@ function RoomMain({join, content}) {
     console.log("isJoin", isJoin);
   }, [join])
 
-  const RoomSection =  !isJoin ? null : (
+  const RoomSection =  !isJoin ? <Resume /> : (
     <Intro>방에 참여하면 팀원들의 자소서를 볼 수 있어요</Intro>
   );
   

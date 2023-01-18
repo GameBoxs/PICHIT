@@ -55,7 +55,8 @@ const FooterList = styled.div`
   background-color: black;
   color: black;
   width: 100%;
-  position:absolute;
+  position:relative;
+  transform: translateY(-100%);
   bottom: 0;
   left:0;
 `
