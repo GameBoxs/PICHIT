@@ -7,6 +7,8 @@ import styled from "styled-components";
 import Title from "../common/Title";
 import SubTitle from "../common/SubTitle";
 
+import ToggleButton from "../common/ToggleButton";
+
 const ReviewPage = (props) => {
   const [percentage, setPercentage] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -96,6 +98,11 @@ const ReviewPage = (props) => {
       <Title title={titleText}></Title>
       <SubTitle title={subtitleText}></SubTitle>
       <Line></Line>
+      
+      <br></br>
+      <ToggleButton></ToggleButton>
+      <br></br>
+      
       Review
       {/* 보이는 사운드 바 */}
 
