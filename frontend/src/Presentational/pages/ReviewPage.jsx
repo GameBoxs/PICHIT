@@ -7,7 +7,7 @@ import styled from "styled-components";
 import Title from "../common/Title";
 import SubTitle from "../common/SubTitle";
 
-import ToggleButton from "../common/ToggleButton";
+import {ToggleButton} from "../common/ToggleButton";
 
 const ReviewPage = (props) => {
   const [percentage, setPercentage] = useState(0);
