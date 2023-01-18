@@ -4,7 +4,7 @@ import RoomListItem from './RoomListItem'
   
 function RoomList(props) {
     return(
-        <ul>
+        <RoomListul>
             {props.rooms.map((room)=>
                 <RoomListItem
                     key={room.id} 
@@ -14,8 +14,16 @@ function RoomList(props) {
                     date={room.date} 
                 />
             )}
-        </ul>
+        </RoomListul>
     )
 }
 
 export default RoomList; 
+
+const RoomListul = styled.ul`
+    display: flex;
+    flex-flow: wrap;
+    justify-content:space-between;
+    list-style:none;
+    
+`

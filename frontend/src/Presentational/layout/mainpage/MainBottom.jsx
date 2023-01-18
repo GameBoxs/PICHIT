@@ -1,14 +1,8 @@
 import styled from "styled-components";
 import RoomList from "../../component/RoomList";
+import React,{useState,useEffect,useCallback,useMemo} from "react";
 
 const DUMMY_DATA = [
-  {
-    id: 1,
-    Participant: 2,
-    personnel: 4,
-    title: "방제목",
-    date: "23.01.24",
-  },
   {
     id: 1,
     Participant: 2,
@@ -82,6 +76,10 @@ const DUMMY_DATA = [
 ];
 
 function MainBottom() {
+  const handleChange = (content) => {
+    console.log(content.target.value);
+  };
+
   return (
     <Layout>
       <Header>
@@ -96,28 +94,34 @@ function MainBottom() {
       </Header>
       <section>
         <Main>
-          <h4>검색창이 들어갈 예정입니다</h4>
+            <SearchWrapper>
+                <input type="text" className="search-input" onChange={handleChange} placeholder="검색어를 입력해주세용"/>
+            </SearchWrapper>
           <div>
             <button>모든 방</button>
             <button>입장가능</button>
           </div>
-          <LommList>
+          <LommListdiv>
             <RoomList rooms={DUMMY_DATA} />
-          </LommList>
+          </LommListdiv>
         </Main>
-        <footer>
+        <Footer>
           <button>방만들기</button>
-        </footer>
+        </Footer>
       </section>
     </Layout>
   );
 }
 export default MainBottom;
 
-const Layout = styled.div``;
+const Layout = styled.div`
+  margin-left: 10%;
+  margin-right: 10%;
+`;
 
 const Header = styled.div`
   border-bottom: 2px solid gray;
+  padding: 10px 3% 10px 7%;
 `;
 
 const Titlesection = styled.div`
@@ -126,9 +130,17 @@ const Titlesection = styled.div`
 `;
 
 const Main = styled.div`
-  border: 1px solid black;
+  margin: 3% 10% 0% 10%;
+  .search-input {
+    width: 100%;
+  }
 `;
 
-const LommList = styled.div`
-  border: 2px solid red;
+const LommListdiv = styled.div``;
+
+const Footer = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
 `;
+
+const SearchWrapper = styled.div``;
