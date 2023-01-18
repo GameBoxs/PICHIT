@@ -1,7 +1,7 @@
 import React from "react"
 
 const InterviewerPage = () => {
-    return <div>Interviewer</div>
+    return <div>IntervieweePage</div>
 }
 
 export default InterviewerPage;

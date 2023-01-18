@@ -50,8 +50,8 @@ const Submenu = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  font-size: 1.3em;
-  gap: 0.8em;
+  font-size: 1em;
+  gap: 0.5em;
 `;
 
 const ScreenContainer = styled.div`
