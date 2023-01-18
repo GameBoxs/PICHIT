@@ -65,7 +65,7 @@ const ToggleButton = ({handler}) => {
 //#endregion
 
 //#region DarkModToggleButton
-const DarkModeToggleButton = ({handler}) => {
+const DarkModToggleButton = ({handler}) => {
     return (
         <ToggleWrapper>
             <DN className="dn" id="dn"/>
@@ -270,4 +270,4 @@ const DarkModeToggleButton = ({handler}) => {
     //#endregion
 //#endregion
 
-export {ToggleButton,DarkModeToggleButton} ;
+export {ToggleButton,DarkModToggleButton} ;
