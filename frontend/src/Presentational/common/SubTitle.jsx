@@ -3,7 +3,7 @@ import styled from "styled-components";
 const SubTitle = (props) => {
     return (
       <>
-        <SubTitleText>{props.title}</SubTitleText>
+        <SubTitleText className="SubTitle">{props.title}</SubTitleText>
       </>
     )
 }

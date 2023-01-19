@@ -36,11 +36,12 @@ const BottomPanel = styled.div`
 `;
 
 const ConditionSentance = styled.h3`
-  margin-bottom: 2em;
+  font-size: 1em;
+  margin-bottom: 1em;
 `;
 
 const Title = styled.h1`
-  font-size: 3em;
+  font-size: 2em;
   margin: 0;
 `;
 
