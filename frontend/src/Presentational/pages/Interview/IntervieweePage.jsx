@@ -2,10 +2,66 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import SubTitle from "../../common/SubTitle";
+import Rating from "../../layout/Interview/Rating";
+import QuestionCompo from "../../component/QuestionCompo";
+
 import { BsQuestionCircleFill } from "react-icons/bs";
 import { GrHistory } from "react-icons/gr";
 import { MdOutlineLogout } from "react-icons/md";
-import Rating from "../../layout/Interview/Rating";
+
+const dummy = [
+  {
+    id: 1,
+    question: "잠온다",
+    user: "이효진",
+  },
+  {
+    id: 2,
+    question: "너무 잠온다",
+    user: "김민지",
+  },
+  {
+    id: 3,
+    question: "대박 잠온다",
+    user: "이효진",
+  },
+  {
+    id: 4,
+    question: "상당히 잠온다",
+    user: "임수민",
+  },
+  {
+    id: 5,
+    question: "과하게 잠온다",
+    user: "이효진",
+  },
+  {
+    id: 6,
+    question: "생각보다 잠온다",
+    user: "이희수",
+  },
+  {
+    id: 7,
+    question: "그럼 자면 되지",
+    user: "김지훈",
+  },
+  {
+    id: 8,
+    question: "5만원 가치 하더라",
+    user: "김지훈",
+  },
+  {
+    id: 9,
+    question:
+      "테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문",
+    user: "이효진",
+  },
+  {
+    id: 10,
+    question: "끝났다",
+    user: "김지현",
+  },
+];
 
 const IntervieweePage = () => {
   const [chatOn, setChatOn] = useState(false);
@@ -14,8 +70,13 @@ const IntervieweePage = () => {
     setChatOn(!chatOn);
   };
 
+  const Questions = dummy.map((el) => {
+    return <QuestionCompo key={el.id} questionInfo={el} />;
+  });
+
   return (
     <Container>
+      {/* interviewee Nav */}
       <InterviewNav>
         <NavCompo></NavCompo>
         <NavCompo>SpeakOn</NavCompo>
@@ -26,6 +87,7 @@ const IntervieweePage = () => {
       </InterviewNav>
 
       <InterviewBody>
+        {/* 화상채팅 부분 */}
         <BodyCompo>
           <IntervieweeCompo>
             <CamCompo>aa</CamCompo>
@@ -37,7 +99,9 @@ const IntervieweePage = () => {
           </CamCompo>
         </BodyCompo>
 
+        {/* 질문/피드백 박스 */}
         <BodyCompo>
+          {/* 질문 박스 */}
           <QuestionBody>
             <SubNav>
               <SubTitle title={"질문 1"} />
@@ -56,30 +120,38 @@ const IntervieweePage = () => {
             </SubFooter>
           </QuestionBody>
 
+          {/* 평가 */}
           <QuestionBody>
             <SubTitle title={"평가"} />
             <Rating />
           </QuestionBody>
 
+          {/* 피드백 */}
           <QuestionBody>
             <SubTitle title={"피드백"} />
             <Feedback placeholder="피드백을 입력하세요" />
           </QuestionBody>
         </BodyCompo>
 
+        {/* 자소서보기/채팅/ */}
         <BodyCompo chatOn={chatOn}>
+          {/* 자소서 보기 버튼 */}
           <QuestionBody>
             <SubTitle title={"면접자 : 이희수"} />
             <SubBtn>자소서 보기</SubBtn>
           </QuestionBody>
+
+          {/* 총 질문 모아보기 */}
           <QuestionBody>
             <SubNav>
-                <SubTitle title={"질문"} />
+              <SubTitle title={"질문"} />
             </SubNav>
+            <AllQuestions chatOn={chatOn}>{Questions}</AllQuestions>
           </QuestionBody>
+
+          {/* 채팅 */}
           <QuestionBody onClick={chatHandler}>
-            
-          <SubTitle title={"채팅"} />
+            <SubTitle title={"채팅"} />
           </QuestionBody>
         </BodyCompo>
       </InterviewBody>
@@ -88,6 +160,18 @@ const IntervieweePage = () => {
 };
 
 export default IntervieweePage;
+
+const AllQuestions = styled.div`
+  width: 100%;
+  height: calc(100% - ${props => props.chatOn ? "20%" : "12%"});
+  margin-top: 2vh;
+  overflow-y: scroll;
+  border-radius: 0 !important;
+
+  & * {
+    border-radius: 0 !important;
+  }
+`;
 
 const Feedback = styled.textarea`
   width: 100%;
@@ -202,7 +286,7 @@ const BodyCompo = styled.div`
   &:nth-child(3) {
     display: grid;
     grid-template-rows: var(--mini-compo) ${(props) =>
-        props.chatOn ? "4fr 4fr" : "8fr 1fr"};
+        props.chatOn ? "37vh 37vh" : "66vh var(--mini-compo)"};
     transition: 0.5s ease-in-out;
     gap: 0.5vw;
     margin: 0vh 1vw 0vh 0vw;
@@ -212,15 +296,15 @@ const BodyCompo = styled.div`
     }
 
     ${SubNav} {
-        display: block;
+      display: block;
     }
 
     ${QuestionBody} .SubTitle:last-child {
-        margin-top: 0.5vh;
+      margin-top: 0.5vh;
     }
   }
 
-  &:nth-child(2) ${QuestionBody}:nth-child(2), &:nth-child(3) ${QuestionBody}:nth-child(1) {
+  &:nth-child(2) ${QuestionBody}:nth-child(2),  &:nth-child(3) ${QuestionBody}:nth-child(1) {
     display: flex;
     justify-content: space-between;
     align-items: center;
