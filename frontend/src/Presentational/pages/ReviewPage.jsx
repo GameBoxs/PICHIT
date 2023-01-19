@@ -7,8 +7,10 @@ import ControlPanel from "../component/ControlPanel";
 import styled from "styled-components";
 import Title from "../common/Title";
 import SubTitle from "../common/SubTitle";
+import Button from "../common/Button";
 
-import {ToggleButton} from "../common/ToggleButton";
+import {ToggleButton,DarkModToggleButton} from "../common/ToggleButton";
+//#endregion
 
 const ReviewPage = (props) => {
   //#region Hook
@@ -112,51 +114,93 @@ const ReviewPage = (props) => {
   const timeline = ["00:18", "1:09", "2:00"];
   //#endregion
 
+  //#region Test Data
+    const data = [{Title:"2022 연말 콘서트-이희수 전국 투어", Day:"23.01.12", Processing:"Y"},{Title:'2023 유럽투어 댄스쇼-"봉주르 희수"', Day:"23.01.12", Processing:"N"},{Title:'2023 아시아 콘서트-"We Love Heesu"', Day:"23.01.12", Processing:"E"},
+    {Title:'2023 제 3회 팬미팅-"Hamchu Land"', Day:"23.01.12", Processing:"N"},{Title:'2023 아프리카 투어-"울지마 희수"', Day:"23.01.12", Processing:"N"}]
+    // const data = [{},{},{},{},{}];
+    const feedbackData = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu";
+  //#endregion
   return (
     <ReviewMainBody>
       <Title title={titleText}></Title>
       <SubTitle title={subtitleText}></SubTitle>
       <Line></Line>
+      <FilterArea>
+        <Button text="모두 보기"></Button>
+        <Button text="진행중"></Button>
+        <Button text="시작 예정"></Button>
+        <Button text="스터디 종료"></Button>
+      </FilterArea>
+      <HistoryList>
+        {
+          data.map((item, index) => {
+            return (
+              <ListItem item={item} key={index} index={index} lastIndex={data.length-1}></ListItem>
+            )
+          })
+        }
+        <HistoryPagenationArea>
+          <span>&lt; 1 2 3 4 ... 10 &gt;</span>
+        </HistoryPagenationArea>
+      </HistoryList>
 
+      <DetailArea>
+        <SubTitle title="면접 피드백"></SubTitle>
+        <Line></Line>
 
-      Review
-      {/* 보이는 사운드 바 */}
+        <SoundArea>
+          {/* 보이는 사운드 바 */}
+          <Soundbar
+            onChange={onChange}
+            percentage={percentage}
+            duration={duration}
+            timeline={timeline}
+            />
 
-      <Soundbar
-        onChange={onChange}
-        percentage={percentage}
-        duration={duration}
-        timeline={timeline}
-      />
+          {/* 소리 재생하게 해주는 태그 */}
+          <audio
+            ref={audioRef}
+            src={Sampling}
+            onLoadedData={loadedData}
+            onTimeUpdate={getCurrentDuration}
+            ></audio>
 
-      {/* 소리 재생하게 해주는 태그 */}
-      <audio
-        ref={audioRef}
-        src={Sampling}
-        onLoadedData={loadedData}
-        onTimeUpdate={getCurrentDuration}
-      ></audio>
+          {/* 시간표시/재생 on off 버튼 */}
+          <ControlPanel
+            play={play}
+            isPlaying={isPlaying}
+            duration={duration}
+            currentTime={currentTime}
+            />
 
-      {/* 시간표시/재생 on off 버튼 */}
-      <ControlPanel
-        play={play}
-        isPlaying={isPlaying}
-        duration={duration}
-        currentTime={currentTime}
-      />
-
-      {timeline.map((el, idx) => {
-        return (
-          <button
-            onClick={() => {
-              playTime(el);
-            }}
-            key={idx}
-          >
-            HIHIHI
-          </button>
-        );
-      })}
+          {timeline.map((el, idx) => {
+            return (
+              <button
+              onClick={() => {
+                playTime(el);
+              }}
+              key={idx}
+              >
+                HIHIHI
+              </button>
+            );
+          })}
+        </SoundArea>
+        <HistoryPagenationArea>
+          <span>&lt; 1 2 3 4 ... 10 &gt;</span>
+        </HistoryPagenationArea>
+        <FeedBackArea>
+          <Title title="1.질문질문질문질문질문질문질문질문질문질문"></Title>
+          <SubTitle title="피드백"></SubTitle>
+          <FeedBack>
+            <FeedBackTitle>
+              <SubTitle title="김지훈"></SubTitle>
+              <SubTitle title="5점"></SubTitle>
+            </FeedBackTitle>
+            <SubTitle title={feedbackData}></SubTitle>
+          </FeedBack>
+        </FeedBackArea>
+      </DetailArea>
     </ReviewMainBody>
   );
 };
@@ -164,11 +208,11 @@ const ReviewPage = (props) => {
 export default ReviewPage;
 
 const Line = styled.hr`
-  margin-top: 10px;
+  margin: 15px 0 15px 0;
 `;
 
 const ReviewMainBody = styled.div`
-  margin: 0 4.5em 0 4.5em;
+  margin: 0 10em 0 10em;
   height: 100%;
 
   & {
@@ -184,3 +228,147 @@ const ReviewMainBody = styled.div`
     }
   }
 `;
+
+const FilterArea = styled.div`
+  width: 100%;
+  height: 50px;
+  margin-top: 20px;
+  
+  padding: 0 15px 0 15px;
+  align-content: center;
+
+  // 나중에 버튼 수정되면 삭제할 부분
+  & * {
+    margin: 0;
+    margin-top: auto;
+  }
+  /////////////////////////////////
+  & div:nth-child(1), div:nth-child(2), div:nth-child(3) {
+    margin-right: 15px;
+  }
+`
+
+const HistoryList = styled.div`
+  width: 100%;
+  & hr{
+    opacity: 0.2;
+  }
+`
+
+const ListItem = (props) => {
+  let CurrentState = "";
+
+  if(props.item.Processing==="Y") {
+    CurrentState = "진행중";
+  } else if(props.item.Processing==="N") {
+    CurrentState = "진행 예정";
+  } else if(props.item.Processing==="E") {
+    CurrentState = "종료";
+  }
+
+  return(
+    <>
+    <Line></Line>
+      <ItemWrap>
+        <Title title={props.item.Title}></Title>
+        <SubTitle title={props.item.Day}></SubTitle>
+        <SubTitle title={CurrentState}></SubTitle>
+        {props.item.Title !=="" && props.item.Title !== null && props.item.Title !== undefined ? <SubTitle title=">"></SubTitle> : null }
+      </ItemWrap>
+    {props.index === props.lastIndex ? <Line></Line> : null}
+    </>
+  )
+}
+
+const ItemWrap = styled.div`
+  display: flex;
+  width: 100%;
+  height: 50px;
+  * {
+    line-height: 50px;
+    height: 50px;
+  }
+  & > div:nth-child(1), div:nth-child(4) {
+    font-weight: bolder;
+  }
+  & div:nth-child(1) {
+    cursor: pointer;
+    width: 75%;
+  }
+  & div:nth-child(2) {
+    width: 10%;
+  }
+  & div:nth-child(3) {
+    width: 10%;
+  }
+  & div:nth-child(4) {
+    cursor: pointer;
+    width: 5%;
+    font-size: 30px;
+  }
+`
+
+const HistoryPagenationArea = styled.div`
+  width: 100%;
+  height: 50px;
+  margin-bottom: 50px;
+  span {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+  }
+`
+const DetailArea = styled.div`
+  width: 100%;
+
+  & > div:first-child {
+    font-weight: bolder;
+    font-size: 25px;
+  }
+`
+
+const SoundArea = styled.div`
+  width: 100%;
+  margin-top: 50px;
+`
+
+const FeedBackArea = styled.div`
+  width: 100%;
+
+  & > div:first-child {
+    text-align: center;
+    font-weight: bolder;
+    font-size: 40px;
+  }
+
+  & > div:nth-child(2) {
+    margin-top: 50px;
+    margin-bottom: 25px;
+    font-weight: bold;
+    font-size: 30px;
+  }
+`
+
+const FeedBack = styled.div`
+  width: 100%;
+  & > div:nth-child(2) {
+    text-indent: 20px;
+  }
+  margin-bottom: 50px;
+`
+const FeedBackTitle = styled.div`
+  display: flex;
+  width: 100%;
+  margin-bottom: 10px;
+
+  & > div:first-child{
+    font-weight: bold;
+    font-size: 25px;
+    margin-right: 25px;
+  }
+
+  & > div:nth-child(2){
+    font-weight: bold;
+    font-size: 25px;
+  }
+`

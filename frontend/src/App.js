@@ -44,7 +44,7 @@ function App() {
         <Route path="/interview/*" element={<InterviewPage />} />
       </Routes>
 
-      {(pathname.includes("interview")) ? null:<Footer /> }
+      {/* {(pathname.includes("interview")) ? null:<Footer /> } */}
 
     </AppContainer>
   );
