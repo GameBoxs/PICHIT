@@ -1,8 +1,33 @@
 import React from "react";
 import styled from "styled-components";
-import { FaStar} from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 
-const Rating = () => {
+const Rating = ({ RatingHandler }) => {
+  const gradle = Array(5)
+    .fill(0)
+    .map((_, idx) => {
+      return (
+        <>
+          <RatingLabel
+            key={idx}
+            aria-label={`${idx + 1} stars`}
+            htmlFor={`rating2-${10 * (idx + 1)}`}
+          >
+            <RatingIcon>
+              <FaStar />
+            </RatingIcon>
+          </RatingLabel>
+          <RatingInput
+            name="rating2"
+            id={`rating2-${10 * (idx + 1)}`}
+            value={idx+1}
+            type="radio"
+            onClick={RatingHandler}
+          />
+        </>
+      );
+    });
+
   return (
     <RatingBox>
       <RatingGroup>
@@ -18,40 +43,7 @@ const Rating = () => {
           &nbsp;
         </RatingLabel>
 
-        <RatingLabel aria-label="1 star" htmlFor="rating2-10">
-          <RatingIcon>
-            <FaStar />
-          </RatingIcon>
-        </RatingLabel>
-        <RatingInput name="rating2" id="rating2-10" value="1" type="radio" />
-
-        <RatingLabel aria-label="2 stars" htmlFor="rating2-20">
-          <RatingIcon>
-            <FaStar />
-          </RatingIcon>
-        </RatingLabel>
-        <RatingInput name="rating2" id="rating2-20" value="2" type="radio" />
-
-        <RatingLabel aria-label="3 stars" htmlFor="rating2-30">
-          <RatingIcon>
-            <FaStar />
-          </RatingIcon>
-        </RatingLabel>
-        <RatingInput name="rating2" id="rating2-30" value="3" type="radio" />
-
-        <RatingLabel aria-label="4 stars" htmlFor="rating2-40">
-          <RatingIcon>
-            <FaStar />
-          </RatingIcon>
-        </RatingLabel>
-        <RatingInput name="rating2" id="rating2-40" value="4" type="radio" />
-
-        <RatingLabel aria-label="5 stars" htmlFor="rating2-50">
-          <RatingIcon>
-            <FaStar />
-          </RatingIcon>
-        </RatingLabel>
-        <RatingInput name="rating2" id="rating2-50" value="5" type="radio" />
+        {gradle}
       </RatingGroup>
     </RatingBox>
   );

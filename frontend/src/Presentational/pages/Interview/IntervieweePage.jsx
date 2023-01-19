@@ -74,6 +74,10 @@ const IntervieweePage = () => {
     return <QuestionCompo key={el.id} questionInfo={el} />;
   });
 
+  const RatingHandler = (e) => {
+    console.log(e.target.value)
+  }
+
   return (
     <Container>
       {/* interviewee Nav */}
@@ -123,7 +127,7 @@ const IntervieweePage = () => {
           {/* 평가 */}
           <QuestionBody>
             <SubTitle title={"평가"} />
-            <Rating />
+            <Rating RatingHandler={RatingHandler}/>
           </QuestionBody>
 
           {/* 피드백 */}
