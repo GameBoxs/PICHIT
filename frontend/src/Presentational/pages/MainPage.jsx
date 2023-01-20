@@ -2,6 +2,8 @@ import React, { useRef } from "react";
 import styled from "styled-components";
 // import { useScroll } from "../../action/hooks/useScroll";
 
+import MainBottom from '../layout/mainpage/MainBottom'
+
 const MainPage = () => {
   const MainDiv = useRef([]);
 
@@ -22,11 +24,11 @@ const MainPage = () => {
     <>
       <First ref={(el) => (MainDiv.current[0] = el)}>
         First
-        <MoveBtn onClick={() => scrollWithUseRef(0)}>HIHIHI</MoveBtn>
+        <MoveBtn onClick={() => scrollWithUseRef(0)}>DOWN</MoveBtn>
       </First>
       <Second ref={(el) => (MainDiv.current[1] = el)}>
-        Second
-        <MoveBtn onClick={() => scrollWithUseRef(1)}>BYEBYE</MoveBtn>
+        <MoveBtn onClick={() => scrollWithUseRef(1)}>UP</MoveBtn>
+        <MainBottom/>
       </Second>
     </>
   );
@@ -39,7 +41,7 @@ const MoveBtn = styled.div`
 `;
 
 const Second = styled.div`
-  background-color: blue;
+  background-color: #ffffff;
   height: 100vh;
 `;
 
