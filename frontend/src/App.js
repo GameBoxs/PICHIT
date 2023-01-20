@@ -1,14 +1,3 @@
-// import RoomPage from "./page/RoomPage";
-
-// function App() {
-
-// return (
-//   <div className="App">
-//     <RoomPage
-//       items={expenses} />
-//   </div>
-// );
-
 import { Route, Routes, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Footer from "./Presentational/common/Footer";
@@ -17,7 +6,7 @@ import Navigation from "./Presentational/common/Navigation";
 import InterviewPage from "./Presentational/pages/Interview/InterviewPage";
 import MainPage from "./Presentational/pages/MainPage";
 import ReviewPage from "./Presentational/pages/ReviewPage";
-import RoomPage from "./Presentational/pages/RoomPage";
+import RoomPage from "./Presentational/pages/room/RoomPage";
 
 const expenses = [
   {
@@ -44,7 +33,7 @@ function App() {
         <Route path="/interview/*" element={<InterviewPage />} />
       </Routes>
 
-      {/* {(pathname.includes("interview")) ? null:<Footer /> } */}
+      {(pathname.includes("interview")) ? null:<Footer /> }
 
     </AppContainer>
   );
