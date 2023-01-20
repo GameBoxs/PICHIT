@@ -235,7 +235,7 @@ const QuestionBody = styled.div`
 const InterviewerTag = styled.div`
   background-color: #ccc;
   padding: 0.2em 0.6em;
-  position: absolute;
+  position: absolute;  
   top: 0.7em;
   left: 1em;
 `;
