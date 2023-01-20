@@ -32,8 +32,8 @@ function App() {
         <Route path="/room/*" element={<RoomPage items={expenses} />} />
         <Route path="/interview/*" element={<InterviewPage />} />
       </Routes>
-{/* 
-      {(pathname.includes("interview")) ? null:<Footer /> } */}
+
+      {(pathname.includes("interview")) ? null:<Footer /> }
 
     </AppContainer>
   );
