@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import QuestionList from "../../component/QuestionList";
-import QuestionInsert from "../../component/QuestionInsert";
+import QuestionList from "../../component/room/Question/QuestionList";
+import QuestionInsert from "../../component/room/Question/QuestionInsert";
 import React, { useState } from "react";
 
 let nextId = 3;
 let kimName = "Kim jh 남자의";
 
-const QuestionBox = () => {
+const QuestionBox = ({idx}) => {
   const [Questions, setQuestions] = useState([
     {
       id: 1,
@@ -40,7 +40,7 @@ const QuestionBox = () => {
 
   return (
     <>
-      <QuestionList Questions={Questions} />
+      <QuestionList idx={idx} Questions={Questions} />
       <QuestionInsert onInsert={onInsert} />
     </>
   );

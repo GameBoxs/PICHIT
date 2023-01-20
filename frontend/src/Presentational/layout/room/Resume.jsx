@@ -1,13 +1,13 @@
 import React, { useState,useEffect } from "react";
 import styled from "styled-components";
-import ViewPdf from "../../component/ViewPdf";
+import ViewPdf from "../../component/room/resume/ViewPdf";
 import * as pdfjs from "pdfjs-dist"
 
 // 근데 import * as 안하면 에러남 필수로 해줄 것!  
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-function Resume() {
+function Resume({idx}) {
   const [pdfFileList, setPdfFileList] = useState([]);
   const [pdfUrl, setPdfUrl] = useState();
   const [showPdf, setShowPdf] = useState(false);
@@ -73,7 +73,7 @@ function Resume() {
         </ModalOverlay>
        :(
         <FileList>
-          <FileListTitle>파일 목록</FileListTitle>
+          <FileListTitle>파일 목록, {idx}</FileListTitle>
           {pdfFileList.length === 0 ? (
             <FileListBody>
               <Label htmlFor="uploadFile">파일 업로드하기</Label>
@@ -97,7 +97,7 @@ function Resume() {
 export default Resume;
 const MainContainer = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
   height: 600px;
 `;

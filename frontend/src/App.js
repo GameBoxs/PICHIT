@@ -6,7 +6,7 @@ import Navigation from "./Presentational/common/Navigation";
 import InterviewPage from "./Presentational/pages/Interview/InterviewPage";
 import MainPage from "./Presentational/pages/MainPage";
 import ReviewPage from "./Presentational/pages/ReviewPage";
-import RoomPage from "./Presentational/pages/RoomPage";
+import RoomPage from "./Presentational/pages/room/RoomPage";
 
 const expenses = [
   {
