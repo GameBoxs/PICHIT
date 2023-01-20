@@ -53,7 +53,6 @@ export default Footer;
 
 const FooterList = styled.div`
   background-color: black;
-  padding: 6.4rem 2.4 rem;
   color: black;
   width: 100%;
   position:relative;
@@ -63,7 +62,7 @@ const FooterList = styled.div`
 `
 const Sheet = styled.div`
   margin: 0 auto;
-  max-width: 960px;
+  width: 960px;
   padding-top: 10px;
 
 `

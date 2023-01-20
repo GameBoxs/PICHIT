@@ -18,4 +18,8 @@ export const GlobalStyle = createGlobalStyle`
         }
         transition: 0.2s;
     }
+
+    *::before, *::after {
+        box-sizing: border-box;
+    }
 `

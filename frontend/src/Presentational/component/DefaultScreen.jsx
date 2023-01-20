@@ -14,7 +14,7 @@ const DefaultScreen = () => {
   const [isMicOn, setIsMicOn] = useState(true);
 
   return (
-    <ScreenContainer>
+    <ScreenContainer className="ScreenChild">
       HIHIHI
       <Submenu>
         <Icon
@@ -50,8 +50,8 @@ const Submenu = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  font-size: 1.3em;
-  gap: 0.8em;
+  font-size: 1em;
+  gap: 0.5em;
 `;
 
 const ScreenContainer = styled.div`
@@ -59,7 +59,7 @@ const ScreenContainer = styled.div`
   color: white;
   border-radius: 1em;
   overflow: hidden;
-  width: 25vw;
-  height: 30vh;
+  min-width: 25vw;
+  min-height: 30vh;
   text-align: center;
 `;
