@@ -17,11 +17,15 @@ import java.util.Date;
 public class JwtUtil {
     public static final long TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 24 * 7 * 3;
 
+    public static final String ACCESS_TOKEN_NAME = "access_token";
+
+
     @Value("${jwt.secret}")
     private String JWT_SECRET;
 
     @Value("${jwt.issuer}")
     private String JWT_ISSUER;
+
 
     public DecodedJWT decodeToken(String token) throws JWTVerificationException {
         Algorithm algorithm = Algorithm.HMAC512(JWT_SECRET);
