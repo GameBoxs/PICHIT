@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.alppano.speakon.security.jwt.JwtUtil.ACCESS_TOKEN_NAME;
 import static com.alppano.speakon.security.jwt.JwtUtil.TOKEN_VALIDATION_SECOND;
 
 @Component
@@ -36,7 +37,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String accessToken = jwtUtil.createToken(user);
 
-        Cookie tokenCookie = new Cookie("access_token", accessToken);
+        Cookie tokenCookie = new Cookie(ACCESS_TOKEN_NAME, accessToken);
         tokenCookie.setMaxAge((int) TOKEN_VALIDATION_SECOND);
         tokenCookie.setPath("/");
 

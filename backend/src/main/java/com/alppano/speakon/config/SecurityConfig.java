@@ -1,4 +1,5 @@
 package com.alppano.speakon.config;
+
 import com.alppano.speakon.security.oauth.OAuth2AuthenticationFailureHandler;
 import com.alppano.speakon.security.oauth.OAuth2AuthenticationSuccessHandler;
 import com.alppano.speakon.security.oauth.PrincipalOAuth2UserService;
@@ -29,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests() // 애플리케이션에 들어오는 요청에 대한 사용 권한을 체크
-//                .antMatchers("/**").authenticated() // 인증이 되면 들어갈 수 있는 주소
+                .antMatchers("/logout").authenticated() // 인증이 되면 들어갈 수 있는 주소
                 .anyRequest().permitAll(); // 나머지 모든 주소에 대해서 인증 여부와 관계없이 허용
 
         http.cors()                     // CORS on
@@ -44,6 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .successHandler(oAuth2AuthenticationSuccessHandler) // 인증 성공 후처리
                 .failureHandler(oAuth2AuthenticationFailureHandler); // 인증 실패 후처리
+
+        http.logout()
+                .disable();
 
         http.exceptionHandling() // 예외 처리 설정
                 // 인증되지 않은 사용자가 인증이 필요한 URL에 접근할 경우를 처리하는 클래스 지정

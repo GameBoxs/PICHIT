@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.alppano.speakon.security.jwt.JwtUtil.ACCESS_TOKEN_NAME;
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -32,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = null;
         if(cookies != null) {
             for(Cookie cookie : cookies) {
-                if(cookie.getName().equals("access_token")) {
+                if(cookie.getName().equals(ACCESS_TOKEN_NAME)) {
                     jwt = cookie.getValue();
                     break;
                 }
