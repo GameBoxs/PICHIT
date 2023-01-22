@@ -1,23 +1,25 @@
 package com.alppano.speakon.user.entity;
 
 import com.alppano.speakon.common.entity.BaseTimeEntity;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import com.alppano.speakon.interview.entity.Interview;
+import com.alppano.speakon.interview.entity.InterviewJoin;
+import com.alppano.speakon.feedback.entity.Feedback;
+import com.alppano.speakon.question.entity.Question;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.time.LocalDateTime;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 사용자 Entity
  */
 @Entity
-@Data
+@Builder
+@Setter
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User extends BaseTimeEntity {
 
     @Id
@@ -42,12 +44,40 @@ public class User extends BaseTimeEntity {
     @Column(length = 30, nullable = false)
     private String provider;
 
-    @Builder
-    public User(String userId, String password, String name, String email, String provider) {
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
-        this.email = email;
-        this.provider = provider;
+    @Builder.Default
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InterviewJoin> interviewJoins = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
+    private List<Question> questions = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
+    private List<Feedback> feedbacks = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
+    private List<Interview> interviews = new ArrayList<>();
+
+    /**
+     * user 엔티티 삭제 직전에, 일부 테이블의 user를 참고하고 있던 칼럼 값을 null로 변경
+     * <br>
+     * ( 면접방, 질문, 피드백 ) 테이블의 row에 적용
+     */
+    @PreRemove
+    public void onDeleteSetNull() {
+        for (Interview interview : interviews) {
+            // TODO: 방장 위임에 대한 로직 처리가 필요함
+            interview.setManager(null);
+        }
+
+        for (Question question : questions) {
+            question.setWriter(null);
+        }
+
+        for (Feedback feedback : feedbacks) {
+            feedback.setWriter(null);
+        }
     }
 }
