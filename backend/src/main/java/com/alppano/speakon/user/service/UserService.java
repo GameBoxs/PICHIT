@@ -3,6 +3,7 @@ package com.alppano.speakon.user.service;
 import com.alppano.speakon.common.dto.ApiResponse;
 import com.alppano.speakon.exception.ResourceNotFoundException;
 import com.alppano.speakon.user.dto.ModifyUserNameDto;
+import com.alppano.speakon.user.dto.UserInfoDto;
 import com.alppano.speakon.user.entity.User;
 import com.alppano.speakon.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,18 @@ import javax.annotation.Resource;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    public UserInfoDto getUserInfo(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("회원"));
+
+        UserInfoDto userInfo = UserInfoDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .build();
+
+        return userInfo;
+    }
 
     @Transactional
     public boolean modifyUserName(Long id, ModifyUserNameDto dto) {
