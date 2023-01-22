@@ -3,6 +3,7 @@ package com.alppano.speakon.user.controller;
 import com.alppano.speakon.common.dto.ApiResponse;
 import com.alppano.speakon.security.LoginUser;
 import com.alppano.speakon.user.dto.ModifyUserNameDto;
+import com.alppano.speakon.user.dto.UserInfoDto;
 import com.alppano.speakon.user.service.UserService;
 import com.alppano.speakon.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +24,11 @@ public class UserController {
     private final UserService userService;
     private final CookieUtil cookieUtil;
 
-    @GetMapping("/logout")
-    public ResponseEntity<ApiResponse> logout(HttpServletResponse res) {
-        Cookie token = cookieUtil.createCookie(ACCESS_TOKEN_NAME, null, 0);
-        res.addCookie(token);
 
-        ApiResponse result = new ApiResponse(Boolean.TRUE, "로그아웃 성공");
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserInfoDto> getUserInfo(@PathVariable Long id) {
+        UserInfoDto userInfo = userService.getUserInfo(id);
+        return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
 
     @PutMapping("/users")
@@ -49,6 +48,15 @@ public class UserController {
         res.addCookie(token);
 
         ApiResponse result = new ApiResponse(true, "회원 탈퇴 성공");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<ApiResponse> logout(HttpServletResponse res) {
+        Cookie token = cookieUtil.createCookie(ACCESS_TOKEN_NAME, null, 0);
+        res.addCookie(token);
+
+        ApiResponse result = new ApiResponse(Boolean.TRUE, "로그아웃 성공");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
