@@ -2,6 +2,7 @@ package com.alppano.speakon.security.oauth;
 
 import com.alppano.speakon.security.LoginUser;
 import com.alppano.speakon.security.jwt.JwtUtil;
+import com.alppano.speakon.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private String redirectUri;
     private final JwtUtil jwtUtil;
 
+    private final CookieUtil cookieUtil;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         if (response.isCommitted()) {
@@ -36,10 +39,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         LoginUser user = (LoginUser) authentication.getPrincipal();
 
         String accessToken = jwtUtil.createToken(user);
-
-        Cookie tokenCookie = new Cookie(ACCESS_TOKEN_NAME, accessToken);
-        tokenCookie.setMaxAge((int) TOKEN_VALIDATION_SECOND);
-        tokenCookie.setPath("/");
+        Cookie tokenCookie = cookieUtil.createCookie(ACCESS_TOKEN_NAME, accessToken, (int) TOKEN_VALIDATION_SECOND);
 
         response.addCookie(tokenCookie);
 

@@ -3,6 +3,7 @@ package com.alppano.speakon.security.jwt;
 import com.alppano.speakon.security.LoginUser;
 import com.alppano.speakon.user.entity.User;
 import com.alppano.speakon.user.repository.UserRepository;
+import com.alppano.speakon.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,22 +25,14 @@ import static com.alppano.speakon.security.jwt.JwtUtil.ACCESS_TOKEN_NAME;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserRepository userRepository;
-
     private final JwtUtil jwtUtil;
+    private  final CookieUtil cookieUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Cookie[] cookies = request.getCookies();
 
-        String jwt = null;
-        if(cookies != null) {
-            for(Cookie cookie : cookies) {
-                if(cookie.getName().equals(ACCESS_TOKEN_NAME)) {
-                    jwt = cookie.getValue();
-                    break;
-                }
-            }
-        }
+        String jwt = cookieUtil.getCookieValue(cookies, ACCESS_TOKEN_NAME);
 
         try {
             Long id = jwtUtil.getId(jwt);
