@@ -1,7 +1,7 @@
 package com.alppano.speakon.security.jwt;
 
 import com.alppano.speakon.security.LoginUser;
-import com.alppano.speakon.user.entity.User;
+import com.alppano.speakon.domain.user.entity.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;

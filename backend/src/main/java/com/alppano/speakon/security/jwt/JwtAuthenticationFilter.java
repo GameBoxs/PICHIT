@@ -1,9 +1,9 @@
 package com.alppano.speakon.security.jwt;
 
 import com.alppano.speakon.security.LoginUser;
-import com.alppano.speakon.user.entity.User;
-import com.alppano.speakon.user.repository.UserRepository;
-import com.alppano.speakon.util.CookieUtil;
+import com.alppano.speakon.domain.user.entity.User;
+import com.alppano.speakon.domain.user.repository.UserRepository;
+import com.alppano.speakon.common.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

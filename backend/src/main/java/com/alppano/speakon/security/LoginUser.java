@@ -1,7 +1,6 @@
 package com.alppano.speakon.security;
 
-import com.alppano.speakon.security.oauth.provider.OAuthUserInfo;
-import com.alppano.speakon.user.entity.User;
+import com.alppano.speakon.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
