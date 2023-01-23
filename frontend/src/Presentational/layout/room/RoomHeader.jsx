@@ -9,11 +9,11 @@ import EditRoom from "../../component/EditRoom";
 
 
 
-const MySwal =withReactContent(Swal);
+const MySwal = withReactContent(Swal);
 
 function RoomHeader({join,joinRoom,title,date,host}) {
   
-  const showSwalWithLink =() => {
+  const showSwalWithLink = () => {
     MySwal.fire({
       title: "방 수정하기",
       width:800,
