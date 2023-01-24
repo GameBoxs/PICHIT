@@ -18,7 +18,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserInfoDto getUserInfo(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("회원"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 회원입니다."));
 
         UserInfoDto userInfo = UserInfoDto.builder()
                 .id(user.getId())
@@ -31,14 +31,14 @@ public class UserService {
 
     @Transactional
     public boolean modifyUserName(Long id, ModifyUserNameDto dto) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("회원"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 회원입니다."));
         user.setName(dto.getName());
         return true;
     }
 
     @Transactional
     public boolean deleteUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("회원"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 회원입니다."));
         userRepository.delete(user);
         return true;
     }
