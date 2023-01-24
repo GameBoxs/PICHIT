@@ -48,7 +48,7 @@ public class InterviewRoom extends BaseTimeEntity {
     private User manager;
 
     @Builder.Default
-    @OneToMany(mappedBy = "interview", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "interviewRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InterviewJoin> interviewJoins = new ArrayList<>();
 
     // TODO: 방장 위임에 대한 로직 처리가 필요함
