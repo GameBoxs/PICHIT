@@ -12,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +34,16 @@ public class InterviewRoomController {
         InterviewRoomInfo InterviewRoomInfo = interviewRoomService.createInterviewRoom(dto, loginUser.getId());
 
         ApiResponse<InterviewRoomInfo> result = new ApiResponse(Boolean.TRUE, "면접방 생성 성공", InterviewRoomInfo);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Operation(summary = "면접방 상세조회")
+    @GetMapping("/interviewrooms/{id}")
+    public ResponseEntity<ApiResponse<InterviewRoomDetailInfo>> getInterviewRoomDetailInfo(@AuthenticationPrincipal LoginUser loginUser,
+                                                                                           @PathVariable("id") Long interviewRoomId) {
+        InterviewRoomDetailInfo interviewRoomDetailInfo = interviewRoomService.getInterviewRoomDetailInfo(interviewRoomId, loginUser.getId());
+
+        ApiResponse<InterviewRoomDetailInfo> result = new ApiResponse(Boolean.TRUE, "조회 성공", interviewRoomDetailInfo);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
