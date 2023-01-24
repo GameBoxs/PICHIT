@@ -14,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"interview_id", "user_id"})
+        @UniqueConstraint(columnNames = {"interview_room_id", "user_id"})
 })
 @Builder
 @Setter
@@ -27,8 +27,8 @@ public class InterviewJoin extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "interview_id", nullable = false)
-    private InterviewRoom interview;
+    @JoinColumn(name = "interview_room_id", nullable = false)
+    private InterviewRoom interviewRoom;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -61,13 +61,13 @@ public class InterviewJoin extends BaseTimeEntity {
         this.user.getInterviewJoins().add(this);
     }
 
-    public void setInterview(InterviewRoom interview) {
-        if (this.interview != null) {
-            this.interview.getInterviewJoins().remove(this);
+    public void setInterviewRoom(InterviewRoom interviewRoom) {
+        if (this.interviewRoom != null) {
+            this.interviewRoom.getInterviewJoins().remove(this);
         }
 
-        this.interview = interview;
-        this.interview.getInterviewJoins().add(this);
+        this.interviewRoom = interviewRoom;
+        this.interviewRoom.getInterviewJoins().add(this);
     }
 
 }
