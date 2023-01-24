@@ -1,5 +1,6 @@
 package com.alppano.speakon.domain.user.dto;
 
+import com.alppano.speakon.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,11 +12,11 @@ public class UserInfoDto {
     private String name;
     private String email;
 
-    @Builder
-    public UserInfoDto(Long id, String name, String email) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
+    public UserInfoDto(User user) {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.email = user.getEmail();
     }
+
 
 }

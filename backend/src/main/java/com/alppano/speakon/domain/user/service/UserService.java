@@ -20,11 +20,7 @@ public class UserService {
     public UserInfoDto getUserInfo(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 회원입니다."));
 
-        UserInfoDto userInfo = UserInfoDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .build();
+        UserInfoDto userInfo =  new UserInfoDto(user);
 
         return userInfo;
     }
