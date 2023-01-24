@@ -21,7 +21,7 @@ public class InterviewRoomService {
 
     @Transactional
     public InterviewRoomInfo createInterviewRoom(InterviewRoomRequest dto, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("회원"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 회원입니다."));
 
         InterviewRoom interviewRoom = InterviewRoom.builder()
                 .title(dto.getTitle())
