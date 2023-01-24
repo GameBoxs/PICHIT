@@ -1,4 +1,4 @@
-package com.alppano.speakon.resume.entity;
+package com.alppano.speakon.domain.resume.entity;
 
 import com.alppano.speakon.datafile.entity.DataFile;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
