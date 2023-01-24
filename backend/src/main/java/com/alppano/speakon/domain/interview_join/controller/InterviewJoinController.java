@@ -11,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "면접참여 관리")
 @RestController
@@ -30,4 +28,14 @@ public class InterviewJoinController {
         ApiResponse<InterviewJoinInfo> result = new ApiResponse<>(true, "면접참여 등록 성공", interviewJoinInfo);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
+
+    @Operation(summary = "면접참여 취소")
+    @DeleteMapping("/interviewjoins/{id}")
+    public ResponseEntity<ApiResponse> createInterviewJoin(@AuthenticationPrincipal LoginUser loginUser,
+                                                           @PathVariable(value = "id") Long interviewJoinId) {
+        interviewJoinService.deleteInterviewJoin(interviewJoinId, loginUser.getId());
+        ApiResponse<InterviewJoinInfo> result = new ApiResponse<>(true, "면접참여 취소 성공");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }
