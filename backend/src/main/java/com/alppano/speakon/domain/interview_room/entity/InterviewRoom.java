@@ -1,4 +1,4 @@
-package com.alppano.speakon.domain.interview.entity;
+package com.alppano.speakon.domain.interview_room.entity;
 
 import com.alppano.speakon.common.entity.BaseTimeEntity;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Interview extends BaseTimeEntity {
+public class InterviewRoom extends BaseTimeEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -39,7 +39,7 @@ public class Interview extends BaseTimeEntity {
      * 1 : 완료
      */
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
-    private int finish;
+    private int finished;
 
     private LocalDateTime startDate;
 

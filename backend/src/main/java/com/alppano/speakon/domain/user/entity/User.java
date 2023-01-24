@@ -2,7 +2,7 @@ package com.alppano.speakon.domain.user.entity;
 
 import com.alppano.speakon.common.entity.BaseTimeEntity;
 import com.alppano.speakon.domain.feedback.entity.Feedback;
-import com.alppano.speakon.domain.interview.entity.Interview;
+import com.alppano.speakon.domain.interview_room.entity.InterviewRoom;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
 import com.alppano.speakon.domain.question.entity.Question;
 import lombok.*;
@@ -58,7 +58,7 @@ public class User extends BaseTimeEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
-    private List<Interview> interviews = new ArrayList<>();
+    private List<InterviewRoom> interviews = new ArrayList<>();
 
     /**
      * user 엔티티 삭제 직전에, 일부 테이블의 user를 참고하고 있던 칼럼 값을 null로 변경
@@ -67,7 +67,7 @@ public class User extends BaseTimeEntity {
      */
     @PreRemove
     public void onDeleteSetNull() {
-        for (Interview interview : interviews) {
+        for (InterviewRoom interview : interviews) {
             // TODO: 방장 위임에 대한 로직 처리가 필요함
             interview.setManager(null);
         }

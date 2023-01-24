@@ -2,8 +2,9 @@ package com.alppano.speakon.domain.interview_join.entity;
 
 import com.alppano.speakon.domain.recording.entity.Recording;
 import com.alppano.speakon.common.entity.BaseTimeEntity;
-import com.alppano.speakon.domain.interview.entity.Interview;
+import com.alppano.speakon.domain.interview_room.entity.InterviewRoom;
 import com.alppano.speakon.domain.question.entity.Question;
+import com.alppano.speakon.domain.resume.entity.Resume;
 import com.alppano.speakon.domain.user.entity.User;
 import lombok.*;
 
@@ -27,7 +28,7 @@ public class InterviewJoin extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "interview_id", nullable = false)
-    private Interview interview;
+    private InterviewRoom interview;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -39,13 +40,13 @@ public class InterviewJoin extends BaseTimeEntity {
      * 1 : 완료
      */
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
-    private int finish;
+    private int finished;
 
     @OneToOne(mappedBy = "interviewJoin", cascade = CascadeType.ALL, orphanRemoval = true)
     private Recording recording;
 
     @OneToOne(mappedBy = "interviewJoin", cascade = CascadeType.ALL, orphanRemoval = true)
-    private com.alppano.speakon.resume.entity.Resume resume;
+    private Resume resume;
 
     @Builder.Default
     @OneToMany(mappedBy = "interviewJoin", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -60,7 +61,7 @@ public class InterviewJoin extends BaseTimeEntity {
         this.user.getInterviewJoins().add(this);
     }
 
-    public void setInterview(Interview interview) {
+    public void setInterview(InterviewRoom interview) {
         if (this.interview != null) {
             this.interview.getInterviewJoins().remove(this);
         }
