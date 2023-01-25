@@ -1,7 +1,6 @@
 package com.alppano.speakon.domain.user.dto;
 
 import com.alppano.speakon.domain.user.entity.User;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
