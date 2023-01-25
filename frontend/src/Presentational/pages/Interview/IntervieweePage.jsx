@@ -8,6 +8,7 @@ import QuestionCompo from "../../component/QuestionCompo";
 import { BsQuestionCircleFill } from "react-icons/bs";
 import { GrHistory } from "react-icons/gr";
 import { MdOutlineLogout } from "react-icons/md";
+import ChatArea from "../../layout/Chat/ChatArea";
 
 const dummy = [
   {
@@ -156,6 +157,9 @@ const IntervieweePage = () => {
           {/* 채팅 */}
           <QuestionBody onClick={chatHandler}>
             <SubTitle title={"채팅"} />
+            {
+              chatOn !== false ? <ChatArea /> : null
+            }
           </QuestionBody>
         </BodyCompo>
       </InterviewBody>
