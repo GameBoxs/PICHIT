@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -36,11 +37,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         LoginUser user = (LoginUser) authentication.getPrincipal();
 
         String accessToken = jwtUtil.createToken(user);
-        Cookie tokenCookie = cookieUtil.createCookie(ACCESS_TOKEN_NAME, accessToken, (int) TOKEN_VALIDATION_SECOND);
 
-        response.addCookie(tokenCookie);
-
-        getRedirectStrategy().sendRedirect(request, response, redirectUri);
+        String targetUrl = UriComponentsBuilder.fromUriString(redirectUri)
+                .queryParam("token", accessToken)
+                .build().toUriString();
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
 }

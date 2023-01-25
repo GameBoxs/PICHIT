@@ -1,4 +1,4 @@
-package com.alppano.speakon.datafile.entity;
+package com.alppano.speakon.domain.datafile.entity;
 
 import com.alppano.speakon.common.entity.BaseTimeEntity;
 import lombok.*;

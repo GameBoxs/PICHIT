@@ -58,7 +58,9 @@ public class User extends BaseTimeEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
-    private List<InterviewRoom> interviews = new ArrayList<>();
+    private List<InterviewRoom> interviewRooms = new ArrayList<>();
+
+    // TODO: 테이블에 직접 ON DELETE 설정 고려
 
     /**
      * user 엔티티 삭제 직전에, 일부 테이블의 user를 참고하고 있던 칼럼 값을 null로 변경
@@ -67,17 +69,19 @@ public class User extends BaseTimeEntity {
      */
     @PreRemove
     public void onDeleteSetNull() {
-        for (InterviewRoom interview : interviews) {
+
+        for (int i = interviewRooms.size() - 1; i >= 0; i--) {
             // TODO: 방장 위임에 대한 로직 처리가 필요함
-            interview.setManager(null);
+            interviewRooms.get(i).setManager(null);
         }
 
-        for (Question question : questions) {
-            question.setWriter(null);
-        }
-
-        for (Feedback feedback : feedbacks) {
-            feedback.setWriter(null);
-        }
+        // TODO: 질문 및 피드백 기능 구현 시 수정
+//        for (Question question : questions) {
+//            question.setWriter(null);
+//        }
+//
+//        for (Feedback feedback : feedbacks) {
+//            feedback.setWriter(null);
+//        }
     }
 }

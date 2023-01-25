@@ -4,6 +4,7 @@ import com.alppano.speakon.common.dto.ApiResponse;
 import com.alppano.speakon.common.exception.ResourceAlreadyExistsException;
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
+import com.alppano.speakon.common.exception.UnAuthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,5 +38,14 @@ public class RestControllerExceptionHandler {
     public ResponseEntity<ApiResponse> resolveException(ResourceAlreadyExistsException exception) {
         ApiResponse apiResponse = exception.getApiResponse();
         return new ResponseEntity<>(apiResponse, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * 인증받지 않은 사용자인 경우 예외 처리
+     */
+    @ExceptionHandler(UnAuthorizedException.class)
+    public ResponseEntity<ApiResponse> resolveException(UnAuthorizedException exception) {
+        ApiResponse apiResponse = exception.getApiResponse();
+        return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
     }
 }
