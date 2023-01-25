@@ -28,10 +28,10 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class HttpRequestServiceImpl implements HttpRequestService {
 
-    @Value("${OPENVIDU_URL}")
+    @Value("${openvidu.OPENVIDU_URL}")
     private String OPENVIDU_URL;
 
-    @Value("${OPENVIDU_SECRET}")
+    @Value("${openvidu.OPENVIDU_SECRET}")
     private String OPENVIDU_SECRET;
 
     private HttpClient httpClient;
