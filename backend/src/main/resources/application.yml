@@ -35,6 +35,8 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+  activemq:
+    broker-url:
 
 app:
   oauth2:
@@ -43,3 +45,7 @@ app:
 jwt:
   secret: godheesu
   issuer: speakon
+
+openvidu:
+  OPENVIDU_URL: https://121.182.80.78:443/
+  OPENVIDU_SECRET: MY_SECRET
