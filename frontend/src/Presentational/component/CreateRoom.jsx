@@ -1,10 +1,19 @@
 import styled from "styled-components";
 import Calendar from "react-calendar";
 import React,{useState} from "react";
+import {ToggleButton} from "../common/ToggleButton"
 
-function EditRoom() {
-
+// 방 생성하기 모달 
+function CreateRoom() {
+    // 캘린더 
   const [value, onChange] =useState(new Date())
+    // 비밀방 여부 toggle : false(off) true(on)
+  const [toggle, setToggle] =useState(false)
+
+  const Togglehandler = (toggle) => {
+    setToggle(toggle);
+    console.log(toggle)
+    };
 
   return (
 
@@ -21,7 +30,12 @@ function EditRoom() {
                 <Info>
                   <InfoText>연락 방법</InfoText><InfoInput /></Info> 
                 <Info>
-                  <InfoText>비밀번호 변경</InfoText><InfoInput /></Info> 
+                  <InfoText>비밀방 여부</InfoText>
+                  <ToggleButton 
+                    toggle = {toggle}
+                    ToggleHandler={Togglehandler}
+                    onClick={Togglehandler}/>
+                   { toggle ? null :<InfoInput />}</Info> 
               </InfoList>
           </Section>
         </Layout>
@@ -34,7 +48,7 @@ function EditRoom() {
 
   );
 }
-export default EditRoom;
+export default CreateRoom;
 
 
 const ModalContainer = styled.div`

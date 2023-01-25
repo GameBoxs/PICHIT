@@ -4,6 +4,12 @@ import RoomList from "../../component/RoomList";
 import TotalCategory from "../../component/TotalCategory"
 import MyCategory from "../../component/MyCategory"
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import CreateRoom from "../../component/CreateRoom";
+
+const MySwal = withReactContent(Swal);
+// React sweet alert 쓸려고 사용함 
 
 const DUMMY_DATA = [
   {
@@ -161,6 +167,23 @@ function MainBottom() {
         }
     },[isLogined])
 
+    // sweet alert로 방 만들기 모달 생성 
+    const showSwalWithLink = () => {
+      MySwal.fire({
+        title:'방 생성하기',
+        width:800,
+        showConfirmButton:true,
+        showCancelButton:true,
+        confirmButtonText:"생성하기",
+        cancelButtonText:"취소",
+        html:(
+          <div>
+            <CreateRoom />
+          </div>
+        )
+      })
+    }
+
 
   return (
     <Layout>
@@ -185,7 +208,7 @@ function MainBottom() {
           </RoomListdiv>
         </Main>
         <Footer>
-          <button>방만들기</button>
+          <button onClick={showSwalWithLink}>방만들기</button>
         </Footer>
       </section>
     </Layout>

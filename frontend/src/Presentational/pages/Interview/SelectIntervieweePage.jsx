@@ -5,9 +5,46 @@ import { Link } from "react-router-dom";
 
 import Screen from "../../layout/Interview/Screen";
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
 const SelectIntervieweePage = () => {
   //방장이 면접자를 고를 때/고르지 않을 때 뜰 문구
   const sentance = true ? "대기 중입니다" : "방장이 면접자를 선택하고 있습니다";
+
+  // 면접자 선택을 위한 dummy data
+    const dummy = [
+    '연예인 희수',
+    'Kim jh 남자의',
+    '수민',
+    '킹갓 어쩌고 효진 '
+  ]
+
+    const MemberList = dummy.map((person,idx) => {
+      return <option key={idx}>{person}</option>
+    })
+// 방장이 시작 버튼 눌렀을 때, 면접자 선택 모달 
+
+
+  const handler = () => {
+    MySwal.fire({
+      title:"면접자를 선택해주세요",
+      icon:'question',
+      html:(
+        <div>
+          <select>
+            {MemberList}
+          </select>
+
+        </div>
+      )
+
+      
+    })
+  }
+  
 
   return (
     <Container>
@@ -15,7 +52,7 @@ const SelectIntervieweePage = () => {
       <ConditionSentance>{sentance}</ConditionSentance>
       <Screen number={4} />
       <BottomPanel>
-        <Button text="시작" />
+        <Button handler={handler} text="시작" />
         <Link to="/room">
           <Button text="종료" />
         </Link>

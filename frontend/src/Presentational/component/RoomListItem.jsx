@@ -1,35 +1,48 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import PasswordModal from './PasswordModal'
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 function RoomListItem(props) {
-    //비밀번호 모달(시도까지만)
-    const [passwordModal, setPasswordModal] = useState(false);
-    function passwordHandler() {
-        if(passwordModal===false){
-            setPasswordModal(true); 
-        }
-        else{
-            setPasswordModal(false); 
-        }
-    }
 
-    return(
-        <RoomItem>
-            <div className="rommtitle">
-                <h3>{props.title}</h3>
-                <p>{props.Participant}/{props.personnel}</p>
-            </div>
-            <p>{props.date}</p>
-            {/* <button onClick={passwordHandler}>비밀번호</button> */}
-            {passwordModal ? <PasswordModal />:null}
-        </RoomItem>
-    )
+    // 비밀방 클릭시, 비밀번호 입력 모달 띄우도록 설정,
+  const showSwalWithLink = () => {
+    MySwal.fire({
+      title: "비밀번호 입력",
+      input:'text',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      showCancelButton:true,
+      confirmButtonText:"입장하기",
+      cancelButtonText:"취소하기"
+
+
+    });
+  };
+
+  return (
+    <RoomItem>
+      <div className="rommtitle">
+        <h3>{props.title}</h3>
+        <p>
+          {props.Participant}/{props.personnel}
+        </p>
+      </div>
+      <p>{props.date}</p>
+
+      {props.secret ? (
+        <button onClick={showSwalWithLink}>비밀번호</button>
+      ) : null}
+      {/* secret:true 일 때 일단 임시로 비밀번호 버튼 뜨도록 설정 */}
+    </RoomItem>
+  );
 }
 
 export default RoomListItem;
-
 
 const RoomItem = styled.li`
   display: flex;
@@ -40,14 +53,14 @@ const RoomItem = styled.li`
   width: 32%;
   height: 140px;
   padding: 2% 3%;
-  margin-bottom:2%;
-  div{
+  margin-bottom: 2%;
+  div {
     display: flex;
     justify-content: space-between;
     /* margin: 0px 5px; */
   }
-  p{
+  p {
     display: flex;
-    flex-direction: row-reverse
+    flex-direction: row-reverse;
   }
 `;

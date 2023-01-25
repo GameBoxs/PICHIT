@@ -18,7 +18,7 @@ const FullScreen = styled.div`
     width: 51vw;
     height: 60vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;

@@ -5,10 +5,14 @@ import { useState } from "react";
 //#endregion
 
 //#region NormalToggleButton
-const ToggleButton = ({handler}) => {
+const ToggleButton = ({handler,toggle,ToggleHandler}) => {
+
+    const ClickedToggle = () => {
+    ToggleHandler(!toggle)
+    }
     return (
         <MainDiv>
-            <ToggleBody onClick={handler}></ToggleBody>
+            <ToggleBody onClick={ClickedToggle}></ToggleBody>
         </MainDiv>
     )
 }
