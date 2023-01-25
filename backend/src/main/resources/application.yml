@@ -20,7 +20,7 @@ spring:
           kakao:
             client-id: 9fb0d419b0f00382d15ca48e0790d6dc
             client-secret: JQWEMoFIaR7gzISTYouaB8LqVK2O0Bta
-            redirect-uri: http://192.168.100.187:8080/login/oauth2/code/kakao
+            redirect-uri: http://hamchu-dev.shop:8811/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             client-authentication-method: POST
             client-name: Kakao
@@ -40,7 +40,7 @@ spring:
 
 app:
   oauth2:
-    authorizedRedirectUri: "http://192.168.100.187:3000/auth" # 임시
+    authorizedRedirectUri: "http://localhost:3000/auth" # 임시
 
 jwt:
   secret: godheesu
