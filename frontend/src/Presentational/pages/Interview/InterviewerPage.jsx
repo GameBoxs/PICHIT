@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 // import Screen from "../../layout/Interview/Screen";
 import SubTitle from "../../common/SubTitle";
+import ChatArea from "../../layout/Chat/ChatArea";
 
 import { MdOutlineLogout } from "react-icons/md";
 
@@ -36,6 +37,7 @@ const InterviewerPage = () => {
         <BodyCompo>{People}</BodyCompo>
         <BodyCompo>
           <SubTitle title={"채팅"} />
+          <ChatArea />
         </BodyCompo>
       </InterviewBody>
     </Container>
@@ -97,8 +99,19 @@ const BodyCompo = styled.div`
     margin: 0vh 1vw 0vh 0vw;
     background-color: white;
     padding-block: 2vh;
-    padding-inline: 1.5vw;
+    /* padding-inline: 1.5vw; */
     height: 80vh;
+    
+     & > div:first-child{
+      padding-inline: 1.5vw;
+    }
+    
+    /*
+    & > div:last-child {
+      div:last-child{
+        padding-inline: 1.5vw;
+      }
+    } */
   }
 `;
 
@@ -113,9 +126,15 @@ const InterviewBody = styled.div`
   align-items: center;
   overflow: hidden;
 
-  * {
+  &, ${BodyCompo}, ${CamCompo}, ${InterviewerTag} {
     border-radius: 2vw;
   }
+
+  /* * > div:nth-child(2) {
+    * {
+      border-radius: 0 ; 
+    }
+  } */
 `;
 
 const NavCompo = styled.div`
