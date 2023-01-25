@@ -54,10 +54,12 @@ public class InterviewRoom extends BaseTimeEntity {
     // TODO: 방장 위임에 대한 로직 처리가 필요함
     public void setManager(User manager) {
         if (this.manager != null) {
-            this.manager.getInterviews().remove(this);
+            this.manager.getInterviewRooms().remove(this);
         }
 
         this.manager = manager;
-        this.manager.getInterviews().add(this);
+        if(this.manager != null) {
+            this.manager.getInterviewRooms().add(this);
+        }
     }
 }

@@ -76,5 +76,4 @@ public class InterviewRoomService {
         return interviewRoomDetailInfo;
     }
 
-
 }
