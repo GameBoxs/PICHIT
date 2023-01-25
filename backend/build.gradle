@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+    implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.25.0'
     implementation group: 'com.auth0', name: 'java-jwt', version: '4.2.2'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.14'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-security', version: '1.6.14'
