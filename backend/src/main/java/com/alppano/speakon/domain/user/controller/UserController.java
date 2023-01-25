@@ -31,7 +31,7 @@ public class UserController {
     @GetMapping("/users/{id}")
     public ResponseEntity<ApiResponse<UserInfoDto>> getUserInfo(@PathVariable Long id) {
         UserInfoDto userInfo = userService.getUserInfo(id);
-        ApiResponse<UserInfoDto> result = new ApiResponse<>(true,"정보 조회 완료", userInfo);
+        ApiResponse<UserInfoDto> result = new ApiResponse<>(true, "정보 조회 완료", userInfo);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -46,24 +46,10 @@ public class UserController {
 
     @Operation(summary = "회원 탈퇴")
     @DeleteMapping("/users")
-    public ResponseEntity<ApiResponse> deleteUser(@AuthenticationPrincipal LoginUser loginUser,
-                                                  HttpServletResponse res) {
+    public ResponseEntity<ApiResponse> deleteUser(@AuthenticationPrincipal LoginUser loginUser) {
         userService.deleteUser(loginUser.getId());
 
-        Cookie token = cookieUtil.createCookie(ACCESS_TOKEN_NAME, null, 0);
-        res.addCookie(token);
-
         ApiResponse result = new ApiResponse(true, "회원 탈퇴 성공");
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @Operation(summary = "로그아웃")
-    @GetMapping("/logout")
-    public ResponseEntity<ApiResponse> logout(HttpServletResponse res) {
-        Cookie token = cookieUtil.createCookie(ACCESS_TOKEN_NAME, null, 0);
-        res.addCookie(token);
-
-        ApiResponse result = new ApiResponse(Boolean.TRUE, "로그아웃 성공");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

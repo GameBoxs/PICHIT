@@ -1,7 +1,7 @@
 package com.alppano.speakon.domain.recording.entity;
 
 import com.alppano.speakon.common.entity.BaseTimeEntity;
-import com.alppano.speakon.datafile.entity.DataFile;
+import com.alppano.speakon.domain.datafile.entity.DataFile;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
 import com.alppano.speakon.domain.recording_timestamp.entity.RecordingTimestamp;
 import lombok.*;
