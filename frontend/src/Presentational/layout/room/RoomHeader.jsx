@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Title from "../../common/Title"
 import PlanTime from "../../component/PlanTime"
+
 import React,{useState} from "react";
 import Swal from "sweetalert2"
 import withReactContent from 'sweetalert2-react-content'
@@ -8,12 +9,18 @@ import EditRoom from "../../component/EditRoom";
 
 
 
-const MySwal =withReactContent(Swal);
+const MySwal = withReactContent(Swal);
 
 function RoomHeader({join,joinRoom,title,date,host}) {
   
-  const showSwalWithLink =() => {
+  const showSwalWithLink = () => {
     MySwal.fire({
+      title: "방 수정하기",
+      width:800,
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText:"수정하기",
+      cancelButtonText:"취소",
       html:(
         <div>
           <EditRoom />
@@ -26,8 +33,6 @@ function RoomHeader({join,joinRoom,title,date,host}) {
   const joinHandler = () => {
     joinRoom(!join)
   }
-
-
 
 
     return (

@@ -2,6 +2,12 @@ import { useRef } from "react";
 import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
 
+import Swal from "sweetalert2"
+import withReactContent from 'sweetalert2-react-content'
+import LogInModal from "../component/LogInModal";
+
+const MySwal = withReactContent(Swal);
+
 function NavigationButton(props) {
   
   const menuToggle = useRef();
@@ -9,6 +15,19 @@ function NavigationButton(props) {
   const toggleClick = () => {
     menuToggle.current.classList.toggle('active');
   }
+
+  const showSwalWithLink = () => {
+    MySwal.fire({
+      showConfirmButton:false,
+      html:(
+      <div>
+       <LogInModal />
+      </div>
+      )
+    })
+  }
+
+  
 
   return (
     <NavStyle className="navigation" ref={menuToggle} userName={props.userName}>
@@ -27,7 +46,7 @@ function NavigationButton(props) {
         </MenuList>
         :
         <MenuList className="menuList">
-          <MenuItem>Log In</MenuItem>
+          <MenuItem onClick={showSwalWithLink}>Log In</MenuItem>
         </MenuList>
       }
     </NavStyle>

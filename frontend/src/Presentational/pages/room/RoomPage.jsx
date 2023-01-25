@@ -17,7 +17,7 @@ function RoomPage(props) {
     console.log(join);
   };
 
-  const [host, setHost] = useState(false);
+  const [host, setHost] = useState(true);
 
   // 방장 권한을 어떤 방식으로 주는지 감이 안와서
   //일단 임시로 설정해 놓았습니다. 

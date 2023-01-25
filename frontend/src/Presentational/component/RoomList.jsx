@@ -11,7 +11,8 @@ function RoomList(props) {
                     title={room.title} 
                     Participant={room.Participant} 
                     personnel={room.personnel} 
-                    date={room.date} 
+                    date={room.date}
+                    secret={room.secret}
                 />
             )}
         </RoomListul>

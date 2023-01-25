@@ -23,7 +23,6 @@ const Btn = styled.div`
     line-height: 4px;
     padding: 0;
     border: none;
-    margin: 20px;
     width: fit-content;
     height: 4px;
     border-radius: 5px;

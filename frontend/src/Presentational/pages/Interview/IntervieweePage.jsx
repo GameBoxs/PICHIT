@@ -10,6 +10,12 @@ import { GrHistory } from "react-icons/gr";
 import { MdOutlineLogout } from "react-icons/md";
 import ChatArea from "../../layout/Chat/ChatArea";
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { result } from "lodash";
+
+const MySwal = withReactContent(Swal);
+
 const dummy = [
   {
     id: 1,
@@ -76,8 +82,33 @@ const IntervieweePage = () => {
   });
 
   const RatingHandler = (e) => {
-    console.log(e.target.value)
-  }
+    console.log(e.target.value);
+  };
+
+  const QuestionHandler = (Questions) => {
+    console.log(Questions.target);
+    MySwal.fire({
+      title: "질문을 시작하시겠습니까?",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "취소",
+      showConfirmButton: true,
+      confirmButtonText: "승인",
+      html: (
+        <div>
+          <div></div>
+        </div>
+      ),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "질문이 제출 되었습니다.",
+          text: "질문을 시작해주세요.",
+          icon: "success",
+        });
+      }
+    });
+  };
 
   return (
     <Container>
@@ -128,7 +159,7 @@ const IntervieweePage = () => {
           {/* 평가 */}
           <QuestionBody>
             <SubTitle title={"평가"} />
-            <Rating RatingHandler={RatingHandler}/>
+            <Rating RatingHandler={RatingHandler} />
           </QuestionBody>
 
           {/* 피드백 */}
@@ -151,15 +182,15 @@ const IntervieweePage = () => {
             <SubNav>
               <SubTitle title={"질문"} />
             </SubNav>
-            <AllQuestions chatOn={chatOn}>{Questions}</AllQuestions>
+            <AllQuestions onClick={QuestionHandler} chatOn={chatOn}>
+              {Questions}
+            </AllQuestions>
           </QuestionBody>
 
           {/* 채팅 */}
           <QuestionBody onClick={chatHandler}>
             <SubTitle title={"채팅"} />
-            {
-              chatOn !== false ? <ChatArea /> : null
-            }
+            {chatOn !== false ? <ChatArea /> : null}
           </QuestionBody>
         </BodyCompo>
       </InterviewBody>
@@ -171,7 +202,7 @@ export default IntervieweePage;
 
 const AllQuestions = styled.div`
   width: 100%;
-  height: calc(100% - ${props => props.chatOn ? "20%" : "12%"});
+  height: calc(100% - ${(props) => (props.chatOn ? "20%" : "12%")});
   margin-top: 2vh;
   overflow-y: scroll;
   border-radius: 0 !important;
@@ -239,7 +270,7 @@ const QuestionBody = styled.div`
 const InterviewerTag = styled.div`
   background-color: #ccc;
   padding: 0.2em 0.6em;
-  position: absolute;  
+  position: absolute;
   top: 0.7em;
   left: 1em;
 `;
@@ -318,6 +349,7 @@ const BodyCompo = styled.div`
     align-items: center;
   }
 `;
+
 
 const NavCompo = styled.div`
   gap: 1em;
