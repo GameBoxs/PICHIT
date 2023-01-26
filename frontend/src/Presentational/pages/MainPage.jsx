@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
+import useGet from "../../action/hooks/useGet";
 import usePost from "../../action/hooks/usePost";
 // import { useScroll } from "../../action/hooks/useScroll";
 
@@ -18,6 +19,7 @@ const MainPage = () => {
     "startDate": "2023-01-24T08:40:10.495Z",
     "managerId": 1
   }
+  // const [data] = useGet('https://jsonplaceholder.typicode.com/comments')
   // const [data] = usePost('http://hamchu-dev.shop:8811/interviewrooms', test)
   const [value, setValue] = useState();
 
