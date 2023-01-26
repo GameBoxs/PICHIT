@@ -76,4 +76,15 @@ public class InterviewRoomService {
         return interviewRoomDetailInfo;
     }
 
+    public void deleteInterviewRoom(Long interviewRoomId, Long userId) {
+        InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
+
+        if (interviewRoom.getManager().getId() != userId) {
+            throw new ResourceForbiddenException("방장만 면접방을 삭제할 수 있습니다.");
+        }
+
+        interviewRoomRepository.delete(interviewRoom);
+    }
+
 }
