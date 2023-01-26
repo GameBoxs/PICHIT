@@ -50,6 +50,34 @@ public class QuestionService {
         return new QuestionInfo(question, userId);
     }
 
+    @Transactional
+    public void deleteQuestion(Long questionId, Long userId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(
+                () -> new ResourceNotFoundException("존재하지 않는 질문입니다.")
+        );
+
+        if (question.getWriter().getId() != userId) {
+            throw new ResourceForbiddenException("자신이 작성한 질문만 삭제할 수 있습니다.");
+        }
+
+        questionRepository.delete(question);
+    }
+
+    @Transactional
+    public QuestionInfo updateQuestion(QuestionRequest dto, Long questionId, Long userId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(
+                () -> new ResourceNotFoundException("존재하지 않는 질문입니다.")
+        );
+
+        if (question.getWriter().getId() != userId) {
+            throw new ResourceForbiddenException("자신이 작성한 질문만 수정할 수 있습니다.");
+        }
+
+        question.setContent(dto.getContent());
+
+        return new QuestionInfo(question, userId);
+    }
+
     public List<QuestionInfo> getQuestionListByInterviewJoin(Long interviewJoinId, Long userId) {
         InterviewJoin interviewJoin = interviewJoinRepository.findById(interviewJoinId)
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접 참여자입니다."));
@@ -67,18 +95,4 @@ public class QuestionService {
 
         return questionInfoList;
     }
-
-    @Transactional
-    public void deleteQuestion(Long questionId, Long userId) {
-        Question question = questionRepository.findById(questionId).orElseThrow(
-                () -> new ResourceNotFoundException("존재하지 않는 질문입니다.")
-        );
-
-        if (question.getWriter().getId() != userId) {
-            throw new ResourceForbiddenException("자신이 작성한 질문만 삭제할 수 있습니다.");
-        }
-
-        questionRepository.delete(question);
-    }
-
 }

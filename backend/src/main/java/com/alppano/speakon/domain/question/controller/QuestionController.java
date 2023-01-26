@@ -31,12 +31,13 @@ public class QuestionController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "질문 목록 조회")
-    @GetMapping("/interviewjoins/{id}/questions")
-    public ResponseEntity<ApiResponse<List<QuestionInfo>>> getQuestionListByInterviewJoin(@AuthenticationPrincipal LoginUser loginUser,
-                                                                                          @PathVariable("id") Long interviewJoinId) {
-        List<QuestionInfo> list = questionService.getQuestionListByInterviewJoin(interviewJoinId, loginUser.getId());
-        ApiResponse<List<QuestionInfo>> result = new ApiResponse<>(true, "질문 목록 조회", list);
+    @Operation(summary = "질문 내용 수정")
+    @PutMapping("/questions/{id}")
+    public ResponseEntity<ApiResponse<QuestionInfo>> createQuestion(@AuthenticationPrincipal LoginUser loginUser,
+                                                                    @PathVariable("id") Long questionId,
+                                                                    @RequestBody QuestionRequest dto) {
+        QuestionInfo questionInfo = questionService.updateQuestion(dto, questionId, loginUser.getId());
+        ApiResponse result = new ApiResponse<>(true, "질문 수정 성공", questionInfo);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -46,6 +47,15 @@ public class QuestionController {
                                                       @PathVariable("id") Long questionId) {
         questionService.deleteQuestion(questionId, loginUser.getId());
         ApiResponse result = new ApiResponse<>(true, "질문 삭제 성공");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Operation(summary = "질문 목록 조회")
+    @GetMapping("/interviewjoins/{id}/questions")
+    public ResponseEntity<ApiResponse<List<QuestionInfo>>> getQuestionListByInterviewJoin(@AuthenticationPrincipal LoginUser loginUser,
+                                                                                          @PathVariable("id") Long interviewJoinId) {
+        List<QuestionInfo> list = questionService.getQuestionListByInterviewJoin(interviewJoinId, loginUser.getId());
+        ApiResponse<List<QuestionInfo>> result = new ApiResponse<>(true, "질문 목록 조회", list);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
