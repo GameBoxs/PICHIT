@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "질문 관리")
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +31,15 @@ public class QuestionController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "질문 목록 조회")
+    @GetMapping("/interviewjoins/{id}/questions")
+    public ResponseEntity<ApiResponse<List<QuestionInfo>>> getQuestionListByInterviewJoin(@AuthenticationPrincipal LoginUser loginUser,
+                                                                                          @PathVariable("id") Long interviewJoinId) {
+        List<QuestionInfo> list = questionService.getQuestionListByInterviewJoin(interviewJoinId, loginUser.getId());
+        ApiResponse<List<QuestionInfo>> result = new ApiResponse<>(true, "질문 목록 조회", list);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @Operation(summary = "질문 삭제")
     @DeleteMapping("/questions/{id}")
     public ResponseEntity<ApiResponse> createQuestion(@AuthenticationPrincipal LoginUser loginUser,
@@ -37,4 +48,5 @@ public class QuestionController {
         ApiResponse result = new ApiResponse<>(true, "질문 삭제 성공");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
 }
