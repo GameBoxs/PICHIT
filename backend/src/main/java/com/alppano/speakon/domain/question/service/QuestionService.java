@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -30,7 +33,7 @@ public class QuestionService {
         );
 
         InterviewJoin interviewJoin = interviewJoinRepository.findById(dto.getInterviewJoinId())
-                .orElseThrow(() -> new ResourceNotFoundException("해당 회원은 현재 면접방에 참여하고 있지 않습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접 참여자입니다."));
 
         if (interviewJoinRepository.findByUserIdAndInterviewRoomId(userId, interviewJoin.getInterviewRoom().getId()).isEmpty()) {
             throw new ResourceForbiddenException("면접방에 참여한 사람만 질문을 입력할 수 있습니다.");
@@ -44,7 +47,25 @@ public class QuestionService {
 
         questionRepository.save(question);
 
-        return new QuestionInfo(question);
+        return new QuestionInfo(question, userId);
+    }
+
+    public List<QuestionInfo> getQuestionListByInterviewJoin(Long interviewJoinId, Long userId) {
+        InterviewJoin interviewJoin = interviewJoinRepository.findById(interviewJoinId)
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접 참여자입니다."));
+
+        if (interviewJoinRepository.findByUserIdAndInterviewRoomId(userId, interviewJoin.getInterviewRoom().getId()).isEmpty()) {
+            throw new ResourceForbiddenException("면접방에 참여 중인 사람만 질문 목록을 조회할 수 있습니다.");
+        }
+
+        List<Question> list = questionRepository.findAllByInterviewJoinIdOrderByIdAsc(interviewJoinId);
+
+        List<QuestionInfo> questionInfoList = new ArrayList<>();
+        for (Question question : list) {
+            questionInfoList.add(new QuestionInfo(question, userId));
+        }
+
+        return questionInfoList;
     }
 
     @Transactional
@@ -56,7 +77,7 @@ public class QuestionService {
         if (question.getWriter().getId() != userId) {
             throw new ResourceForbiddenException("자신이 작성한 질문만 삭제할 수 있습니다.");
         }
-        
+
         questionRepository.delete(question);
     }
 
