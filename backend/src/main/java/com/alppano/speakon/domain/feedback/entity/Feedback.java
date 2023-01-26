@@ -18,7 +18,7 @@ public class Feedback {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "question", nullable = false)
+    @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
     @ManyToOne
