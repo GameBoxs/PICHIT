@@ -50,12 +50,21 @@ public class QuestionController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @Operation(summary = "질문 목록 조회")
+    @Operation(summary = "질문 단일 조회")
+    @GetMapping("/questions/{id}")
+    public ResponseEntity<ApiResponse<QuestionInfo>> getQuestion(@AuthenticationPrincipal LoginUser loginUser,
+                                                                 @PathVariable("id") Long questionId) {
+        QuestionInfo questionInfo = questionService.getQuestion(questionId, loginUser.getId());
+        ApiResponse<QuestionInfo> result = new ApiResponse<>(true, "질문 단일 조회 성공", questionInfo);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Operation(summary = "면접 참여자의 질문 목록 조회")
     @GetMapping("/interviewjoins/{id}/questions")
     public ResponseEntity<ApiResponse<List<QuestionInfo>>> getQuestionListByInterviewJoin(@AuthenticationPrincipal LoginUser loginUser,
                                                                                           @PathVariable("id") Long interviewJoinId) {
         List<QuestionInfo> list = questionService.getQuestionListByInterviewJoin(interviewJoinId, loginUser.getId());
-        ApiResponse<List<QuestionInfo>> result = new ApiResponse<>(true, "질문 목록 조회", list);
+        ApiResponse<List<QuestionInfo>> result = new ApiResponse<>(true, "질문 목록 조회 성공", list);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
