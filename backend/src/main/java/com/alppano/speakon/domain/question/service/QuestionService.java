@@ -78,12 +78,25 @@ public class QuestionService {
         return new QuestionInfo(question, userId);
     }
 
+    public QuestionInfo getQuestion(Long questionId, Long userId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(
+                () -> new ResourceNotFoundException("존재하지 않는 질문입니다.")
+        );
+
+        Long interviewRoomId = question.getInterviewJoin().getInterviewRoom().getId();
+        if (interviewJoinRepository.findByUserIdAndInterviewRoomId(userId, interviewRoomId).isEmpty()) {
+            throw new ResourceForbiddenException("면접방에 참여한 사람만 질문을 조회할 수 있습니다.");
+        }
+
+        return new QuestionInfo(question, userId);
+    }
+
     public List<QuestionInfo> getQuestionListByInterviewJoin(Long interviewJoinId, Long userId) {
         InterviewJoin interviewJoin = interviewJoinRepository.findById(interviewJoinId)
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접 참여자입니다."));
 
         if (interviewJoinRepository.findByUserIdAndInterviewRoomId(userId, interviewJoin.getInterviewRoom().getId()).isEmpty()) {
-            throw new ResourceForbiddenException("면접방에 참여 중인 사람만 질문 목록을 조회할 수 있습니다.");
+            throw new ResourceForbiddenException("면접방에 참여한 사람만 질문 목록을 조회할 수 있습니다.");
         }
 
         List<Question> list = questionRepository.findAllByInterviewJoinIdOrderByIdAsc(interviewJoinId);
@@ -95,4 +108,5 @@ public class QuestionService {
 
         return questionInfoList;
     }
+
 }
