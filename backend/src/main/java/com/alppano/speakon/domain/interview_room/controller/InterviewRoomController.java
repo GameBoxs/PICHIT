@@ -47,4 +47,15 @@ public class InterviewRoomController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @Operation(summary = "면접방 삭제")
+    @DeleteMapping("/interviewrooms/{id}")
+    public ResponseEntity<ApiResponse<InterviewRoomDetailInfo>> deleteInterviewRoom(@AuthenticationPrincipal LoginUser loginUser,
+                                                                                    @PathVariable("id") Long interviewRoomId) {
+        interviewRoomService.deleteInterviewRoom(interviewRoomId, loginUser.getId());
+
+        ApiResponse<InterviewRoomDetailInfo> result = new ApiResponse(Boolean.TRUE, "면접방 삭제 성공");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
 }
