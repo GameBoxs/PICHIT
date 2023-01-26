@@ -1,11 +1,25 @@
 import React, { useRef } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
+import usePost from "../../action/hooks/usePost";
 // import { useScroll } from "../../action/hooks/useScroll";
 
 import MainBottom from '../layout/mainpage/MainBottom'
 
 const MainPage = () => {
   const MainDiv = useRef([]);
+  const test = {
+    "title": "string",
+    "description": "string",
+    "maxPersonCount": 2,
+    "password": "asd",
+    "finished": 0,
+    "startDate": "2023-01-24T08:40:10.495Z",
+    "managerId": 1
+  }
+  // const [data] = usePost('http://hamchu-dev.shop:8811/interviewrooms', test)
+  const [value, setValue] = useState();
 
   const scrollWithUseRef = (idx) => {
     if (idx === 0)
