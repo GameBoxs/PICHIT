@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://hamchu-dev.shop:3311/speakon-dev
+    url: jdbc:mariadb://i8d107.p.ssafy.io:3311/speakon-dev
     username: hamchu
     password: dlgmltn0114
 
