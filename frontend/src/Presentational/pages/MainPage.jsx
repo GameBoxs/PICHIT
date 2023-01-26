@@ -2,8 +2,7 @@ import React, { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
-import useGet from "../../action/hooks/useGet";
-import usePost from "../../action/hooks/usePost";
+import useAxios from "../../action/hooks/useAxios";
 // import { useScroll } from "../../action/hooks/useScroll";
 
 import MainBottom from '../layout/mainpage/MainBottom'
@@ -11,17 +10,15 @@ import MainBottom from '../layout/mainpage/MainBottom'
 const MainPage = () => {
   const MainDiv = useRef([]);
   const test = {
-    "title": "string",
-    "description": "string",
-    "maxPersonCount": 2,
-    "password": "asd",
-    "finished": 0,
-    "startDate": "2023-01-24T08:40:10.495Z",
-    "managerId": 1
+    "userId": 1,
+    "id": 1,
+    "title": "테스트 되고 있나용",
+    "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
   }
-  // const [data] = useGet('https://jsonplaceholder.typicode.com/comments')
-  // const [data] = usePost('http://hamchu-dev.shop:8811/interviewrooms', test)
-  const [value, setValue] = useState();
+  // const data = useAxios('https://jsonplaceholder.typicode.com/comments', "GET")
+  // const data = useAxios('https://jsonplaceholder.typicode.com/posts/1', "DELETE", test)
+
+  // console.log(data)
 
   const scrollWithUseRef = (idx) => {
     if (idx === 0)
