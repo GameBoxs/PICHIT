@@ -11,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "질문 관리")
 @RestController
@@ -29,5 +27,14 @@ public class QuestionController {
         QuestionInfo questionInfo = questionService.createQuestion(dto, loginUser.getId());
         ApiResponse<QuestionInfo> result = new ApiResponse<>(true, "질문 생성 성공", questionInfo);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "질문 삭제")
+    @DeleteMapping("/questions/{id}")
+    public ResponseEntity<ApiResponse> createQuestion(@AuthenticationPrincipal LoginUser loginUser,
+                                                      @PathVariable("id") Long questionId) {
+        questionService.deleteQuestion(questionId, loginUser.getId());
+        ApiResponse result = new ApiResponse<>(true, "질문 삭제 성공");
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

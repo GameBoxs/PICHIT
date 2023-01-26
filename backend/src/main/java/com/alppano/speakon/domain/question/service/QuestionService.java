@@ -47,4 +47,17 @@ public class QuestionService {
         return new QuestionInfo(question);
     }
 
+    @Transactional
+    public void deleteQuestion(Long questionId, Long userId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(
+                () -> new ResourceNotFoundException("존재하지 않는 질문입니다.")
+        );
+
+        if (question.getWriter().getId() != userId) {
+            throw new ResourceForbiddenException("자신이 작성한 질문만 삭제할 수 있습니다.");
+        }
+        
+        questionRepository.delete(question);
+    }
+
 }
