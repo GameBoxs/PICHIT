@@ -32,7 +32,7 @@ public class InterviewJoinService {
             throw new ResourceAlreadyExistsException("해당 면접방에 이미 참여중 입니다.");
         }
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("회원"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 회원입니다."));
 
         InterviewRoom interviewRoom = interviewRoomRepository.findById(dto.getInterviewRoomId())
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
