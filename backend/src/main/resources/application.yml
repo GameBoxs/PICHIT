@@ -47,5 +47,5 @@ jwt:
   issuer: speakon
 
 openvidu:
-  OPENVIDU_URL: https://121.182.80.78:443/
+  OPENVIDU_URL: https://i8d107.p.ssafy.io:443/
   OPENVIDU_SECRET: MY_SECRET
