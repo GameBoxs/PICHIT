@@ -14,6 +14,9 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { result } from "lodash";
 
+import UserVideoComponent from "../../component/Chat/OpenVidu/UserVideoComponent";
+import { leaveSession } from "../../../action/modules/chatModule";
+
 const MySwal = withReactContent(Swal);
 
 const dummy = [
@@ -70,7 +73,17 @@ const dummy = [
   },
 ];
 
-const IntervieweePage = () => {
+const IntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
+  let cnt = 3-info.subscribers.length;
+  console.log(cnt);
+  function makeBlank() {
+    let result = [];
+    for(let i=0; i<cnt; i++){
+      result.push(<CamCompo className="in">aa</CamCompo>)
+    }
+    return result;
+  }
+
   const [chatOn, setChatOn] = useState(false);
 
   const chatHandler = () => {
@@ -109,7 +122,7 @@ const IntervieweePage = () => {
       }
     });
   };
-
+  console.log(info);
   return (
     <Container>
       {/* interviewee Nav */}
@@ -118,7 +131,9 @@ const IntervieweePage = () => {
         <NavCompo>SpeakOn</NavCompo>
         <NavCompo>
           <div>총 시간&nbsp;00:00:00</div>
-          <MdOutlineLogout />
+          <MdOutlineLogout className="logOutBtn" onClick={() => {
+        leaveSession(session, setOV);
+      }}/>
         </NavCompo>
       </InterviewNav>
 
@@ -126,12 +141,32 @@ const IntervieweePage = () => {
         {/* 화상채팅 부분 */}
         <BodyCompo>
           <IntervieweeCompo>
-            <CamCompo>aa</CamCompo>
-            <CamCompo>aa</CamCompo>
-            <CamCompo>aa</CamCompo>
+          <CamCompo className="in">
+            <UserVideoComponent streamManager={info.publisher} />
+          </CamCompo>
+          {
+            info.subscribers.map((sub, i) => (
+                sub.stream.connection.connectionId === info.interviewee ?
+                null
+                : <CamCompo className="in">
+                  <UserVideoComponent streamManager={sub} />
+                </CamCompo>
+            ))
+          }
+          {
+            makeBlank()
+          }
           </IntervieweeCompo>
           <CamCompo>
             <InterviewerTag>면접자</InterviewerTag>
+            {
+              info.subscribers.map((sub, i) => (
+                  sub.stream.connection.connectionId === info.interviewee ?
+                  <CamCompo>
+                    <UserVideoComponent streamManager={sub} />
+                  </CamCompo> : null
+              ))
+            }
           </CamCompo>
         </BodyCompo>
 
@@ -288,6 +323,12 @@ const IntervieweeCompo = styled.div`
   display: flex;
   justify-content: center;
   gap: 0.5vw;
+  .in {
+    * {
+      width: 100%;
+      height: auto;
+    }
+  }
 `;
 
 const BodyCompo = styled.div`
@@ -361,6 +402,9 @@ const NavCompo = styled.div`
 
   &:nth-child(3) {
     justify-content: flex-end;
+  }
+  .logOutBtn {
+    cursor: pointer;
   }
 `;
 
