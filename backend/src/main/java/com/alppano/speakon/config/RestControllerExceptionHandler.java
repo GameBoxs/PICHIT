@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.FileNotFoundException;
+
 @RestControllerAdvice
 public class RestControllerExceptionHandler {
 
@@ -47,5 +49,14 @@ public class RestControllerExceptionHandler {
     public ResponseEntity<ApiResponse> resolveException(UnAuthorizedException exception) {
         ApiResponse apiResponse = exception.getApiResponse();
         return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * 파일이 존재하지 않는 경우 예외 처리
+     */
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<ApiResponse> resolveException(FileNotFoundException exception) {
+        ApiResponse apiResponse = new ApiResponse(false, "파일이 존재하지 않습니다.", null);
+        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 }

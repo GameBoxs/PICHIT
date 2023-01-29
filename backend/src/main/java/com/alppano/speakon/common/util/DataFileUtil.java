@@ -37,6 +37,14 @@ public class DataFileUtil {
         return dataFile;
     }
 
+    public boolean deleteFile(DataFile dataFile) {
+        File temp = new File(getFullPath(dataFile.getStoredFileName()));
+        if (temp.exists()) {
+            temp.delete();
+        }
+        return false;
+    }
+
     private String createStoreFileName(String originalFilename) {
         String ext = extractExt(originalFilename);
         String uuid = UUID.randomUUID().toString();

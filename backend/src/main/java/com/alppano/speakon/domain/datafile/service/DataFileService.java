@@ -6,8 +6,6 @@ import com.alppano.speakon.domain.datafile.dto.DataFileResource;
 import com.alppano.speakon.domain.datafile.entity.DataFile;
 import com.alppano.speakon.domain.datafile.repository.DataFileRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,4 +47,14 @@ public class DataFileService {
         return dataFileResource;
     }
 
+    @Transactional
+    public void deleteDataFile(Long id) {
+        DataFile dataFile = dataFileRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("존재하지 않는 파일 입니다.")
+        );
+
+        dataFileUtil.deleteFile(dataFile);
+
+        dataFileRepository.delete(dataFile);
+    }
 }
