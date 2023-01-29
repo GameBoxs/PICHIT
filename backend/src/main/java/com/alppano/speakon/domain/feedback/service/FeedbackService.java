@@ -58,4 +58,16 @@ public class FeedbackService {
         return new FeedbackInfo(feedback);
     }
 
+    @Transactional
+    public void deleteFeedback(Long feedbackId, Long userId) {
+        Feedback feedback = feedbackRepository.findById(feedbackId).orElseThrow(
+                ()-> new ResourceNotFoundException("존재하지 않는 피드백입니다.")
+        );
+
+        if(feedback.getWriter().getId() != userId) {
+            throw new ResourceForbiddenException("자신이 작성한 피드백만 삭제할 수 있습니다.");
+        }
+
+        feedbackRepository.delete(feedback);
+    }
 }
