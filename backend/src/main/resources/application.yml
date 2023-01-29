@@ -19,6 +19,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
   security:
     oauth2:
@@ -60,3 +63,8 @@ jwt:
 openvidu:
   OPENVIDU_URL: https://i8d107.p.ssafy.io:443/
   OPENVIDU_SECRET: MY_SECRET
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace

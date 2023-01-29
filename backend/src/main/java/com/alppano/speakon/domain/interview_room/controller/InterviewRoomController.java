@@ -1,6 +1,7 @@
 package com.alppano.speakon.domain.interview_room.controller;
 
 import com.alppano.speakon.common.dto.ApiResponse;
+import com.alppano.speakon.common.dto.PagedResult;
 import com.alppano.speakon.domain.interview_room.dto.InterviewRoomDetailInfo;
 import com.alppano.speakon.domain.interview_room.dto.InterviewRoomInfo;
 import com.alppano.speakon.domain.interview_room.dto.InterviewRoomRequest;
@@ -9,6 +10,10 @@ import com.alppano.speakon.security.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,16 +42,6 @@ public class InterviewRoomController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @Operation(summary = "면접방 상세조회")
-    @GetMapping("/interviewrooms/{id}")
-    public ResponseEntity<ApiResponse<InterviewRoomDetailInfo>> getInterviewRoomDetailInfo(@AuthenticationPrincipal LoginUser loginUser,
-                                                                                           @PathVariable("id") Long interviewRoomId) {
-        InterviewRoomDetailInfo interviewRoomDetailInfo = interviewRoomService.getInterviewRoomDetailInfo(interviewRoomId, loginUser.getId());
-
-        ApiResponse<InterviewRoomDetailInfo> result = new ApiResponse(Boolean.TRUE, "조회 성공", interviewRoomDetailInfo);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
     @Operation(summary = "면접방 삭제")
     @DeleteMapping("/interviewrooms/{id}")
     public ResponseEntity<ApiResponse<InterviewRoomDetailInfo>> deleteInterviewRoom(@AuthenticationPrincipal LoginUser loginUser,
@@ -57,5 +52,24 @@ public class InterviewRoomController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @Operation(summary = "면접방 상세조회")
+    @GetMapping("/interviewrooms/{id}")
+    public ResponseEntity<ApiResponse<InterviewRoomDetailInfo>> getInterviewRoomDetailInfo(@AuthenticationPrincipal LoginUser loginUser,
+                                                                                           @PathVariable("id") Long interviewRoomId) {
+        InterviewRoomDetailInfo interviewRoomDetailInfo = interviewRoomService.getInterviewRoomDetailInfo(interviewRoomId, loginUser.getId());
+
+        ApiResponse<InterviewRoomDetailInfo> result = new ApiResponse(Boolean.TRUE, "조회 성공", interviewRoomDetailInfo);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Operation(summary = "면접방 검색")
+    @GetMapping("/interviewrooms")
+    public ResponseEntity<ApiResponse<PagedResult<InterviewRoomInfo>>> searchInterviewRooms(@PageableDefault(size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                                                                            @RequestParam(required = false) String title,
+                                                                                            @RequestParam(required = false) Integer finished) {
+        PagedResult<InterviewRoomInfo> list = interviewRoomService.searchInterviewRooms(pageable, title, finished);
+        ApiResponse<PagedResult<InterviewRoomInfo>> result = new ApiResponse(Boolean.TRUE, "조회 성공", list);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
 }

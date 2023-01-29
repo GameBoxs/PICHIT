@@ -1,5 +1,6 @@
 package com.alppano.speakon.domain.interview_room.service;
 
+import com.alppano.speakon.common.dto.PagedResult;
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
@@ -13,6 +14,8 @@ import com.alppano.speakon.domain.user.dto.UserInfoDto;
 import com.alppano.speakon.domain.user.entity.User;
 import com.alppano.speakon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +60,17 @@ public class InterviewRoomService {
         return new InterviewRoomInfo(interviewRoom);
     }
 
+    public void deleteInterviewRoom(Long interviewRoomId, Long userId) {
+        InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
+
+        if (interviewRoom.getManager().getId() != userId) {
+            throw new ResourceForbiddenException("방장만 면접방을 삭제할 수 있습니다.");
+        }
+
+        interviewRoomRepository.delete(interviewRoom);
+    }
+
     public InterviewRoomDetailInfo getInterviewRoomDetailInfo(Long interviewRoomId, Long userId) {
         InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
@@ -76,15 +90,22 @@ public class InterviewRoomService {
         return interviewRoomDetailInfo;
     }
 
-    public void deleteInterviewRoom(Long interviewRoomId, Long userId) {
-        InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
-                .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
+    public PagedResult<InterviewRoomInfo> searchInterviewRooms(Pageable pageable, String title, Integer finished) {
+        Page<InterviewRoom> queryResult = null;
 
-        if (interviewRoom.getManager().getId() != userId) {
-            throw new ResourceForbiddenException("방장만 면접방을 삭제할 수 있습니다.");
+        if (title != null && finished != null) {
+            queryResult = interviewRoomRepository.findAllByTitleContainingAndFinished(pageable, title, finished);
+        } else if (title != null) {
+            queryResult = interviewRoomRepository.findAllByTitleContaining(pageable, title);
+        } else if (finished != null) {
+            queryResult = interviewRoomRepository.findAllByFinished(pageable, finished);
+        } else {
+            queryResult = interviewRoomRepository.findAll(pageable);
         }
 
-        interviewRoomRepository.delete(interviewRoom);
+        Page<InterviewRoomInfo> list = queryResult.map(interviewRoom -> new InterviewRoomInfo(interviewRoom));
+
+        return new PagedResult<>(list);
     }
 
 }
