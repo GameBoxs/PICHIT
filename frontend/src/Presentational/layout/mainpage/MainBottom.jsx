@@ -3,6 +3,7 @@ import styled from "styled-components";
 import RoomList from "../../component/RoomList";
 import TotalCategory from "../../component/TotalCategory"
 import MyCategory from "../../component/MyCategory"
+import PageBar from "../../common/Pagination/PageBar"
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -184,6 +185,15 @@ function MainBottom() {
       })
     }
 
+    //페이지네이션
+    const [currentPage, setCurrentPage] = useState(1); //현재페이지
+    const [postsPerPage, setPostsPerPage] = useState(9);//페이지당 게시물 수
+
+    const lastPostIndex = currentPage * postsPerPage; //렌더할 페이지에 해당하는 마지막 인덱스값
+    const firstPostIndex = lastPostIndex - postsPerPage; //렌더할 페이지에 해당하는 첫번째 인덱스값
+    const currentPosts = data.slice(firstPostIndex, lastPostIndex); //현재 페이지에서 렌더할 데이터항목
+  
+
 
   return (
     <Layout>
@@ -204,8 +214,14 @@ function MainBottom() {
         <Main>
             {roomPosition ? <MyCategory/> : <TotalCategory/>}
           <RoomListdiv>
-            <RoomList rooms={data} />
+            <RoomList rooms={currentPosts} />
           </RoomListdiv>
+          <PageBar 
+          totalPosts={data.length} //전체 데이터 길이
+          postsPerPage={postsPerPage}  //페이지당 게시물 수
+          setCurrentPage={setCurrentPage} //현재 페이지를 계산하는 함수
+          currentPage={currentPage} //현재페이지
+          />
         </Main>
         <Footer>
           <button onClick={showSwalWithLink}>방만들기</button>
@@ -238,11 +254,14 @@ const Main = styled.div`
   }
 `;
 
-const RoomListdiv = styled.div``;
+const RoomListdiv = styled.div`
+  height: 500px;
+`;
 
 const Footer = styled.div`
   display: flex;
   flex-direction: row-reverse;
 `;
+
 
 

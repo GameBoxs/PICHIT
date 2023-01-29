@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 
+//전체 데이터 길이, 페이지당 게시물 수, 현재 페이지를 계산하는 함수, 현재페이지
 function PageBar({
   totalPosts,
   postsPerPage,
@@ -32,9 +33,11 @@ function PageBar({
 export default PageBar;
 
 const Bar = styled.div`
-  border: solid 2px blue; //pagination영역을 위한 border
-  width: 300px;
+  border: solid 2px skyblue; //pagination영역을 위한 border: ;
+  width: 100%;
   height: 23px;
+  display: flex;
+  justify-content: center
 `;
 
 const Button = styled.button`
