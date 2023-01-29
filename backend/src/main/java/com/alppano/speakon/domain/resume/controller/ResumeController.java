@@ -1,6 +1,7 @@
 package com.alppano.speakon.domain.resume.controller;
 
 import com.alppano.speakon.common.dto.ApiResponse;
+import com.alppano.speakon.domain.resume.dto.ResumeInfo;
 import com.alppano.speakon.domain.resume.service.ResumeService;
 import com.alppano.speakon.security.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -31,6 +29,15 @@ public class ResumeController {
                                                        @RequestParam("file") MultipartFile multipartFile) throws IOException {
         resumeService.registerResume(loginUser.getId(), interviewJoinId, multipartFile);
         ApiResponse result = new ApiResponse(true, "자기소개서 등록 성공");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Operation(summary = "자기소개서 조회")
+    @GetMapping("/interviewjoins/{id}/resumes")
+    public ResponseEntity<ApiResponse<ResumeInfo>> getResume(@AuthenticationPrincipal LoginUser loginUser,
+                                                             @PathVariable("id") Long interviewJoinId) {
+        ResumeInfo resumeInfo = resumeService.getResume(loginUser.getId(), interviewJoinId);
+        ApiResponse<ResumeInfo> result = new ApiResponse(true, "자기소개서 조회 성공", resumeInfo);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
