@@ -21,7 +21,7 @@ function NavigationButton(props) {
       showConfirmButton:false,
       html:(
       <div>
-       <LogInModal />
+       <LogInModal handleOpenPop={props.handleOpenPop}/>
       </div>
       )
     })
