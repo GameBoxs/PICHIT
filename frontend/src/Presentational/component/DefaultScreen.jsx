@@ -9,13 +9,28 @@ import {
     IoVideocamOff
 } from "react-icons/io5"
 
-const DefaultScreen = () => {
+// OpenVidu 관련 Import
+import OpenViduVideoComponent from "../component/Chat/OpenVidu/OvVideo";
+import {
+  selectInterviwee
+} from '../../action/modules/chatModule';
+import { useDispatch } from "react-redux";
+
+const DefaultScreen = ({streamManager, name, session}) => {
+  let dispatch = useDispatch();
+
   const [isCamOn, setIsCamOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
 
   return (
-    <ScreenContainer className="ScreenChild">
-      HIHIHI
+    <ScreenContainer className="ScreenChild"onClick={() =>{
+      selectInterviwee(streamManager.stream.connection.connectionId, session);
+    }}>
+      {name!==null && name !== undefined ? name : null}
+      {streamManager !== null ? 
+        <OpenViduVideoComponent streamManager={streamManager} /> :
+        null
+      }
       <Submenu>
         <Icon
           onClick={() => {

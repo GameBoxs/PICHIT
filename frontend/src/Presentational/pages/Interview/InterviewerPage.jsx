@@ -7,20 +7,57 @@ import ChatArea from "../../layout/Chat/ChatArea";
 
 import { MdOutlineLogout } from "react-icons/md";
 
-const InterviewerPage = () => {
-  const peopleNumb = 4;
-  const People = Array(peopleNumb)
-    .fill()
-    .map((_, idx) => {
-      return (
-        <CamCompo key={idx}>
-          {idx === peopleNumb - 1 ? (
-            <InterviewerTag>면접자</InterviewerTag>
-          ) : null}
-          HIHI
-        </CamCompo>
-      );
-    });
+import { useState } from "react";
+import { leaveSession } from "../../../action/modules/chatModule";
+import UserVideoComponent from "../../component/Chat/OpenVidu/UserVideoComponent";
+import { useNavigate } from "react-router-dom";
+
+const InterviewerPage = ({session,setSession,OV,setOV,info,setInfo}) => {
+  let navigate = useNavigate();
+
+  // const peopleNumb = 4;
+  // const People = Array(peopleNumb)
+  //   .fill()
+  //   .map((_, idx) => {
+  //     return (
+  //       <CamCompo key={idx}>
+  //         {idx === peopleNumb - 1 ? (
+  //           <InterviewerTag>면접자</InterviewerTag>
+  //         ) : null}
+  //         HIHI
+  //       </CamCompo>
+  //     );
+  //   });
+  
+  function People() {
+    let cnt = 3-info.subscribers.length;
+    function makeBlank() {
+      let result = [];
+      for(let i=0; i<cnt; i++){
+        result.push(<CamCompo></CamCompo>)
+      }
+      return result;
+    }
+    return (
+      <>
+        {info.publisher !== undefined ? (
+          <CamCompo>
+            <UserVideoComponent streamManager={info.publisher} />
+          </CamCompo>
+        ) : null}
+        {
+          info.subscribers.map((sub, i) => (
+            <CamCompo>
+              <UserVideoComponent streamManager={sub} />
+            </CamCompo>
+          ))
+        }
+        {
+          makeBlank()
+        }
+      </>
+    )
+  }
 
   return (
     <Container>
@@ -29,12 +66,15 @@ const InterviewerPage = () => {
         <NavCompo>SpeakOn</NavCompo>
         <NavCompo>
           <div>총 시간&nbsp;00:00:00</div>
-          <MdOutlineLogout />
+          <MdOutlineLogout className="logOutBtn" onClick={() => {
+        leaveSession(session, setOV);
+        navigate("/room");
+      }}/>
         </NavCompo>
       </InterviewNav>
 
       <InterviewBody>
-        <BodyCompo>{People}</BodyCompo>
+        <BodyCompo>{People()}</BodyCompo>
         <BodyCompo>
           <SubTitle title={"채팅"} />
           <ChatArea />
@@ -147,6 +187,10 @@ const NavCompo = styled.div`
 
   &:nth-child(3) {
     justify-content: flex-end;
+  }
+
+  .logOutBtn {
+    cursor: pointer;
   }
 `;
 
