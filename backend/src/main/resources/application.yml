@@ -47,7 +47,7 @@ spring:
 
 file:
 #  dir: C:\test\
-  dir: /usr/app/speakon-dev
+  dir: /usr/app/speakon-dev/
 
 app:
   oauth2:
