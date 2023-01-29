@@ -10,6 +10,11 @@ spring:
     username: hamchu
     password: dlgmltn0114
 
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -39,6 +44,10 @@ spring:
             user-name-attribute: id
   activemq:
     broker-url:
+
+file:
+#  dir: C:\test\
+  dir: /usr/app/speakon-dev
 
 app:
   oauth2:
