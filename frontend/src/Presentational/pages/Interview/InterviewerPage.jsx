@@ -10,8 +10,11 @@ import { MdOutlineLogout } from "react-icons/md";
 import { useState } from "react";
 import { leaveSession } from "../../../action/modules/chatModule";
 import UserVideoComponent from "../../component/Chat/OpenVidu/UserVideoComponent";
+import { useNavigate } from "react-router-dom";
 
 const InterviewerPage = ({session,setSession,OV,setOV,info,setInfo}) => {
+  let navigate = useNavigate();
+
   // const peopleNumb = 4;
   // const People = Array(peopleNumb)
   //   .fill()
@@ -65,6 +68,7 @@ const InterviewerPage = ({session,setSession,OV,setOV,info,setInfo}) => {
           <div>총 시간&nbsp;00:00:00</div>
           <MdOutlineLogout className="logOutBtn" onClick={() => {
         leaveSession(session, setOV);
+        navigate("/room");
       }}/>
         </NavCompo>
       </InterviewNav>

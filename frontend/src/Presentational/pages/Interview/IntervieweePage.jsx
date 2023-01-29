@@ -16,6 +16,7 @@ import { result } from "lodash";
 
 import UserVideoComponent from "../../component/Chat/OpenVidu/UserVideoComponent";
 import { leaveSession } from "../../../action/modules/chatModule";
+import { useNavigate } from "react-router-dom";
 
 const MySwal = withReactContent(Swal);
 
@@ -74,6 +75,8 @@ const dummy = [
 ];
 
 const IntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
+  let navigate = useNavigate();
+
   let cnt = 3-info.subscribers.length;
   console.log(cnt);
   function makeBlank() {
@@ -133,6 +136,7 @@ const IntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
           <div>총 시간&nbsp;00:00:00</div>
           <MdOutlineLogout className="logOutBtn" onClick={() => {
         leaveSession(session, setOV);
+        navigate("/room");
       }}/>
         </NavCompo>
       </InterviewNav>
