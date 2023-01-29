@@ -1,6 +1,7 @@
 package com.alppano.speakon.domain.feedback.controller;
 
 import com.alppano.speakon.common.dto.ApiResponse;
+import com.alppano.speakon.domain.feedback.dto.FeedbackInfo;
 import com.alppano.speakon.domain.feedback.dto.FeedbackRequest;
 import com.alppano.speakon.domain.feedback.service.FeedbackService;
 import com.alppano.speakon.security.LoginUser;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "피드백 관리")
 @RestController
@@ -37,5 +40,15 @@ public class FeedbackController {
         ApiResponse result = new ApiResponse(true, "피드백 삭제 성공");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @Operation(summary = "질문의 피드백 목록 조회")
+    @GetMapping("/questions/{questionId}/feedbacks")
+    public ResponseEntity<ApiResponse<List<FeedbackInfo>>> getFeedbacksByQuestion(@AuthenticationPrincipal LoginUser loginUser,
+                                                                                  @PathVariable Long questionId) {
+        List<FeedbackInfo> list = feedbackService.getFeedbacksByQuestion(questionId, loginUser.getId());
+        ApiResponse<List<FeedbackInfo>> result = new ApiResponse(true, "조회 성공", list);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
 }

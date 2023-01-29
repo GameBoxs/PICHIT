@@ -16,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -69,5 +72,25 @@ public class FeedbackService {
         }
 
         feedbackRepository.delete(feedback);
+    }
+
+    public List<FeedbackInfo> getFeedbacksByQuestion(Long questionId, Long userId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(
+                () -> new ResourceNotFoundException("존재하지 않는 질문입니다.")
+        );
+
+        if(question.getInterviewJoin().getUser().getId() != userId) {
+            throw new ResourceForbiddenException("자신의 면접 질문에 대한 피드백만 조회할 수 있습니다.");
+        }
+
+        List<Feedback> feedbacks = feedbackRepository.findAllByQuestionId(questionId);
+
+        List<FeedbackInfo> list = new ArrayList<>();
+
+        for(Feedback feedback : feedbacks) {
+            list.add(new FeedbackInfo(feedback));
+        }
+
+        return list;
     }
 }
