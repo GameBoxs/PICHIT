@@ -27,5 +27,4 @@ public class DataFile extends BaseTimeEntity {
 
     @Column(length = 50, nullable = false)
     private String contentType;
-
 }
