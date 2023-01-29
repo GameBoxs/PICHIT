@@ -26,7 +26,7 @@ public class DataFileController {
 
     @Operation(summary = "파일 등록")
     @PostMapping("/datafiles")
-    public ResponseEntity<ApiResponse<DataFile>> saveItem(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<ApiResponse<DataFile>> saveDataFile(@RequestParam("file") MultipartFile multipartFile) throws IOException {
         DataFile datafile = dataFileService.createDataFile(multipartFile);
         ApiResponse<DataFile> result = new ApiResponse<>(true, "성공", datafile);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -34,7 +34,7 @@ public class DataFileController {
 
     @Operation(summary = "파일 열기")
     @GetMapping("/datafiles/{id}")
-    public ResponseEntity<Resource> downloadAttach(@PathVariable Long id) throws MalformedURLException {
+    public ResponseEntity<Resource> getDataFile(@PathVariable Long id) throws MalformedURLException {
         DataFileResource dataFileResource = dataFileService.getDataFileResource(id);
 
         String contentDisposition = "inline; filename=\"" + dataFileResource.getEncodedFileName() + "\"";
@@ -43,6 +43,14 @@ public class DataFileController {
                 .contentType(MediaType.parseMediaType(dataFileResource.getContentType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .body(dataFileResource);
+    }
+
+    @Operation(summary = "파일 삭제")
+    @DeleteMapping("/datafiles/{id}")
+    public ResponseEntity<ApiResponse> deleteDataFile(@PathVariable Long id) {
+        dataFileService.deleteDataFile(id);
+        ApiResponse result = new ApiResponse(true, "파일 삭제 성공");
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }
