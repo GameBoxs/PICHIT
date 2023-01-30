@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { slicer } from "../../reducer/tokenSlicer";
 
 
-function Navigation() {
+function Navigation({pathname}) {
   const [popup, setPopup] = useState();
   
   //state 값 가져오는 방법
@@ -68,6 +68,8 @@ function Navigation() {
       window.removeEventListener("message", kakaoOAuthCodeListener);
       popup?.close()
       setPopup(null)
+      
+      
     }
 
   }, [popup])

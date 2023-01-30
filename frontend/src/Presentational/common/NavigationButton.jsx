@@ -5,11 +5,14 @@ import { GlobalStyle } from "../../action/GlobalStyle";
 import Swal from "sweetalert2"
 import withReactContent from 'sweetalert2-react-content'
 import LogInModal from "../component/LogInModal";
+import { useDispatch, useSelector } from "react-redux";
+import { slicer } from "../../reducer/tokenSlicer";
 
 const MySwal = withReactContent(Swal);
 
 function NavigationButton(props) {
-  
+  const token = useSelector(state => state.token)
+  const dispatch = useDispatch()
   const menuToggle = useRef();
   
   const toggleClick = () => {
@@ -27,22 +30,25 @@ function NavigationButton(props) {
     })
   }
 
-  
+  const logout = () => {
+    localStorage.removeItem('token')
+    dispatch(slicer(''))
+  }
 
   return (
-    <NavStyle className="navigation" ref={menuToggle} userName={props.userName}>
+    <NavStyle className="navigation" ref={menuToggle} token={token}>
       <GlobalStyle/>
       <NavUser className="userArea">
         <UserName>
-          {props.userName!=null && props.userName!==''  ? `${props.userName}님 반갑습니다.` : '로그인이 필요합니다.'}
+          {(token !== null)  ? `${props.userName}님 반갑습니다.` : '로그인이 필요합니다.'}
         </UserName>
       </NavUser>
       <MenuToggle className="menuToggle" onClick={toggleClick}></MenuToggle>
       {
-        props.userName!=null && props.userName!=='' ?
+        (token !== null) ?
         <MenuList className="menuList">
           <MenuItem>피드백</MenuItem> 
-          <MenuItem>로그아웃</MenuItem> 
+          <MenuItem onClick={logout}>로그아웃</MenuItem> 
         </MenuList>
         :
         <MenuList className="menuList">
@@ -171,7 +177,7 @@ const NavStyle = styled.div`
       border-radius: 10%;
     }
     width: 300px;
-    height: ${props => props.userName != null && props.userName!=='' ? "202px" : "130px"};
+    height: ${props => props.token !== null ? "202px" : "130px"};
     border-radius: 2%;
     transition: width 0.5s, height 0.5s;
     transition-delay: 0s, 0.75s;

@@ -26,7 +26,7 @@ function App() {
 
   return (
     <AppContainer>
-      {(pathname.includes("interview")) ? null:<Navigation /> }
+      {(pathname.includes("interview")) ? null:<Navigation pathname={pathname} /> }
 
       <Routes>
         <Route path="/" element={<MainPage />} />
