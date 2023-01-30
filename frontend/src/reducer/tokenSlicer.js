@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const tokenSlice = createSlice({
     name: 'token',
-    initialState : '',
+    initialState : localStorage.getItem('token'),
     reducers: {
-        slicer(state, action) {
-            state = action.payload.slice(7)
-            return state
+        slicer(state, action) {         //action 값을 받아서
+            state = action.payload      //state에 저장 후
+            return state                //반환
         }
     }
 })
