@@ -6,6 +6,7 @@ import NavigationButton from "./NavigationButton";
 import { KAKAO_AUTH_SERVER } from "../../store/values"
 import { useDispatch, useSelector } from "react-redux";
 import { slicer } from "../../reducer/tokenSlicer";
+import { useLocation, useNavigate } from "react-router";
 
 
 function Navigation() {
@@ -68,6 +69,8 @@ function Navigation() {
       window.removeEventListener("message", kakaoOAuthCodeListener);
       popup?.close()
       setPopup(null)
+      
+      window.location.reload()
     }
 
   }, [popup])
@@ -81,7 +84,7 @@ function Navigation() {
       */}
       <GlobalStyle/>
       <NavTitle>Speak On</NavTitle>
-      <NavigationButton userName='' handleOpenPop={handleOpenPop}></NavigationButton>
+      <NavigationButton userName='' handleOpenPop={handleOpenPop} ></NavigationButton>
     </NavBody>
   )
 }
