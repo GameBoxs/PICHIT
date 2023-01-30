@@ -7,6 +7,7 @@ import withReactContent from 'sweetalert2-react-content'
 import LogInModal from "../component/LogInModal";
 import { useDispatch, useSelector } from "react-redux";
 import { slicer } from "../../reducer/tokenSlicer";
+import { useLocation, useNavigate } from "react-router";
 
 const MySwal = withReactContent(Swal);
 
@@ -33,6 +34,8 @@ function NavigationButton(props) {
   const logout = () => {
     localStorage.removeItem('token')
     dispatch(slicer(''))
+    
+    window.location.reload()
   }
 
   return (

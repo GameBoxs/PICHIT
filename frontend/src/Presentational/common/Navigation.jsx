@@ -6,9 +6,10 @@ import NavigationButton from "./NavigationButton";
 import { KAKAO_AUTH_SERVER } from "../../store/values"
 import { useDispatch, useSelector } from "react-redux";
 import { slicer } from "../../reducer/tokenSlicer";
+import { useLocation, useNavigate } from "react-router";
 
 
-function Navigation({pathname}) {
+function Navigation() {
   const [popup, setPopup] = useState();
   
   //state 값 가져오는 방법
@@ -69,7 +70,7 @@ function Navigation({pathname}) {
       popup?.close()
       setPopup(null)
       
-      
+      window.location.reload()
     }
 
   }, [popup])
@@ -83,7 +84,7 @@ function Navigation({pathname}) {
       */}
       <GlobalStyle/>
       <NavTitle>Speak On</NavTitle>
-      <NavigationButton userName='' handleOpenPop={handleOpenPop}></NavigationButton>
+      <NavigationButton userName='' handleOpenPop={handleOpenPop} ></NavigationButton>
     </NavBody>
   )
 }
