@@ -33,7 +33,7 @@ function PageBar({
 export default PageBar;
 
 const Bar = styled.div`
-  border: solid 2px skyblue; //pagination영역을 위한 border: ;
+  /* border: solid 2px skyblue; //pagination영역을 위한 border: ; */
   width: 100%;
   height: 23px;
   display: flex;
