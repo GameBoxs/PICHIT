@@ -166,10 +166,11 @@ const DUMMY_DATA = [
   ];
 
 function Pagination() {
+  // 페이지네이션 사용법
     // 전체데이터, 현재페이지, 페이지당 포스트갯수
     const [dumyData, setDumyData] = useState(DUMMY_DATA);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage, setPostsPerPage] = useState(6);
+    const [currentPage, setCurrentPage] = useState(1); //초기 현재페이지값(변경 불필요)
+    const [postsPerPage, setPostsPerPage] = useState(6); // 페이지당 개시물수(선택변경 필요)
 
     //현재 페이지에 렌더할 데이터를 추출하기위한 값들
     const lastPostIndex = currentPage * postsPerPage; //렌더할 페이지에 해당하는 마지막 인덱스값
@@ -179,12 +180,12 @@ function Pagination() {
     return(
         <>
         <PageBar
-        totalPosts={dumyData.length} //전체 데이터 길이
+        totalPosts={dumyData.length} //전체 데이터 길이(상황에 맞게변경)
         postsPerPage={postsPerPage}  //페이지당 게시물 수
         setCurrentPage={setCurrentPage} //현재 페이지를 계산하는 함수
         currentPage={currentPage} //현재페이지
         />
-        <PagePost dumyData={currentPosts}/>
+         <PagePost dumyData={currentPosts}/>  {/*사용시 currentPosts로 데이터 내려주기 */}
         </>
     )
 }

@@ -127,9 +127,9 @@ const SoundArea = () => {
                 );
             })}
 
-            <SoundPagenationArea>
+            {/* <SoundPagenationArea>
                 <span>&lt; 1 2 3 4 ... 10 &gt;</span>
-            </SoundPagenationArea>
+            </SoundPagenationArea> */}
         </SoundWrap>
     )
 }
