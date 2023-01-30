@@ -12,7 +12,7 @@ function Navigation(props) {
       */}
       <GlobalStyle/>
       <NavTitle>Speak On</NavTitle>
-      <NavigationButton userName=''></NavigationButton>
+      <NavigationButton userName='' handleOpenPop={props.handleOpenPop}></NavigationButton>
     </NavBody>
   )
 }
