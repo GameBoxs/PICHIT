@@ -94,4 +94,24 @@ public class ResumeService {
         dataFileRepository.delete(resume.getDataFile());
     }
 
+    @Transactional
+    public void updateResume(Long userId, Long resumeId, MultipartFile multipartFile) throws IOException {
+        Resume resume = resumeRepository.findById(resumeId).orElseThrow(
+                ()-> new ResourceNotFoundException("등록된 자기소개서가 없습니다.")
+        );
+
+        if(resume.getInterviewJoin().getUser().getId() != userId) {
+            throw new ResourceForbiddenException("자신의 자기소개서만 수정할 수 있습니다.");
+        }
+
+        DataFile temp = resume.getDataFile();
+        dataFileUtil.deleteFile(temp);
+        dataFileRepository.delete(temp);
+
+        DataFile dataFile = dataFileUtil.storeFile(multipartFile);
+        dataFileRepository.save(dataFile);
+
+        resume.setDataFile(dataFile);
+    }
+
 }
