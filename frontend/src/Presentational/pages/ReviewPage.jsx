@@ -156,9 +156,11 @@ const ReviewPage = (props) => {
       <SubTitle title={subtitleText}></SubTitle>
       <Line></Line>
       <FilterArea />
+      <FilterArea />
       <HistoryList data={data} />
       {/* <DetailArea data={detailData} /> */}
       <DetailArea data={testdata} />
+      <DetailArea data={detailData} />
     </ReviewMainBody>
   );
 };
