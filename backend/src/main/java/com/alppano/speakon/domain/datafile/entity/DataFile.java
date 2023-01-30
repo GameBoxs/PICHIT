@@ -1,12 +1,10 @@
 package com.alppano.speakon.domain.datafile.entity;
 
 import com.alppano.speakon.common.entity.BaseTimeEntity;
+import com.alppano.speakon.domain.resume.entity.Resume;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Builder
@@ -27,4 +25,5 @@ public class DataFile extends BaseTimeEntity {
 
     @Column(length = 50, nullable = false)
     private String contentType;
+
 }

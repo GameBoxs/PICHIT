@@ -75,4 +75,23 @@ public class ResumeService {
 
         return new ResumeInfo(resume.getId(),uri);
     }
+
+    @Transactional
+    public void deleteResume(Long userId, Long resumeId) {
+        Resume resume = resumeRepository.findById(resumeId).orElseThrow(
+                ()-> new ResourceNotFoundException("등록된 자기소개서가 없습니다.")
+        );
+
+        InterviewJoin interviewJoin = resume.getInterviewJoin();
+
+        if(interviewJoin.getUser().getId() != userId) {
+            throw new ResourceForbiddenException("자신의 자기소개서만 삭제할 수 있습니다.");
+        }
+
+        dataFileUtil.deleteFile(resume.getDataFile());
+        interviewJoin.setResume(null);
+        resumeRepository.delete(resume);
+        dataFileRepository.delete(resume.getDataFile());
+    }
+
 }
