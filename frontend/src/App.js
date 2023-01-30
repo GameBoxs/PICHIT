@@ -10,7 +10,9 @@ import ReviewPage from "./Presentational/pages/ReviewPage";
 import RoomPage from "./Presentational/pages/room/RoomPage";
 import Pagination from "./Presentational/common/Pagination/Pagination"
 
-import { KAKAO_AUTH_SERVER } from "./store/index.js"
+import { KAKAO_AUTH_SERVER } from "./store/values.js"
+import { useDispatch, useSelector } from "react-redux";
+import { slicer } from "./reducer/tokenSlicer";
 
 const expenses = [
   {
@@ -25,7 +27,9 @@ const expenses = [
 
 function App() {
   const [popup, setPopup] = useState();
+  const token = useSelector(state => state.token)
   const { pathname } = useLocation();
+  const dispatch = useDispatch()
 
   const handleOpenPop = () => {
     const width = 400;
@@ -50,7 +54,7 @@ function App() {
     const kakaoOAuthCodeListener = (e) => {
       if (e.origin !== window.location.origin) return
 
-      console.log(e.data)
+      dispatch(slicer(e.data))
 
       popup?.close()
       setPopup(null)
@@ -69,6 +73,8 @@ function App() {
     }
 
   }, [popup])
+
+  console.log(token, "Token")
 
   return (
     <AppContainer>

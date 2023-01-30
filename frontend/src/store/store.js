@@ -10,8 +10,22 @@ let chatSession = createSlice({
     }
 })
 
+const tokenStore = createSlice({
+    name: 'tokenStore',
+    initialState: {
+        value: ''
+    },
+    reducers: {
+        tokenStore(state) {
+            console.log(state)
+            return state.slice(7)
+        }
+    }
+})
+
 export default configureStore({
     reducer:{
-        chatSession : chatSession.reducer
+        chatSession : chatSession.reducer,
+        tokenStore: tokenStore.reducer
     }
 })
