@@ -12,17 +12,18 @@ const ListItem = (props) => {
     } else if(props.item.Processing==="E") {
       CurrentState = "종료";
     }
-  
+  console.log(props.item)
     return(
       <>
-        <Line></Line>
+        {/* <Line></Line> */}
             <ItemWrap>
             <Title title={props.item.Title}></Title>
             <SubTitle title={props.item.Day}></SubTitle>
             <SubTitle title={CurrentState}></SubTitle>
             {props.item.Title !=="" && props.item.Title !== null && props.item.Title !== undefined ? <SubTitle title=">"></SubTitle> : null }
             </ItemWrap>
-        {props.index === props.lastIndex ? <Line></Line> : null}
+            <Line></Line>
+        {/* {props.index === props.postsPerPage-1 || props.index+1 === ""? <Line></Line> : null} */}
       </>
     )
   }

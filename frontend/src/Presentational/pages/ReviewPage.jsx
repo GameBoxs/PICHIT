@@ -20,32 +20,145 @@ const ReviewPage = (props) => {
 
   // 피드백 서브타이틀 텍스트
   const subtitleText = (
-    <div
-      style={{ fontSize: "25px", marginTop: "50px", fontWeight: "bold" }}
-    >
+    <div style={{ fontSize: "25px", marginTop: "50px", fontWeight: "bold" }}>
       기록 선택하기
     </div>
   );
   //#endregion
 
   //#region Test Data
-    const data = [{Title:"2022 연말 콘서트-이희수 전국 투어", Day:"23.01.12", Processing:"Y"},{Title:'2023 유럽투어 댄스쇼-"봉주르 희수"', Day:"23.01.12", Processing:"N"},{Title:'2023 아시아 콘서트-"We Love Heesu"', Day:"23.01.12", Processing:"E"},
-    {Title:'2023 제 3회 팬미팅-"Hamchu Land"', Day:"23.01.12", Processing:"N"},{Title:'2023 아프리카 투어-"울지마 희수"', Day:"23.01.12", Processing:"N"}]
-    // const data = [{},{},{},{},{}];
+  const data = [
+    {
+      Title: "2022 연말 콘서트-이희수 전국 투어",
+      Day: "23.01.12",
+      Processing: "Y",
+    },
+    {
+      Title: '2023 유럽투어 댄스쇼-"봉주르 희수"',
+      Day: "23.01.12",
+      Processing: "N",
+    },
+    {
+      Title: '2023 아시아 콘서트-"We Love Heesu"',
+      Day: "23.01.12",
+      Processing: "E",
+    },
+    {
+      Title: '2023 제 3회 팬미팅-"Hamchu Land"',
+      Day: "23.01.12",
+      Processing: "N",
+    },
+    {
+      Title: '2023 아프리카 투어-"울지마 희수"',
+      Day: "23.01.12",
+      Processing: "N",
+    },
+    {
+      Title: '2023 새해기념 콘서트-"새해에는 희수와 함께"',
+      Day: "23.01.12",
+      Processing: "N",
+    },
+    {
+      Title: '2023 1월끝나간다-"울지마 희수"',
+      Day: "23.01.12",
+      Processing: "N",
+    },
+    {
+      Title: '2023 2월에는 디자인작업 몰두-"희수는 아무것도 몰라"',
+      Day: "23.01.12",
+      Processing: "N",
+    },
+    {
+      Title: '2023 곧 통신시작예정-"희수, 통신에 거대한기여.. 그냥 귀추가 주목됨"',
+      Day: "23.01.12",
+      Processing: "N",
+    },
+  ];
+  // const data = [{},{},{},{},{}];
 
-    const detailData = {title:"1. 질문질문질문질문질문질문질문질문질문질문질문질문", item:[{name:"김지훈",score:"5점",feedback:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu"},{name:"김지훈2",score:"5점",feedback:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu"},{name:"김지훈3",score:"5점",feedback:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu"}]}
-    // const detailData = {};
+  const detailData = {
+    title: "1. 질문질문질문질문질문질문질문질문질문질문질문질문",
+    item: [
+      {
+        name: "김지훈",
+        score: "5점",
+        feedback:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu",
+      },
+      {
+        name: "김지훈2",
+        score: "5점",
+        feedback:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu",
+      },
+      {
+        name: "김지훈3",
+        score: "5점",
+        feedback:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu",
+      },
+    ],
+  };
+  const testdata = [{
+    "question": '1. 질문질문질문질문질문질문질문질문질문질문질문질문',
+    "reviews": [{
+      "name": "김지훈",
+      "score": '5점',
+      "feedback":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu"
+    },{
+      "name": "김지훈2",
+      "score": '2점',
+      "feedback":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu"
+    },{
+      "name": "김지훈3",
+      "score": '4점',
+      "feedback":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu"
+    },]
+  },{
+    "question": '2. 질문2질문2질문2질문2질문2질문222222222222질문질문질문질문질문',
+    "reviews": [{
+      "name": "김지훈",
+      "score": '5점',
+      "feedback":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu"
+    },{
+      "name": "김지훈2",
+      "score": '2점',
+      "feedback":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu"
+    },{
+      "name": "김지훈3",
+      "score": '4점',
+      "feedback":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu"
+    },]
+  },{
+    "question": '3. 33333333333문질문질문질문질문질문질문질문',
+    "reviews": [{
+      "name": "김지훈",
+      "score": '5점',
+      "feedback":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu"
+    },{
+      "name": "김지훈2",
+      "score": '2점',
+      "feedback":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu"
+    },{
+      "name": "김지훈3",
+      "score": '4점',
+      "feedback":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sodales tempor viverra. Vivamus eleifend iaculis risus, in posuere quam fermentum eget. Sed est massa, porta eu varius et, tincidunt ac lorem. Ut laoreet dolor mi, ac fermentum orci dignissim nec. Vestibulum non malesuada felis. In consequat odio arcu. In hac habitasse platea dictumst. Etiam luctu"
+    },]
+  },
+]
+  // const detailData = {};
 
-    //#endregion
-  
+  //#endregion
+
   return (
     <ReviewMainBody>
       <Title title={titleText}></Title>
       <SubTitle title={subtitleText}></SubTitle>
       <Line></Line>
-      <FilterArea/>
+      <FilterArea />
       <HistoryList data={data} />
-      <DetailArea  data={detailData}/>
+      {/* <DetailArea data={detailData} /> */}
+      <DetailArea data={testdata} />
     </ReviewMainBody>
   );
 };
@@ -55,7 +168,6 @@ export default ReviewPage;
 const Line = styled.hr`
   margin: 15px 0 15px 0;
 `;
-
 const ReviewMainBody = styled.div`
   margin: 0 10em 0 10em;
   height: 100%;
