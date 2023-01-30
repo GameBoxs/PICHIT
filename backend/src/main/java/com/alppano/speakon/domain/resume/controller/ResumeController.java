@@ -49,4 +49,14 @@ public class ResumeController {
         ApiResponse result = new ApiResponse(true, "자기소개서 삭제 성공");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @Operation(summary = "자기소개서 수정")
+    @PutMapping("/resumes/{id}")
+    public ResponseEntity<ApiResponse<ResumeInfo>> deleteResume(@AuthenticationPrincipal LoginUser loginUser,
+                                                                @PathVariable("id") Long resumeId,
+                                                                @RequestParam("file") MultipartFile multipartFile) throws IOException {
+        resumeService.updateResume(loginUser.getId(), resumeId, multipartFile);
+        ApiResponse result = new ApiResponse(true, "자기소개서 수정 성공");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
