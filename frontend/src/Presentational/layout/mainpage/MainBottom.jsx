@@ -172,7 +172,7 @@ function MainBottom() {
     const showSwalWithLink = () => {
       MySwal.fire({
         title:'방 생성하기',
-        width:800,
+        width:700,
         showConfirmButton:true,
         showCancelButton:true,
         confirmButtonText:"생성하기",
