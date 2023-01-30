@@ -16,10 +16,10 @@ const MainPage = () => {
     "title": "테스트 되고 있나용",
     "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
   }
-  // const data = useAxios('https://jsonplaceholder.typicode.com/comments', "GET")
+  const data = useAxios('https://jsonplaceholder.typicode.com/comments', "GET")
   // const data = useAxios('https://jsonplaceholder.typicode.com/posts/1', "DELETE", test)
 
-  // console.log(data)
+  console.log(data)
 
   const scrollWithUseRef = (idx) => {
     if (idx === 0)

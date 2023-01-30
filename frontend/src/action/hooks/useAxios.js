@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
-function useGet(target, type, body) {
+function useAxios(target, type, body) {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  //로그인 이후 리덕스 저장소에서 토큰 들고오기
-  const token =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcGVha29uIiwibmFtZSI6IuydtO2drOyImCIsImlkIjo0NiwiZXhwIjoxNjc2NTA3ODMwLCJpYXQiOjE2NzQ2OTM0MzAsInVzZXJJZCI6Imtha2FvXzI2Mjk4Mzk0NjIifQ.R7JuJDcrX13tpKqqHxq_MDcNOzASPZUYPnLWlevKzmePM6InZPe3YEy0XkTD-HqRADzkpB2p9UYFcVYnwQwzBA";
+
+  const token = useSelector(state => state.token)
 
   useEffect(() => {
-    switch (type) {
+    const select = type.toUpperCase()
+    switch (select) {
       case "GET":
         axios
           .get(target)
@@ -63,4 +64,4 @@ function useGet(target, type, body) {
   return { data, isLoading };
 }
 
-export default useGet;
+export default useAxios;

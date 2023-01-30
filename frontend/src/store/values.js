@@ -1,0 +1,1 @@
+export const KAKAO_AUTH_SERVER = "https://i8d107.p.ssafy.io/api/oauth2/authorization/kakao"

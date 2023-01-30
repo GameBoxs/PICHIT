@@ -1,1 +1,10 @@
-export const KAKAO_AUTH_SERVER = "https://i8d107.p.ssafy.io/api/oauth2/authorization/kakao"
+import { configureStore } from "@reduxjs/toolkit";
+import tokenReducer from "../reducer/tokenSlicer";
+import chatSessionReducer from "../reducer/chatStore";
+
+export default configureStore({
+  reducer: {
+    token: tokenReducer,
+    chatSession: chatSessionReducer,
+  },
+});
