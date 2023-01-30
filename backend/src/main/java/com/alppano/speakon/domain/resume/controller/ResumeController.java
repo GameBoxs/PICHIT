@@ -29,7 +29,7 @@ public class ResumeController {
                                                        @RequestParam("file") MultipartFile multipartFile) throws IOException {
         resumeService.registerResume(loginUser.getId(), interviewJoinId, multipartFile);
         ApiResponse result = new ApiResponse(true, "자기소개서 등록 성공");
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @Operation(summary = "자기소개서 조회")
@@ -38,6 +38,15 @@ public class ResumeController {
                                                              @PathVariable("id") Long interviewJoinId) {
         ResumeInfo resumeInfo = resumeService.getResume(loginUser.getId(), interviewJoinId);
         ApiResponse<ResumeInfo> result = new ApiResponse(true, "자기소개서 조회 성공", resumeInfo);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Operation(summary = "자기소개서 삭제")
+    @DeleteMapping("/resumes/{id}")
+    public ResponseEntity<ApiResponse<ResumeInfo>> deleteResume(@AuthenticationPrincipal LoginUser loginUser,
+                                                                @PathVariable("id") Long resumeId) {
+        resumeService.deleteResume(loginUser.getId(), resumeId);
+        ApiResponse result = new ApiResponse(true, "자기소개서 삭제 성공");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
