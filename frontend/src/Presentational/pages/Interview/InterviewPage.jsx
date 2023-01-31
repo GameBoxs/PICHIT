@@ -9,6 +9,7 @@ import PrepareInterview from "./PrepareInterview";
 // OpenVidu 관련 Import
 import { useState,useEffect } from "react";
 import { OpenVidu } from "openvidu-browser";
+import {OpenViduLogger} from "openvidu-browser/lib/OpenViduInternal/Logger/OpenViduLogger"
 import { useSelector } from "react-redux";
 import {getToken, leaveSession,} from '../../../action/modules/chatModule';
 
@@ -62,6 +63,8 @@ const InterviewPage = () => {
   const joinSession = () => {
     // OpenVidu 초기화
     setSession(OV.initSession());
+    OpenViduLogger.getInstance().enableProdMode(); // 건들지 말것
+    OpenViduLogger.getInstance().disableLogger(); // << 내가 작성한 console.log() 가 안나올때 해당 67번째 줄 주석 처리 하면 작동함.
   };
 
   // 컴포넌트 마운트 될 때 세션 참여 함수 실행
