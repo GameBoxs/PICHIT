@@ -8,6 +8,7 @@ import Title from "../common/Title";
 
 import useAxios from "../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 
 
@@ -44,13 +45,13 @@ function CreateRoom({ setModalOpen }) {
 
 
   const test = {
-    title: "",
-    description: "",
+    title: "테스트 방",
+    description: "테스트 설명",
     maxPersonCount: 0,
-    password: "",
+    password: "1234",
     finished: 0,
-    startDate: "",
-    managerId: 0,
+    startDate: "2023-01-31T12:08:36.833Z",
+    managerId: 2,
   }
 
   const InputHandler = useCallback((e, type) => {
@@ -97,10 +98,7 @@ function CreateRoom({ setModalOpen }) {
 
   const token =useSelector(state => state.token)
   
-  const data = useAxios('interviewrooms', "POST" , test, token)
-
-  console.log(data)
-
+  // const data = useAxios('interviewrooms', "POST" , token, test)
 
 
   let footer = <p>Please pick a day.</p>;
@@ -117,6 +115,28 @@ function CreateRoom({ setModalOpen }) {
     return () => document.body.style = `overflow:auto`
   },[])
 
+  const [isLoading, setIsLoading] = useState(true);
+
+  const createRoom = () => {
+    console.log(test)
+    axios({
+      method: 'POST',
+      url:'https://i8d107.p.ssafy.io/api/interviewrooms',
+      headers:{
+        Authorization: token
+      },
+      data:test,
+    })
+    .then((res) => {
+      console.log(res)
+      setRoom(res.test);
+      console.log(res.test)
+    })
+    .catch((err) => console.log(err))
+    .finally(() => {
+      setIsLoading(false);
+    });
+  }
 
   return (
     <Wrap onClick={closeModal}>
@@ -184,7 +204,7 @@ function CreateRoom({ setModalOpen }) {
           </Section>
         </Layout>
         <Layout height="20%">
-          <button>생성하기</button>
+          <button onClick={createRoom}>생성하기</button>
           <button onClick={closeModal}>취소하기</button>
         </Layout>
       </ModalContainer>

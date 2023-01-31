@@ -32,7 +32,7 @@ function RoomPage(props) {
   //    host 값 false 
   // }
 
-
+  
 
   return (
     <>

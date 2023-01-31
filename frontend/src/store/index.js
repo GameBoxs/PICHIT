@@ -6,6 +6,7 @@ import userStoreReducer from "../reducer/userStore"
 export default configureStore({
     reducer: {
         token: tokenReducer,
-        chatSession : chatSessionReducer
+        chatSession : chatSessionReducer,
+        userinfo : userStoreReducer
     }
 })
