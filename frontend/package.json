@@ -1,5 +1,4 @@
 { 
-  "proxy":"https://i8d107.p.ssafy.io/api",
   "name": "speakon",
   "version": "0.1.0",
   "private": true,

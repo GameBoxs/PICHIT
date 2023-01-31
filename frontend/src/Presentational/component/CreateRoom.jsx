@@ -7,7 +7,8 @@ import "react-day-picker/dist/style.css";
 import Title from "../common/Title";
 
 import useAxios from "../../action/hooks/useAxios";
-import axios from "axios";
+import { useSelector } from "react-redux";
+
 
 
 
@@ -41,6 +42,16 @@ function CreateRoom({ setModalOpen }) {
   //   room
   // );
 
+
+  const test = {
+    title: "",
+    description: "",
+    maxPersonCount: 0,
+    password: "",
+    finished: 0,
+    startDate: "",
+    managerId: 0,
+  }
 
   const InputHandler = useCallback((e, type) => {
     const value = (prev) => {
@@ -84,14 +95,14 @@ function CreateRoom({ setModalOpen }) {
     }
   }, []);
 
-  axios.post('/interviewrooms',room)
-  // 성공시 then 실행
-  .then(function(response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  })
+  const token =useSelector(state => state.token)
+  
+  const data = useAxios('interviewrooms', "POST" , test, token)
+
+  console.log(data)
+
+
+
   let footer = <p>Please pick a day.</p>;
   if (selected) {
     footer = <p>You picked {format(selected, "PP")}.</p>;
