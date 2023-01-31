@@ -4,6 +4,9 @@ server:
     context-path: /api
 
 spring:
+  redis:
+    host: i8d107.p.ssafy.io
+    port: 6420
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://i8d107.p.ssafy.io:3311/speakon-dev
