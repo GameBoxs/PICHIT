@@ -11,6 +11,7 @@ import CreateRoom from "../../component/CreateRoom";
 import EmptyRoomList from "../../component/EmptyRoomList";
 //통신
 import useAxios from '../../../action/hooks/useAxios';
+import axios from "axios";
 
 const MySwal = withReactContent(Swal);
 // React sweet alert 쓸려고 사용함
@@ -140,17 +141,38 @@ function MainBottom() {
   //   }
   // }
   
-  // roomlist통신
-  const lstTmp = useAxios(
-    'http://i8d107.p.ssafy.io/api/interviewrooms','GET'
-  )
-  console.log(lstTmp)
 
-  //더미데이터(변경을 위해, useState에 넣어둠)
-  const [data, setData] = useState(lstTmp);
-  const [tmp, setTmp] = useState([])
-  if (lstTmp.isLoading !== true){
-  setTmp(lstTmp.data.data.content)}
+  // // roomlist통신
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false);
+    // //페이지네이션
+    const [currentPage, setCurrentPage] = useState(1); //현재페이지
+    const [postsPerPage, setPostsPerPage] = useState(9); //페이지당 게시물 수
+    const [totalElements, setTotalElements] = useState(0); //전체 데이터 길이
+    const [totalpages, setTotalPages] = useState(0); //전체 데이터 길이
+    
+    // const lastPostIndex = currentPage * postsPerPage; //렌더할 페이지에 해당하는 마지막 인덱스값
+    // const firstPostIndex = lastPostIndex - postsPerPage; //렌더할 페이지에 해당하는 첫번째 인덱스값
+    // const currentPosts = data.slice(firstPostIndex, lastPostIndex); //현재 페이지에서 렌더할 데이터항목
+
+  const loadData = async () => {
+    try{
+      setLoading(true);
+      const response = await axios.get(`http://i8d107.p.ssafy.io/api/interviewrooms?page=${currentPage-1}`);
+      setData(response.data);
+      console.log(response.data.data)
+      setTotalElements(response.data.data.totalElements)
+      console.log(response.data.data.totalElements)
+      setTotalPages(response.data.data.totalPages)
+      console.log(response.data.data.totalPages)
+    } catch (e) {
+      console.log('catch실행됨')
+    }
+    setLoading(false);
+  }
+  useEffect(() => {
+    loadData();
+  }, [currentPage]);
 
   //////////////////  <<<  total/my 사용자정렬  >>>>  ////////////////
   //사용자 정렬
@@ -192,7 +214,7 @@ function MainBottom() {
     });
   };
 
-  // //페이지네이션
+  // // //페이지네이션
   // const [currentPage, setCurrentPage] = useState(1); //현재페이지
   // const [postsPerPage, setPostsPerPage] = useState(9); //페이지당 게시물 수
 
@@ -209,6 +231,7 @@ function MainBottom() {
       </button> */}
       <Header>
         <h1> LOOM LIST</h1>
+        <button onClick={ loadData }>다시 불러오기</button>
         <Titlesection>
           <p>대충 설명이 들어가겠죠?</p>
           <div>
@@ -232,19 +255,21 @@ function MainBottom() {
       <section>
         <Main>
           {/* {roomPosition ? <MyCategory /> : <TotalCategory />} */}
-          {/* <RoomListdiv>
+          <RoomListdiv>
             {data.length === 0 ? (
               <EmptyRoomList />
             ) : (
-              <RoomList rooms={currentPosts} />
+              // <RoomList rooms={currentPosts} />
+              <RoomList rooms={data.data.content} />
             )}
-          </RoomListdiv> */}
-          {/* <PageBar
-            totalPosts={data.length} //전체 데이터 길이
+          </RoomListdiv>
+          <PageBar
+            totalPosts={totalElements} //전체 데이터 길이
             postsPerPage={postsPerPage} //페이지당 게시물 수
             setCurrentPage={setCurrentPage} //현재 페이지를 계산하는 함수
             currentPage={currentPage} //현재페이지
-          /> */}
+            totalpages={totalpages} //페이지 길이
+          />
         </Main>
         <Footer>
           <button onClick={showSwalWithLink}>방만들기</button>
