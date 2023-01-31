@@ -12,7 +12,7 @@ const IncomMessage = ({data}) => {
             <MessageText>
                 {data.Message}
             </MessageText>
-        </IncomWrap>    
+        </IncomWrap>
     )
 }
 

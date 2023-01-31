@@ -5,12 +5,12 @@ import TotalCategory from "../../component/TotalCategory"
 import MyCategory from "../../component/MyCategory"
 import PageBar from "../../common/Pagination/PageBar"
 
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+// import Swal from "sweetalert2";
+// import withReactContent from "sweetalert2-react-content";
 import CreateRoom from "../../component/CreateRoom";
 
-const MySwal = withReactContent(Swal);
-// React sweet alert 쓸려고 사용함 
+// const MySwal = withReactContent(Swal);
+// // React sweet alert 쓸려고 사용함 
 
 const DUMMY_DATA = [
   {
@@ -169,20 +169,26 @@ function MainBottom() {
     },[isLogined])
 
     // sweet alert로 방 만들기 모달 생성 
-    const showSwalWithLink = () => {
-      MySwal.fire({
-        title:'방 생성하기',
-        width:700,
-        showConfirmButton:true,
-        showCancelButton:true,
-        confirmButtonText:"생성하기",
-        cancelButtonText:"취소",
-        html:(
-          <div>
-            <CreateRoom />
-          </div>
-        )
-      })
+    // const showSwalWithLink = () => {
+    //   MySwal.fire({
+    //     title:'방 생성하기',
+    //     width:700,
+    //     showConfirmButton:true,
+    //     showCancelButton:true,
+    //     confirmButtonText:"생성하기",
+    //     cancelButtonText:"취소",
+    //     html:(
+    //       <div>
+    //         <CreateRoom />
+    //       </div>
+    //     )
+    //   })
+    // }
+
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const showModal = () => {
+      setModalOpen(true)
     }
 
     //페이지네이션
@@ -224,7 +230,8 @@ function MainBottom() {
           />
         </Main>
         <Footer>
-          <button onClick={showSwalWithLink}>방만들기</button>
+          <button onClick={showModal}>방만들기</button>
+          {modalOpen && <CreateRoom setModalOpen={setModalOpen} />}
         </Footer>
       </section>
     </Layout>

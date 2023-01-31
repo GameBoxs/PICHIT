@@ -1,14 +1,18 @@
 import styled from "styled-components";
-import React, { useState } from "react";
+import React, { useState, useCallback,useEffect } from "react";
 import { ToggleButton } from "../common/ToggleButton";
-import { format } from 'date-fns';
-import { DayPicker } from 'react-day-picker';
-import 'react-day-picker/dist/style.css';
+import { format } from "date-fns";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
+import Title from "../common/Title";
 
 import useAxios from "../../action/hooks/useAxios";
+import axios from "axios";
+
+
 
 // 방 생성하기 모달
-function CreateRoom() {
+function CreateRoom({ setModalOpen }) {
   // 캘린더
   const [value, onChange] = useState(new Date());
   // 비밀방 여부 toggle : false(off) true(on)
@@ -32,14 +36,15 @@ function CreateRoom() {
   const [selected, setSelected] = useState();
 
   // const data = useAxios(
-  //   "http://i8d107.p.ssafy.io/api/interviewrooms",
+  //   "/interviewrooms",
   //   "POST",
   //   room
   // );
 
-  const InputHandler = (e, type) => {
+
+  const InputHandler = useCallback((e, type) => {
     const value = (prev) => {
-      return { ...prev, maxPersonCount: value };
+      return { ...prev };
     };
 
     switch (type) {
@@ -77,83 +82,136 @@ function CreateRoom() {
       default:
         break;
     }
-  };
+  }, []);
 
-
+  axios.post('/interviewrooms',room)
+  // 성공시 then 실행
+  .then(function(response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  })
   let footer = <p>Please pick a day.</p>;
   if (selected) {
-    footer = <p>You picked {format(selected, 'PP')}.</p>;
+    footer = <p>You picked {format(selected, "PP")}.</p>;
   }
- 
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+  
+  useEffect (() => {
+    document.body.style = `overflow:hidden`;
+    return () => document.body.style = `overflow:auto`
+  },[])
+
 
   return (
-    <ModalContainer>
-      <Layout>
-        <Section width="50%">
-          <DayPicker 
-         mode="single"
-          selected={selected}
-          onSelect={setSelected}
-          footer={footer}
-          />
-        </Section>
-        <Section width="50%">
-          <InfoList>
-            <Info>
-              <InfoText>방 이름</InfoText>
-              <InfoInput
-                onChange={() => {
-                  InputHandler("title");
-                }}
-              />
-            </Info>
-            <Info>
-              <InfoText>모집 인원</InfoText>
-              <InfoInput
-                onChange={() => {
-                  InputHandler("maxPersoncount");
-                }}
-              />
-            </Info>
-            <Info>
-              <InfoText>연락 방법</InfoText>
-              <InfoInput />
-            </Info>
-            <Info>
-              <InfoText>비밀방 여부</InfoText>
-              <ToggleButton
-                toggle={toggle}
-                ToggleHandler={Togglehandler}
-                onClick={Togglehandler}
-              />
-              {toggle ?  (
+    <Wrap onClick={closeModal}>
+      <ModalContainer onClick = {(e) => e.stopPropagation()}>
+        <Header>
+          <Title title='방 생성하기' />
+        </Header>
+        <Layout height="40%">
+          <Section width="50%">
+            <DayPicker
+              mode="single"
+              selected={selected}
+              onSelect={setSelected}
+              footer={footer}
+            />
+          </Section>
+          <Section width="60%">
+            <InfoList>
+              <Info>
+                <InfoText>방 이름</InfoText>
                 <InfoInput
                   onChange={() => {
-                    InputHandler("password");
+                    InputHandler("title");
                   }}
                 />
-              ):null}
-            </Info>
-          </InfoList>
-        </Section>
-      </Layout>
-      <Layout>
-        <Section width="100%">
-          <RoomText
-            placeholder="방 생성에 필요한 정보를 입력하세요"
-            onChange={() => {
-              InputHandler("desciption");
-            }}
-          ></RoomText>
-        </Section>
-      </Layout>
-    </ModalContainer>
+              </Info>
+              <Info>
+                <InfoText>모집 인원</InfoText>
+                <InfoInput
+                  onChange={() => {
+                    InputHandler("maxPersoncount");
+                  }}
+                />
+              </Info>
+              <Info>
+                <InfoText>연락 방법</InfoText>
+                <InfoInput />
+              </Info>
+              <Info>
+                <InfoText>비밀방 여부</InfoText>
+                <ToggleButton
+                  toggle={toggle}
+                  ToggleHandler={Togglehandler}
+                  onClick={Togglehandler}
+                />
+                {toggle ? (
+                  <InfoInput
+                    onChange={() => {
+                      InputHandler("password");
+                    }}
+                  />
+                ) : null}
+              </Info>
+            </InfoList>
+          </Section>
+        </Layout>
+        <Layout height="30%">
+          <Section width="100%">
+            <RoomText
+              placeholder="방 생성에 필요한 정보를 입력하세요"
+              onChange={() => {
+                InputHandler("desciption");
+              }}
+            ></RoomText>
+          </Section>
+        </Layout>
+        <Layout height="20%">
+          <button>생성하기</button>
+          <button onClick={closeModal}>취소하기</button>
+        </Layout>
+      </ModalContainer>
+    </Wrap>
   );
 }
 export default CreateRoom;
 
+const Wrap = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+`;
+
 const ModalContainer = styled.div`
-  margin: 1em;
+  width: 700px;
+  height: 700px;
+
+  /* 최상단 위치 */
+  z-index: 9999;
+
+  /* 중앙 배치 */
+  /* top, bottom, left, right 는 브라우저 기준으로 작동한다. */
+  /* translate는 본인의 크기 기준으로 작동한다. */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /* 모달창 디자인 */
+  background-color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 5px 10px 10px 1px rgba(0, 0, 0, 0.3);
+  padding:30px
 `;
 
 const Layout = styled.div`
@@ -161,7 +219,7 @@ const Layout = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   gap: 1em;
-  height: 50%;
+  height: ${(props) => props.width};
   width: 100%;
   margin-bottom: 1em;
   margin-top: 1em;
@@ -195,4 +253,10 @@ const InfoInput = styled.input.attrs({ type: "text" })`
 const RoomText = styled.textarea`
   width: 100%;
   height: 200px;
+  border: none
 `;
+
+const Header = styled.div`
+margin: 10px;
+  text-align: center;
+`

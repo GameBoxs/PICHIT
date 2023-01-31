@@ -229,7 +229,7 @@ const IntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
           {/* 채팅 */}
           <QuestionBody onClick={chatHandler}>
             <SubTitle title={"채팅"} />
-            {chatOn !== false ? <ChatArea /> : null}
+            {chatOn !== false ? <ChatArea session={session} info={info}/> : null}
           </QuestionBody>
         </BodyCompo>
       </InterviewBody>
