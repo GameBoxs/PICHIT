@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import IncomMessage from "../../component/Chat/IncomMessage";
 
