@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import useAxios from "../../action/hooks/useAxios";
 // import { useScroll } from "../../action/hooks/useScroll";
@@ -17,7 +18,7 @@ const MainPage = () => {
     "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
   }
   // const data = useAxios('https://jsonplaceholder.typicode.com/comments', "GET")
-  // const data = useAxios('https://jsonplaceholder.typicode.com/posts/1', "DELETE", test)
+  // const data = useAxios('https://jsonplaceholder.typicode.com/posts/1', "PUT", test)
 
   // console.log(data)
 

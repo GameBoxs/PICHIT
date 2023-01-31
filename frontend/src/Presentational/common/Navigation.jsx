@@ -3,18 +3,15 @@ import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
 import NavigationButton from "./NavigationButton";
 
-import { KAKAO_AUTH_SERVER } from "../../store/values"
+import { KAKAO_AUTH_SERVER, testToken } from "../../store/values"
 import { useDispatch, useSelector } from "react-redux";
 import { slicer } from "../../reducer/tokenSlicer";
-import { useLocation, useNavigate } from "react-router";
+import useAxios from "../../action/hooks/useAxios";
+import { getUserInfo } from "../../reducer/userStore";
 
 
 function Navigation() {
-  const [popup, setPopup] = useState();
-  
-  //state 값 가져오는 방법
-  // const tokenRedux =  useSelector(state=> state.token)
-  
+  const [popup, setPopup] = useState();  
   const dispatch = useDispatch()
 
   const handleOpenPop = () => {  //팝업 생성 함수
@@ -49,6 +46,8 @@ function Navigation() {
       //Redux state 저장
       dispatch(slicer(token))
 
+      console.log(e.data)
+
       //로컬스토리지에 token이란 이름으로 값 저장 
       localStorage.setItem('token', token)
 
@@ -74,6 +73,11 @@ function Navigation() {
     }
 
   }, [popup])
+  
+  //토큰 불러와서 불러온 userInfo 이용해서 리덕스에 사용자 정보 넣기
+  const token = useSelector(state => state.token)
+  const {data} = useAxios('userinfo', "GET", token)
+  dispatch(getUserInfo(data))
 
   return (
     <NavBody>
