@@ -53,4 +53,12 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @Operation(summary = "로그인 회원 정보 조회")
+    @GetMapping("/userinfo")
+    public ResponseEntity<ApiResponse<UserInfoDto>> getMyUserInfo(@AuthenticationPrincipal LoginUser loginUser) {
+        UserInfoDto userInfo = userService.getMyUserInfo(loginUser.getId());
+        ApiResponse<UserInfoDto> result = new ApiResponse<>(true, "로그인 회원 정보 조회 완료", userInfo);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }
