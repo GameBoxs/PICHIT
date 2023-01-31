@@ -54,7 +54,7 @@ file:
 
 app:
   oauth2:
-    authorizedRedirectUri: "https://i8d107.p.ssafy.io/auth" # 임시
+    authorizedRedirectUri: "http://localhost:3000/auth" # 임시
 
 jwt:
   secret: godheesu
