@@ -6,6 +6,7 @@ import useAxios from "../../action/hooks/useAxios";
 // import { useScroll } from "../../action/hooks/useScroll";
 
 import MainBottom from '../layout/mainpage/MainBottom'
+import MainTop from '../layout/mainpage/MainTop'
 
 const MainPage = () => {
   const MainDiv = useRef([]);
@@ -36,8 +37,8 @@ const MainPage = () => {
   return (
     <>
       <First ref={(el) => (MainDiv.current[0] = el)}>
-        First
         <MoveBtn onClick={() => scrollWithUseRef(0)}>DOWN</MoveBtn>
+        <MainTop/>
       </First>
       <Second ref={(el) => (MainDiv.current[1] = el)}>
         <MoveBtn onClick={() => scrollWithUseRef(1)}>UP</MoveBtn>
@@ -59,6 +60,6 @@ const Second = styled.div`
 `;
 
 const First = styled.div`
-  background-color: aqua;
+  background-color: #3ec7c2;
   height: 100vh;
 `;
