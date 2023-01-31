@@ -1,3 +1,4 @@
+import { memo, useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import BounceText from "../../component/Chat/BounceText";
@@ -9,26 +10,49 @@ import MessageArea from "./MessageArea";
     MessageArea에서 스크롤바 없애기
 */
 
-const ChatArea = () => {
-    let [IncomM, SetIncomM] = useState([]);
-    
-    function SetIncomMessage(data) {
-        let temp = [...IncomM];
+const ChatArea = ({session,info}) => {
+    const [incomM, SetIncomM] = useState([]);
+    const [tD, setT] = useState();
+    const [flag,setFlag] = useState(false);
+
+    useEffect(() => {
+        let mySession = session;
+        if (mySession !== null){
+            mySession.on('signal:all-chat',(e) => {
+                setT(JSON.parse(e.data));
+                // SetIncomMessage(JSON.parse(e.data));
+                // let data = JSON.parse(e.data);
+                // let temp = [...IncomM];
+                // temp.push(data);
+                // SetIncomM(temp);
+            })
+        }
+    },[session])
+
+    useEffect(() => {
+        if(flag === false)
+            setFlag(true);
+        else{
+            SetIncomMessage(tD);
+        }
+    },[tD])
+
+    const SetIncomMessage = (data) => {
+        let temp = [...incomM];
         temp.push(data);
         SetIncomM(temp);
-        console.log(temp);
-        console.log('SetIncomMessage Start');
     }
-
 
     return(
         <ChatWrap>
             <ChatBody>
-                <MessageArea Message={IncomM}/>
+                <MessageArea Message={incomM}/>
+                {/* <MessageArea session={session}/> */}
                 <BounceText />
             </ChatBody>
             <InputBody>
-                <InputArea SetIncomMessage={SetIncomMessage}/>
+                {/* <InputArea SetIncomMessage={SetIncomMessage} session={session}/> */}
+                <InputArea session={session}/>
             </InputBody>
         </ChatWrap>
     )
@@ -53,4 +77,4 @@ const InputBody = styled.div`
     height: 8%;
 `
 
-export default ChatArea;
+export default memo(ChatArea);
