@@ -87,7 +87,7 @@ function Navigation() {
         NavigationButton - Menu Button
       */}
       <GlobalStyle/>
-      <NavTitle>Speak On</NavTitle>
+      {/* <NavTitle>Speak On</NavTitle> */}
       <NavigationButton userName='' handleOpenPop={handleOpenPop} ></NavigationButton>
     </NavBody>
   )
@@ -97,13 +97,11 @@ export default Navigation;
 
 const NavBody = styled.div`
   width: 100%;
-  height: 100px;
   display: table;
   z-index: 100;
 `
 
 const NavTitle = styled.p`
-  font-size: 30px;
   display: table-cell;
   vertical-align: middle;
   text-align: center;
