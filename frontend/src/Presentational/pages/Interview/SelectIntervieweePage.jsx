@@ -49,6 +49,7 @@ const SelectIntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
     let myID = info.publisher.stream.connection.connectionId;
     let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData
     let MemberList = new Object();
+
     MemberList[myID] = myNickName;
     for(let i=0; i< info.subscribers.length; i++){
       let targetID = info.subscribers[i].stream.connection.connectionId

@@ -1,10 +1,11 @@
+import { memo } from "react";
 import styled from "styled-components";
 import Input from "../../component/Chat/Input";
 
-const InputArea = ({SetIncomMessage}) => {
+const InputArea = ({SetIncomMessage, session}) => {
     return (
         <InputWrap>
-            <Input SetIncomMessage={SetIncomMessage}/>
+            <Input SetIncomMessage={SetIncomMessage} session={session}/>
         </InputWrap>
     )
 }

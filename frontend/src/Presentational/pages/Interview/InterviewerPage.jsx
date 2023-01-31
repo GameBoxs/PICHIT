@@ -77,7 +77,7 @@ const InterviewerPage = ({session,setSession,OV,setOV,info,setInfo}) => {
         <BodyCompo>{People()}</BodyCompo>
         <BodyCompo>
           <SubTitle title={"채팅"} />
-          <ChatArea />
+          <ChatArea session={session} info={info}/>
         </BodyCompo>
       </InterviewBody>
     </Container>
