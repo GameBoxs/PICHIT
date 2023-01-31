@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import {BiSend} from "react-icons/bi";
 
-const Input = ({SetIncomMessage}) => {
+const Input = ({SetIncomMessage, session}) => {
     const [textValue, SetTextValue] = useState("");
 
     useEffect(() => {
@@ -26,23 +26,28 @@ const Input = ({SetIncomMessage}) => {
 
     function pressEnter(e) {
         if(e.key === 'Enter'){
+            SetTextValue(textValue.trim());
             if(e.shiftKey || textValue===''){
                 return;
             }
-            console.log(e.key ==='Enter' && e.shiftKey);
             SetTextValue('');
             clickBtn();
         }
     }
-    
+
     function clickBtn() {
-        if(textValue===''){
+        SetTextValue(textValue.trim());
+        if(textValue==='' || textValue.trim() === ''){
             return;
         }
         let time = getTime();
         const data = {Name:"김지훈", Time:time, Message:textValue};
-        
-        SetIncomMessage(data);
+        // SetIncomMessage(data);
+        session.signal({
+            data : JSON.stringify(data),
+            to: [],
+            type: 'all-chat'
+        })
         SetTextValue('');
     }
 
@@ -96,4 +101,4 @@ const SendBtn = styled.div`
     }
 `
 
-export default Input;
+export default memo(Input);
