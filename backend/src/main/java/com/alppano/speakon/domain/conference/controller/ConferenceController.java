@@ -4,14 +4,16 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.alppano.speakon.domain.conference.dto.ConferenceRequest;
 import com.alppano.speakon.domain.conference.service.HttpRequestService;
+import com.alppano.speakon.security.LoginUser;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import io.openvidu.java.client.Connection;
@@ -49,8 +51,11 @@ public class ConferenceController {
      * @return The Session ID
      */
     @PostMapping("/sessions")
-    public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params)
+    public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params,
+                                                    @AuthenticationPrincipal LoginUser loginUser)
             throws OpenViduJavaClientException, OpenViduHttpException {
+        // TODO: 방장 검사
+        // TODO: 세션 ID DB에 저장하기
         SessionProperties properties = SessionProperties.fromJson(params).build();
         Session session = openvidu.createSession(properties);
         return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
@@ -76,13 +81,13 @@ public class ConferenceController {
 
     // 면접자 지정
     @PostMapping("/interview/interviewee")
-    public ResponseEntity<String> selectInterviewee(@RequestBody Map<String, Object> params) throws Exception {
-        String session = (String)  params.get("session");
-        String requester = (String) params.get("requester");
-        String interviewee = (String) params.get("interviewee");
+    public ResponseEntity<String> selectInterviewee(@RequestBody ConferenceRequest requestDto,
+                                                    @AuthenticationPrincipal LoginUser loginUser) throws Exception {
+        String sessionId = requestDto.getSessionId();
+        String intervieweeId = requestDto.getIntervieweeId();
         //TODO: 검사 - 요청자가 방장인가
 
-        HttpResponse response =	httpRequestService.broadCastSignal(session, "broadcast-interviewee", interviewee);
+        HttpResponse response =	httpRequestService.broadCastSignal(sessionId, "broadcast-interviewee", intervieweeId);
         StatusLine sl = response.getStatusLine();
         System.out.print("STATUS CODE: ");
         System.out.println(sl.getStatusCode());
@@ -93,16 +98,18 @@ public class ConferenceController {
 
     // 질문 제안 요청
     @PostMapping("/interview/question/propose")
-    public ResponseEntity<String> proposeQuestion(@RequestBody Map<String, Object> params) throws Exception {
-        String session = (String)  params.get("session");
-        String requester = (String) params.get("requester");
-        String interviewee = (String) params.get("interviewee");
-        String questionId = (String) params.get("questionId");
+    public ResponseEntity<String> proposeQuestion(@RequestBody ConferenceRequest requestDto,
+                                                  @AuthenticationPrincipal LoginUser loginUser) throws Exception {
+        String sessionId = requestDto.getSessionId();
+        String intervieweeId = requestDto.getIntervieweeId();
+        String questionId = requestDto.getQuestionId();
         //TODO: 이미 질문이 '시작'되어 진행 중인지 검사 -> 진행 중이면 요청 거절
         //TODO: 질문 시작되었음을 기록
 
-        HttpResponse response = httpRequestService.broadCastSignal(session, "broadcast-question-start", questionId);
-        System.out.println(response);
+        HttpResponse response = httpRequestService.broadCastSignal(sessionId, "broadcast-question-start", questionId);
+        StatusLine sl = response.getStatusLine();
+        System.out.print("STATUS CODE: ");
+        System.out.println(sl.getStatusCode());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -110,32 +117,36 @@ public class ConferenceController {
 
     // 질문 종료 요청
     @PostMapping("/interview/question/end")
-    public ResponseEntity<String> endQuestion(@RequestBody Map<String, Object> params) throws Exception {
-        String session = (String)  params.get("session");
-        String requester = (String) params.get("requester");
-        String interviewee = (String) params.get("interviewee");
-        String questionId = (String) params.get("questionId");
+    public ResponseEntity<String> endQuestion(@RequestBody ConferenceRequest requestDto,
+                                              @AuthenticationPrincipal LoginUser loginUser) throws Exception {
+        String sessionId = requestDto.getSessionId();
+        String intervieweeId = requestDto.getIntervieweeId();
+        String questionId = requestDto.getQuestionId();
         //TODO: 이미 질문이 '시작'되어 진행 중인지 검사 -> 질문이 진행 중이지 않은 상태면 요청 거절
         //TODO: 진행중인 질문자와 동일인인지 검사
         //TODO: 질문이 종료 되었음을 기록
 
-        HttpResponse response = httpRequestService.broadCastSignal(session, "broadcast-question-end", questionId);
-        System.out.println(response);
+        HttpResponse response = httpRequestService.broadCastSignal(sessionId, "broadcast-question-end", questionId);
+        StatusLine sl = response.getStatusLine();
+        System.out.print("STATUS CODE: ");
+        System.out.println(sl.getStatusCode());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 현재 진행 중인 면접자 XXX의 '인터뷰' 종료 요청
     @PostMapping("/interview/end")
-    public ResponseEntity<String> endInterview(@RequestBody Map<String, Object> params) throws Exception {
-        String session = (String)  params.get("session");
-        String requester = (String) params.get("requester");
-        String interviewee = (String) params.get("interviewee");
+    public ResponseEntity<String> endInterview(@RequestBody ConferenceRequest requestDto,
+                                               @AuthenticationPrincipal LoginUser loginUser) throws Exception {
+        String sessionId = requestDto.getSessionId();
+        String intervieweeId = requestDto.getIntervieweeId();
         //TODO: 검사 - 현재 진행 중인 면접자인가
         //TODO: 검사 - 요청자가 방장인가
 
-        HttpResponse response = httpRequestService.broadCastSignal(session, "broadcast-interview-end", interviewee);
-        System.out.println(response);
+        HttpResponse response = httpRequestService.broadCastSignal(sessionId, "broadcast-interview-end", intervieweeId);
+        StatusLine sl = response.getStatusLine();
+        System.out.print("STATUS CODE: ");
+        System.out.println(sl.getStatusCode());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
