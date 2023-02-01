@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import Swal from "sweetalert2";
@@ -30,10 +31,19 @@ function RoomListItem(props) {
     });
   };
 
+  // const [roomId, setRoomId] =useState([])
+  // const clickHandler = () => {
+  //   setRoomId(props.id)
+  //   console.log(props.id)
+
+  // }
   return (
+    
     <RoomItem>
       <div className="rommtitle">
+      <Link to ="/room" state={{ roomId:props.id}}>
         <h3>({props.index}){props.id}{props.title}</h3>
+      </Link>
         <p>
           {props.currentPersonCount}/{props.maxPersonCount}
         </p>

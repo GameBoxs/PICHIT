@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useState, useCallback,useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { ToggleButton } from "../common/ToggleButton";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
@@ -9,9 +9,6 @@ import Title from "../common/Title";
 import useAxios from "../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 import axios from "axios";
-
-
-
 
 // 방 생성하기 모달
 function CreateRoom({ setModalOpen }) {
@@ -25,6 +22,7 @@ function CreateRoom({ setModalOpen }) {
     console.log(toggle);
   };
 
+  // 방 생성 정보 들어감
   const [room, setRoom] = useState({
     title: "",
     description: "",
@@ -35,125 +33,74 @@ function CreateRoom({ setModalOpen }) {
     managerId: 0,
   });
 
+  // Daypicker 용
   const [selected, setSelected] = useState();
 
-  const handleDayClick = day => {
+  // 날짜 선택해서 데이터 넣음
+  const handleDayClick = (day) => {
     setSelected(day);
-    setRoom(prev => {
-      return {...prev, startDate:day}
-    })
-  }
+    setRoom((prev) => {
+      return { ...prev, startDate: day };
+    });
+  };
 
-
-  // const InputHandler = useCallback((e, type) => {
-  //   const value = (prev) => {
-  //     return { ...prev };
-  //   };
-
-  //   switch (type) {
-  //     case "title":
-  //       setRoom((prev) => {
-  //         return { ...prev, title: value };
-  //       });
-  //       break;
-  //     case "desciption":
-  //       setRoom((prev) => {
-  //         return { ...prev, description: value };
-  //       });
-  //       break;
-  //     case "maxPersoncount":
-  //       setRoom((prev) => {
-  //         return { ...prev, maxPersonCount: value };
-  //       });
-  //       break;
-  //     case "password":
-  //       setRoom((prev) => {
-  //         return { ...prev, password: value };
-  //       });
-  //       break;
-  //     case "finished":
-  //       setRoom((prev) => {
-  //         return { ...prev, finished: value };
-  //       });
-  //       break;
-  //     // case "startDate":
-  //     //   setRoom((prev) => {
-  //     //     return { ...prev, startDate: value };
-  //     //   });
-  //     //   break;
-
-  //     default:
-  //       break;
-  //   }
-  // }, []);
-
-  const InputHandler = e => {
+  // 방 생성하기 모달에 적은 input 값 넣어줌
+  const InputHandler = (e) => {
     setRoom({
       ...room,
-      [e.target.name]:e.target.value,
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  
-  // const data = useAxios('interviewrooms', "POST" , token, test)
-
-
-  // let footer = <p>Please pick a day.</p>;
-  // if (selected) {
-  //   footer = <p>You picked {format(selected, "PP")}.</p>;
-  // }
-
+  // 모달 닫는창
   const closeModal = () => {
     setModalOpen(false);
   };
-  
-  useEffect (() => {
+
+  // 모달 밖 클릭시 모달 없앰
+  useEffect(() => {
     document.body.style = `overflow:hidden`;
-    return () => document.body.style = `overflow:auto`
-  },[])
+    return () => (document.body.style = `overflow:auto`);
+  }, []);
 
+  // 방 생성하기 임시 axios post
+  const token = useSelector((state) => state.token);
   const [isLoading, setIsLoading] = useState(true);
-
-  const token =useSelector(state => state.token)
-
   const createRoom = () => {
-    
-    console.log(room)
+    console.log(room);
     axios({
-      method: 'POST',
-      url:'https://i8d107.p.ssafy.io/api/interviewrooms',
-      headers:{
-        Authorization: token
+      method: "POST",
+      url: "https://i8d107.p.ssafy.io/api/interviewrooms",
+      headers: {
+        Authorization: token,
       },
-      data:room
+      data: room,
     })
-    .then((res) => {
-      console.log(res)
-      setRoom(res.room);
-      
-    })
-    .catch((err) => console.log(err))
-    .finally(() => {
-      setIsLoading(false);
-    });
+      .then((res) => {
+        console.log(res);
+        setRoom(res.room);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
     setModalOpen(false);
-  }
+  };
 
   const handleDaySelect = (date) => {
     setSelected(date);
     if (date) {
-      setRoom(format(date,'yyyy-MM-dd'));
+      setRoom(format(date, "yyyy-MM-dd"));
     }
-    setRoom('');
-    console.log(date)
-  } 
-  
+    setRoom("");
+    console.log(date);
+  };
 
   return (
     <Wrap onClick={closeModal}>
-      <ModalContainer onClick = {(e) => e.stopPropagation()}>
+      <ModalContainer onClick={(e) => e.stopPropagation()}>
         <Header>
-          <Title title='방 생성하기' />
+          <Title title="방 생성하기" />
         </Header>
         <Layout height="40%">
           <Section width="50%">
@@ -179,13 +126,12 @@ function CreateRoom({ setModalOpen }) {
               <Info>
                 <InfoText>모집 인원</InfoText>
                 <InfoPerson
-                   max ="4"
-                   min = "2"
-                   step="1"
-                  
-                   name="maxPersonCount"
-                   value={room.maxPersonCount}
-                   onChange={InputHandler}
+                  max="4"
+                  min="2"
+                  step="1"
+                  name="maxPersonCount"
+                  value={room.maxPersonCount}
+                  onChange={InputHandler}
                 />
               </Info>
               <Info>
@@ -201,9 +147,9 @@ function CreateRoom({ setModalOpen }) {
                 />
                 {toggle ? (
                   <InfoInput
-                  name="password"
-                  value={room.password}
-                  onChange={InputHandler}
+                    name="password"
+                    value={room.password}
+                    onChange={InputHandler}
                   />
                 ) : null}
               </Info>
@@ -215,8 +161,8 @@ function CreateRoom({ setModalOpen }) {
             <RoomText
               placeholder="방 생성에 필요한 정보를 입력하세요"
               name="description"
-                  value={room.description}
-                  onChange={InputHandler}
+              value={room.description}
+              onChange={InputHandler}
             ></RoomText>
           </Section>
         </Layout>
@@ -259,7 +205,7 @@ const ModalContainer = styled.div`
   border: none;
   border-radius: 8px;
   box-shadow: 5px 10px 10px 1px rgba(0, 0, 0, 0.3);
-  padding:30px
+  padding: 30px;
 `;
 
 const Layout = styled.div`
@@ -299,22 +245,22 @@ const InfoInput = styled.input.attrs({ type: "text" })`
   width: 180px;
 `;
 
-const InfoPerson = styled.input.attrs({type:"number"})`
+const InfoPerson = styled.input.attrs({ type: "number" })`
   background-color: gray;
   border-radius: 5px;
   height: 30px;
   width: 180px;
   margin: 10px;
   border: none;
-`
+`;
 
 const RoomText = styled.textarea`
   width: 100%;
   height: 200px;
-  border: none
+  border: none;
 `;
 
 const Header = styled.div`
-margin: 10px;
+  margin: 10px;
   text-align: center;
-`
+`;

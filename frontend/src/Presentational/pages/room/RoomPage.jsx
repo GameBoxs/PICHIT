@@ -2,12 +2,18 @@ import styled from "styled-components";
 import RoomHeader from "../../layout/room/RoomHeader"
 import RoomMain from "../../layout/room/RoomMain";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import useAxios from "../../../action/hooks/useAxios";
-import { get } from "lodash";
+import { useLocation } from "react-router-dom";
 
-function RoomPage(props) {
+
+function RoomPage() {
+  
+  // roomId 값을 RoomListItem에서 Link state에 받아와서 
+  // useLocation에 넣어논 roomId 값을 가져와서 사용함 
+  const location =useLocation();
+  const roomId = location.state.roomId
+
 
   const [join, setJoin] = useState(false);
 
@@ -35,10 +41,15 @@ function RoomPage(props) {
   //   else 아이디 값 !== 방생성 아이디 
   //    host 값 false 
   // }
+
+  
   const token =useSelector(state => state.token)
   const [data, setData] =useState([])
 
-  const [getData , isLoading] =useAxios('interviewrooms/172',"GET", token)
+
+
+
+  const [getData , isLoading] =useAxios(`interviewrooms/${roomId}`,"GET", token)
 
   useEffect(() => {
     if(getData && getData.data) {
@@ -48,7 +59,7 @@ function RoomPage(props) {
 
   },[getData])
 
-
+  
 // console.log(room[0].)
 //  axios({
 //   method:'GET',
