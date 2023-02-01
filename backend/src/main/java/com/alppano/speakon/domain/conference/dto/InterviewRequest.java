@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ConferenceRequest {
+public class InterviewRequest {
     private String sessionId;
     private String intervieweeId;
     private String questionId;
