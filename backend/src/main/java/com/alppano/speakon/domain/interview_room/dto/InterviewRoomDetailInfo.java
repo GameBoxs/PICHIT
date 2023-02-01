@@ -1,12 +1,12 @@
 package com.alppano.speakon.domain.interview_room.dto;
 
+import com.alppano.speakon.domain.interview_join.entity.Participant;
 import com.alppano.speakon.domain.interview_room.entity.InterviewRoom;
 import com.alppano.speakon.domain.user.dto.UserInfoDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -23,7 +23,7 @@ public class InterviewRoomDetailInfo {
     private LocalDateTime startDate;
     private LocalDateTime createdDate;
     private UserInfoDto manager;
-    private List<UserInfoDto> participants;
+    private List<Participant> participants;
 
     public InterviewRoomDetailInfo(InterviewRoom dto) {
         this.id = dto.getId();
