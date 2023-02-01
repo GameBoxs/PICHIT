@@ -60,11 +60,12 @@ public class InterviewRoomService {
         return new InterviewRoomInfo(interviewRoom);
     }
 
+    @Transactional
     public void deleteInterviewRoom(Long interviewRoomId, Long userId) {
         InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
 
-        if (interviewRoom.getManager().getId() != userId) {
+        if (!interviewRoom.getManager().getId().equals(userId)) {
             throw new ResourceForbiddenException("방장만 면접방을 삭제할 수 있습니다.");
         }
 
@@ -83,7 +84,7 @@ public class InterviewRoomService {
         // 참가자 정보
         List<Participant> participants = new ArrayList<>();
         for (InterviewJoin join : interviewRoom.getInterviewJoins()) {
-            participants.add(new Participant(join.getUser(),join.getId()));
+            participants.add(new Participant(join.getUser(), join.getId()));
         }
         interviewRoomDetailInfo.setParticipants(participants);
 
@@ -108,4 +109,15 @@ public class InterviewRoomService {
         return new PagedResult<>(list);
     }
 
+    @Transactional
+    public void setInterviewRoomFinishedStatus(Long interviewRoomId, Integer finished, Long userId) {
+        InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
+
+        if (!interviewRoom.getManager().getId().equals(userId)) {
+            throw new ResourceForbiddenException("방장만 면접방 상태를 수정할 수 있습니다.");
+        }
+
+        interviewRoom.setFinished(finished);
+    }
 }
