@@ -9,8 +9,6 @@ import com.alppano.speakon.domain.recording.repository.RecordingRepository;
 import com.alppano.speakon.domain.recording_timestamp.dto.RecordingTimestampRequest;
 import com.alppano.speakon.domain.recording_timestamp.entity.RecordingTimestamp;
 import com.alppano.speakon.domain.recording_timestamp.repository.RecordingTimestampRepository;
-import com.alppano.speakon.domain.user.entity.User;
-import com.alppano.speakon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class RecordingTimestampService {
 
     private final RecordingTimestampRepository recordingTimestampRepository;
-    private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
     private final RecordingRepository recordingRepository;
 

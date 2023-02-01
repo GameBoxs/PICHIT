@@ -2,7 +2,6 @@ package com.alppano.speakon.domain.question.entity;
 
 import com.alppano.speakon.domain.feedback.entity.Feedback;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
-import com.alppano.speakon.domain.recording.entity.Recording;
 import com.alppano.speakon.domain.recording_timestamp.entity.RecordingTimestamp;
 import com.alppano.speakon.domain.user.entity.User;
 import lombok.*;
