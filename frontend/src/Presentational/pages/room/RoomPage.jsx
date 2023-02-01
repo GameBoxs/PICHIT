@@ -35,11 +35,10 @@ function RoomPage(props) {
 
 
   return (
-    <>
+    <Container>
       <Page>
         <RoomHeader
           title={props.items[0].title}
-          date={props.items[0].date}
           joinRoom={joinRoom}
           join={join}
           host={host}
@@ -49,9 +48,10 @@ function RoomPage(props) {
           content={props.items[0].content}
           join={join}
           host={host}
+          date={props.items[0].date}
         />
       </Page>
-    </>
+    </Container>
   );
 }
 export default RoomPage;
@@ -59,4 +59,13 @@ export default RoomPage;
 const Page = styled.div`
   margin-left: 10%;
   margin-right: 10%;
+  width: 65vw;
 `;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding-top: 10vh;
+  background-color: var(--white);
+`
