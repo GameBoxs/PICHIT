@@ -54,12 +54,13 @@ const RoomItem = styled.li`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 15px;
   width: 32%;
   height: 140px;
-  padding: 2% 3%;
+  padding: 2% 4%;
   margin-bottom: 2%;
+	box-shadow: 4px 4px 12px 1px rgba(0, 0, 0, 0.2);
   div {
     display: flex;
     justify-content: space-between;

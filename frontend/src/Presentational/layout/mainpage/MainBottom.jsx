@@ -158,29 +158,37 @@ function MainBottom() {
 export default MainBottom;
 
 const Layout = styled.div`
-  margin-left: 10%;
-  margin-right: 10%;
+  /* margin-inline: 15rem; */
+  margin-bottom: 100px;
+  width: 65vw;
 `;
 
 const Header = styled.div`
-  border-bottom: 2px solid gray;
-  padding: 10px 3% 10px 7%;
+  /* border-bottom: 2px solid gray; */
+  padding: 4rem 0 2rem 0;
+
+  & h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const Titlesection = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const Main = styled.div`
-  margin: 3% 10% 0% 10%;
+  margin: 0;
   .search-input {
     width: 100%;
+    margin-block: 2rem 1.5rem;
   }
 `;
 
 const RoomListdiv = styled.div`
-  height: 500px;
+  margin-block: 1rem 3rem;
 `;
 
 const Footer = styled.div`
