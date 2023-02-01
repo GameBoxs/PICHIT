@@ -12,7 +12,7 @@ import { leaveSession } from "../../../action/modules/chatModule";
 import UserVideoComponent from "../../component/Chat/OpenVidu/UserVideoComponent";
 import { useNavigate } from "react-router-dom";
 
-const InterviewerPage = ({session,setSession,OV,setOV,info,setInfo}) => {
+const InterviewerPage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   let navigate = useNavigate();
 
   // const peopleNumb = 4;
@@ -28,13 +28,13 @@ const InterviewerPage = ({session,setSession,OV,setOV,info,setInfo}) => {
   //       </CamCompo>
   //     );
   //   });
-  
+
   function People() {
-    let cnt = 3-info.subscribers.length;
+    let cnt = 3 - info.subscribers.length;
     function makeBlank() {
       let result = [];
-      for(let i=0; i<cnt; i++){
-        result.push(<CamCompo></CamCompo>)
+      for (let i = 0; i < cnt; i++) {
+        result.push(<CamCompo></CamCompo>);
       }
       return result;
     }
@@ -45,18 +45,14 @@ const InterviewerPage = ({session,setSession,OV,setOV,info,setInfo}) => {
             <UserVideoComponent streamManager={info.publisher} />
           </CamCompo>
         ) : null}
-        {
-          info.subscribers.map((sub, i) => (
-            <CamCompo>
-              <UserVideoComponent streamManager={sub} />
-            </CamCompo>
-          ))
-        }
-        {
-          makeBlank()
-        }
+        {info.subscribers.map((sub, i) => (
+          <CamCompo>
+            <UserVideoComponent streamManager={sub} />
+          </CamCompo>
+        ))}
+        {makeBlank()}
       </>
-    )
+    );
   }
 
   return (
@@ -66,10 +62,13 @@ const InterviewerPage = ({session,setSession,OV,setOV,info,setInfo}) => {
         <NavCompo>Pitchit</NavCompo>
         <NavCompo>
           <div>00:00:00</div>
-          <MdOutlineLogout className="logOutBtn" onClick={() => {
-        leaveSession(session, setOV);
-        navigate("/room");
-      }}/>
+          <MdOutlineLogout
+            className="logOutBtn"
+            onClick={() => {
+              leaveSession(session, setOV);
+              navigate("/room");
+            }}
+          />
         </NavCompo>
       </InterviewNav>
 
@@ -77,7 +76,7 @@ const InterviewerPage = ({session,setSession,OV,setOV,info,setInfo}) => {
         <BodyCompo>{People()}</BodyCompo>
         <BodyCompo>
           <SubTitle title={"채팅"} />
-          <ChatArea session={session} info={info}/>
+          <ChatArea session={session} info={info} />
         </BodyCompo>
       </InterviewBody>
     </Container>
@@ -140,12 +139,12 @@ const BodyCompo = styled.div`
     background-color: white;
     padding-block: 2vh;
     /* padding-inline: 1.5vw; */
-    height: 80vh;
-    
-     & > div:first-child{
+    height: 83vh;
+
+    & > div:first-child {
       padding-inline: 1.5vw;
     }
-    
+
     /*
     & > div:last-child {
       div:last-child{
@@ -163,12 +162,13 @@ const InterviewBody = styled.div`
   gap: 0.5vw;
   display: grid;
   grid-template-columns: 2fr 1fr;
-  box-shadow:.8rem .8rem 1.4rem var(--greyLight-2), 
-            -.2rem -.2rem 1.8rem var(--greyLight-2);
+  box-shadow: 0.8rem 0.8rem 1.4rem var(--greyLight-2),
+    -0.2rem -0.2rem 1.8rem var(--greyLight-2);
   align-items: center;
   overflow: hidden;
 
-  &, ${BodyCompo}, ${CamCompo}, ${InterviewerTag} {
+  &,
+  ${BodyCompo}, ${CamCompo}, ${InterviewerTag} {
     border-radius: 2vw;
   }
 
@@ -189,7 +189,7 @@ const NavCompo = styled.div`
 
   &:nth-child(2) {
     font-weight: 600;
-    color:var(--primary);
+    color: var(--primary);
   }
 
   &:nth-child(3) {
@@ -202,7 +202,10 @@ const NavCompo = styled.div`
 
   .logOutBtn {
     cursor: pointer;
-    &:hover {color: var(--primary);}
+    
+    &:hover * {
+      color: var(--primary);
+    }
   }
 `;
 

@@ -159,7 +159,7 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
       {/* interviewee Nav */}
       <InterviewNav>
         <NavCompo></NavCompo>
-        <NavCompo>SpeakOn</NavCompo>
+        <NavCompo>Pitchit</NavCompo>
         <NavCompo>
           <div>총 시간&nbsp;00:00:00</div>
           <MdOutlineLogout
@@ -368,6 +368,7 @@ const Feedback = styled.textarea`
   height: 40vh;
   font-size: 1.2em;
   resize: none;
+  outline: none;
 `;
 
 const SubBtn = styled.div`
@@ -385,9 +386,9 @@ const SubBtn = styled.div`
   grid-column: 1 / 2;
   grid-row: 1 / 2;
   background-color: var(--primary);
-  box-shadow: inset 0.2rem 0.2rem 1rem var(--primary-light),
-    inset -0.2rem -0.2rem 1rem var(--primary-dark),
-    0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--white);
+  box-shadow: inset 0.1rem 0.1rem 0.5rem var(--primary-light),
+    inset -0.1rem -0.1rem 0.5rem var(--primary-dark),
+    0.15rem 0.15rem 0.3rem var(--greyLight-2), -0.1rem -0.1rem 0.25rem var(--white);
 
   color: var(--greyLight-1);
   &:hover {
@@ -401,11 +402,11 @@ const SubBtn = styled.div`
 `;
 
 const TipMark = styled.div`
-  color: #989898;
+  color: var(--greyLight-2);
   font-size: 1.2em;
 
   &:hover {
-    color: #5f5f5f;
+    color: var(--greyDark);
   }
 `;
 
@@ -435,14 +436,13 @@ const QuestionBody = styled.div`
 `;
 
 const InterviewerTag = styled.div`
-  background-color: #ccc;
   padding: 0.2em 0.6em;
   position: absolute;
   font-weight: 600;
   top: 0.7em;
   left: 1em;
   background: var(--greyLight-1);
-  color: var(--greyDark);
+  color: var(--primary);
 `;
 
 const CamCompo = styled.div`
@@ -545,6 +545,14 @@ const NavCompo = styled.div`
 
     & * {
       color: var(--greyDark);
+    }
+  }
+  
+  .logOutBtn {
+    cursor: pointer;
+    
+    &:hover * {
+      color: var(--primary);
     }
   }
 `;
