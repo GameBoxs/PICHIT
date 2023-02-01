@@ -4,7 +4,9 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.alppano.speakon.common.dto.ApiResponse;
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
+import com.alppano.speakon.common.exception.ResourceNotFoundException;
 import com.alppano.speakon.domain.conference.dto.ConferenceRequest;
 import com.alppano.speakon.domain.conference.service.ConferenceService;
 import com.alppano.speakon.domain.conference.service.HttpRequestService;
@@ -62,7 +64,7 @@ public class ConferenceController {
      */
     @Operation(summary = "화상회의 세션 생성")
     @PostMapping("/sessions/{interviewRoomId}")
-    public ResponseEntity<String> initializeSession(@PathVariable("interviewRoomId") Long interviewRoomId,
+    public ResponseEntity<ApiResponse> initializeSession(@PathVariable("interviewRoomId") Long interviewRoomId,
                                                     @AuthenticationPrincipal LoginUser loginUser)
             throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
         Map<String, Object> openViduParams = null; // OpenVidu 세션 설정이 가능함
@@ -84,12 +86,13 @@ public class ConferenceController {
         // OpenVidu 세션이 만들어지면 Redis에 회의 정보 등록
         conferenceService.createConference(session.getSessionId(), interviewRoomDetailInfo);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        ApiResponse result = new ApiResponse(Boolean.TRUE, "세션 생성 성공");
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Operation(summary = "화상회의 세션 종료")
     @PostMapping("/sessions/close/{sessionId}")
-    public ResponseEntity<String> closeConference(@PathVariable("sessionId") String sessionId,
+    public ResponseEntity<ApiResponse> closeConference(@PathVariable("sessionId") String sessionId,
                                                     @AuthenticationPrincipal LoginUser loginUser)
             throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
         Long userId = loginUser.getId();
@@ -103,21 +106,25 @@ public class ConferenceController {
         conferenceService.deleteConference(sessionId);
         Session session = openvidu.getActiveSession(sessionId);
         session.close();
-        return new ResponseEntity<>(HttpStatus.OK);
+        ApiResponse result = new ApiResponse(Boolean.TRUE, "세션 종료 성공");
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Operation(summary = "화상회의 연결")
     @PostMapping("/sessions/connections/{sessionId}")
-    public ResponseEntity<String> createConnection(@PathVariable("sessionId") String sessionId,
-                                                   @RequestBody(required = false) Map<String, Object> params)
+    public ResponseEntity<ApiResponse<String>> createConnection(@PathVariable("sessionId") String sessionId)
             throws OpenViduJavaClientException, OpenViduHttpException {
         Session session = openvidu.getActiveSession(sessionId);
         if (session == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("존재하지 않는 세션입니다.");
         }
-        ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
+
+        Map<String, Object> openViduParams = null; // OpenVidu 세션 설정이 가능함
+        ConnectionProperties properties = ConnectionProperties.fromJson(openViduParams).build();
         Connection connection = session.createConnection(properties);
-        return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
+
+        ApiResponse<String> result = new ApiResponse(Boolean.TRUE, "토큰 발급 성공", connection.getToken());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Operation(summary = "면접자 지정(인터뷰 시작)")
