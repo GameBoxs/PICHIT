@@ -12,6 +12,8 @@ import com.alppano.speakon.domain.interview_room.dto.InterviewRoomDetailInfo;
 import com.alppano.speakon.domain.interview_room.service.InterviewRoomService;
 import com.alppano.speakon.security.LoginUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
@@ -30,6 +32,7 @@ import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 
+@Tag(name = "화상회의 관리")
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
@@ -57,6 +60,7 @@ public class ConferenceController {
     /**
      OpenVidu에 세션 등록 + Redis에 세션 등록
      */
+    @Operation(summary = "화상회의 세션 생성")
     @PostMapping("/sessions/{interviewRoomId}")
     public ResponseEntity<String> initializeSession(@PathVariable("interviewRoomId") Long interviewRoomId,
                                                     @AuthenticationPrincipal LoginUser loginUser)
@@ -83,6 +87,7 @@ public class ConferenceController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "화상회의 세션 종료")
     @PostMapping("/sessions/close/{sessionId}")
     public ResponseEntity<String> closeConference(@PathVariable("sessionId") String sessionId,
                                                     @AuthenticationPrincipal LoginUser loginUser)
@@ -100,11 +105,8 @@ public class ConferenceController {
         session.close();
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    /**
-     * @param sessionId The Session in which to create the Connection
-     * @param params    The Connection properties
-     * @return The Token associated to the Connection
-     */
+
+    @Operation(summary = "화상회의 연결")
     @PostMapping("/sessions/connections/{sessionId}")
     public ResponseEntity<String> createConnection(@PathVariable("sessionId") String sessionId,
                                                    @RequestBody(required = false) Map<String, Object> params)
@@ -118,7 +120,7 @@ public class ConferenceController {
         return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
     }
 
-    // 면접자 지정
+    @Operation(summary = "면접자 지정(인터뷰 시작)")
     @PostMapping("/interview/interviewee")
     public ResponseEntity<String> selectInterviewee(@RequestBody ConferenceRequest requestDto,
                                                     @AuthenticationPrincipal LoginUser loginUser) throws Exception {
@@ -135,7 +137,7 @@ public class ConferenceController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // 질문 제안 요청
+    @Operation(summary = "질문 제안")
     @PostMapping("/interview/question/propose")
     public ResponseEntity<String> proposeQuestion(@RequestBody ConferenceRequest requestDto,
                                                   @AuthenticationPrincipal LoginUser loginUser) throws Exception {
@@ -153,8 +155,7 @@ public class ConferenceController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-    // 질문 종료 요청
+    @Operation(summary = "질문 종료")
     @PostMapping("/interview/question/end")
     public ResponseEntity<String> endQuestion(@RequestBody ConferenceRequest requestDto,
                                               @AuthenticationPrincipal LoginUser loginUser) throws Exception {
@@ -174,6 +175,7 @@ public class ConferenceController {
     }
 
     // 현재 진행 중인 면접자 XXX의 '인터뷰' 종료 요청
+    @Operation(summary = "인터뷰 종료")
     @PostMapping("/interview/end")
     public ResponseEntity<String> endInterview(@RequestBody ConferenceRequest requestDto,
                                                @AuthenticationPrincipal LoginUser loginUser) throws Exception {
