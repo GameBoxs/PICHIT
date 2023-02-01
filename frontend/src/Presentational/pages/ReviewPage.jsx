@@ -27,11 +27,25 @@ const ReviewPage = (props) => {
   
   useEffect(() => {
     if(getData && getData.data){
-      setData(getData.data.content);
+      setData(getData);
       setTotalElements(getData.data.totalElements);
       setTotalPage(getData.data.totalPage);
     }
   },[getData]);
+
+  console.log('isLoading');
+  console.log(isLoading);
+  
+  console.log('getData');
+  console.log(getData);
+
+  console.log('data');
+  console.log(data);
+
+  // if(getData){
+  //   console.log('getData.data');
+  //   console.log(getData.data);
+  // }
 
   //#region 타이틀 텍스트 변수
   // 피드백 타이틀 텍스트
@@ -180,11 +194,13 @@ const ReviewPage = (props) => {
       <Line></Line>
       {/* <FilterArea /> */}
       {
-        isLoading === true ? <div>loading...</div> : 
+        isLoading !== false ? <div>loading...</div> :
+        data && data.data ?
         <>
-          {/* <HistoryList data={data} />
-          <DetailArea data={testdata} /> */}
-        </>
+          <HistoryList data={data} currentPage={nowPage} setCurrentPage={setNowPage} totalpages={totalPage}/>
+          {/* <DetailArea data={testdata} /> */}
+        </> :
+        <div>loading...</div>
       }
       {/* <HistoryList data={data} />
       <DetailArea data={testdata} /> */}

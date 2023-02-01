@@ -3,27 +3,16 @@ import Title from "../../../common/Title";
 import SubTitle from "../../../common/SubTitle";
 
 const ListItem = (props) => {
-    let CurrentState = "";
-  
-    if(props.item.Processing==="Y") {
-      CurrentState = "진행중";
-    } else if(props.item.Processing==="N") {
-      CurrentState = "진행 예정";
-    } else if(props.item.Processing==="E") {
-      CurrentState = "종료";
-    }
-  console.log(props.item)
+  const tempDate = new Date((props.item.startDate).toString());
+  const date = tempDate.getFullYear().toString().slice(2,4) + '.' +  (tempDate.getMonth()+1).toString() + '.' + tempDate.getDate().toString()
     return(
       <>
-        {/* <Line></Line> */}
-            <ItemWrap>
-            <Title title={props.item.Title}></Title>
-            <SubTitle title={props.item.Day}></SubTitle>
-            <SubTitle title={CurrentState}></SubTitle>
-            {props.item.Title !=="" && props.item.Title !== null && props.item.Title !== undefined ? <SubTitle title=">"></SubTitle> : null }
-            </ItemWrap>
-            <Line></Line>
-        {/* {props.index === props.postsPerPage-1 || props.index+1 === ""? <Line></Line> : null} */}
+        <ItemWrap>
+          <Title title={props.item.title}></Title>
+          <SubTitle title={date}></SubTitle>
+          {props.item.title !=="" && props.item.title !== null && props.item.title !== undefined ? <SubTitle title=">"></SubTitle> : null }
+        </ItemWrap>
+        <Line></Line>
       </>
     )
   }
@@ -41,16 +30,13 @@ const ListItem = (props) => {
     }
     & div:nth-child(1) {
         cursor: pointer;
-        width: 75%;
+        width: 85%;
     }
     & div:nth-child(2) {
         width: 10%;
     }
     & div:nth-child(3) {
-        width: 10%;
-    }
-    & div:nth-child(4) {
-        cursor: pointer;
+      cursor: pointer;
         width: 5%;
         font-size: 30px;
     }
