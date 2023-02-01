@@ -46,4 +46,9 @@ const QuestionBody = styled.div`
   &:hover {
     background-color: var(--greyLight-1);
   }
+
+  & .SubTitle {
+    color: var(--greyDark);
+    font-size: 1rem;
+  }
 `;
