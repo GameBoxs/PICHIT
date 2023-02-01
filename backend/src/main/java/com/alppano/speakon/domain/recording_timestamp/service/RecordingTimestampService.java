@@ -27,7 +27,7 @@ public class RecordingTimestampService {
 
     // TODO: 추후 수정 예정
     @Transactional
-    public void createRecordingTimeStamp(RecordingTimestampRequest dto) {
+    public void createRecordingTimestamp(RecordingTimestampRequest dto) {
         Question question = questionRepository.findById(dto.getQuestionId()).orElseThrow(
                 () -> new ResourceNotFoundException("존재하지 않는 질문 입니다.")
         );
@@ -47,5 +47,14 @@ public class RecordingTimestampService {
                 .build();
 
         recordingTimestampRepository.save(recordingTimestamp);
+    }
+
+    @Transactional
+    public void deleteRecordingTimestamp(Long timestampId) {
+        RecordingTimestamp recordingTimestamp = recordingTimestampRepository.findById(timestampId).orElseThrow(
+                () -> new ResourceNotFoundException("해당 타임스탬프가 존재하지 않습니다.")
+        );
+
+        recordingTimestampRepository.delete(recordingTimestamp);
     }
 }

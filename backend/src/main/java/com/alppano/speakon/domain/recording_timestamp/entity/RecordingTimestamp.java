@@ -18,7 +18,7 @@ public class RecordingTimestamp {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "question_id", nullable = false, unique = true)
+    @JoinColumn(name = "question_id", unique = true)
     private Question question;
 
     @ManyToOne
@@ -26,4 +26,5 @@ public class RecordingTimestamp {
     private Recording recording;
 
     private int secondTime;
+
 }
