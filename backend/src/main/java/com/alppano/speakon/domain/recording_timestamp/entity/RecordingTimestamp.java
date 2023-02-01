@@ -26,4 +26,5 @@ public class RecordingTimestamp {
     private Recording recording;
 
     private int secondTime;
+
 }
