@@ -38,7 +38,7 @@ const MainPage = () => {
   };
 
   return (
-    <>
+    <MainPageLayout>
       <First ref={(el) => (MainDiv.current[0] = el)}>
         <MoveBtn onClick={() => scrollWithUseRef(0)}>DOWN</MoveBtn>
         <MainTop/>
@@ -47,7 +47,7 @@ const MainPage = () => {
         <MoveBtn onClick={() => scrollWithUseRef(1)}>UP</MoveBtn>
         <MainBottom/>
       </Second>
-    </>
+    </MainPageLayout>
   );
 };
 
@@ -59,10 +59,22 @@ const MoveBtn = styled.div`
 
 const Second = styled.div`
   background-color: #ffffff;
+  display: flex;
+  justify-content: center;
   height: 100vh;
+  padding: 1em 3em;
 `;
 
 const First = styled.div`
   background-color: #3ec7c2;
   height: 100vh;
+  position: relative;
+  padding: 1em 3em;
+  overflow: hidden;
 `;
+
+const MainPageLayout = styled.div`
+  margin-bottom: 10vh;
+  height: 250vh;
+  margin: 0 auto;
+`

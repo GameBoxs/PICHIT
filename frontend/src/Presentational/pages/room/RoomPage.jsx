@@ -2,6 +2,10 @@ import styled from "styled-components";
 import RoomHeader from "../../layout/room/RoomHeader"
 import RoomMain from "../../layout/room/RoomMain";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import useAxios from "../../../action/hooks/useAxios";
+import { get } from "lodash";
 
 function RoomPage(props) {
 
@@ -31,22 +35,48 @@ function RoomPage(props) {
   //   else 아이디 값 !== 방생성 아이디 
   //    host 값 false 
   // }
+  const token =useSelector(state => state.token)
+  const [data, setData] =useState([])
 
+  const [getData , isLoading] =useAxios('interviewrooms/172',"GET", token)
+
+  useEffect(() => {
+    if(getData && getData.data) {
+      console.log(getData.data)
+      setData(getData.data)
+    }
+
+  },[getData])
+
+
+// console.log(room[0].)
+//  axios({
+//   method:'GET',
+//   url: 'http://i8d107.p.ssafy.io/api/interviewrooms/150',
+//   headers:{
+//     Authorization: token
+//   }
+//  })
+//  .then((res)=> {
+//   console.log(res)
+//  })
+//  .catch((err) => {
+//   console.log(err)
+//  })
   
 
   return (
     <>
       <Page>
+
         <RoomHeader
-          title={props.items[0].title}
-          date={props.items[0].date}
           joinRoom={joinRoom}
+          data = {data}
           join={join}
           host={host}
         />
         <RoomMain
-          people={props.items[0].people}
-          content={props.items[0].content}
+        data = {data}
           join={join}
           host={host}
         />

@@ -11,8 +11,8 @@ import EditRoom from "../../component/EditRoom";
 
 const MySwal = withReactContent(Swal);
 
-function RoomHeader({join,joinRoom,title,date,host}) {
-  
+function RoomHeader({join,joinRoom,data,host}) {
+  // console.log(roomData)
   const showSwalWithLink = () => {
     MySwal.fire({
       title: "방 수정하기",
@@ -28,7 +28,12 @@ function RoomHeader({join,joinRoom,title,date,host}) {
       )
     })
   }
-  
+
+  const title = data.title
+  const startDate=data.startDate
+
+
+
 
   const joinHandler = () => {
     joinRoom(!join)
@@ -40,7 +45,7 @@ function RoomHeader({join,joinRoom,title,date,host}) {
         <Layout>
           <Left>
             <Title title={title} />
-            <PlanTime date={date} />
+            <Title title={startDate} />
           </Left>
         { host ?  // host 인지 아닌지 판별
 

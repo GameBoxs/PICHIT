@@ -7,19 +7,20 @@ function MainTop() {
           <Header>
             <WcontainerContents>
               <MainHeadingWrapper>
-                <H1Tag>SPEAK</H1Tag>
+                <H1Tag>PICHIT</H1Tag>
                 <WithOutTag>ON</WithOutTag>
               </MainHeadingWrapper>
               <MultiSubtitle>
-                Our team is 'Alppano'.
-                The members are a celebrity and 'kjh man' and four people.
-                The author of this page has a headache today.
-                work hard.&nbsp;
+                <p>Our team is 'Alppano'.</p>
+                <p>The members are a celebrity and 'kjh man' and four people.</p>
+                <p>The author of this page has a headache today.</p>
+                <p>work hard.&nbsp;
                 <LinkBlack>
                   {/* <a className="link black" href="#more"> */}
                   Learn More
                   {/* </a> */}
                 </LinkBlack>
+                </p>
               </MultiSubtitle>
             </WcontainerContents>
           </Header>
@@ -34,24 +35,26 @@ export default MainTop;
 const TopBody = styled.div`
   //   background-color: #21ffda;
   //   /* height: 100vh; */
-  margin-top: 30px;
-  margin-left: 150px;
+  margin-top:2%;
+  /* margin-left: 150px; */
 `;
+
 const Header = styled.div`
   position: relative;
   overflow-x: hidden;
   overflow-y: hidden;
   padding-bottom: 99px;
 `;
+
 const WcontainerContents = styled.div`
   max-width: 1170px;
   padding-right: 20px;
   padding-left: 20px;
 
 `;
+
 const MainHeadingWrapper = styled.div`
-  margin-top: 32px;
-  margin-bottom: 47px;
+  margin-bottom: 5em;
 `;
 
 const fadeInDown = keyframes`
@@ -66,13 +69,13 @@ const fadeInDown = keyframes`
 `
 const H1Tag = styled.h1`
   position: relative;
+  top: 15px;
   z-index: 1;
-  margin-right: 0px;
-  margin-left: 0px;
+  margin: 0;
   font-family: "Montserrat", sans-serif;
   color: black;
-  font-size: 99px;
-  line-height: 87px;
+  font-size: 1200%;
+  line-height: 0.8em;
   font-weight: 800;
   text-transform: uppercase;
   opacity: 0;
@@ -93,26 +96,20 @@ const fadeInUp = keyframes`
     opacity: 1;
   }
 `
-const MultiSubtitle = styled.h2`
+const MultiSubtitle = styled.div`
   //h2태그로 되있던거
-  margin-right: 0px;
-  margin-left: 0px;
-  padding-bottom: 92px;
+  margin-inline: 1rem;
   font-family: "Montserrat", sans-serif;
   color: #262626;
-  font-size: 31px;
-  line-height: 35px;
-  font-weight: 800;
+  font-size: 120%;
   text-align: center;
   text-transform: uppercase;
   //main-subtitle 클래스로 되있던거
-  padding-bottom: 57px;
   font-family: futura-pt, sans-serif;
   color: black;
-  font-size: 28px;
-  line-height: 34px;
   font-style: normal;
   font-weight: 400;
+  line-height: 200%;
   text-align: left;
   text-transform: none;
   opacity: 0;

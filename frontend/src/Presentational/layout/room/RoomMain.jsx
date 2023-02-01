@@ -4,11 +4,14 @@ import React, { useState, useEffect } from "react";
 import QuestionBox from "./QuestionBox";
 import Resume from "./Resume";
 
-function RoomMain({ join, content, host }) {
+function RoomMain({ join, host, data }) {
   const [isJoin, setIsJoin] = useState(true);
   const [pdf, setPdf] = useState(0);
   // 참여하기
+ const description = data.description
 
+
+  
   useEffect(() => {
     setIsJoin(join);
     console.log("isJoin", isJoin);
@@ -64,7 +67,7 @@ function RoomMain({ join, content, host }) {
             </BlockList>
           )}
         </Section>
-        <Section width="50%">{content}</Section>
+        <Section width="50%">{description}</Section>
       </Layout>
       <SectionHeader>
         <SubTitle title={"자기소개서"} />

@@ -37,74 +37,71 @@ function CreateRoom({ setModalOpen }) {
 
   const [selected, setSelected] = useState();
 
-  // const data = useAxios(
-  //   "/interviewrooms",
-  //   "POST",
-  //   room
-  // );
-
-
-  const test = {
-    title: "테스트 방",
-    description: "테스트 설명",
-    maxPersonCount: 0,
-    password: "1234",
-    finished: 0,
-    startDate: "2023-01-31T12:08:36.833Z",
-    managerId: 2,
+  const handleDayClick = day => {
+    setSelected(day);
+    setRoom(prev => {
+      return {...prev, startDate:day}
+    })
   }
 
-  const InputHandler = useCallback((e, type) => {
-    const value = (prev) => {
-      return { ...prev };
-    };
 
-    switch (type) {
-      case "title":
-        setRoom((prev) => {
-          return { ...prev, title: value };
-        });
-        break;
-      case "desciption":
-        setRoom((prev) => {
-          return { ...prev, description: value };
-        });
-        break;
-      case "maxPersoncount":
-        setRoom((prev) => {
-          return { ...prev, maxPersonCount: value };
-        });
-        break;
-      case "password":
-        setRoom((prev) => {
-          return { ...prev, password: value };
-        });
-        break;
-      case "finished":
-        setRoom((prev) => {
-          return { ...prev, finished: value };
-        });
-        break;
-      // case "startDate":
-      //   setRoom((prev) => {
-      //     return { ...prev, startDate: value };
-      //   });
-      //   break;
+  // const InputHandler = useCallback((e, type) => {
+  //   const value = (prev) => {
+  //     return { ...prev };
+  //   };
 
-      default:
-        break;
-    }
-  }, []);
+  //   switch (type) {
+  //     case "title":
+  //       setRoom((prev) => {
+  //         return { ...prev, title: value };
+  //       });
+  //       break;
+  //     case "desciption":
+  //       setRoom((prev) => {
+  //         return { ...prev, description: value };
+  //       });
+  //       break;
+  //     case "maxPersoncount":
+  //       setRoom((prev) => {
+  //         return { ...prev, maxPersonCount: value };
+  //       });
+  //       break;
+  //     case "password":
+  //       setRoom((prev) => {
+  //         return { ...prev, password: value };
+  //       });
+  //       break;
+  //     case "finished":
+  //       setRoom((prev) => {
+  //         return { ...prev, finished: value };
+  //       });
+  //       break;
+  //     // case "startDate":
+  //     //   setRoom((prev) => {
+  //     //     return { ...prev, startDate: value };
+  //     //   });
+  //     //   break;
 
-  const token =useSelector(state => state.token)
+  //     default:
+  //       break;
+  //   }
+  // }, []);
+
+  const InputHandler = e => {
+    setRoom({
+      ...room,
+      [e.target.name]:e.target.value,
+    })
+  }
+
   
   // const data = useAxios('interviewrooms', "POST" , token, test)
 
 
-  let footer = <p>Please pick a day.</p>;
-  if (selected) {
-    footer = <p>You picked {format(selected, "PP")}.</p>;
-  }
+  // let footer = <p>Please pick a day.</p>;
+  // if (selected) {
+  //   footer = <p>You picked {format(selected, "PP")}.</p>;
+  // }
 
   const closeModal = () => {
     setModalOpen(false);
@@ -117,26 +114,40 @@ function CreateRoom({ setModalOpen }) {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const token =useSelector(state => state.token)
+
   const createRoom = () => {
-    console.log(test)
+    
+    console.log(room)
     axios({
       method: 'POST',
       url:'https://i8d107.p.ssafy.io/api/interviewrooms',
       headers:{
         Authorization: token
       },
-      data:test,
+      data:room
     })
     .then((res) => {
       console.log(res)
-      setRoom(res.test);
-      console.log(res.test)
+      setRoom(res.room);
+      
     })
     .catch((err) => console.log(err))
     .finally(() => {
       setIsLoading(false);
     });
+    setModalOpen(false);
   }
+
+  const handleDaySelect = (date) => {
+    setSelected(date);
+    if (date) {
+      setRoom(format(date,'yyyy-MM-dd'));
+    }
+    setRoom('');
+    console.log(date)
+  } 
+  
 
   return (
     <Wrap onClick={closeModal}>
@@ -149,8 +160,10 @@ function CreateRoom({ setModalOpen }) {
             <DayPicker
               mode="single"
               selected={selected}
-              onSelect={setSelected}
-              footer={footer}
+              onDayClick={handleDayClick}
+              name="startDate"
+              value={room.startDate}
+              onChange={handleDaySelect}
             />
           </Section>
           <Section width="60%">
@@ -158,17 +171,21 @@ function CreateRoom({ setModalOpen }) {
               <Info>
                 <InfoText>방 이름</InfoText>
                 <InfoInput
-                  onChange={() => {
-                    InputHandler("title");
-                  }}
+                  name="title"
+                  value={room.title}
+                  onChange={InputHandler}
                 />
               </Info>
               <Info>
                 <InfoText>모집 인원</InfoText>
-                <InfoInput
-                  onChange={() => {
-                    InputHandler("maxPersoncount");
-                  }}
+                <InfoPerson
+                   max ="4"
+                   min = "2"
+                   step="1"
+                  
+                   name="maxPersonCount"
+                   value={room.maxPersonCount}
+                   onChange={InputHandler}
                 />
               </Info>
               <Info>
@@ -184,9 +201,9 @@ function CreateRoom({ setModalOpen }) {
                 />
                 {toggle ? (
                   <InfoInput
-                    onChange={() => {
-                      InputHandler("password");
-                    }}
+                  name="password"
+                  value={room.password}
+                  onChange={InputHandler}
                   />
                 ) : null}
               </Info>
@@ -197,9 +214,9 @@ function CreateRoom({ setModalOpen }) {
           <Section width="100%">
             <RoomText
               placeholder="방 생성에 필요한 정보를 입력하세요"
-              onChange={() => {
-                InputHandler("desciption");
-              }}
+              name="description"
+                  value={room.description}
+                  onChange={InputHandler}
             ></RoomText>
           </Section>
         </Layout>
@@ -279,7 +296,17 @@ const InfoInput = styled.input.attrs({ type: "text" })`
   height: 30px;
   margin: 10px;
   border: none;
+  width: 180px;
 `;
+
+const InfoPerson = styled.input.attrs({type:"number"})`
+  background-color: gray;
+  border-radius: 5px;
+  height: 30px;
+  width: 180px;
+  margin: 10px;
+  border: none;
+`
 
 const RoomText = styled.textarea`
   width: 100%;
