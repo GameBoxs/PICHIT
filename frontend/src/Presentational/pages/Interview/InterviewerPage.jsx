@@ -63,9 +63,9 @@ const InterviewerPage = ({session,setSession,OV,setOV,info,setInfo}) => {
     <Container>
       <InterviewNav>
         <NavCompo></NavCompo>
-        <NavCompo>SpeakOn</NavCompo>
+        <NavCompo>Pitchit</NavCompo>
         <NavCompo>
-          <div>총 시간&nbsp;00:00:00</div>
+          <div>00:00:00</div>
           <MdOutlineLogout className="logOutBtn" onClick={() => {
         leaveSession(session, setOV);
         navigate("/room");
@@ -156,13 +156,15 @@ const BodyCompo = styled.div`
 `;
 
 const InterviewBody = styled.div`
-  background-color: #ccc;
+  background-color: var(--greyLight-1);
   height: 90vh;
   margin: 0vh 3vw 4vh 3vw;
   border-radius: 3vw;
   gap: 0.5vw;
   display: grid;
   grid-template-columns: 2fr 1fr;
+  box-shadow:.8rem .8rem 1.4rem var(--greyLight-2), 
+            -.2rem -.2rem 1.8rem var(--greyLight-2);
   align-items: center;
   overflow: hidden;
 
@@ -185,12 +187,22 @@ const NavCompo = styled.div`
   justify-content: center;
   width: 20vw;
 
+  &:nth-child(2) {
+    font-weight: 600;
+    color:var(--primary);
+  }
+
   &:nth-child(3) {
     justify-content: flex-end;
+
+    & * {
+      color: var(--greyDark);
+    }
   }
 
   .logOutBtn {
     cursor: pointer;
+    &:hover {color: var(--primary);}
   }
 `;
 

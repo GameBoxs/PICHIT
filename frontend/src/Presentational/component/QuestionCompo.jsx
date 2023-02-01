@@ -28,7 +28,7 @@ const MainQuestion = styled.div`
 
 const QuestionBody = styled.div`
   padding: 3vh 1vh 2vh 1vh;
-  border-bottom: solid 1px #ccc;
+  border-bottom: solid 1px var(--greyLight-2);
 
   & .SubTitle {
     font-size: 0.85em;
@@ -44,6 +44,6 @@ const QuestionBody = styled.div`
   }
 
   &:hover {
-    background-color: #f0f0f0;
+    background-color: var(--greyLight-1);
   }
 `;

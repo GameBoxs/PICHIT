@@ -56,12 +56,11 @@ const NameTag = styled.div`
   display: flex;
   top: 1vh;
   left: 0.5vw;
-  background-color: #4d4d4d;
   background: var(--greyLight-1);
+  color: var(--greyDark);
   padding: 1% 2%;
   border-radius: 0.5em;
   justify-self: center;
-  color: var(--greyDark);
 `;
 
 const Icon = styled.div``;

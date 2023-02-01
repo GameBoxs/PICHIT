@@ -6,7 +6,6 @@ export const GlobalStyle = createGlobalStyle`
         padding: 0;
         margin: 0;
         box-sizing: border-box;
-        color: #000000;
         transition: 0.2s;
     }
 
@@ -20,6 +19,7 @@ export const GlobalStyle = createGlobalStyle`
         --greyLight-2: #c8d0e7;
         --greyLight-3: #bec8e4;
         --greyDark: #9baacf;
+        --textColor: #5e5e5e;
     }
 
     $shadow: .3rem .3rem .6rem var(--greyLight-2), -.2rem -.2rem .5rem var(--white);
