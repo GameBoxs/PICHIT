@@ -1,5 +1,6 @@
 package com.alppano.speakon.domain.interview_join.service;
 
+import com.alppano.speakon.common.dto.PagedResult;
 import com.alppano.speakon.common.exception.ResourceAlreadyExistsException;
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
@@ -12,7 +13,8 @@ import com.alppano.speakon.domain.interview_room.repository.InterviewRoomReposit
 import com.alppano.speakon.domain.user.entity.User;
 import com.alppano.speakon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,4 +73,17 @@ public class InterviewJoinService {
         }
     }
 
+    public PagedResult<InterviewJoinInfo> getMyInterviewJoins(Pageable pageable, Integer finished, Long userId) {
+        Page<InterviewJoin> queryResult = null;
+
+        if (finished != null) {
+            queryResult = interviewJoinRepository.findAllByFinishedAndUserId(pageable, finished, userId);
+        } else {
+            queryResult = interviewJoinRepository.findAllByUserId(pageable, userId);
+        }
+
+        Page<InterviewJoinInfo> list = queryResult.map(interviewJoin -> new InterviewJoinInfo(interviewJoin));
+
+        return new PagedResult<>(list);
+    }
 }

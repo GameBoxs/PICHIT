@@ -60,6 +60,6 @@ public class JwtUtil {
 
     public Boolean validateToken(String token, User user) {
         final Long id = getId(token);
-        return (id == user.getId() && !isTokenExpired(token));
+        return (id.equals(user.getId()) && !isTokenExpired(token));
     }
 }
