@@ -38,41 +38,21 @@ function MainBottom() {
 
   // // roomlist통신
   const [data, setData] = useState([])
-  const [loading, setLoading] = useState(false);
     // //페이지네이션
     const [currentPage, setCurrentPage] = useState(1); //현재페이지
     const [postsPerPage, setPostsPerPage] = useState(9); //페이지당 게시물 수
     const [totalElements, setTotalElements] = useState(0); //전체 데이터 길이
     const [totalpages, setTotalPages] = useState(0); //전체 데이터 길이
-    
-    // const lastPostIndex = currentPage * postsPerPage; //렌더할 페이지에 해당하는 마지막 인덱스값
-    // const firstPostIndex = lastPostIndex - postsPerPage; //렌더할 페이지에 해당하는 첫번째 인덱스값
-    // const currentPosts = data.slice(firstPostIndex, lastPostIndex); //현재 페이지에서 렌더할 데이터항목
 
-  // const loadData = async () => {
-  //   try{
-  //     setLoading(true);
-  //     const response = await axios.get(`http://i8d107.p.ssafy.io/api/interviewrooms?page=${currentPage-1}`);
-  //     setData(response.data);
-  //     setTotalElements(response.data.data.totalElements)
-  //     setTotalPages(response.data.data.totalPages)
-  //   } catch (e) {
-  //     console.log('catch실행됨')
-  //   }
-  //   setLoading(false);
-  // }
-  // useEffect(() => {
-  //   loadData();
-  // }, [currentPage]);
   const [getData, isLoading] = useAxios(
-    `/interviewrooms?page=${currentPage-1}`,'GET',testToken,
+    `interviewrooms?page=${currentPage-1}`,'GET',testToken,
   );
-  console.log(getData)
   useEffect(() => {
     if(getData && getData.data){
-      setData(getData.data)
-      setTotalElements(getData.data.data.totalElements)
-      setTotalPages(getData.data.data.totalPages)
+      console.log(getData)
+      setData(getData)
+      setTotalElements(getData.data.totalElements)
+      setTotalPages(getData.data.totalPages)
     }
   }, [getData]);
 
@@ -115,15 +95,6 @@ function MainBottom() {
       ),
     });
   };
-
-  // // //페이지네이션
-  // const [currentPage, setCurrentPage] = useState(1); //현재페이지
-  // const [postsPerPage, setPostsPerPage] = useState(9); //페이지당 게시물 수
-
-  // const lastPostIndex = currentPage * postsPerPage; //렌더할 페이지에 해당하는 마지막 인덱스값
-  // const firstPostIndex = lastPostIndex - postsPerPage; //렌더할 페이지에 해당하는 첫번째 인덱스값
-  // const currentPosts = data.slice(firstPostIndex, lastPostIndex); //현재 페이지에서 렌더할 데이터항목
-
 
   return (
     <Layout>
