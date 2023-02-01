@@ -11,7 +11,6 @@ import com.alppano.speakon.domain.interview_room.dto.InterviewRoomInfo;
 import com.alppano.speakon.domain.interview_room.dto.InterviewRoomRequest;
 import com.alppano.speakon.domain.interview_room.entity.InterviewRoom;
 import com.alppano.speakon.domain.interview_room.repository.InterviewRoomRepository;
-import com.alppano.speakon.domain.user.dto.UserInfoDto;
 import com.alppano.speakon.domain.user.entity.User;
 import com.alppano.speakon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
