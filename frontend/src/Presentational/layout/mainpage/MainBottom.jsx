@@ -12,116 +12,10 @@ import EmptyRoomList from "../../component/EmptyRoomList";
 //통신
 import useAxios from '../../../action/hooks/useAxios';
 import axios from "axios";
+import {testToken} from "../../../store/values"
 
 const MySwal = withReactContent(Swal);
 // React sweet alert 쓸려고 사용함
-
-const DUMMY_DATA = [
-  {
-    id: 1,
-    Participant: 2,
-    personnel: 4,
-    title: "비밀방1",
-    date: "23.01.24",
-    secret: true,
-  },
-  {
-    id: 2,
-    Participant: 2,
-    personnel: 4,
-    title: "방제목",
-    date: "23.01.24",
-    secret: false,
-  },
-  {
-    id: 3,
-    Participant: 2,
-    personnel: 4,
-    title: "방제목",
-    date: "23.01.24",
-    secret: false,
-  },
-  {
-    id: 4,
-    Participant: 2,
-    personnel: 4,
-    title: "비밀방2",
-    date: "23.01.24",
-    secret: true,
-  },
-  {
-    id: 5,
-    Participant: 2,
-    personnel: 4,
-    title: "방제목",
-    date: "23.01.24",
-    secret: false,
-  },
-  {
-    id: 6,
-    Participant: 2,
-    personnel: 4,
-    title: "방제목",
-    date: "23.01.24",
-    secret: false,
-  },
-  {
-    id: 7,
-    Participant: 2,
-    personnel: 4,
-    title: "비밀방3",
-    date: "23.01.24",
-    secret: true,
-  },
-  {
-    id: 8,
-    Participant: 2,
-    personnel: 4,
-    title: "방제목",
-    date: "23.01.24",
-    secret: false,
-  },
-  {
-    id: 9,
-    Participant: 2,
-    personnel: 4,
-    title: "방제목",
-    date: "23.01.24",
-    secret: false,
-  },
-  {
-    id: 10,
-    Participant: 2,
-    personnel: 4,
-    title: "방제목",
-    date: "23.01.24",
-    secret: false,
-  },
-];
-
-const MY_ROOMS = [
-  {
-    id: 1,
-    Participant: 2,
-    personnel: 4,
-    title: "알밥",
-    date: "23.01.24",
-  },
-  {
-    id: 2,
-    Participant: 2,
-    personnel: 4,
-    title: "짬뽕",
-    date: "23.01.24",
-  },
-  {
-    id: 3,
-    Participant: 2,
-    personnel: 4,
-    title: "탕수육",
-    date: "23.01.24",
-  },
-];
 
 function MainBottom() {
   // //로그인여부
@@ -155,24 +49,32 @@ function MainBottom() {
     // const firstPostIndex = lastPostIndex - postsPerPage; //렌더할 페이지에 해당하는 첫번째 인덱스값
     // const currentPosts = data.slice(firstPostIndex, lastPostIndex); //현재 페이지에서 렌더할 데이터항목
 
-  const loadData = async () => {
-    try{
-      setLoading(true);
-      const response = await axios.get(`http://i8d107.p.ssafy.io/api/interviewrooms?page=${currentPage-1}`);
-      setData(response.data);
-      console.log(response.data.data)
-      setTotalElements(response.data.data.totalElements)
-      console.log(response.data.data.totalElements)
-      setTotalPages(response.data.data.totalPages)
-      console.log(response.data.data.totalPages)
-    } catch (e) {
-      console.log('catch실행됨')
-    }
-    setLoading(false);
-  }
+  // const loadData = async () => {
+  //   try{
+  //     setLoading(true);
+  //     const response = await axios.get(`http://i8d107.p.ssafy.io/api/interviewrooms?page=${currentPage-1}`);
+  //     setData(response.data);
+  //     setTotalElements(response.data.data.totalElements)
+  //     setTotalPages(response.data.data.totalPages)
+  //   } catch (e) {
+  //     console.log('catch실행됨')
+  //   }
+  //   setLoading(false);
+  // }
+  // useEffect(() => {
+  //   loadData();
+  // }, [currentPage]);
+  const [getData, isLoading] = useAxios(
+    `/interviewrooms?page=${currentPage-1}`,'GET',testToken,
+  );
+  console.log(getData)
   useEffect(() => {
-    loadData();
-  }, [currentPage]);
+    if(getData && getData.data){
+      setData(getData.data)
+      setTotalElements(getData.data.data.totalElements)
+      setTotalPages(getData.data.data.totalPages)
+    }
+  }, [getData]);
 
   //////////////////  <<<  total/my 사용자정렬  >>>>  ////////////////
   //사용자 정렬
@@ -231,7 +133,7 @@ function MainBottom() {
       </button> */}
       <Header>
         <h1> LOOM LIST</h1>
-        <button onClick={ loadData }>다시 불러오기</button>
+        
         <Titlesection>
           <p>대충 설명이 들어가겠죠?</p>
           <div>
@@ -251,7 +153,10 @@ function MainBottom() {
             </button> */}
           </div>
         </Titlesection>
+         
       </Header>
+      {
+          isLoading===true ? <div>loading...</div> :
       <section>
         <Main>
           {/* {roomPosition ? <MyCategory /> : <TotalCategory />} */}
@@ -275,6 +180,7 @@ function MainBottom() {
           <button onClick={showSwalWithLink}>방만들기</button>
         </Footer>
       </section>
+      }
     </Layout>
   );
 }
