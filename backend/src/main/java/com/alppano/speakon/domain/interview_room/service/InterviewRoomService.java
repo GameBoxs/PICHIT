@@ -4,13 +4,13 @@ import com.alppano.speakon.common.dto.PagedResult;
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
+import com.alppano.speakon.domain.interview_join.entity.Participant;
 import com.alppano.speakon.domain.interview_join.repository.InterviewJoinRepository;
 import com.alppano.speakon.domain.interview_room.dto.InterviewRoomDetailInfo;
 import com.alppano.speakon.domain.interview_room.dto.InterviewRoomInfo;
 import com.alppano.speakon.domain.interview_room.dto.InterviewRoomRequest;
 import com.alppano.speakon.domain.interview_room.entity.InterviewRoom;
 import com.alppano.speakon.domain.interview_room.repository.InterviewRoomRepository;
-import com.alppano.speakon.domain.user.dto.UserInfoDto;
 import com.alppano.speakon.domain.user.entity.User;
 import com.alppano.speakon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -81,9 +81,9 @@ public class InterviewRoomService {
         InterviewRoomDetailInfo interviewRoomDetailInfo = new InterviewRoomDetailInfo(interviewRoom);
 
         // 참가자 정보
-        List<UserInfoDto> participants = new ArrayList<>();
+        List<Participant> participants = new ArrayList<>();
         for (InterviewJoin join : interviewRoom.getInterviewJoins()) {
-            participants.add(new UserInfoDto(join.getUser()));
+            participants.add(new Participant(join.getUser(),join.getId()));
         }
         interviewRoomDetailInfo.setParticipants(participants);
 
