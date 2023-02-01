@@ -64,7 +64,7 @@ public class ConferenceController {
         SessionProperties properties = SessionProperties.fromJson(params).build(); // 방 이름 미지정 시 sessionId 랜덤값 생성
 
         Long userId = loginUser.getId();
-        Long interviewRoomId = (Long) params.get("interviewRoomId");
+        Long interviewRoomId = Long.parseLong((String)params.get("interviewRoomId"));
         log.info("세션 생성 요청자 ID: {}", userId);
         log.info("면접방 ID: {}", interviewRoomId);
 
