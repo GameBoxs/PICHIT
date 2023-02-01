@@ -5,8 +5,6 @@ import com.alppano.speakon.common.dto.PagedResult;
 import com.alppano.speakon.domain.interview_join.dto.InterviewJoinInfo;
 import com.alppano.speakon.domain.interview_join.dto.InterviewJoinRequest;
 import com.alppano.speakon.domain.interview_join.service.InterviewJoinService;
-import com.alppano.speakon.domain.interview_room.dto.InterviewRoomInfo;
-import com.alppano.speakon.domain.interview_room.dto.InterviewRoomSimpleInfo;
 import com.alppano.speakon.security.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
