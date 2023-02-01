@@ -10,6 +10,10 @@ export const GlobalStyle = createGlobalStyle`
         transition: 0.2s;
     }
 
+    body {
+        height: fit-content;
+    }
+
     body.dark {
         background: #353535;
         & *{ 

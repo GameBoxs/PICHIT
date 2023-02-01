@@ -13,6 +13,7 @@ import { getUserInfo } from "../../reducer/userStore";
 function Navigation() {
   const [popup, setPopup] = useState();  
   const dispatch = useDispatch()
+  let data = {}
 
   const handleOpenPop = () => {  //팝업 생성 함수
     const width = 400;
@@ -76,7 +77,7 @@ function Navigation() {
   
   //토큰 불러와서 불러온 userInfo 이용해서 리덕스에 사용자 정보 넣기
   const token = useSelector(state => state.token)
-  const {data} = useAxios('userinfo', "GET", token)
+  data = useAxios('userinfo', "GET", token)
   dispatch(getUserInfo(data))
 
   return (
@@ -87,7 +88,7 @@ function Navigation() {
         NavigationButton - Menu Button
       */}
       <GlobalStyle/>
-      <NavTitle>Speak On</NavTitle>
+      {/* <NavTitle>Speak On</NavTitle> */}
       <NavigationButton userName='' handleOpenPop={handleOpenPop} ></NavigationButton>
     </NavBody>
   )
@@ -97,13 +98,11 @@ export default Navigation;
 
 const NavBody = styled.div`
   width: 100%;
-  height: 100px;
   display: table;
   z-index: 100;
 `
 
 const NavTitle = styled.p`
-  font-size: 30px;
   display: table-cell;
   vertical-align: middle;
   text-align: center;

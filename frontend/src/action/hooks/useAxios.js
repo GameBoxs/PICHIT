@@ -46,9 +46,9 @@ function useAxios(target, type, token, body) {
         setIsLoading(false);
       });
 
-  }, [type]);
+  }, [type, target, body]);
 
-  return { data, isLoading };
+  return [ data, isLoading ];
 }
 
 export default useAxios;

@@ -13,6 +13,7 @@ const MySwal = withReactContent(Swal);
 
 function NavigationButton(props) {
   const token = useSelector(state => state.token)
+  const info = useSelector(state => state.userinfo)
   const dispatch = useDispatch()
   const menuToggle = useRef();
   
@@ -48,7 +49,7 @@ function NavigationButton(props) {
       <GlobalStyle/>
       <NavUser className="userArea">
         <UserName>
-          {(token !== null)  ? `${props.userName}님 반갑습니다.` : '로그인이 필요합니다.'}
+          {(token !== null)  ? `${info.name}님 반갑습니다.` : '로그인이 필요합니다.'}
         </UserName>
       </NavUser>
       <MenuToggle className="menuToggle" onClick={toggleClick}></MenuToggle>
