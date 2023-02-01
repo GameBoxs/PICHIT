@@ -6,8 +6,16 @@ import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
 
+// {
+//     "id": 80,
+//     "title": "멋진 면접",
+//     "currentPersonCount": 1,
+//     "maxPersonCount": 4,
+//     "secretRoom": true,
+//     "finished": false,
+//     "startDate": "2023-01-24T08:40:10.495"
+// }
 function RoomListItem(props) {
-
     // 비밀방 클릭시, 비밀번호 입력 모달 띄우도록 설정,
   const showSwalWithLink = () => {
     MySwal.fire({
@@ -19,20 +27,18 @@ function RoomListItem(props) {
       showCancelButton:true,
       confirmButtonText:"입장하기",
       cancelButtonText:"취소하기"
-
-
     });
   };
 
   return (
     <RoomItem>
       <div className="rommtitle">
-        <h3>{props.title}</h3>
+        <h3>({props.index}){props.id}{props.title}</h3>
         <p>
-          {props.Participant}/{props.personnel}
+          {props.currentPersonCount}/{props.maxPersonCount}
         </p>
       </div>
-      <p>{props.date}</p>
+      <p>{props.startDate}</p>
 
       {props.secret ? (
         <button onClick={showSwalWithLink}>비밀번호</button>
