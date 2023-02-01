@@ -83,10 +83,10 @@ const Fade = styled.div`
   pointer-events: none;
   background: linear-gradient(
     /* 방향 설정 */ 180deg,
-    #fff,
+    var(--greyLight-1),
     transparent 30%,
     transparent 70%,
-    #fff
+    var(--greyLight-1)
   );
   position: absolute;
   height: inherit;
