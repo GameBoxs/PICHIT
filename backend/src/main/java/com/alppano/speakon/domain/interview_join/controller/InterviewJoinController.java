@@ -46,7 +46,7 @@ public class InterviewJoinController {
     @GetMapping("/my-interviewjoins")
     public ResponseEntity<ApiResponse<PagedResult<InterviewJoinInfo>>> getMyInterviewJoins(@AuthenticationPrincipal LoginUser loginUser,
                                                                                                  @PageableDefault(size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                                                                                                 @RequestParam(required = false) Integer finished) {
+                                                                                                 @RequestParam int finished) {
         PagedResult<InterviewJoinInfo> list = interviewJoinService.getMyInterviewJoins(pageable, finished, loginUser.getId());
         ApiResponse<PagedResult<InterviewJoinInfo>> result = new ApiResponse(Boolean.TRUE, "조회 성공", list);
         return new ResponseEntity<>(result, HttpStatus.OK);

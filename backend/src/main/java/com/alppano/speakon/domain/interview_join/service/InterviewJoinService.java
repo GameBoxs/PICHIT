@@ -73,10 +73,11 @@ public class InterviewJoinService {
         }
     }
 
-    public PagedResult<InterviewJoinInfo> getMyInterviewJoins(Pageable pageable, Integer finished, Long userId) {
+    public PagedResult<InterviewJoinInfo> getMyInterviewJoins(Pageable pageable, int finished, Long userId) {
         Page<InterviewJoin> queryResult = null;
 
-        if (finished != null) {
+        // 0: 면접 시작전, 1: 면접 완료, 2: 모두 조회
+        if (finished == 0 || finished == 1) {
             queryResult = interviewJoinRepository.findAllByFinishedAndUserId(pageable, finished, userId);
         } else {
             queryResult = interviewJoinRepository.findAllByUserId(pageable, userId);
