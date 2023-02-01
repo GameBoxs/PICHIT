@@ -15,8 +15,8 @@ const BounceWrap = styled.div`
     height: 30px;
     display: flex;
     align-items: center;
-    margin-top: 2px;
-    background-color: rgba(0,0,0,0.3);
+    margin-top: 2%;
+    background-color: var( --greyLight-1);
     width: 70px;
     border-radius: 20px 20px 20px 20px;
 `
@@ -33,7 +33,7 @@ const Ellipsis = styled.div`
     height: 10px;
     margin-left: 10px;
     margin-top: 3px;
-    background-color: rgba(0,0,0,1);
+    background-color: var(--primary);
     border-radius: 50%;
     animation: ${bounce} 1.3s linear infinite;
 

@@ -84,8 +84,8 @@ const SelectIntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
       <ConditionSentance>{sentance}</ConditionSentance>
       <Screen number={info.subscribers.length} info={info} />
       <BottomPanel>
-        <Button handler={handler} text="시작" />
-        <Button text="종료" handler={() => {leaveSession(session, setOV); navigate("/room")}}/>
+        <Button handler={handler} text="시작" isImportant={true} />
+        <Button text="종료" handler={() => {leaveSession(session, setOV); navigate("/room")}} isImportant={false} />
       </BottomPanel>
     </Container>
   );
@@ -105,11 +105,14 @@ const BottomPanel = styled.div`
 const ConditionSentance = styled.h3`
   font-size: 1em;
   margin-bottom: 1em;
+  color: var(--greyDark);
 `;
 
 const Title = styled.h1`
   font-size: 2em;
-  margin: 0;
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+  color: var(--primary);
 `;
 
 const Container = styled.div`

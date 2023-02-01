@@ -6,12 +6,28 @@ export const GlobalStyle = createGlobalStyle`
         padding: 0;
         margin: 0;
         box-sizing: border-box;
-        color: #000000;
         transition: 0.2s;
     }
 
+    :root {
+        --primary-light: #8abdff;
+        --primary: #6d5dfc;
+        --primary-dark: #5b0eeb;
+        
+        --white: #FFFFFF;
+        --greyLight-1: #E4EBF5;
+        --greyLight-2: #c8d0e7;
+        --greyLight-3: #bec8e4;
+        --greyDark: #9baacf;
+        --textColor: #5e5e5e;
+    }
+
+    $shadow: .3rem .3rem .6rem var(--greyLight-2), -.2rem -.2rem .5rem var(--white);
+    $inner-shadow: inset .2rem .2rem .5rem var(--greyLight-2), inset -.2rem -.2rem .5rem var(--white);
+
     body {
         height: fit-content;
+        background: var(--greyLight-1);
     }
 
     body.dark {
@@ -26,4 +42,4 @@ export const GlobalStyle = createGlobalStyle`
     *::before, *::after {
         box-sizing: border-box;
     }
-`
+`;

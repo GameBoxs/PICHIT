@@ -74,33 +74,41 @@ const dummy = [
   },
 ];
 
-const IntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
+const testPlayer = ["김민지"]
+
+const dummyPlayer = ["이희수", "임수민", "김민지"];
+
+const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   let navigate = useNavigate();
 
-  let cnt = 3-info.subscribers.length;
+  let cnt = 3 - info.subscribers.length;
   console.log(cnt);
   function makeBlank() {
     let result = [];
-    for(let i=0; i<cnt; i++){
-      result.push(<CamCompo className="in">aa</CamCompo>)
+    for (let i = 0; i < cnt; i++) {
+      result.push(<CamCompo className="in">aa</CamCompo>);
     }
     return result;
   }
 
   const [chatOn, setChatOn] = useState(false);
 
+  //채팅 활성화/비활성화
   const chatHandler = () => {
     setChatOn(!chatOn);
   };
 
+  //질문 렌더링
   const Questions = dummy.map((el) => {
     return <QuestionCompo key={el.id} questionInfo={el} />;
   });
 
+  //별점 값 받아오는 함수
   const RatingHandler = (e) => {
     console.log(e.target.value);
   };
 
+  //질문 관리
   const QuestionHandler = (Questions) => {
     console.log(Questions.target);
     MySwal.fire({
@@ -125,19 +133,42 @@ const IntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
       }
     });
   };
-  console.log(info);
+
+  const getInterviewee = (person) => {
+    console.log(person);
+  };
+
+  const interviewees = dummyPlayer.map((elem, idx) => {
+      return (
+        <>
+          <input
+            type="radio"
+            name={`radio`}
+            value={elem}
+            id={`tab-${idx + 1}`}
+          />
+          <label for={`tab-${idx + 1}`}>
+            <p>{elem}</p>
+          </label>
+        </>
+    );
+  });
+
   return (
     <Container>
       {/* interviewee Nav */}
       <InterviewNav>
         <NavCompo></NavCompo>
-        <NavCompo>SpeakOn</NavCompo>
+        <NavCompo>Pitchit</NavCompo>
         <NavCompo>
           <div>총 시간&nbsp;00:00:00</div>
-          <MdOutlineLogout className="logOutBtn" onClick={() => {
-        leaveSession(session, setOV);
-        navigate("/room");
-      }}/>
+          <MdOutlineLogout
+            className="logOutBtn"
+            onClick={() => {
+              leaveSession(session, setOV);
+              navigate("/room");
+            }}
+          />
         </NavCompo>
       </InterviewNav>
 
@@ -145,32 +176,27 @@ const IntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
         {/* 화상채팅 부분 */}
         <BodyCompo>
           <IntervieweeCompo>
-          <CamCompo className="in">
-            <UserVideoComponent streamManager={info.publisher} />
-          </CamCompo>
-          {
-            info.subscribers.map((sub, i) => (
-                sub.stream.connection.connectionId === info.interviewee ?
-                null
-                : <CamCompo className="in">
+            <CamCompo className="in">
+              <UserVideoComponent streamManager={info.publisher} />
+            </CamCompo>
+            {info.subscribers.map((sub, i) =>
+              sub.stream.connection.connectionId === info.interviewee ? null : (
+                <CamCompo className="in">
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>
-            ))
-          }
-          {
-            makeBlank()
-          }
+              )
+            )}
+            {makeBlank()}
           </IntervieweeCompo>
           <CamCompo>
             <InterviewerTag>면접자</InterviewerTag>
-            {
-              info.subscribers.map((sub, i) => (
-                  sub.stream.connection.connectionId === info.interviewee ?
-                  <CamCompo>
-                    <UserVideoComponent streamManager={sub} />
-                  </CamCompo> : null
-              ))
-            }
+            {info.subscribers.map((sub, i) =>
+              sub.stream.connection.connectionId === info.interviewee ? (
+                <CamCompo>
+                  <UserVideoComponent streamManager={sub} />
+                </CamCompo>
+              ) : null
+            )}
           </CamCompo>
         </BodyCompo>
 
@@ -212,7 +238,7 @@ const IntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
         <BodyCompo chatOn={chatOn}>
           {/* 자소서 보기 버튼 */}
           <QuestionBody>
-            <SubTitle title={"면접자 : 이희수"} />
+            <SubTitle title={"이희수"} />
             <SubBtn>자소서 보기</SubBtn>
           </QuestionBody>
 
@@ -221,6 +247,11 @@ const IntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
             <SubNav>
               <SubTitle title={"질문"} />
             </SubNav>
+            <Member>
+              {interviewees}
+      
+              <MemberColor></MemberColor>
+            </Member>
             <AllQuestions onClick={QuestionHandler} chatOn={chatOn}>
               {Questions}
             </AllQuestions>
@@ -229,7 +260,9 @@ const IntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
           {/* 채팅 */}
           <QuestionBody onClick={chatHandler}>
             <SubTitle title={"채팅"} />
-            {chatOn !== false ? <ChatArea session={session} info={info}/> : null}
+            {chatOn !== false ? (
+              <ChatArea session={session} info={info} />
+            ) : null}
           </QuestionBody>
         </BodyCompo>
       </InterviewBody>
@@ -239,15 +272,90 @@ const IntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
 
 export default IntervieweePage;
 
+const MemberColor = styled.div``;
+
+const Member = styled.div`
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+  width: 20.4rem;
+  margin-top: 1rem;
+  margin-bottom: 0;
+  border-radius: 1rem !important;
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  & input {
+    display: none;
+  }
+
+  & > input:checked + label {
+    transition: all 0.5s ease;
+    color: var(--primary);
+  }
+
+  & label {
+    width: 5rem;
+    height: 2rem;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: var(--greyDark);
+    transition: all 0.5s ease;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  ${MemberColor} {
+    position: absolute;
+    height: 2rem;
+    width: 5rem;
+    border-radius: 0.8rem !important;
+    box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2), inset -0.2rem -0.2rem 0.5rem var(--white);
+    pointer-events: none;
+  }
+
+  #tab-1:checked ~ ${MemberColor} {
+    transform: translateX(0);
+    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  #tab-2:checked ~ ${MemberColor} {
+    transform: translateX(5rem);
+    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  #tab-3:checked ~ ${MemberColor} {
+    transform: translateX(10rem);
+    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+`;
+
 const AllQuestions = styled.div`
   width: 100%;
-  height: calc(100% - ${(props) => (props.chatOn ? "20%" : "12%")});
+  height: calc(100% - ${(props) => (props.chatOn ? "35%" : "22%")});
   margin-top: 2vh;
   overflow-y: scroll;
   border-radius: 0 !important;
 
   & * {
     border-radius: 0 !important;
+  }
+
+  &::-webkit-scrollbar {
+    width: 7px;
+    border-radius: 1rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--greyLight-2);
+    border-radius: 1rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: var(--greyLight-1);
   }
 `;
 
@@ -259,25 +367,46 @@ const Feedback = styled.textarea`
   margin-right: 1em;
   height: 40vh;
   font-size: 1.2em;
+  resize: none;
+  outline: none;
 `;
 
 const SubBtn = styled.div`
-  background-color: #ccc;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.5em 0.6em;
-  font-weight: bolder;
+  padding: 0.5em 1.2em;
   font-size: 0.8em;
   width: fit-content;
+  border-radius: 1rem;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-weight: 600;
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  background-color: var(--primary);
+  box-shadow: inset 0.1rem 0.1rem 0.5rem var(--primary-light),
+    inset -0.1rem -0.1rem 0.5rem var(--primary-dark),
+    0.15rem 0.15rem 0.3rem var(--greyLight-2), -0.1rem -0.1rem 0.25rem var(--white);
+
+  color: var(--greyLight-1);
+  &:hover {
+    color: var(--white);
+  }
+
+  &:active {
+    box-shadow: inset 0.2rem 0.2rem 1rem var(--primary-dark),
+      inset -0.2rem -0.2rem 1rem var(--primary-light);
+  }
 `;
 
 const TipMark = styled.div`
-  color: #989898;
+  color: var(--greyLight-2);
   font-size: 1.2em;
 
   &:hover {
-    color: #5f5f5f;
+    color: var(--greyDark);
   }
 `;
 
@@ -307,11 +436,13 @@ const QuestionBody = styled.div`
 `;
 
 const InterviewerTag = styled.div`
-  background-color: #ccc;
   padding: 0.2em 0.6em;
   position: absolute;
+  font-weight: 600;
   top: 0.7em;
   left: 1em;
+  background: var(--greyLight-1);
+  color: var(--primary);
 `;
 
 const CamCompo = styled.div`
@@ -364,6 +495,7 @@ const BodyCompo = styled.div`
     ${QuestionBody}:nth-child(1) {
       display: grid;
       grid-template-rows: 1fr 2fr 1fr;
+      background-color: #ffffed;
     }
   }
 
@@ -388,13 +520,12 @@ const BodyCompo = styled.div`
     }
   }
 
-  &:nth-child(2) ${QuestionBody}:nth-child(2),  &:nth-child(3) ${QuestionBody}:nth-child(1) {
+  &:nth-child(2) ${QuestionBody}:nth-child(2), &:nth-child(3) ${QuestionBody}:nth-child(1) {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 `;
-
 
 const NavCompo = styled.div`
   gap: 1em;
@@ -404,22 +535,38 @@ const NavCompo = styled.div`
   justify-content: center;
   width: 20vw;
 
+  &:nth-child(2) {
+    font-weight: 600;
+    color: var(--primary);
+  }
+
   &:nth-child(3) {
     justify-content: flex-end;
+
+    & * {
+      color: var(--greyDark);
+    }
   }
+  
   .logOutBtn {
     cursor: pointer;
+    
+    &:hover * {
+      color: var(--primary);
+    }
   }
 `;
 
 const InterviewBody = styled.div`
-  background-color: #ccc;
+  background-color: var(--greyLight-1);
   height: 90vh;
   margin: 0vh 3vw 4vh 3vw;
   border-radius: 3vw;
   gap: 0.5vw;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  box-shadow: 0.8rem 0.8rem 1.4rem var(--greyLight-2),
+    -0.2rem -0.2rem 1.8rem var(--greyLight-2);
   align-items: center;
   overflow: hidden;
 
@@ -451,5 +598,13 @@ const Container = styled.div`
   & .SubTitle {
     font-size: 1em;
     font-weight: bolder;
+  }
+
+  & * {
+    transition: ease 0.1s;
+  }
+
+  & .SubTitle {
+    color: var(--textColor);
   }
 `;

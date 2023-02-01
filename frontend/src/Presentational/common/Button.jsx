@@ -1,117 +1,57 @@
 import styled from "styled-components";
 
-const Button = ({text, handler}) => {
+const Button = ({ text, handler, isImportant }) => {
+  return (
+    <Btn onClick={handler} isImportant={isImportant}>
+      <BtnText>{text}</BtnText>
+    </Btn>
+  );
+};
 
-    return (
-        <Btn onClick={handler}>
-            <BtnText>{text}</BtnText>
-        </Btn>
-    
-    )
-}
+export default Button;
 
-export default Button ;
-
-const BtnText = styled.span`
-    display: flex;  
-    text-align: center;
-`
+const BtnText = styled.p`
+  display: flex;
+  text-align: center;
+  font-size: 120%;
+`;
 
 const Btn = styled.div`
-    background: rgb(247,150,192);
-    background: radial-gradient(circle, rgba(247,150,192,1) 0%, rgba(118,174,241,1) 100%);
-    line-height: 4px;
-    padding: 0;
-    border: none;
-    width: fit-content;
-    height: 4px;
-    border-radius: 5px;
-    padding: 16px 25px;
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-    box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
-    7px 7px 20px 0px rgba(0,0,0,.1),
-    4px 4px 5px 0px rgba(0,0,0,.1);
-    outline: none;
+  width: 10vw;
+  height: 8vh;
+  border-radius: 1rem;
+  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
+    -0.2rem -0.2rem 0.5rem var(--white);
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-weight: 600;
+  grid-column: 1 / 2;
+  grid-row: ${(props) => (props.isImportant ? "4 / 5" : "1 / 2")};
+  background-color: ${(props) =>
+    props.isImportant ? "var(--primary)" : "var(--greyLight-1)"};
+  box-shadow: ${(props) =>
+    props.isImportant
+      ? "inset 0.2rem 0.2rem 1rem var(--primary-light), inset -0.2rem -0.2rem 1rem var(--primary-dark), 0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--white)"
+      : "null"};
 
-    & span {
-        position: relative;
-        display: block;
-        width: 100%;
-        height: 100%;
+  & ${BtnText} {
+    color: ${(props) =>
+      props.isImportant ? "var(--greyLight-1)" : "var(--greyDark)"};
+  }
 
+  &:hover ${BtnText} {
+    color: ${(props) =>
+      props.isImportant ? "var(--white)" : "var(--primary)"};
+  }
 
-    }
-
-    &:before,
-    &:after{
-        position: absolute;
-        content: "";
-        height: 0%;
-        width: 1px;
-        box-shadow:
-        -1px -1px 20px 0px rgba(255,255,255,1),
-        -4px -4px 5px 0px rgba(255,255,255,1),
-        7px 7px 20px 0px rgba(0,0,0,.4),
-        4px 4px 5px 0px rgba(0,0,0,.3);
-    }
-
-    &:before {
-        right: 0;
-        top: 0;
-        transition: all 500ms ease;
-    }
-    &:after {
-        left: 0;
-        bottom: 0;
-        transition: all 500ms ease;
-    }
-
-    &:hover {
-        background: transparent;
-        color: #76aef1;
-        box-shadow: none;
-    }
-
-    &:hover:before {
-        transition: all 500ms ease;
-        height: 100%;
-    }
-
-    &:hover:after {
-        transition: all 500ms ease;
-         height: 100%;
-    }
-    &:before span,
-    &:after span{
-        position: absolute;
-        content: "";
-        box-shadow:
-         -1px -1px 20px 0px rgba(255,255,255,1),
-         -4px -4px 5px 0px rgba(255,255,255,1),
-         7px 7px 20px 0px rgba(0,0,0,.4),
-         4px 4px 5px 0px rgba(0,0,0,.3);
-
-    }
-    &:before span{
-        left: 0;
-        top: 0;
-        width: 0%;
-        height: .5px;
-        transition: all 500ms ease;
-    }
-    &:after span{
-        right: 0;
-        bottom: 0;
-        width: 0%;
-        height: .5px;
-        transition: all 500ms ease;
-    }
-    &:hover :before span{
-        width:100%;
-    }
-    &:hover :after span{
-        width:100%;
-    }
-`
+  &:active {
+    box-shadow: ${(props) =>
+      props.isImportant
+        ? "inset 0.2rem 0.2rem 1rem var(--primary-dark),inset -0.2rem -0.2rem 1rem var(--primary-light)"
+        : "inset .2rem .2rem .5rem var(--greyLight-2), inset -.2rem -.2rem .5rem var(--white)"};
+  }
+`;

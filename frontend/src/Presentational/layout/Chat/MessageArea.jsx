@@ -35,8 +35,23 @@ const MessageWrap = styled.div`
     & *{
         margin: 0px 0 5px 0;
     }
+
     & :first-child, :last-child{
         margin:0;
+    }
+
+    &::-webkit-scrollbar {
+        width: 7px;
+        border-radius: 1rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--greyLight-2);
+        border-radius: 1rem;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: var(--greyLight-1);
     }
 `
 
