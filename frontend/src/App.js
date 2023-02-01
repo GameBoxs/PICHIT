@@ -9,6 +9,7 @@ import MainPage from "./Presentational/pages/MainPage";
 import ReviewPage from "./Presentational/pages/ReviewPage";
 import RoomPage from "./Presentational/pages/room/RoomPage";
 import Pagination from "./Presentational/common/Pagination/Pagination"
+import { GlobalStyle } from "./action/GlobalStyle";
 
 const expenses = [
   {
@@ -26,6 +27,7 @@ function App() {
 
   return (
     <AppContainer>
+      <GlobalStyle />
       {(pathname.includes("interview")) ? null:<Navigation /> }
 
       <Routes>
