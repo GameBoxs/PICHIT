@@ -44,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE,"/interviewrooms/**").authenticated()
                 .antMatchers(HttpMethod.PUT,"/interviewrooms/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/userinfo").authenticated()
+                .antMatchers(HttpMethod.GET,"/my-interviewjoins").authenticated()
                 .anyRequest().permitAll(); // 나머지 모든 주소에 대해서 인증 여부와 관계없이 허용
 
         http.cors()                     // CORS on
