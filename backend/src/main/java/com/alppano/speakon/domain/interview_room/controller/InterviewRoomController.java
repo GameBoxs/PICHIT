@@ -66,4 +66,14 @@ public class InterviewRoomController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @Operation(summary = "면접방 상태 수정")
+    @PutMapping("/interviewrooms/{id}/finished")
+    public ResponseEntity<ApiResponse> setInterviewRoomFinishedStatus(@AuthenticationPrincipal LoginUser loginUser,
+                                                                      @PathVariable("id") Long interviewRoomId,
+                                                                      @RequestParam(required = false, defaultValue = "1") Integer finished) {
+        interviewRoomService.setInterviewRoomFinishedStatus(interviewRoomId, finished, loginUser.getId());
+        ApiResponse result = new ApiResponse(Boolean.TRUE, "면접방 상태 수정 성공");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }
