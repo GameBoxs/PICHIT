@@ -18,8 +18,9 @@ public class ConferenceService {
     /**
      회의 진행 정보 불러오기
      */
-    public Conference retrieveConference(String sessionId) throws JsonProcessingException {
-        Conference conference = redisUtil.getRedisValue(sessionId, Conference.class);
+    public Conference retrieveConference(Long interviewRoomId) throws JsonProcessingException {
+        String key = String.valueOf(interviewRoomId);
+        Conference conference = redisUtil.getRedisValue(key , Conference.class);
         if(conference == null) {
             throw new ResourceNotFoundException("존재하지 않는 세션입니다.");
         }
@@ -32,20 +33,21 @@ public class ConferenceService {
     public void createConference(String sessionId, InterviewRoomDetailInfo interviewRoomDetailInfo) throws JsonProcessingException {
         Conference conference = new Conference();
 
-        conference.setInterviewRoomId(interviewRoomDetailInfo.getId());
+        conference.setSessionId(sessionId);
         conference.setManagerId(interviewRoomDetailInfo.getManager().getId());
         conference.setParticipants(interviewRoomDetailInfo.getParticipants());
 
-        redisUtil.setRedisValue(sessionId, conference);
+        redisUtil.setRedisValue(String.valueOf(interviewRoomDetailInfo.getId()), conference);
     }
 
     /**
      redis에서 회의 진행 정보를 삭제 /
      mariaDB로 회의 정보 이관 및 최종 종료
      */
-    public void deleteConference(String sessionId) {
+    public void deleteConference(Long interviewRoomId) {
+        String key = String.valueOf(interviewRoomId);
         //TODO: MariaDB에 자료 이관 작업
-        redisUtil.deleteData(sessionId);
+        redisUtil.deleteData(key);
     }
 
 }

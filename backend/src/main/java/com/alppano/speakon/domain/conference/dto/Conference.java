@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Conference {
-    private Long interviewRoomId;
+    private String sessionId;
     private Long managerId;
     private List<Participant> participants;
     private String questionProceeding;
