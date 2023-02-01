@@ -7,7 +7,8 @@ import javax.annotation.PostConstruct;
 import com.alppano.speakon.common.dto.ApiResponse;
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
-import com.alppano.speakon.domain.conference.dto.ConferenceRequest;
+import com.alppano.speakon.domain.conference.dto.Conference;
+import com.alppano.speakon.domain.conference.dto.InterviewRequest;
 import com.alppano.speakon.domain.conference.service.ConferenceService;
 import com.alppano.speakon.domain.conference.service.HttpRequestService;
 import com.alppano.speakon.domain.interview_room.dto.InterviewRoomDetailInfo;
@@ -91,20 +92,22 @@ public class ConferenceController {
     }
 
     @Operation(summary = "화상회의 세션 종료")
-    @PostMapping("/sessions/close/{sessionId}")
-    public ResponseEntity<ApiResponse> closeConference(@PathVariable("sessionId") String sessionId,
+    @PostMapping("/sessions/close/{interviewRoomId}")
+    public ResponseEntity<ApiResponse> closeConference(@PathVariable("interviewRoomId") Long interviewRoomId,
                                                     @AuthenticationPrincipal LoginUser loginUser)
             throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
         Long userId = loginUser.getId();
         log.info("세션 종료 요청자 ID: {}", userId);
-        log.info("면접방 SessionID: {}", sessionId);
+        log.info("면접방 ID: {}", interviewRoomId);
 
-        if(!userId.equals(conferenceService.retrieveConference(sessionId).getManagerId())) {
+        Conference conference = conferenceService.retrieveConference(interviewRoomId);
+
+        if(!userId.equals(conference.getManagerId())) {
             throw new ResourceForbiddenException("방을 종료할 권한이 없습니다.");
         }
 
-        conferenceService.deleteConference(sessionId);
-        Session session = openvidu.getActiveSession(sessionId);
+        conferenceService.deleteConference(interviewRoomId);
+        Session session = openvidu.getActiveSession(conference.getSessionId());
         session.close();
         ApiResponse result = new ApiResponse(Boolean.TRUE, "세션 종료 성공");
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -129,7 +132,7 @@ public class ConferenceController {
 
     @Operation(summary = "면접자 지정(인터뷰 시작)")
     @PostMapping("/interview/interviewee")
-    public ResponseEntity<String> selectInterviewee(@RequestBody ConferenceRequest requestDto,
+    public ResponseEntity<String> selectInterviewee(@RequestBody InterviewRequest requestDto,
                                                     @AuthenticationPrincipal LoginUser loginUser) throws Exception {
         String sessionId = requestDto.getSessionId();
         String intervieweeId = requestDto.getIntervieweeId();
@@ -146,7 +149,7 @@ public class ConferenceController {
 
     @Operation(summary = "질문 제안")
     @PostMapping("/interview/question/propose")
-    public ResponseEntity<String> proposeQuestion(@RequestBody ConferenceRequest requestDto,
+    public ResponseEntity<String> proposeQuestion(@RequestBody InterviewRequest requestDto,
                                                   @AuthenticationPrincipal LoginUser loginUser) throws Exception {
         String sessionId = requestDto.getSessionId();
         String intervieweeId = requestDto.getIntervieweeId();
@@ -164,7 +167,7 @@ public class ConferenceController {
 
     @Operation(summary = "질문 종료")
     @PostMapping("/interview/question/end")
-    public ResponseEntity<String> endQuestion(@RequestBody ConferenceRequest requestDto,
+    public ResponseEntity<String> endQuestion(@RequestBody InterviewRequest requestDto,
                                               @AuthenticationPrincipal LoginUser loginUser) throws Exception {
         String sessionId = requestDto.getSessionId();
         String intervieweeId = requestDto.getIntervieweeId();
@@ -184,7 +187,7 @@ public class ConferenceController {
     // 현재 진행 중인 면접자 XXX의 '인터뷰' 종료 요청
     @Operation(summary = "인터뷰 종료")
     @PostMapping("/interview/end")
-    public ResponseEntity<String> endInterview(@RequestBody ConferenceRequest requestDto,
+    public ResponseEntity<String> endInterview(@RequestBody InterviewRequest requestDto,
                                                @AuthenticationPrincipal LoginUser loginUser) throws Exception {
         String sessionId = requestDto.getSessionId();
         String intervieweeId = requestDto.getIntervieweeId();
