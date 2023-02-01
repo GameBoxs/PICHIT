@@ -13,6 +13,7 @@ import { getUserInfo } from "../../reducer/userStore";
 function Navigation() {
   const [popup, setPopup] = useState();  
   const dispatch = useDispatch()
+  let data = {}
 
   const handleOpenPop = () => {  //팝업 생성 함수
     const width = 400;
@@ -76,7 +77,7 @@ function Navigation() {
   
   //토큰 불러와서 불러온 userInfo 이용해서 리덕스에 사용자 정보 넣기
   const token = useSelector(state => state.token)
-  const {data} = useAxios('userinfo', "GET", token)
+  data = useAxios('userinfo', "GET", token)
   dispatch(getUserInfo(data))
 
   return (
