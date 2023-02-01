@@ -49,6 +49,9 @@ const ListBody = styled.div`
   height: 450px;
   & hr {
     opacity: 0.2;
+    :first-child, :last-child {
+      display: none;
+    }
   }
 `;
 

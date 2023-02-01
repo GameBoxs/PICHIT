@@ -7,14 +7,37 @@ import SubTitle from "../common/SubTitle";
 import FilterArea from "../component/Review/Filter/FilterArea";
 import HistoryList from "../component/Review/History/HistoryList";
 import DetailArea from "../component/Review/Detail/DetailArea";
+import { useSelector } from "react-redux";
+import useAxios from "../../action/hooks/useAxios";
+import { useState } from "react";
+import { useEffect } from "react";
 //#endregion
 
 const ReviewPage = (props) => {
+  const user = useSelector(state => state.userinfo);
+  // const token = useSelector(state => state.token);
+  const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcGVha29uIiwibmFtZSI6IuydtO2drOyImCIsImlkIjoxLCJleHAiOjE2NzY1NTY2ODcsImlhdCI6MTY3NDc0MjI4NywidXNlcklkIjoia2FrYW9fMjYyOTgzOTQ2MiJ9.TxhacA4jIPlIJLQt8Dlz5Xl-loXmfhtnnUOofpBAUnO8IT2e3t5vi_KY-yQ194QMcI4l7bLHKL5EIUqsnVCWAg'
+  
+  const [data, setData] = useState();
+  const [nowPage, setNowPage] = useState(1);
+  const [totalElements, setTotalElements] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
+
+  const [getData, isLoading] = useAxios(`my-interviewjoins?size=5&page=${nowPage-1}&finished=2`,'GET',token);
+  
+  useEffect(() => {
+    if(getData && getData.data){
+      setData(getData.data.content);
+      setTotalElements(getData.data.totalElements);
+      setTotalPage(getData.data.totalPage);
+    }
+  },[getData]);
+
   //#region 타이틀 텍스트 변수
   // 피드백 타이틀 텍스트
   const titleText = (
     <div>
-      안녕하세요 <br /> 김지훈님
+      안녕하세요 <br /> {user.name}님
     </div>
   );
 
@@ -27,7 +50,7 @@ const ReviewPage = (props) => {
   //#endregion
 
   //#region Test Data
-  const data = [
+  const data123 = [
     {
       Title: "2022 연말 콘서트-이희수 전국 투어",
       Day: "23.01.12",
@@ -155,10 +178,16 @@ const ReviewPage = (props) => {
       <Title title={titleText}></Title>
       <SubTitle title={subtitleText}></SubTitle>
       <Line></Line>
-      <FilterArea />
-      <FilterArea />
-      <HistoryList data={data} />
-      <DetailArea data={testdata} />
+      {/* <FilterArea /> */}
+      {
+        isLoading === true ? <div>loading...</div> : 
+        <>
+          {/* <HistoryList data={data} />
+          <DetailArea data={testdata} /> */}
+        </>
+      }
+      {/* <HistoryList data={data} />
+      <DetailArea data={testdata} /> */}
     </ReviewMainBody>
   );
 };
@@ -169,7 +198,7 @@ const Line = styled.hr`
   margin: 15px 0 15px 0;
 `;
 const ReviewMainBody = styled.div`
-  margin: 0 10em 0 10em;
+  margin: 10em 10em 0 10em;
   height: 100%;
 
   & {
