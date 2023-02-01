@@ -57,14 +57,14 @@ public class ConferenceController {
     /**
      OpenVidu에 세션 등록 + Redis에 세션 등록
      */
-    @PostMapping("/sessions")
-    public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params,
+    @PostMapping("/sessions/{interviewRoomId}")
+    public ResponseEntity<String> initializeSession(@PathVariable("interviewRoomId") Long interviewRoomId,
                                                     @AuthenticationPrincipal LoginUser loginUser)
             throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
-        SessionProperties properties = SessionProperties.fromJson(params).build(); // 방 이름 미지정 시 sessionId 랜덤값 생성
+        Map<String, Object> openViduParams = null; // OpenVidu 세션 설정이 가능함
+        SessionProperties properties = SessionProperties.fromJson(openViduParams).build();
 
         Long userId = loginUser.getId();
-        Long interviewRoomId = Long.parseLong((String)params.get("interviewRoomId"));
         log.info("세션 생성 요청자 ID: {}", userId);
         log.info("면접방 ID: {}", interviewRoomId);
 
