@@ -90,45 +90,48 @@ function CreateRoom({ setModalOpen }) {
     console.log(date);
   };
 
+  const roomCreate = () => {
+    setCreateData(true);
+  }
+
   // 면접방 생성에 성공했을 때 감지하는 useEffect 
   useEffect(() => {
-    setCreateData();
-    if (
-      createResult &&
-      createResult.success === true &&
-      createResult.success !== undefined
-    ) {
-      setModalOpen(false);
-      MySwal.fire({
-        html: (
-          <div>
-            면접방이 생성 되었습니다
-            <br />
-            면접방으로 이동하시겠습니까?
-          </div>
-        ),
-        icon: "success",
-        showConfirmButton: true,
-        confirmButtonText: "이동하기",
-        showCancelButton: true,
-        cancelButtonText: "취소하기",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          console.log(createResult.data.id);
-          navigate("/room", {
-            state: {
-              id: createResult.data.id,
-            },
-          });
-        }
-      });
+    return () => {
+      setCreateData();
+      if (
+        createResult &&
+        createResult.success === true &&
+        createResult.success !== undefined
+      ) {
+        setModalOpen(false);
+        MySwal.fire({
+          html: (
+            <div>
+              면접방이 생성 되었습니다
+              <br />
+              면접방으로 이동하시겠습니까?
+            </div>
+          ),
+          icon: "success",
+          showConfirmButton: true,
+          confirmButtonText: "이동하기",
+          showCancelButton: true,
+          cancelButtonText: "취소하기",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            console.log(createResult.data.id);
+            navigate("/room", {
+              state: {
+                id: createResult.data.id,
+              },
+            });
+          }
+        });
+      }
     }
   }, [createData]);
 
   // 생성하기 버튼 눌렀을 때 활성화 되는 함수
-  const createRoom = () => {
-    setCreateData(true);
-  }
   return (
     <Wrap onClick={closeModal}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
@@ -200,7 +203,7 @@ function CreateRoom({ setModalOpen }) {
           </Section>
         </Layout>
         <Layout height="20%">
-          <button onClick={createRoom}>생성하기</button>
+          <button onClick={roomCreate}>생성하기</button>
           <button onClick={closeModal}>취소하기</button>
         </Layout>
       </ModalContainer>
@@ -216,6 +219,7 @@ const Wrap = styled.div`
   bottom: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.8);
+  z-index:9998;
 `;
 
 const ModalContainer = styled.div`

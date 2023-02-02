@@ -17,9 +17,9 @@ const MainPage = () => {
   // const data = useAxios('https://jsonplaceholder.typicode.com/comments', "GET")
   // const data = useAxios('https://jsonplaceholder.typicode.com/posts/1', "PUT", test)
 
-  const testRedux = useSelector(state => state)
+  // const testRedux = useSelector(state => state)
 
-  console.log(testRedux)
+  // console.log(testRedux)
 
   const scrollWithUseRef = (idx) => {
     if (idx === 0)
