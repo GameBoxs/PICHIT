@@ -13,11 +13,14 @@ const dummy = [
   { isHost: false, name: "연예인 희수" },
 ];
 
-function RoomMain({ join, content, host, date }) {
+function RoomMain({ join, host, data }) {
   const [isJoin, setIsJoin] = useState(true);
   const [pdf, setPdf] = useState(0);
   // 참여하기
+ const description = data.description
 
+
+  
   useEffect(() => {
     setIsJoin(join);
     console.log("isJoin", isJoin);
@@ -72,9 +75,9 @@ function RoomMain({ join, content, host, date }) {
 
         <Section width="50%">
           <SubTitle title={"스터디 시작일"} />
-          <PlanTime date={date} />
+          {/* <PlanTime date={date} /> */}
           <SubTitle title={"우리는 이런 스터디에요"} />
-          {content}
+          {description}
         </Section>
       </Layout>
       <SectionHeader>

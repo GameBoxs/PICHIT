@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { PITCHIT_URL } from "../../store/values";
+import { useDispatch } from "react-redux";
 
 /* 
   target : 타겟 백엔드 API 주소
@@ -24,7 +25,6 @@ import { PITCHIT_URL } from "../../store/values";
 function useAxios(target, type, token, body, execute=true) {
   const [data, setData] = useState(null); //외부로 내보낼 데이터
   const [isLoading, setIsLoading] = useState(true); //로딩 중인지 아닌지 판단하는 부분
-
   useEffect(() => {
     if(execute) {
       //props를 받고 실행되어야 하기 때문에/통신이기 때문에 useEffect로 감싸줌
