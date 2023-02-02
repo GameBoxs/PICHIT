@@ -1,5 +1,6 @@
 package com.alppano.speakon.domain.question.service;
 
+import com.alppano.speakon.common.dto.PagedResult;
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
@@ -11,6 +12,8 @@ import com.alppano.speakon.domain.question.repository.QuestionRepository;
 import com.alppano.speakon.domain.user.entity.User;
 import com.alppano.speakon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,7 +94,7 @@ public class QuestionService {
         return new QuestionInfo(question, userId);
     }
 
-    public List<QuestionInfo> getQuestionListByInterviewJoin(Long interviewJoinId, Long userId) {
+    public PagedResult<QuestionInfo> getQuestionListByInterviewJoin(Pageable pageable, Long interviewJoinId, Long userId) {
         InterviewJoin interviewJoin = interviewJoinRepository.findById(interviewJoinId)
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접 참여자입니다."));
 
@@ -99,14 +102,10 @@ public class QuestionService {
             throw new ResourceForbiddenException("면접방에 참여한 사람만 질문 목록을 조회할 수 있습니다.");
         }
 
-        List<Question> list = questionRepository.findAllByInterviewJoinIdOrderByIdAsc(interviewJoinId);
+        Page<QuestionInfo> result = questionRepository.findAllByInterviewJoinId(pageable, interviewJoinId)
+                .map(question -> new QuestionInfo(question, userId));
 
-        List<QuestionInfo> questionInfoList = new ArrayList<>();
-        for (Question question : list) {
-            questionInfoList.add(new QuestionInfo(question, userId));
-        }
-
-        return questionInfoList;
+        return new PagedResult<>(result);
     }
 
 }

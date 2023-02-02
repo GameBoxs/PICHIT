@@ -1,6 +1,7 @@
 package com.alppano.speakon.domain.question.controller;
 
 import com.alppano.speakon.common.dto.ApiResponse;
+import com.alppano.speakon.common.dto.PagedResult;
 import com.alppano.speakon.domain.question.dto.QuestionInfo;
 import com.alppano.speakon.domain.question.dto.QuestionRequest;
 import com.alppano.speakon.domain.question.service.QuestionService;
@@ -8,6 +9,9 @@ import com.alppano.speakon.security.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -61,10 +65,11 @@ public class QuestionController {
 
     @Operation(summary = "면접 참여자의 질문 목록 조회")
     @GetMapping("/interviewjoins/{id}/questions")
-    public ResponseEntity<ApiResponse<List<QuestionInfo>>> getQuestionListByInterviewJoin(@AuthenticationPrincipal LoginUser loginUser,
-                                                                                          @PathVariable("id") Long interviewJoinId) {
-        List<QuestionInfo> list = questionService.getQuestionListByInterviewJoin(interviewJoinId, loginUser.getId());
-        ApiResponse<List<QuestionInfo>> result = new ApiResponse<>(true, "질문 목록 조회 성공", list);
+    public ResponseEntity<ApiResponse<PagedResult<QuestionInfo>>> getQuestionListByInterviewJoin(@PageableDefault(size = 1, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+                                                                                                 @AuthenticationPrincipal LoginUser loginUser,
+                                                                                                 @PathVariable("id") Long interviewJoinId) {
+        PagedResult<QuestionInfo> list = questionService.getQuestionListByInterviewJoin(pageable, interviewJoinId, loginUser.getId());
+        ApiResponse<PagedResult<QuestionInfo>> result = new ApiResponse<>(true, "질문 목록 조회 성공", list);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
