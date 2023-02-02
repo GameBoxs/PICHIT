@@ -1,18 +1,10 @@
 package com.alppano.speakon.domain.conference.controller;
 
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
 import com.alppano.speakon.common.dto.ApiResponse;
-import com.alppano.speakon.common.exception.ResourceForbiddenException;
-import com.alppano.speakon.common.exception.ResourceNotFoundException;
 import com.alppano.speakon.domain.conference.dto.Conference;
 import com.alppano.speakon.domain.conference.dto.InterviewRequest;
 import com.alppano.speakon.domain.conference.service.ConferenceService;
 import com.alppano.speakon.domain.conference.service.HttpRequestService;
-import com.alppano.speakon.domain.interview_room.dto.InterviewRoomDetailInfo;
-import com.alppano.speakon.domain.interview_room.service.InterviewRoomService;
 import com.alppano.speakon.security.LoginUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,19 +13,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import io.openvidu.java.client.Connection;
-import io.openvidu.java.client.ConnectionProperties;
-import io.openvidu.java.client.OpenVidu;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
-import io.openvidu.java.client.Session;
-import io.openvidu.java.client.SessionProperties;
 
 @Tag(name = "화상회의 관리")
 @CrossOrigin(origins = "*")
@@ -43,50 +29,23 @@ import io.openvidu.java.client.SessionProperties;
 @Slf4j
 public class ConferenceController {
 
-    @Value("${openvidu.OPENVIDU_URL}")
-    private String OPENVIDU_URL;
-
-    @Value("${openvidu.OPENVIDU_SECRET}")
-    private String OPENVIDU_SECRET;
-
-    private OpenVidu openvidu;
-
     private final HttpRequestService httpRequestService;
     private final ConferenceService conferenceService;
-    private final InterviewRoomService interviewRoomService;
-
-    @PostConstruct
-    public void init() { // OPENVIDU 초기화
-        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-    }
 
     /**
      OpenVidu에 세션 등록 + Redis에 세션 등록
      */
     @Operation(summary = "화상회의 세션 생성")
     @PostMapping("/sessions/{interviewRoomId}")
-    public ResponseEntity<ApiResponse> initializeSession(@PathVariable("interviewRoomId") Long interviewRoomId,
+    public ResponseEntity<ApiResponse> createConference(@PathVariable("interviewRoomId") Long interviewRoomId,
                                                     @AuthenticationPrincipal LoginUser loginUser)
             throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
-        Map<String, Object> openViduParams = null; // OpenVidu 세션 설정이 가능함
-        SessionProperties properties = SessionProperties.fromJson(openViduParams).build();
 
         Long requesterId = loginUser.getId();
         log.info("세션 생성 요청자 ID: {}", requesterId);
         log.info("면접방 ID: {}", interviewRoomId);
 
-        InterviewRoomDetailInfo interviewRoomDetailInfo = interviewRoomService.getInterviewRoomDetailInfo(interviewRoomId, requesterId);
-        if(!interviewRoomDetailInfo.getManager().getId().equals(requesterId)) {
-            throw new ResourceForbiddenException("방을 생성할 권한이 없습니다.");
-        }
-
-        Session session = openvidu.createSession(properties);
-        if (session == null) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        // OpenVidu 세션이 만들어지면 Redis에 회의 정보 등록
-        conferenceService.createConference(session.getSessionId(), interviewRoomDetailInfo);
-
+        conferenceService.createConference(requesterId, interviewRoomId);
         ApiResponse result = new ApiResponse(Boolean.TRUE, "세션 생성 성공");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -100,15 +59,7 @@ public class ConferenceController {
         log.info("세션 종료 요청자 ID: {}", requesterId);
         log.info("면접방 ID: {}", interviewRoomId);
 
-        Conference conference = conferenceService.retrieveConference(interviewRoomId);
-
-        if(!requesterId.equals(conference.getManagerId())) {
-            throw new ResourceForbiddenException("방을 종료할 권한이 없습니다.");
-        }
-
-        conferenceService.deleteConference(interviewRoomId);
-        Session session = openvidu.getActiveSession(conference.getSessionId());
-        session.close();
+        conferenceService.closeConference(requesterId, interviewRoomId);
         ApiResponse result = new ApiResponse(Boolean.TRUE, "세션 종료 성공");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -117,16 +68,9 @@ public class ConferenceController {
     @GetMapping("/sessions/connections/{sessionId}")
     public ResponseEntity<ApiResponse<String>> createConnection(@PathVariable("sessionId") String sessionId)
             throws OpenViduJavaClientException, OpenViduHttpException {
-        Session session = openvidu.getActiveSession(sessionId);
-        if (session == null) {
-            throw new ResourceNotFoundException("존재하지 않는 세션입니다.");
-        }
+        String token = conferenceService.getOpenviduToken(sessionId);
 
-        Map<String, Object> openViduParams = null; // OpenVidu 세션 설정이 가능함
-        ConnectionProperties properties = ConnectionProperties.fromJson(openViduParams).build();
-        Connection connection = session.createConnection(properties);
-
-        ApiResponse<String> result = new ApiResponse(Boolean.TRUE, "토큰 발급 성공", connection.getToken());
+        ApiResponse<String> result = new ApiResponse(Boolean.TRUE, "토큰 발급 성공", token);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
