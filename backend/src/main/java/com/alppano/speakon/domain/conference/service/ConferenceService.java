@@ -6,6 +6,7 @@ import com.alppano.speakon.common.util.RedisUtil;
 import com.alppano.speakon.domain.conference.dto.Conference;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
 import com.alppano.speakon.domain.interview_join.entity.Participant;
+import com.alppano.speakon.domain.interview_join.repository.InterviewJoinRepository;
 import com.alppano.speakon.domain.interview_room.entity.InterviewRoom;
 import com.alppano.speakon.domain.interview_room.repository.InterviewRoomRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,9 +28,10 @@ public class ConferenceService {
     @Value("${openvidu.OPENVIDU_SECRET}")
     private String OPENVIDU_SECRET;
 
+    private OpenVidu openvidu;
     private final RedisUtil redisUtil;
     private final InterviewRoomRepository interviewRoomRepository;
-    private OpenVidu openvidu;
+    private final InterviewJoinRepository interviewJoinRepository;
 
     @PostConstruct
     public void init() { // OPENVIDU 초기화
@@ -37,19 +39,19 @@ public class ConferenceService {
     }
 
     /**
-     회의 진행 정보 불러오기
+     * 회의 진행 정보 불러오기
      */
     public Conference retrieveConference(Long interviewRoomId) throws JsonProcessingException {
         String key = String.valueOf(interviewRoomId);
         Conference conference = redisUtil.getRedisValue(key , Conference.class);
         if(conference == null) {
-            throw new ResourceNotFoundException("존재하지 않는 세션입니다.");
+            throw new ResourceNotFoundException("존재하지 않는 회의입니다.");
         }
         return conference;
     }
 
     /**
-     openvidu 세션 시작 / redis 회의 정보 등록
+     * openvidu 세션 시작 / redis 회의 정보 등록
      */
       public void createConference(Long requesterId, Long interviewRoomId)
               throws JsonProcessingException, OpenViduJavaClientException, OpenViduHttpException {
@@ -80,8 +82,8 @@ public class ConferenceService {
       }
 
     /**
-     redis 회의 정보 제거 + openvidu 세션 제거 /
-     mariaDB로 회의 정보 이관 및 최종 종료
+     * redis 회의 정보 제거 + openvidu 세션 제거 /
+     * mariaDB로 회의 정보 이관 및 최종 종료
      */
     public void closeConference(Long requesterId, Long interviewRoomId) throws JsonProcessingException, OpenViduJavaClientException, OpenViduHttpException {
         //TODO: MariaDB에 자료 이관 작업
@@ -94,17 +96,34 @@ public class ConferenceService {
 
         Conference conference = redisUtil.getRedisValue(String.valueOf(interviewRoomId), Conference.class);
         if(conference == null) {
-            throw new ResourceNotFoundException("존재하지 않는 세션입니다.");
+            throw new ResourceNotFoundException("존재하지 않는 회의입니다.");
         }
 
         Session session = openvidu.getActiveSession(conference.getSessionId());
+        if (session == null) {
+            throw new ResourceNotFoundException("존재하지 않는 세션입니다.");
+        }
         session.close();
 
         redisUtil.deleteData(String.valueOf(interviewRoomId));
     }
 
-    public String getOpenviduToken(String sessionId) throws OpenViduJavaClientException, OpenViduHttpException {
-        Session session = openvidu.getActiveSession(sessionId);
+    /**
+     * 세션 연결을 위한 Token 발급
+     */
+    public String getSessionToken(Long requesterId, Long interviewRoomId) throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
+        interviewRoomRepository.findById(interviewRoomId)
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
+
+        interviewJoinRepository.findByUserIdAndInterviewRoomId(requesterId, interviewRoomId)
+                .orElseThrow(() -> new ResourceForbiddenException("참여 중인 면접방만 접근할 수 있습니다."));
+
+        Conference conference = redisUtil.getRedisValue(String.valueOf(interviewRoomId), Conference.class);
+        if(conference == null) {
+            throw new ResourceNotFoundException("존재하지 않는 회의입니다.");
+        }
+
+        Session session = openvidu.getActiveSession(conference.getSessionId());
         if (session == null) {
             throw new ResourceNotFoundException("존재하지 않는 세션입니다.");
         }
