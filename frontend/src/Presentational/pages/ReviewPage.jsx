@@ -1,5 +1,5 @@
 //#region import
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
 import Title from "../common/Title";
 import SubTitle from "../common/SubTitle";
@@ -8,44 +8,14 @@ import FilterArea from "../component/Review/Filter/FilterArea";
 import HistoryList from "../component/Review/History/HistoryList";
 import DetailArea from "../component/Review/Detail/DetailArea";
 import { useSelector } from "react-redux";
-import useAxios from "../../action/hooks/useAxios";
+
 import { useState } from "react";
 import { useEffect } from "react";
 //#endregion
 
 const ReviewPage = (props) => {
   const user = useSelector(state => state.userinfo);
-  // const token = useSelector(state => state.token);
-  const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcGVha29uIiwibmFtZSI6IuydtO2drOyImCIsImlkIjoxLCJleHAiOjE2NzY1NTY2ODcsImlhdCI6MTY3NDc0MjI4NywidXNlcklkIjoia2FrYW9fMjYyOTgzOTQ2MiJ9.TxhacA4jIPlIJLQt8Dlz5Xl-loXmfhtnnUOofpBAUnO8IT2e3t5vi_KY-yQ194QMcI4l7bLHKL5EIUqsnVCWAg'
-  
-  const [data, setData] = useState();
-  const [nowPage, setNowPage] = useState(1);
-  const [totalElements, setTotalElements] = useState(0);
-  const [totalPage, setTotalPage] = useState(0);
-
-  const [getData, isLoading] = useAxios(`my-interviewjoins?size=5&page=${nowPage-1}&finished=2`,'GET',token);
-  
-  useEffect(() => {
-    if(getData && getData.data){
-      setData(getData);
-      setTotalElements(getData.data.totalElements);
-      setTotalPage(getData.data.totalPage);
-    }
-  },[getData]);
-
-  console.log('isLoading');
-  console.log(isLoading);
-  
-  console.log('getData');
-  console.log(getData);
-
-  console.log('data');
-  console.log(data);
-
-  // if(getData){
-  //   console.log('getData.data');
-  //   console.log(getData.data);
-  // }
+  const [selectedID, setSelectedID] = useState();
 
   //#region 타이틀 텍스트 변수
   // 피드백 타이틀 텍스트
@@ -186,24 +156,15 @@ const ReviewPage = (props) => {
   // const detailData = {};
 
   //#endregion
-
+  console.log(selectedID)
   return (
     <ReviewMainBody>
       <Title title={titleText}></Title>
       <SubTitle title={subtitleText}></SubTitle>
       <Line></Line>
       {/* <FilterArea /> */}
-      {
-        isLoading !== false ? <div>loading...</div> :
-        data && data.data ?
-        <>
-          <HistoryList data={data} currentPage={nowPage} setCurrentPage={setNowPage} totalpages={totalPage}/>
-          {/* <DetailArea data={testdata} /> */}
-        </> :
-        <div>loading...</div>
-      }
-      {/* <HistoryList data={data} />
-      <DetailArea data={testdata} /> */}
+      <HistoryList setSelectedID={setSelectedID}/>
+      <DetailArea selectedID={selectedID} />
     </ReviewMainBody>
   );
 };

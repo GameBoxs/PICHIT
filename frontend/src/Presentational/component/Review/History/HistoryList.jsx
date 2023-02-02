@@ -1,31 +1,43 @@
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import ListItem from "./ListItem";
 import PageBar from "../../../common/Pagination/PageBar";
 
-const HistoryList = ({ data, currentPage, setCurrentPage, totalpages}) => {
-  //pagination 데이터
-  // 전체데이터, 현재페이지, 페이지당 포스트갯수
-  // const [dumyData, setDumyData] = useState(DUMMY_DATA);
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [postsPerPage, setPostsPerPage] = useState(5);
+import useAxios from "../../../../action/hooks/useAxios";
 
-  //현재 페이지에 렌더할 데이터를 추출하기위한 값들
-  // const lastPostIndex = currentPage * postsPerPage; //렌더할 페이지에 해당하는 마지막 인덱스값
-  // const firstPostIndex = lastPostIndex - postsPerPage; //렌더할 페이지에 해당하는 첫번째 인덱스값
-  // const currentPosts = data.slice(firstPostIndex, lastPostIndex); //현재 페이지에서 렌더할 데이터항목
+const HistoryList = ({setSelectedID}) => {
+  const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcGVha29uIiwibmFtZSI6IuydtO2drOyImCIsImlkIjoxLCJleHAiOjE2NzY1NTY2ODcsImlhdCI6MTY3NDc0MjI4NywidXNlcklkIjoia2FrYW9fMjYyOTgzOTQ2MiJ9.TxhacA4jIPlIJLQt8Dlz5Xl-loXmfhtnnUOofpBAUnO8IT2e3t5vi_KY-yQ194QMcI4l7bLHKL5EIUqsnVCWAg'
+  
+  const [data, setData] = useState();
+  const [nowPage, setNowPage] = useState(1);
+  const [nowPageElements, setNowPageElements] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
+  const [getData, isLoading] = useAxios(`my-interviewjoins?size=5&page=${nowPage-1}&finished=1`,'GET',token);
+  const [currentPosts, setCurrentPosts] = useState();
+  
+  useEffect(() => {
+    if(getData && getData.data){
+      setData(getData); 
+      setCurrentPosts(getData.data.content);
+      setTotalPage(getData.data.totalPage);
+      setNowPageElements(getData.data.numberOfElements);
+    }
+  },[getData]);
+
   console.log('HistoryList data');
   console.log(data);
-  let currentPosts = data.data.content;
   console.log('HistoryList currentPosts');
   console.log(currentPosts);
+  let blankPosts = new Array(5-nowPageElements).fill({item:{title:"",startDate:""}});
+  console.log(blankPosts);
 
   return (
     <>
       {
-        currentPosts ? 
+        isLoading && data===undefined ? <div>Loading..</div> :
+        currentPosts!==undefined?
         <>
           <ListBody>
             <Line></Line>
@@ -35,35 +47,28 @@ const HistoryList = ({ data, currentPage, setCurrentPage, totalpages}) => {
                   item={item.interviewRoom}
                   key={index}
                   index={index}
+                  cursor="pointer"
+                  setSelectedID={setSelectedID}
+                  myID = {item.interviewJoinId}
                 />
               );
-            })}
+            })
+            }
+            {
+              blankPosts.map((item,idx) => {
+                return (
+                  <ListItem item={item} key={idx} index={idx} cursor="default"/>
+                )
+              })
+            }
           </ListBody>
           <PageBar
-            totalpages={totalpages}
-            setCurrentPage={setCurrentPage}
-            currentPage={currentPage}
+            totalpages={totalPage}
+            setCurrentPage={setNowPage}
+            currentPage={nowPage}
           />
-        </> : null
+        </> : <div>Loading..</div>
       }
-      {/* <ListBody>
-        <Line></Line>
-        {currentPosts.map((item, index) => {
-          return (
-            <>
-            <ListItem
-              item={item}
-              key={index}
-              index={index}
-            ></ListItem></>
-          );
-        })}
-      </ListBody>
-      <PageBar
-        totalpages={totalpages}
-        setCurrentPage={setCurrentPage}
-        currentPage={currentPage}
-      /> */}
     </>
   );
 };
@@ -93,4 +98,4 @@ const Line = styled.hr`
         margin: 15px 0 15px 0;
     `;
 
-export default HistoryList;
+export default memo(HistoryList);

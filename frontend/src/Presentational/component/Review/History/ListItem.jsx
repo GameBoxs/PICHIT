@@ -3,13 +3,31 @@ import Title from "../../../common/Title";
 import SubTitle from "../../../common/SubTitle";
 
 const ListItem = (props) => {
-  const tempDate = new Date((props.item.startDate).toString());
-  const date = tempDate.getFullYear().toString().slice(2,4) + '.' +  (tempDate.getMonth()+1).toString() + '.' + tempDate.getDate().toString()
+  console.log('ListItem');
+  console.log(props);
+  const tempDate = props.item.startDate !== undefined ? new Date((props.item.startDate).toString()) : null;
+  const date = tempDate !== null ? tempDate.getFullYear().toString().slice(2,4) + '.' +  (tempDate.getMonth()+1).toString() + '.' + tempDate.getDate().toString() : null;
+  const changeID = () => {
+    if(props.item.startDate !== undefined){
+      props.setSelectedID(props.myID);
+    }
+  }
     return(
       <>
-        <ItemWrap>
-          <Title title={props.item.title}></Title>
-          <SubTitle title={date}></SubTitle>
+        <ItemWrap onClick={changeID} cursor={props.cursor}>
+          {
+            props.item && props.item.title ?
+            <>
+              <Title title={props.item.title} />
+            </>
+            : 
+            <Title title="" />
+          }
+          {
+            props.item && props.item.title ?
+            <SubTitle title={date}></SubTitle>
+            : <SubTitle title=""></SubTitle>
+          }
           {props.item.title !=="" && props.item.title !== null && props.item.title !== undefined ? <SubTitle title=">"></SubTitle> : null }
         </ItemWrap>
         <Line></Line>
@@ -29,14 +47,16 @@ const ListItem = (props) => {
         font-weight: bolder;
     }
     & div:nth-child(1) {
-        cursor: pointer;
+        /* cursor: pointer; */
+        cursor: ${props => props.cursor};
         width: 85%;
-    }
-    & div:nth-child(2) {
+      }
+      & div:nth-child(2) {
         width: 10%;
-    }
-    & div:nth-child(3) {
-      cursor: pointer;
+      }
+      & div:nth-child(3) {
+        /* cursor: pointer; */
+        cursor: ${props => props.cursor};
         width: 5%;
         font-size: 30px;
     }
