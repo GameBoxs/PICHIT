@@ -61,19 +61,17 @@ function RoomHeader({ join, joinRoom, data, host }) {
       cancelButtonText: "취소",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "면접방이 삭제 되었습니다.",
-          showConfirmButton: true,
-          confirmButtonText: "확인",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigate("/");
-          }
-        });
         setDeleteData(true);
         if (deleteResult[0] && deleteResult[0].success && deleteResult[0].success !== undefined) {
+          Swal.fire({
+            title: "면접방이 삭제 되었습니다.",
+            showConfirmButton: false,
+            icon:'success',
+            timer:1500
+          })
           navigate("/");
         }
+        
       }
     });
   };

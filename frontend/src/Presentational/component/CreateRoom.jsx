@@ -11,9 +11,18 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+const MySwal = withReactContent(Swal);
+
+
 // 방 생성하기 모달
 function CreateRoom({ setModalOpen }) {
 
+  const navigate = useNavigate();
   // 비밀방 여부 toggle : false(off) true(on)
   const [toggle, setToggle] = useState(false);
 
@@ -68,7 +77,7 @@ function CreateRoom({ setModalOpen }) {
   // 방 생성하기 useAxios
 
   const [createData, setCreateData] = useState(false);
-  const [result, isLoading] = useAxios(
+  const [createResult, isLoading] = useAxios(
     "interviewrooms",
     "POST",
     token,
@@ -115,8 +124,31 @@ function CreateRoom({ setModalOpen }) {
 
   const createRoom = () => {
     setCreateData(true);
-    closeModal();
-    console.log(result)
+    if (createResult && createResult.success === true && createResult.success !== undefined){
+      setModalOpen(false);
+      MySwal.fire({
+        text:"면접방이 생성 되었습니다<br></br> 면접방으로 이동하시겠습니까?",
+        icon:'success',
+        showConfirmButton:true,
+        confirmButtonText:'이동하기',
+        showCancelButton:true,
+        cancelButtonText:'취소하기'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log(createResult.data.id)
+          navigate('/room', {
+            state: {
+              id:createResult.data.id
+            }
+          });
+        }
+      })
+      
+    }
+
+
+    // closeModal();
+    // console.log(result)
   }  
 
 

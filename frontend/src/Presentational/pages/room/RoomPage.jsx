@@ -11,7 +11,8 @@ function RoomPage() {
   // roomId 값을 RoomListItem에서 Link state에 받아와서
   // useLocation에 넣어논 roomId 값을 가져와서 사용함
   const location = useLocation();
-  const roomId = location.state.roomId;
+ const roomId = location.state.id
+  
 
   const [join, setJoin] = useState(false);
 
