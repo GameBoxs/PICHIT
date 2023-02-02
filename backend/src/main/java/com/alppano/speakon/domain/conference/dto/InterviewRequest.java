@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class InterviewRequest {
-    private String sessionId;
-    private String intervieweeId;
-    private String questionId;
+    private Long interviewRoomId;
+    private Long intervieweeId;
+    private Long questionId;
 }

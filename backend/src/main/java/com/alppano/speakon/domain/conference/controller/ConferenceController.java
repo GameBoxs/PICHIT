@@ -71,12 +71,12 @@ public class ConferenceController {
         Map<String, Object> openViduParams = null; // OpenVidu 세션 설정이 가능함
         SessionProperties properties = SessionProperties.fromJson(openViduParams).build();
 
-        Long userId = loginUser.getId();
-        log.info("세션 생성 요청자 ID: {}", userId);
+        Long requesterId = loginUser.getId();
+        log.info("세션 생성 요청자 ID: {}", requesterId);
         log.info("면접방 ID: {}", interviewRoomId);
 
-        InterviewRoomDetailInfo interviewRoomDetailInfo = interviewRoomService.getInterviewRoomDetailInfo(interviewRoomId, userId);
-        if(!interviewRoomDetailInfo.getManager().getId().equals(userId)) {
+        InterviewRoomDetailInfo interviewRoomDetailInfo = interviewRoomService.getInterviewRoomDetailInfo(interviewRoomId, requesterId);
+        if(!interviewRoomDetailInfo.getManager().getId().equals(requesterId)) {
             throw new ResourceForbiddenException("방을 생성할 권한이 없습니다.");
         }
 
@@ -96,13 +96,13 @@ public class ConferenceController {
     public ResponseEntity<ApiResponse> closeConference(@PathVariable("interviewRoomId") Long interviewRoomId,
                                                     @AuthenticationPrincipal LoginUser loginUser)
             throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
-        Long userId = loginUser.getId();
-        log.info("세션 종료 요청자 ID: {}", userId);
+        Long requesterId = loginUser.getId();
+        log.info("세션 종료 요청자 ID: {}", requesterId);
         log.info("면접방 ID: {}", interviewRoomId);
 
         Conference conference = conferenceService.retrieveConference(interviewRoomId);
 
-        if(!userId.equals(conference.getManagerId())) {
+        if(!requesterId.equals(conference.getManagerId())) {
             throw new ResourceForbiddenException("방을 종료할 권한이 없습니다.");
         }
 
@@ -134,11 +134,12 @@ public class ConferenceController {
     @PostMapping("/interview/interviewee")
     public ResponseEntity<String> selectInterviewee(@RequestBody InterviewRequest requestDto,
                                                     @AuthenticationPrincipal LoginUser loginUser) throws Exception {
-        String sessionId = requestDto.getSessionId();
-        String intervieweeId = requestDto.getIntervieweeId();
         //TODO: 검사 - 요청자가 방장인가
+        //TODO: 검사 - 지정한 면접자가 참여자인지
+        Conference conference = conferenceService.retrieveConference(requestDto.getInterviewRoomId());
+        String intervieweeId = String.valueOf(requestDto.getIntervieweeId());
 
-        HttpResponse response =	httpRequestService.broadCastSignal(sessionId, "broadcast-interviewee", intervieweeId);
+        HttpResponse response =	httpRequestService.broadCastSignal(conference.getSessionId(), "broadcast-interviewee", intervieweeId);
         StatusLine sl = response.getStatusLine();
         System.out.print("STATUS CODE: ");
         System.out.println(sl.getStatusCode());
@@ -151,13 +152,13 @@ public class ConferenceController {
     @PostMapping("/interview/question/propose")
     public ResponseEntity<String> proposeQuestion(@RequestBody InterviewRequest requestDto,
                                                   @AuthenticationPrincipal LoginUser loginUser) throws Exception {
-        String sessionId = requestDto.getSessionId();
-        String intervieweeId = requestDto.getIntervieweeId();
-        String questionId = requestDto.getQuestionId();
+        Conference conference = conferenceService.retrieveConference(requestDto.getInterviewRoomId());
+        String intervieweeId = String.valueOf(requestDto.getIntervieweeId());
+        String questionId = String.valueOf(requestDto.getQuestionId());
         //TODO: 이미 질문이 '시작'되어 진행 중인지 검사 -> 진행 중이면 요청 거절
         //TODO: 질문 시작되었음을 기록
 
-        HttpResponse response = httpRequestService.broadCastSignal(sessionId, "broadcast-question-start", questionId);
+        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(), "broadcast-question-start", questionId);
         StatusLine sl = response.getStatusLine();
         System.out.print("STATUS CODE: ");
         System.out.println(sl.getStatusCode());
@@ -169,14 +170,14 @@ public class ConferenceController {
     @PostMapping("/interview/question/end")
     public ResponseEntity<String> endQuestion(@RequestBody InterviewRequest requestDto,
                                               @AuthenticationPrincipal LoginUser loginUser) throws Exception {
-        String sessionId = requestDto.getSessionId();
-        String intervieweeId = requestDto.getIntervieweeId();
-        String questionId = requestDto.getQuestionId();
+        Conference conference = conferenceService.retrieveConference(requestDto.getInterviewRoomId());
+        String intervieweeId = String.valueOf(requestDto.getIntervieweeId());
+        String questionId = String.valueOf(requestDto.getQuestionId());
         //TODO: 이미 질문이 '시작'되어 진행 중인지 검사 -> 질문이 진행 중이지 않은 상태면 요청 거절
         //TODO: 진행중인 질문자와 동일인인지 검사
         //TODO: 질문이 종료 되었음을 기록
 
-        HttpResponse response = httpRequestService.broadCastSignal(sessionId, "broadcast-question-end", questionId);
+        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(), "broadcast-question-end", questionId);
         StatusLine sl = response.getStatusLine();
         System.out.print("STATUS CODE: ");
         System.out.println(sl.getStatusCode());
@@ -189,12 +190,13 @@ public class ConferenceController {
     @PostMapping("/interview/end")
     public ResponseEntity<String> endInterview(@RequestBody InterviewRequest requestDto,
                                                @AuthenticationPrincipal LoginUser loginUser) throws Exception {
-        String sessionId = requestDto.getSessionId();
-        String intervieweeId = requestDto.getIntervieweeId();
+        Conference conference = conferenceService.retrieveConference(requestDto.getInterviewRoomId());
+        String intervieweeId = String.valueOf(requestDto.getIntervieweeId());
+        String questionId = String.valueOf(requestDto.getQuestionId());
         //TODO: 검사 - 현재 진행 중인 면접자인가
         //TODO: 검사 - 요청자가 방장인가
 
-        HttpResponse response = httpRequestService.broadCastSignal(sessionId, "broadcast-interview-end", intervieweeId);
+        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(), "broadcast-interview-end", intervieweeId);
         StatusLine sl = response.getStatusLine();
         System.out.print("STATUS CODE: ");
         System.out.println(sl.getStatusCode());
