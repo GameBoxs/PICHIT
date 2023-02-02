@@ -64,11 +64,13 @@ public class ConferenceController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @Operation(summary = "화상회의 연결(토큰 발급)")
-    @GetMapping("/sessions/connections/{sessionId}")
-    public ResponseEntity<ApiResponse<String>> createConnection(@PathVariable("sessionId") String sessionId)
-            throws OpenViduJavaClientException, OpenViduHttpException {
-        String token = conferenceService.getOpenviduToken(sessionId);
+    @Operation(summary = "화상회의 토큰 발급)")
+    @GetMapping("/sessions/connections/{interviewRoomId}")
+    public ResponseEntity<ApiResponse<String>> getSessionToken(@PathVariable("interviewRoomId") Long interviewRoomId,
+                                                               @AuthenticationPrincipal LoginUser loginUser)
+            throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
+        Long requesterId = loginUser.getId();
+        String token = conferenceService.getSessionToken(requesterId, interviewRoomId);
 
         ApiResponse<String> result = new ApiResponse(Boolean.TRUE, "토큰 발급 성공", token);
         return new ResponseEntity<>(result, HttpStatus.OK);
