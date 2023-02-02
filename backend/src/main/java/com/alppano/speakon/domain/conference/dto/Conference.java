@@ -12,6 +12,6 @@ public class Conference {
     private String sessionId;
     private Long managerId;
     private List<Participant> participants;
-    private String questionProceeding;
-    private String currentInterviewee;
+    private Long questionProceeding;
+    private Long currentInterviewee;
 }
