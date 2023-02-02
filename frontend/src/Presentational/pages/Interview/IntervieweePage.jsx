@@ -12,7 +12,7 @@ import ChatArea from "../../layout/Chat/ChatArea";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { result } from "lodash";
+
 
 import UserVideoComponent from "../../component/Chat/OpenVidu/UserVideoComponent";
 import { leaveSession } from "../../../action/modules/chatModule";
