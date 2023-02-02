@@ -1,27 +1,22 @@
 import styled from "styled-components";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ToggleButton } from "../common/ToggleButton";
-import { format } from "date-fns";
-import { DayPicker } from "react-day-picker";
-import "react-day-picker/dist/style.css";
 import Title from "../common/Title";
 
 import useAxios from "../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-
+import { format } from "date-fns";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { Navigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 const MySwal = withReactContent(Swal);
 
-
 // 방 생성하기 모달
 function CreateRoom({ setModalOpen }) {
-
   const navigate = useNavigate();
   // 비밀방 여부 toggle : false(off) true(on)
   const [toggle, setToggle] = useState(false);
@@ -84,32 +79,8 @@ function CreateRoom({ setModalOpen }) {
     room,
     createData
   );
-
-
-  // 방 생성하기 임시 axios post
-  // const [isLoading, setIsLoading] = useState(true); //로딩 중인지 아닌지 판단하는 부분
-
-  // const createRoom = () => {
-  //   console.log(room);
-  //   axios({
-  //     method: "POST",
-  //     url: "https://i8d107.p.ssafy.io/api/interviewrooms",
-  //     headers: {
-  //       Authorization: token,
-  //     },
-  //     data: room,
-  //   })
-  //     .then((res) => {
-  //       console.log(res);
-  //       setRoom(res.room);
-  //     })
-  //     .catch((err) => console.log(err))
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     });
-  //   setModalOpen(false);
-  // };
-
+  
+  // Daypicker 날짜 선택 handler 
   const handleDaySelect = (date) => {
     setSelected(date);
     if (date) {
@@ -119,39 +90,45 @@ function CreateRoom({ setModalOpen }) {
     console.log(date);
   };
 
-  // if (createData === true)
-  //   closeModal();
-
-  const createRoom = () => {
-    setCreateData(true);
-    if (createResult && createResult.success === true && createResult.success !== undefined){
+  // 면접방 생성에 성공했을 때 감지하는 useEffect 
+  useEffect(() => {
+    setCreateData();
+    if (
+      createResult &&
+      createResult.success === true &&
+      createResult.success !== undefined
+    ) {
       setModalOpen(false);
       MySwal.fire({
-        text:"면접방이 생성 되었습니다<br></br> 면접방으로 이동하시겠습니까?",
-        icon:'success',
-        showConfirmButton:true,
-        confirmButtonText:'이동하기',
-        showCancelButton:true,
-        cancelButtonText:'취소하기'
+        html: (
+          <div>
+            면접방이 생성 되었습니다
+            <br />
+            면접방으로 이동하시겠습니까?
+          </div>
+        ),
+        icon: "success",
+        showConfirmButton: true,
+        confirmButtonText: "이동하기",
+        showCancelButton: true,
+        cancelButtonText: "취소하기",
       }).then((result) => {
         if (result.isConfirmed) {
-          console.log(createResult.data.id)
-          navigate('/room', {
+          console.log(createResult.data.id);
+          navigate("/room", {
             state: {
-              id:createResult.data.id
-            }
+              id: createResult.data.id,
+            },
           });
         }
-      })
-      
+      });
     }
+  }, [createData]);
 
-
-    // closeModal();
-    // console.log(result)
-  }  
-
-
+  // 생성하기 버튼 눌렀을 때 활성화 되는 함수
+  const createRoom = () => {
+    setCreateData(true);
+  }
   return (
     <Wrap onClick={closeModal}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
@@ -223,11 +200,7 @@ function CreateRoom({ setModalOpen }) {
           </Section>
         </Layout>
         <Layout height="20%">
-          <button
-            onClick={createRoom }
-          >
-            생성하기
-          </button>
+          <button onClick={createRoom}>생성하기</button>
           <button onClick={closeModal}>취소하기</button>
         </Layout>
       </ModalContainer>

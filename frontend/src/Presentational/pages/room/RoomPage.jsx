@@ -62,7 +62,7 @@ function RoomPage() {
   }, [getData]);
 
   return (
-    <>
+    <Container>
       <Page>
         {
           isLoading === true ? <div>loading...</div> :
@@ -73,7 +73,7 @@ function RoomPage() {
           </> : <div>없는디여</div>
         }
       </Page>
-    </>
+    </Container>
   );
 }
 export default RoomPage;
@@ -81,4 +81,13 @@ export default RoomPage;
 const Page = styled.div`
   margin-left: 10%;
   margin-right: 10%;
+  width: 65vw;
 `;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding-top: 10vh;
+  background-color: var(--white);
+`

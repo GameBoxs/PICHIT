@@ -46,15 +46,27 @@ function RoomHeader({ join, joinRoom, data, host }) {
     deleteData
   );
   console.log(deleteResult);
-  // if (result[0] && result[0].success && result[0].success !== undefined) {
-  //   navigate("/");
-  // }
 
-  // const deleteAlert =
+  useEffect(() => {
+    setDeleteData();
+    if (
+      deleteResult[0] &&
+      deleteResult[0].success &&
+      deleteResult[0].success !== undefined
+    ) {
+      Swal.fire({
+        text: "면접방이 삭제 되었습니다.",
+        showConfirmButton: false,
+        icon: "success",
+        timer: 1500,
+      });
+      navigate("/");
+    }
+  }, [deleteData]);
 
   const deleteRoom = () => {
     MySwal.fire({
-      title: "면접방을 정말 삭제하시겠습니까?",
+      text: "면접방을 정말 삭제하시겠습니까?",
       showConfirmButton: true,
       showCancelButton: true,
       confirmButtonText: "삭제",
@@ -62,16 +74,6 @@ function RoomHeader({ join, joinRoom, data, host }) {
     }).then((result) => {
       if (result.isConfirmed) {
         setDeleteData(true);
-        if (deleteResult[0] && deleteResult[0].success && deleteResult[0].success !== undefined) {
-          Swal.fire({
-            title: "면접방이 삭제 되었습니다.",
-            showConfirmButton: false,
-            icon:'success',
-            timer:1500
-          })
-          navigate("/");
-        }
-        
       }
     });
   };
@@ -85,43 +87,87 @@ function RoomHeader({ join, joinRoom, data, host }) {
   // },[deleteData])
 
   const readyRoom = join ? (
-    <button>나가기</button>
+    <LayoutButton text={"나가기"}>나가기</LayoutButton>
   ) : (
-    <button onClick={joinHandler}>참여하기</button>
+    <LayoutButton isImportant={false} text={"참여하기"} onClick={joinHandler}>
+      참여하기
+    </LayoutButton>
   );
 
   const RoomHost = host ? (
     <div>
-      <button onClick={showModal}>수정하기</button>
-      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
-      <button onClick={deleteRoom}>삭제하기</button>
+      {/* <LayoutButton text={"수정하기"} onClick={showModal}>수정하기</LayoutButton>
+      <button onClick={showModal} >수정하기</button>
+      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />} */}
+      <LayoutButton text={"삭제하기"} onClick={deleteRoom}>
+        삭제하기
+      </LayoutButton>
     </div>
   ) : (
     { readyRoom }
   );
 
   return (
-    <>
-      <Layout>
-        <Left>
-          <Title title={title} />
-          <Title title={startDate} />
-        </Left>
-        {RoomHost}
-      </Layout>
-    </>
+    <Layout>
+      <Title title={title} />
+      {RoomHost}
+    </Layout>
   );
 }
 
 export default RoomHeader;
 
+const LayoutButton = styled.div`
+  width: 10vw;
+  height: 8vh;
+  border-radius: 1rem;
+  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
+    -0.2rem -0.2rem 0.5rem var(--white);
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-weight: 600;
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  background-color: var(--primary-light);
+
+  & {
+    color: var(--white);
+  }
+
+  &:hover {
+    color: var(--primary);
+  }
+
+  &:active {
+    box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
+      inset -0.2rem -0.2rem 0.5rem var(--white);
+  }
+`;
+
 const Layout = styled.div`
   display: flex;
   justify-content: space-between;
-  text-align: center;
-  border-bottom: 2px solid gray;
+  align-items: flex-end;
+  margin-bottom: 3rem;
+
+  & .Title {
+    font-weight: 600;
+    font-size: 3rem;
+  }
+
+  & div:nth-child(2) {
+    width: 7rem;
+    height: 3rem;
+
+    & * {
+      font-size: 1rem;
+    }
+  }
 `;
-const Left = styled.div`
-  display: inline-flex;
-  align-items: center;
+const ButtonSection = styled.div`
+  display: flex;
 `;
