@@ -10,10 +10,10 @@ import useAxios from "../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
+
 // 방 생성하기 모달
 function CreateRoom({ setModalOpen }) {
-  // 캘린더
-  const [value, onChange] = useState(new Date());
+
   // 비밀방 여부 toggle : false(off) true(on)
   const [toggle, setToggle] = useState(false);
 
@@ -63,29 +63,43 @@ function CreateRoom({ setModalOpen }) {
     return () => (document.body.style = `overflow:auto`);
   }, []);
 
-  // 방 생성하기 임시 axios post
   const token = useSelector((state) => state.token);
-  const [isLoading, setIsLoading] = useState(true);
-  const createRoom = () => {
-    console.log(room);
-    axios({
-      method: "POST",
-      url: "https://i8d107.p.ssafy.io/api/interviewrooms",
-      headers: {
-        Authorization: token,
-      },
-      data: room,
-    })
-      .then((res) => {
-        console.log(res);
-        setRoom(res.room);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setIsLoading(false);
-      });
-    setModalOpen(false);
-  };
+
+  // 방 생성하기 useAxios
+
+  const [createData, setCreateData] = useState(false);
+  const [result, isLoading] = useAxios(
+    "interviewrooms",
+    "POST",
+    token,
+    room,
+    createData
+  );
+
+
+  // 방 생성하기 임시 axios post
+  // const [isLoading, setIsLoading] = useState(true); //로딩 중인지 아닌지 판단하는 부분
+
+  // const createRoom = () => {
+  //   console.log(room);
+  //   axios({
+  //     method: "POST",
+  //     url: "https://i8d107.p.ssafy.io/api/interviewrooms",
+  //     headers: {
+  //       Authorization: token,
+  //     },
+  //     data: room,
+  //   })
+  //     .then((res) => {
+  //       console.log(res);
+  //       setRoom(res.room);
+  //     })
+  //     .catch((err) => console.log(err))
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  //   setModalOpen(false);
+  // };
 
   const handleDaySelect = (date) => {
     setSelected(date);
@@ -95,6 +109,16 @@ function CreateRoom({ setModalOpen }) {
     setRoom("");
     console.log(date);
   };
+
+  // if (createData === true)
+  //   closeModal();
+
+  const createRoom = () => {
+    setCreateData(true);
+    closeModal();
+    console.log(result)
+  }  
+
 
   return (
     <Wrap onClick={closeModal}>
@@ -167,7 +191,11 @@ function CreateRoom({ setModalOpen }) {
           </Section>
         </Layout>
         <Layout height="20%">
-          <button onClick={createRoom}>생성하기</button>
+          <button
+            onClick={createRoom }
+          >
+            생성하기
+          </button>
           <button onClick={closeModal}>취소하기</button>
         </Layout>
       </ModalContainer>

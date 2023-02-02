@@ -79,23 +79,6 @@ function MainBottom() {
   //   }
   // }, [isLogined]);
 
-    // sweet alert로 방 만들기 모달 생성 
-    // const showSwalWithLink = () => {
-    //   MySwal.fire({
-    //     title:'방 생성하기',
-    //     width:700,
-    //     showConfirmButton:true,
-    //     showCancelButton:true,
-    //     confirmButtonText:"생성하기",
-    //     cancelButtonText:"취소",
-    //     html:(
-    //       <div>
-    //         <CreateRoom />
-    //       </div>
-    //     )
-    //   })
-    // }
-
     const [modalOpen, setModalOpen] = useState(false);
 
     const showModal = () => {
