@@ -92,7 +92,7 @@ public class ConferenceController {
     }
 
     @Operation(summary = "화상회의 세션 종료")
-    @PostMapping("/sessions/close/{interviewRoomId}")
+    @DeleteMapping("/sessions/close/{interviewRoomId}")
     public ResponseEntity<ApiResponse> closeConference(@PathVariable("interviewRoomId") Long interviewRoomId,
                                                     @AuthenticationPrincipal LoginUser loginUser)
             throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
@@ -113,8 +113,8 @@ public class ConferenceController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @Operation(summary = "화상회의 연결")
-    @PostMapping("/sessions/connections/{sessionId}")
+    @Operation(summary = "화상회의 연결(토큰 발급)")
+    @GetMapping("/sessions/connections/{sessionId}")
     public ResponseEntity<ApiResponse<String>> createConnection(@PathVariable("sessionId") String sessionId)
             throws OpenViduJavaClientException, OpenViduHttpException {
         Session session = openvidu.getActiveSession(sessionId);
