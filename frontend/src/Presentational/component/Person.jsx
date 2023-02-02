@@ -2,10 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import _ from "lodash";
 import {MdPersonPin} from "react-icons/md"
-function Person({ name, isHost }) {
 
+function Person({ name, isHost, people }) {
   return (
-    <PersonContainer>
+    <PersonContainer people={people}>
       <Background isHost={isHost}>
         <MdPersonPin />
       </Background>
@@ -20,8 +20,8 @@ const Name = styled.div``;
 
 const Background = styled.div`
 position: relative;
-  width: 5vw;
-  height: 5vw;
+  width: 3vw;
+  height: 3vw;
   border-radius: 50%;
 
   & *{
@@ -37,6 +37,7 @@ const PersonContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 10vw;
-  margin-bottom: 2rem;
+  justify-content: center;
+  width: ${props => `calc(100%/${props.people})`};
+  gap: 1rem;
 `;

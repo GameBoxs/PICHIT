@@ -21,9 +21,9 @@ function PlanTime(props) {
     },
   ];
 
-  const dday = date.map((elem) => {
+  const dday = date.map((elem, idx) => {
     return (
-      <Layout>
+      <Layout key={idx}>
         <DayTitle>{elem.type}</DayTitle>
         <Text>{elem.value}</Text>
       </Layout>
@@ -45,8 +45,8 @@ const DayTitle = styled.div`
 `;
 
 const Text = styled.div`
-  width: 2em;
-  height: 2em;
+  width: 1.5em;
+  height: 1.5em;
   font-weight: bolder;
   font-size: 2rem;
   padding: 1em;
