@@ -48,18 +48,18 @@ function RoomPage() {
   const token = useSelector((state) => state.token);
   const [data, setData] = useState();
 
-  const [getData, isLoading] = useAxios(
+  const [postData, isLoading] = useAxios(
     `interviewrooms/${roomId}`,
-    "GET",
+    "POST",
     token
   );
 
   useEffect(() => {
-    if (getData && getData.data) {
-      setData(getData.data);
-      console.log(getData.data);
+    if (postData && postData.data) {
+      setData(postData.data);
+      console.log(postData.data);
     }
-  }, [getData]);
+  }, [postData]);
 
   return (
     <Container>
