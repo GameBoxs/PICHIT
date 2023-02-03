@@ -53,7 +53,7 @@ export default Rating;
 
 const RatingIcon = styled.div`
   pointer-events: none;
-  color: orange;
+  color: #f7e160;
 
   &.rating__icon--none {
     color: #eee;

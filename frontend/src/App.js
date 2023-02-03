@@ -9,6 +9,7 @@ import MainPage from "./Presentational/pages/MainPage";
 import ReviewPage from "./Presentational/pages/ReviewPage";
 import RoomPage from "./Presentational/pages/room/RoomPage";
 import Pagination from "./Presentational/common/Pagination/Pagination"
+import { GlobalStyle } from "./action/GlobalStyle";
 
 const expenses = [
   {
@@ -16,6 +17,7 @@ const expenses = [
     title: "면접 들어와",
     people: 4,
     date: new Date(2023, 1, 15),
+    connect: "010-4125-4629",
     content:
       "이 정보는 테스트용 정보 입니다.가나다라마바사아자차카타파하.이 정보는 테스트용 정보 입니다.가나다라마바사아자차카타파하",
   },
@@ -26,6 +28,7 @@ function App() {
 
   return (
     <AppContainer>
+      <GlobalStyle />
       {(pathname.includes("interview")) ? null:<Navigation /> }
 
       <Routes>

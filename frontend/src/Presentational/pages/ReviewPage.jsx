@@ -27,7 +27,7 @@ const ReviewPage = (props) => {
 
   // 피드백 서브타이틀 텍스트
   const subtitleText = (
-    <div style={{ fontSize: "25px", marginTop: "50px", fontWeight: "bold" }}>
+    <div style={{ fontSize: "25px", marginTop: "50px", fzontWeight: "bold" }}>
       기록 선택하기
     </div>
   );
