@@ -78,7 +78,9 @@ function Navigation() {
   //토큰 불러와서 불러온 userInfo 이용해서 리덕스에 사용자 정보 넣기
   const token = useSelector(state => state.token)
   data = useAxios('userinfo', "GET", token)
-  dispatch(getUserInfo(data))
+  dispatch(getUserInfo(data[0]))
+
+  console.log(data[0])
 
   return (
     <NavBody>
