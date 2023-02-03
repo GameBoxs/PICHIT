@@ -25,6 +25,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   // axios delete
   const [deleteData, setDeleteData] = useState(false);
   const [joinId, setJoinId] = useState(0);
+  // const [goSession, setGoSession] = useState(false);
 
   const [enterRes] = useAxios(
     `interviewjoins`,
@@ -53,6 +54,16 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     quit
   );
 
+  // const [getSession] = useAxios(
+  //   `conference/sessions/${id}`,
+  //   "POST",
+  //   token,
+  //   {interviewRoomId:id},
+  //   goSession
+  // )
+
+  // console.log(getSession, '-------------')
+
   useEffect(() => {
     console.log("===userinfo===");
     const tempArr = participants.filter(
@@ -68,7 +79,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     console.log("===enterRes===");
     if (enterRes !== null) {
       if (enterRes.success) {
-        alert("참가");
       } else {
         alert("이미 참가한 방입니다");
       }
@@ -96,7 +106,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     console.log("===quitRes===");
     if (quitRes !== null && quitRes.success) {
       // window.location.reload();
-      alert("탈퇴");
     }
   }, [quitRes]);
 
@@ -147,32 +156,46 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   // },[deleteData])
 
   const readyRoom = join ? (
-    <LayoutButton
+    <Button
       text={"나가기"}
       onClick={() => {
         quitHandler(false);
       }}
     >
       나가기
-    </LayoutButton>
+    </Button>
   ) : (
-    <LayoutButton
+    <Button
       isImportant={false}
       text={"참여하기"}
       onClick={() => joinHandler(true)}
     >
       참여하기
-    </LayoutButton>
+    </Button>
   );
 
+  const moveSession = () => {
+    // setGoSession(true)
+    navigate("/interview", {
+      state: {
+        id: userinfo.id,
+        roomId: id,
+      },
+    });
+  };
+
   const RoomHost = host ? (
-    <div>
+    <BtnContainer>
       {/* <LayoutButton text={"수정하기"} onClick={showModal}>수정하기</LayoutButton>
       <button onClick={showModal} >수정하기</button>
       {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />} */}
       {/* <LayoutButton text={"삭제하기"} onClick={deleteRoom}> */}
       {participants.length >= 2 ? (
-        <Button text={"스터디 시작하기"} isImportant={true}>
+        <Button
+          text={"스터디 시작하기"}
+          handler={moveSession}
+          isImportant={true}
+        >
           화상채팅 시작하기
         </Button>
       ) : null}
@@ -180,7 +203,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
         삭제하기
       </Button>
       {/* </LayoutButton> */}
-    </div>
+    </BtnContainer>
   ) : (
     <div>{readyRoom}</div>
   );
@@ -195,6 +218,12 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
 }
 
 export default RoomHeader;
+
+const BtnContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
 
 const LayoutButton = styled.div`
   width: 10vw;
@@ -211,9 +240,9 @@ const Layout = styled.div`
     font-family: "SBagrroL";
   }
 
-  & div:nth-child(2) {
-    width: 7rem;
-    height: 3rem;
+  .Btn {
+    width: 10rem;
+    height: 3.5rem;
 
     & * {
       font-size: 1rem;

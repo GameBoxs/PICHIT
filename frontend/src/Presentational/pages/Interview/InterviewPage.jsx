@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 import IntervieweePage from "./IntervieweePage"
 import InterviewerPage from "./InterviewerPage";
@@ -14,8 +14,15 @@ import { useSelector } from "react-redux";
 import {getToken, leaveSession,} from '../../../action/modules/chatModule';
 
 const InterviewPage = () => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  /* 
+    roomPage에서 받아온 값
+    id : 해당 유저 아이디
+    rommId : 방 아이디
+  */
+  const {id, roomId} = useLocation().state;
   const mySession = useSelector((state) => state.chatSession);
+
   const [info, setInfo] = useState({
     interviewee: "미지정",
     mySessionId: mySession,
