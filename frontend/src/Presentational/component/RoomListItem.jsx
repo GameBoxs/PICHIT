@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import Swal from "sweetalert2";
@@ -8,37 +8,10 @@ import useAxios from "../../action/hooks/useAxios";
 
 const MySwal = withReactContent(Swal);
 
-// {
-//     "id": 80,
-//     "title": "멋진 면접",
-//     "currentPersonCount": 1,
-//     "maxPersonCount": 4,
-//     "secretRoom": true,
-//     "finished": false,
-//     "startDate": "2023-01-24T08:40:10.495"
-// }
 function RoomListItem(props) {
   // 비밀방 클릭시, 비밀번호 입력 모달 띄우도록 설정,
   let navigate = useNavigate();
-  const showSwalWithLink = () => {
-    MySwal.fire({
-      title: "비밀번호 입력",
-      input: "text",
-      inputAttributes: {
-        autocapitalize: "off",
-      },
-      showCancelButton: true,
-      confirmButtonText: "입장하기",
-      cancelButtonText: "취소하기",
-    });
-  };
-
-  // const [roomId, setRoomId] =useState([])
-  // const clickHandler = () => {
-  //   setRoomId(props.id)
-  //   console.log(props.id)
-
-  // }
+  const roomId = props.id
 
   const clickRoomItem = () => {
     if (props.secretRoom === true) {
@@ -54,7 +27,8 @@ function RoomListItem(props) {
           return { password: password };
         },
       }).then((result) => {
-        navigate("/room", {
+        console.log(result.value.password)
+        navigate(`/room/${roomId}`, {
           state: {
             id: props.id,
             password: result.value.password,
@@ -62,7 +36,7 @@ function RoomListItem(props) {
         });
       });
     } else {
-      navigate("/room", {
+      navigate(`/room/${roomId}`, {
         state: {
           id: props.id,
         },
@@ -81,11 +55,6 @@ function RoomListItem(props) {
         </p>
       </div>
       <p>{props.startDate}</p>
-
-      {props.secret ? (
-        <button onClick={showSwalWithLink}>비밀번호</button>
-      ) : null}
-      {/* secret:true 일 때 일단 임시로 비밀번호 버튼 뜨도록 설정 */}
     </RoomItem>
   );
 }

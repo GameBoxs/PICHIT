@@ -78,6 +78,7 @@ function CreateRoom({ setModalOpen }) {
     room,
     createData
   );
+  console.log(createResult)
   
   // Daypicker 날짜 선택 handler 
   const handleDaySelect = (date) => {
@@ -137,9 +138,10 @@ function CreateRoom({ setModalOpen }) {
         }).then((result) => {
           if (result.isConfirmed) {
             console.log(createResult.data.id);
-            navigate("/room", {
+            navigate(`/room/${createResult.data.id}`, {
               state: {
                 id: createResult.data.id,
+                password:room.password
               },
             });
           }
