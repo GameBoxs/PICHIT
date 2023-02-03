@@ -36,12 +36,17 @@ public class InterviewRoomService {
     public InterviewRoomInfo createInterviewRoom(InterviewRoomRequest dto, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 회원입니다."));
 
+        String password = null;
+        if (dto.getPassword() != null && dto.getPassword().trim().length() != 0) {
+            password = dto.getPassword().trim();
+        }
+
         InterviewRoom interviewRoom = InterviewRoom.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())
                 .manager(user)
                 .maxPersonCount(dto.getMaxPersonCount())
-                .password(dto.getPassword().length() != 0 ? dto.getPassword() : null)
+                .password(password)
                 .startDate(dto.getStartDate())
                 .finished(0)
                 .build();
@@ -79,7 +84,7 @@ public class InterviewRoomService {
 
         // 비밀방인 경우, 비밀번호 확인
         if (interviewRoom.getPassword() != null) {
-            if(dto == null || !interviewRoom.getPassword().equals(dto.getPassword())) {
+            if (dto == null || !interviewRoom.getPassword().equals(dto.getPassword())) {
                 throw new ResourceForbiddenException("비밀번호가 틀렸습니다.");
             }
         }
