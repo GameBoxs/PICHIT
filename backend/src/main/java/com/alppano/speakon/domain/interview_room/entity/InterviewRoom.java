@@ -27,6 +27,9 @@ public class InterviewRoom extends BaseTimeEntity {
     @Column(length = 300)
     private String description;
 
+    @Column(length = 200)
+    private String contactWay;
+
     @Column(nullable = false)
     private int maxPersonCount;
 

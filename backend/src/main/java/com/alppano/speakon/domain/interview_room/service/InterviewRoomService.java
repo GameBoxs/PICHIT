@@ -145,4 +145,43 @@ public class InterviewRoomService {
 
         interviewRoom.setFinished(finished);
     }
+
+    @Transactional
+    public void updateInterviewRoom(InterviewRoomRequest dto, Long interviewRoomId, Long userId) {
+        InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
+
+        if (!interviewRoom.getManager().getId().equals(userId)) {
+            throw new ResourceForbiddenException("방장만 면접방 상태를 수정할 수 있습니다.");
+        }
+
+        if (dto.getTitle() != null) {
+            interviewRoom.setTitle(dto.getTitle());
+        }
+
+        if (dto.getDescription() != null) {
+            interviewRoom.setDescription(dto.getDescription());
+        }
+
+        if (dto.getContactWay() != null) {
+            interviewRoom.setContactWay(dto.getContactWay());
+        }
+
+        if (dto.getMaxPersonCount() != null) {
+            if (interviewRoom.getInterviewJoins().size() > dto.getMaxPersonCount()) {
+                throw new ResourceForbiddenException("수정하려는 최대 인원 수가 현재 인원 수보다 작습니다.");
+            }
+            interviewRoom.setMaxPersonCount(dto.getMaxPersonCount());
+        }
+
+        if (dto.getStartDate() != null) {
+            interviewRoom.setStartDate(dto.getStartDate());
+        }
+
+        String password = null;
+        if (dto.getPassword() != null && dto.getPassword().trim().length() != 0) {
+            password = dto.getPassword().trim();
+        }
+        interviewRoom.setPassword(password);
+    }
 }
