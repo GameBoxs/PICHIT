@@ -1,33 +1,51 @@
 import styled from "styled-components";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import useAxios from "../../../../action/hooks/useAxios";
 
-const QuestionInsert = ({onInsert}) => {
+const QuestionInsert = ({ userinfo }) => {
+  const token = useSelector((state) => state.token);
 
-  const [value, setValue] = useState("");
+  const [content, setContent] = useState("");
+  const [click, setClick] = useState(false);
+  const [postData] = useAxios(
+    "questions",
+    "POST",
+    token,
+    {
+      content: content,
+      interviewJoinId: userinfo.interviewJoinId,
+      writerId: userinfo.id,
+    },
+    click
+  );
 
-  const onChange = (e) => {
-    console.log(e.target.value);
-    setValue(e.target.value);
+  useEffect(() => {
+    if (postData && postData.data) {
+      setClick(false);
+      console.log(postData);
+    }
+    console.log("useEffect 실행됨?");
+  }, [postData]);
+
+  const inputHandler = (e) => {
+    setContent(e.target.value);
   };
 
-  const onSubmit = (e) => {
+  const QuestionHandler = (e) => {
     e.preventDefault();
-    onInsert(value);
-    setValue("");
+    setClick(true);
+    console.log(content);
   };
 
   return (
     <>
-      <form onSubmit={onSubmit}>
-          <Input
-            value={value}
-            onChange={onChange}
-          ></Input>
-          <Button>작성</Button>
-        </form>
-        
+      <form>
+        <Input value={content} onChange={inputHandler}></Input>
+        <Button onClick={QuestionHandler}>작성</Button>
+      </form>
 
-    {/* <form onSubmit={onSubmit}>
+      {/* <form onSubmit={onSubmit}>
       <input 
       type='text'
       placeholder="질문을 입력 해주세요"
@@ -40,6 +58,5 @@ const QuestionInsert = ({onInsert}) => {
 };
 export default QuestionInsert;
 
-
-const Input = styled.input.attrs({type:"text"})``;
-const Button = styled.button.attrs({type:"submit"})``;
+const Input = styled.input.attrs({ type: "text" })``;
+const Button = styled.button.attrs({ type: "submit" })``;
