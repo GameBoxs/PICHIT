@@ -41,7 +41,7 @@ public class InterviewRoomService {
                 .description(dto.getDescription())
                 .manager(user)
                 .maxPersonCount(dto.getMaxPersonCount())
-                .password(dto.getPassword())
+                .password(dto.getPassword().length() != 0 ? dto.getPassword() : null)
                 .startDate(dto.getStartDate())
                 .finished(0)
                 .build();
