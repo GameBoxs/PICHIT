@@ -119,6 +119,21 @@ public class InterviewRoomService {
         return new PagedResult<>(list);
     }
 
+    public PagedResult<InterviewRoomInfo> searchMyInterviewRooms(Pageable pageable, Integer finished, Long userId) {
+        Page<InterviewJoin> queryResult = null;
+
+        if (finished != null) {
+            queryResult = interviewJoinRepository.findAllByFinishedAndUserId(pageable, finished, userId);
+        } else {
+            queryResult = interviewJoinRepository.findAllByUserId(pageable, userId);
+        }
+
+        Page<InterviewRoomInfo> list = queryResult.map(interviewJoin -> new InterviewRoomInfo(interviewJoin.getInterviewRoom()));
+
+        return new PagedResult<>(list);
+    }
+
+
     @Transactional
     public void setInterviewRoomFinishedStatus(Long interviewRoomId, Integer finished, Long userId) {
         InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)

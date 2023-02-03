@@ -68,6 +68,17 @@ public class InterviewRoomController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @Operation(summary = "나의 면접방 검색")
+    @GetMapping("/my-interviewrooms")
+    public ResponseEntity<ApiResponse<PagedResult<InterviewRoomInfo>>> searchMyInterviewRooms(@AuthenticationPrincipal LoginUser loginUser,
+                                                                                              @PageableDefault(size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                                                                              @RequestParam(required = false) Integer finished) {
+        PagedResult<InterviewRoomInfo> list = interviewRoomService.searchMyInterviewRooms(pageable, finished, loginUser.getId());
+        ApiResponse<PagedResult<InterviewRoomInfo>> result = new ApiResponse(Boolean.TRUE, "조회 성공", list);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
     @Operation(summary = "면접방 상태 수정")
     @PutMapping("/interviewrooms/{id}/finished")
     public ResponseEntity<ApiResponse> setInterviewRoomFinishedStatus(@AuthenticationPrincipal LoginUser loginUser,
