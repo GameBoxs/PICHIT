@@ -93,16 +93,7 @@ public class ConferenceController {
     @PostMapping("/interview/question/propose")
     public ResponseEntity<String> proposeQuestion(@RequestBody InterviewRequest requestDto,
                                                   @AuthenticationPrincipal LoginUser loginUser) throws Exception {
-        Conference conference = conferenceService.retrieveConference(requestDto.getInterviewRoomId());
-        String intervieweeId = String.valueOf(requestDto.getIntervieweeId());
-        String questionId = String.valueOf(requestDto.getQuestionId());
-        //TODO: 이미 질문이 '시작'되어 진행 중인지 검사 -> 진행 중이면 요청 거절
-        //TODO: 질문 시작되었음을 기록
-
-        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(), "broadcast-question-start", questionId);
-        StatusLine sl = response.getStatusLine();
-        System.out.print("STATUS CODE: ");
-        System.out.println(sl.getStatusCode());
+        interviewService.proposeQuestion(loginUser.getId(), requestDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
