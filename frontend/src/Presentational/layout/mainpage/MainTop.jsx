@@ -1,11 +1,11 @@
 import styled, { css, keyframes } from "styled-components";
 
-import SBagrroL from "../../common/Font/AggroL";
+import SBagrroM from "../../common/Font/AggroM";
 
 function MainTop() {
   return (
     <>
-      <SBagrroL />
+      <SBagrroM />
       <TopBody>
         <Header>
           <WcontainerContents>
@@ -31,7 +31,7 @@ export default MainTop;
 const TopBody = styled.div`
   //   background-color: #21ffda;
   //   /* height: 100vh; */
-  margin: 10vh 0 0 0;
+  margin: 15vh 0 0 0;
   padding: 0;
   width: 96vw;
   display: flex;
@@ -41,7 +41,6 @@ const TopBody = styled.div`
 
 const Header = styled.div`
   position: relative;
-  padding-bottom: 99px;
 `;
 
 const WcontainerContents = styled.div`
@@ -67,14 +66,15 @@ const H1Tag = styled.h1`
   position: relative;
   top: 15px;
   z-index: 1;
-  margin: 0;
+  margin: 0 0 10px 0;
   color: var(--primary);
-  font-size: 900%;
+  font-size: 700%;
   line-height: 0.8em;
   font-weight: 800;
   text-transform: uppercase;
   opacity: 0;
   animation: ${fadeInDown} 1s both;
+  font-family: SBagrroM;
   
 `;
 
