@@ -1,83 +1,99 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+
 import RoomList from "../../component/RoomList";
 import TotalCategory from "../../component/TotalCategory";
 import MyCategory from "../../component/MyCategory";
 import PageBar from "../../common/Pagination/PageBar";
-
+import EmptyRoomList from "../../component/EmptyRoomList";
+import CreateRoom from "../../component/CreateRoom";
+//sweetalert2
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import CreateRoom from "../../component/CreateRoom";
-import EmptyRoomList from "../../component/EmptyRoomList";
 //통신
 import useAxios from '../../../action/hooks/useAxios';
-import axios from "axios";
 import {testToken} from "../../../store/values"
+//카테고리
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+  // const token = useSelector(state => state.token)
+  // const info = useSelector(state => state.userinfo)
+  // https://i8d107.p.ssafy.io/api
 
 const MySwal = withReactContent(Swal);
 // React sweet alert 쓸려고 사용함
 
 function MainBottom() {
-  // //로그인여부
-  // const [isLogined, setIsLogined] = useState(false); //false:비로그인, true:로그인
-  // //로그인버튼(테스트용)
-  // function loginBtn() {
-  //   if (isLogined === false) {
-  //     setIsLogined(true);
-  //     console.log(isLogined);
-  //     const btnElement = document.getElementById("btn");
-  //     btnElement.innerText = "로그인상태";
-  //   } else {
-  //     setIsLogined(false);
-  //     console.log(isLogined);
-  //     const btnElement = document.getElementById("btn");
-  //     btnElement.innerText = "지금은 비로그인";
-  //   }
-  // }
   
-
-  // // roomlist통신
-  const [data, setData] = useState([])
-    // //페이지네이션
-    const [currentPage, setCurrentPage] = useState(1); //현재페이지
-    const [postsPerPage, setPostsPerPage] = useState(9); //페이지당 게시물 수
-    const [totalElements, setTotalElements] = useState(0); //전체 데이터 길이
-    const [totalpages, setTotalPages] = useState(0); //전체 데이터 길이
-
-  const [getData, isLoading] = useAxios(
-    `interviewrooms?page=${currentPage-1}`,'GET',testToken,
-  );
-  useEffect(() => {
-    if(getData && getData.data){
-      console.log(getData)
-      setData(getData)
-      setTotalElements(getData.data.totalElements)
-      setTotalPages(getData.data.totalPages)
+  // //페이지네이션
+  const [currentPage, setCurrentPage] = useState(1); //현재페이지
+  const [postsPerPage, setPostsPerPage] = useState(9); //페이지당 게시물 수
+  const [totalElements, setTotalElements] = useState(0); //전체 데이터 길이
+  const [totalpages, setTotalPages] = useState(0); //전체 데이터 길이
+  
+  const [APIurl,serAPIurl] = useState()
+  const myCategory = `my-interviewjoins?size=9&page=${currentPage-1}&finished=0`
+  const totalCategory = `interviewrooms?page=${currentPage-1}`
+  
+  //로그인에 따른 카테고리 기본값
+  const [isLogined, setIsLogined] = useState(false) //false : 비로그인, true : 로그인
+  const token = useSelector(state => state.token)//으로 원래는 사용자 토큰을 받아야하는데 지금은 테스트라서 testToken으로 수민꺼 들고올거다.
+  useEffect(()=>{
+    if(token){
+      setIsLogined(true)
+      serAPIurl(myCategory)
     }
-  }, [getData]);
+    else{
+      setIsLogined(false)
+      serAPIurl(totalCategory)
+    }
+  },[isLogined])
+  
+  // TOTAL/MY 카테고리
+  const [roomPosition, setRoomPosition] = useState(false); // false : total, true ; my
+  
+  //버튼을 통한 TOTAL/MY 값
+  function roomSwitch(position) {
+    if(position === "toTotal") {
+    setRoomPosition(false);
+    setCurrentPage(1)
+    serAPIurl(totalCategory)
+    } else {
+    setRoomPosition(true);
+    setCurrentPage(1)
+    serAPIurl(myCategory)
+  }
+  }
+  
+  // roomlist통신
+  const [data, setData] = useState([]) //total데이터 저장
+  const [getData, isLoading] = useAxios(
+    // APIurl,'GET',testToken,
+    APIurl,'GET',token,
+    );
+    useEffect(() => {
+      if(APIurl===myCategory){
+        console.log(getData.data)
+      }
+      if(getData && getData.data){
+        console.log(getData.data)
+        setData(getData)
+        setTotalElements(getData.data.totalElements) //데이터 전체 수
+        setTotalPages(getData.data.totalPages) //페이지 전체 수
+        console.log('데이터 불러오는중')
+      }
+      console.log('페이지가변하면서 얘도 바뀜')
+    }, [getData]);
+    console.log(isLogined+'사용자'+APIurl+'일 때'+roomPosition+'이고, 엑시오스 상태'+getData)/////////////////////////////////
 
-  //////////////////  <<<  total/my 사용자정렬  >>>>  ////////////////
-  //사용자 정렬
-  // const [roomPosition, setRoomPosition] = useState(false); // false : total, true ; my
-  // //버튼이 따른 변경
-  // function roomSwitch(position) {
-  //   if (position === "toTotal") {
-  //     setRoomPosition(false);
-  //     setData(DUMMY_DATA);
-  //   } else {
-  //     setRoomPosition(true);
-  //     setData(MY_ROOMS);
-  //   }
-  // }
-  // useEffect(() => {
-  //   if (isLogined === false) {
-  //     setRoomPosition(false);
-  //     setData(DUMMY_DATA);
-  //   } else {
-  //     setRoomPosition(true);
-  //     setData(MY_ROOMS);
-  //   }
-  // }, [isLogined]);
+    useEffect(()=>{
+      if(roomPosition){
+        serAPIurl(myCategory)
+      }
+      else{
+        serAPIurl(totalCategory)
+      }
+    },[totalCategory, myCategory])
 
   // sweet alert로 방 만들기 모달 생성
   const showSwalWithLink = () => {
@@ -95,20 +111,22 @@ function MainBottom() {
       ),
     });
   };
-
+  // 물어볼거
+  // 페이지네이션 ->페이지정보까지 받아서 axios까지는 들어가는데 결과값이 (setdata가) 변하지 않는다
+  // 내가 참여한 방 리스트 정보를 불러올때 interviewRoomId가 방 고유 id값인거 같은데, 그럼 이걸가지고 다시 방 검색을 할수 있어야 한다던지, 방 검색에서 내가참여한 방만 볼수있는 걸로 하던지 해야할듯. 지금주는 자신의 면접참여목록조회로 마이데이터 카테고리로는 정보가 부족함(인원수라던지, 시크릿방인지 같은거)
+  // 해야할거
+  // 비로그인 사용자 마이카테고리 막기(스윗알럿)
+  // 페이지네이션 더보기 버튼(특정페이지수가 넘어갈때)
+  console.log('페이지네이션'+totalElements+'/'+postsPerPage+'/'+currentPage+'/'+totalpages)
+  console.log('totalCategory///'+totalCategory)
   return (
     <Layout>
-      {/* 로그인 상태에 따른거(테스트용)  */}
-      {/* <button id="btn" onClick={loginBtn}>
-        지금은 비로그인
-      </button> */}
       <Header>
         <h1> LOOM LIST</h1>
-        
         <Titlesection>
-          <p>대충 설명이 들어가겠죠?</p>
+          <p>{roomPosition ? '내가 참여한 목록입니다(예정만 보여줌)' : '모든방 목록입니다'}</p>
           <div>
-            {/* <button
+            <button
               onClick={() => {
                 roomSwitch("toTotal");
               }}
@@ -117,17 +135,22 @@ function MainBottom() {
             </button>
             <button
               onClick={() => {
-                roomSwitch("toMy");
+                if(token){
+                  roomSwitch("toMy");
+                }
+                else{
+                  console.log('못넘어간다')//여기에 스윗알럿 하면 될듯
+                }
               }}
             >
               MY
-            </button> */}
+            </button>
           </div>
         </Titlesection>
          
       </Header>
       {
-          isLoading===true ? <div>loading...</div> :
+          isLoading===true? <div>loading...</div> :
       <section>
         <Main>
           {/* {roomPosition ? <MyCategory /> : <TotalCategory />} */}
@@ -164,8 +187,8 @@ const Layout = styled.div`
 `;
 
 const Header = styled.div`
-  /* border-bottom: 2px solid gray; */
-  padding: 4rem 0 2rem 0;
+  border-bottom: 2px solid gray;
+  padding: 4rem 0 1rem 0;
 
   & h1 {
     font-size: 3.5rem;

@@ -8,6 +8,7 @@ import useAxios from "../../action/hooks/useAxios";
 
 import MainBottom from '../layout/mainpage/MainBottom'
 import MainTop from '../layout/mainpage/MainTop'
+import { RxDotsVertical } from "react-icons/rx";
 
 const MainPage = () => {
   const MainDiv = useRef([]);
@@ -43,7 +44,10 @@ const MainPage = () => {
       </First>
       <Second ref={(el) => (MainDiv.current[1] = el)}>
         <MoveBtn onClick={() => scrollWithUseRef(1)}>UP</MoveBtn>
-        <MainBottom/>
+        <RxDotsVertical className="dotsLogo" onClick={() => scrollWithUseRef(1)}/>
+        <BottomBox>
+          <MainBottom/>
+        </BottomBox>
       </Second>
     </MainPageLayout>
   );
@@ -52,17 +56,29 @@ const MainPage = () => {
 export default MainPage;
 
 const MoveBtn = styled.div`
+  /* height: 100%; */
   cursor: pointer;
+`;
+
+const BottomBox = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const Second = styled.div`
   background-color: #ffffff;
-  display: flex;
-  justify-content: center;
+  /* display: flex;
+  justify-content: center; */
   height: 100vh;
   padding: 1em 3em;
-`;
 
+  .dotsLogo {
+    font-size: 50px;
+    & path {
+      color: gray;   
+    }
+  }
+`;
 const First = styled.div`
   background-color: #3ec7c2;
   height: 100vh;
