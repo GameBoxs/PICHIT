@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 
 import styled from "styled-components";
 import Title from "../../common/Title";
@@ -54,6 +54,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   );
 
   useEffect(() => {
+    console.log("===userinfo===");
     const tempArr = participants.filter(
       (person) => person.name === userinfo.name
     );
@@ -63,12 +64,13 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     }
   }, [userinfo]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    console.log("===enterRes===");
     if (enterRes !== null) {
       if (enterRes.success) {
-        window.location.reload();
+        alert("참가");
       } else {
-        alert("이미 참가한 방입니다")
+        alert("이미 참가한 방입니다");
       }
     }
   }, [enterRes]);
@@ -90,9 +92,11 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     }
   }, [deleteResult]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    console.log("===quitRes===");
     if (quitRes !== null && quitRes.success) {
-      window.location.reload();
+      // window.location.reload();
+      alert("탈퇴");
     }
   }, [quitRes]);
 
@@ -100,7 +104,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   const joinHandler = (isJoin) => {
     joinRoom(isJoin);
     setEnter(true);
-    setQuit(false)
+    setQuit(false);
   };
 
   const quitHandler = (isJoin) => {
@@ -167,6 +171,11 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       <button onClick={showModal} >수정하기</button>
       {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />} */}
       {/* <LayoutButton text={"삭제하기"} onClick={deleteRoom}> */}
+      {participants.length >= 2 ? (
+        <Button text={"스터디 시작하기"} isImportant={true}>
+          화상채팅 시작하기
+        </Button>
+      ) : null}
       <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
         삭제하기
       </Button>

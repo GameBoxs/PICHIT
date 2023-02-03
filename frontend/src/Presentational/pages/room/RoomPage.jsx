@@ -9,15 +9,14 @@ import { useLocation } from "react-router-dom";
 function RoomPage() {
   // roomId 값을 RoomListItem에서 Link state에 받아와서
   // useLocation에 넣어논 roomId 값을 가져와서 사용함
-  const [join, setJoin] = useState(false);
-  const [data, setData] = useState();
   const location = useLocation();
-  const [valid, setvalid] = useState(false);
   const roomId = location.state.id;
   const password = location.state.password;
+  const [join, setJoin] = useState(false);
+  const [host, setHost] = useState(false);
+  const [data, setData] = useState();
   const { token, userinfo } = useSelector((state) => state);
   
-  const [host, setHost] = useState(false);
 
   // 방장 권한을 어떤 방식으로 주는지 감이 안와서
   //일단 임시로 설정해 놓았습니다.
@@ -40,10 +39,10 @@ function RoomPage() {
   );
 
   useEffect(() => {
-    if (postData && postData.data && postData.data.manager?.id === userinfo.id) {
+    if (postData && postData.data && postData.data.manager.id === userinfo.id) {
       setHost(true);
     }
-  }, []);
+  }, [postData]);
 
   useEffect(() => {
     const tmpData = postData?.data
