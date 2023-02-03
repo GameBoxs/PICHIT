@@ -16,6 +16,7 @@ public class InterviewRoomDetailInfo {
     private Long id;
     private String title;
     private String description;
+    private String contactWay;
     private int currentPersonCount;
     private int maxPersonCount;
     private boolean secretRoom;
@@ -28,6 +29,7 @@ public class InterviewRoomDetailInfo {
     public InterviewRoomDetailInfo(InterviewRoom dto) {
         this.id = dto.getId();
         this.title = dto.getTitle();
+        this.contactWay = dto.getContactWay();
         this.description = dto.getDescription();
         this.currentPersonCount = dto.getInterviewJoins().size();
         this.maxPersonCount = dto.getMaxPersonCount();

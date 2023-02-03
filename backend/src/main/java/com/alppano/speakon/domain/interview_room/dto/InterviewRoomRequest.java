@@ -11,9 +11,10 @@ public class InterviewRoomRequest {
 
     private String title;
     private String description;
-    private int maxPersonCount;
+    private String contactWay;
+    private Integer maxPersonCount;
     private String password;
-    private int finished;
+    private Integer finished;
     private LocalDateTime startDate;
     private Long managerId;
 
