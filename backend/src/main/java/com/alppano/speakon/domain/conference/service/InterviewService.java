@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -45,15 +44,39 @@ public class InterviewService {
             throw new ResourceForbiddenException("이미 진행 중인 면접자가 있습니다.");
         }
         interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
-                .orElseThrow(() -> new ResourceForbiddenException("잘못된 유저를 지정하였습니다."));
+                .orElseThrow(() -> new ResourceForbiddenException("미참여자를 지정하였습니다."));
 
-        HttpResponse response =	httpRequestService.broadCastSignal(conference.getSessionId(), "broadcast-interviewee", String.valueOf(req.getIntervieweeId()));
+        HttpResponse response =	httpRequestService.broadCastSignal(conference.getSessionId(),
+                "broadcast-interviewee", String.valueOf(req.getIntervieweeId()));
 
         StatusLine sl = response.getStatusLine();
         System.out.print("STATUS CODE: ");
         System.out.println(sl.getStatusCode());
-        // Redis에 새로 진행 면접자를 UPDATE
+        // Redis에 새로 진행할 면접자를 UPDATE
         conference.setCurrentInterviewee(req.getIntervieweeId());
+        redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
+    }
+
+    public void endInterview(Long requesterId, InterviewRequest req) throws IOException {
+        Conference conference = retrieveConference(req.getInterviewRoomId());
+
+        if(!conference.getManagerId().equals(requesterId)) {
+            throw new ResourceForbiddenException("면접을 끝낼 권한이 없습니다.");
+        }
+        if(conference.getCurrentInterviewee() == null) {
+            throw new ResourceForbiddenException("진행 중인 면접자가 없습니다.");
+        }
+        interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
+                .orElseThrow(() -> new ResourceForbiddenException("미참여자를 지정하였습니다."));
+
+        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(),
+                "broadcast-interview-end", String.valueOf(req.getIntervieweeId()));
+
+        StatusLine sl = response.getStatusLine();
+        System.out.print("STATUS CODE: ");
+        System.out.println(sl.getStatusCode());
+        // Redis에 진행 중이던 면접자 삭제
+        conference.setCurrentInterviewee(null);
         redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
     }
 
@@ -72,7 +95,8 @@ public class InterviewService {
             throw new ResourceForbiddenException("잘못된 면접자를 지정하였습니다...");
         }
 
-        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(), "broadcast-question-start", String.valueOf(req.getQuestionId()));
+        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(),
+                "broadcast-question-start", String.valueOf(req.getQuestionId()));
 
         StatusLine sl = response.getStatusLine();
         System.out.print("STATUS CODE: ");
@@ -100,7 +124,8 @@ public class InterviewService {
             throw new ResourceForbiddenException("잘못된 질문을 지정하였습니다...");
         }
 
-        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(), "broadcast-question-end", String.valueOf(req.getQuestionId()));
+        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(),
+                "broadcast-question-end", String.valueOf(req.getQuestionId()));
         StatusLine sl = response.getStatusLine();
         System.out.print("STATUS CODE: ");
         System.out.println(sl.getStatusCode());
