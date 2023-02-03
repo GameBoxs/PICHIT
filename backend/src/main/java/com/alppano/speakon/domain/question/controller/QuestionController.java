@@ -4,6 +4,7 @@ import com.alppano.speakon.common.dto.ApiResponse;
 import com.alppano.speakon.common.dto.PagedResult;
 import com.alppano.speakon.domain.question.dto.QuestionInfo;
 import com.alppano.speakon.domain.question.dto.QuestionRequest;
+import com.alppano.speakon.domain.question.dto.QuestionWithFeedback;
 import com.alppano.speakon.domain.question.service.QuestionService;
 import com.alppano.speakon.security.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,11 +66,11 @@ public class QuestionController {
 
     @Operation(summary = "면접 참여자의 질문 목록 조회")
     @GetMapping("/interviewjoins/{id}/questions")
-    public ResponseEntity<ApiResponse<PagedResult<QuestionInfo>>> getQuestionListByInterviewJoin(@PageableDefault(size = 1, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-                                                                                                 @AuthenticationPrincipal LoginUser loginUser,
-                                                                                                 @PathVariable("id") Long interviewJoinId) {
-        PagedResult<QuestionInfo> list = questionService.getQuestionListByInterviewJoin(pageable, interviewJoinId, loginUser.getId());
-        ApiResponse<PagedResult<QuestionInfo>> result = new ApiResponse<>(true, "질문 목록 조회 성공", list);
+    public ResponseEntity<ApiResponse<PagedResult<QuestionWithFeedback>>> getQuestionListByInterviewJoin(@PageableDefault(size = 1, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+                                                                                                         @AuthenticationPrincipal LoginUser loginUser,
+                                                                                                         @PathVariable("id") Long interviewJoinId) {
+        PagedResult<QuestionWithFeedback> list = questionService.getQuestionListByInterviewJoin(pageable, interviewJoinId, loginUser.getId());
+        ApiResponse<PagedResult<QuestionWithFeedback>> result = new ApiResponse<>(true, "질문 목록 조회 성공", list);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
