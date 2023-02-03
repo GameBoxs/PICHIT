@@ -25,8 +25,9 @@ public class InterviewRoomDetailInfo {
     private LocalDateTime createdDate;
     private UserInfoDto manager;
     private List<Participant> participants;
+    private boolean sessionOpened;
 
-    public InterviewRoomDetailInfo(InterviewRoom dto) {
+    public InterviewRoomDetailInfo(InterviewRoom dto, boolean sessionOpened) {
         this.id = dto.getId();
         this.title = dto.getTitle();
         this.contactWay = dto.getContactWay();
@@ -38,6 +39,7 @@ public class InterviewRoomDetailInfo {
         this.startDate = dto.getStartDate();
         this.createdDate = dto.getCreatedDate();
         this.manager = new UserInfoDto(dto.getManager());
+        this.sessionOpened = sessionOpened;
     }
 
 }
