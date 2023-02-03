@@ -7,6 +7,7 @@ import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
 import com.alppano.speakon.domain.interview_join.entity.Participant;
 import com.alppano.speakon.domain.interview_join.repository.InterviewJoinRepository;
 import com.alppano.speakon.domain.interview_room.dto.InterviewRoomDetailInfo;
+import com.alppano.speakon.domain.interview_room.dto.InterviewRoomEnterRequest;
 import com.alppano.speakon.domain.interview_room.dto.InterviewRoomInfo;
 import com.alppano.speakon.domain.interview_room.dto.InterviewRoomRequest;
 import com.alppano.speakon.domain.interview_room.entity.InterviewRoom;
@@ -35,12 +36,17 @@ public class InterviewRoomService {
     public InterviewRoomInfo createInterviewRoom(InterviewRoomRequest dto, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 회원입니다."));
 
+        String password = null;
+        if (dto.getPassword() != null && dto.getPassword().trim().length() != 0) {
+            password = dto.getPassword().trim();
+        }
+
         InterviewRoom interviewRoom = InterviewRoom.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())
                 .manager(user)
                 .maxPersonCount(dto.getMaxPersonCount())
-                .password(dto.getPassword())
+                .password(password)
                 .startDate(dto.getStartDate())
                 .finished(0)
                 .build();
@@ -72,12 +78,16 @@ public class InterviewRoomService {
         interviewRoomRepository.delete(interviewRoom);
     }
 
-    public InterviewRoomDetailInfo getInterviewRoomDetailInfo(Long interviewRoomId, Long userId) {
+    public InterviewRoomDetailInfo getInterviewRoomDetailInfo(Long interviewRoomId, InterviewRoomEnterRequest dto) {
         InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
 
-        interviewJoinRepository.findByUserIdAndInterviewRoomId(userId, interviewRoomId)
-                .orElseThrow(() -> new ResourceForbiddenException("참여 중인 면접방만 접근할 수 있습니다."));
+        // 비밀방인 경우, 비밀번호 확인
+        if (interviewRoom.getPassword() != null) {
+            if (dto == null || !interviewRoom.getPassword().equals(dto.getPassword())) {
+                throw new ResourceForbiddenException("비밀번호가 틀렸습니다.");
+            }
+        }
 
         InterviewRoomDetailInfo interviewRoomDetailInfo = new InterviewRoomDetailInfo(interviewRoom);
 
@@ -108,6 +118,21 @@ public class InterviewRoomService {
 
         return new PagedResult<>(list);
     }
+
+    public PagedResult<InterviewRoomInfo> searchMyInterviewRooms(Pageable pageable, Integer finished, Long userId) {
+        Page<InterviewJoin> queryResult = null;
+
+        if (finished != null) {
+            queryResult = interviewJoinRepository.findAllByFinishedAndUserId(pageable, finished, userId);
+        } else {
+            queryResult = interviewJoinRepository.findAllByUserId(pageable, userId);
+        }
+
+        Page<InterviewRoomInfo> list = queryResult.map(interviewJoin -> new InterviewRoomInfo(interviewJoin.getInterviewRoom()));
+
+        return new PagedResult<>(list);
+    }
+
 
     @Transactional
     public void setInterviewRoomFinishedStatus(Long interviewRoomId, Integer finished, Long userId) {

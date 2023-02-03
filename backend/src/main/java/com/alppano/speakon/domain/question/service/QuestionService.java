@@ -7,6 +7,7 @@ import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
 import com.alppano.speakon.domain.interview_join.repository.InterviewJoinRepository;
 import com.alppano.speakon.domain.question.dto.QuestionInfo;
 import com.alppano.speakon.domain.question.dto.QuestionRequest;
+import com.alppano.speakon.domain.question.dto.QuestionWithFeedback;
 import com.alppano.speakon.domain.question.entity.Question;
 import com.alppano.speakon.domain.question.repository.QuestionRepository;
 import com.alppano.speakon.domain.user.entity.User;
@@ -94,7 +95,7 @@ public class QuestionService {
         return new QuestionInfo(question, userId);
     }
 
-    public PagedResult<QuestionInfo> getQuestionListByInterviewJoin(Pageable pageable, Long interviewJoinId, Long userId) {
+    public PagedResult<QuestionWithFeedback> getQuestionListByInterviewJoin(Pageable pageable, Long interviewJoinId, Long userId) {
         InterviewJoin interviewJoin = interviewJoinRepository.findById(interviewJoinId)
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접 참여자입니다."));
 
@@ -102,8 +103,8 @@ public class QuestionService {
             throw new ResourceForbiddenException("면접방에 참여한 사람만 질문 목록을 조회할 수 있습니다.");
         }
 
-        Page<QuestionInfo> result = questionRepository.findAllByInterviewJoinId(pageable, interviewJoinId)
-                .map(question -> new QuestionInfo(question, userId));
+        Page<QuestionWithFeedback> result = questionRepository.findAllByInterviewJoinId(pageable, interviewJoinId)
+                .map(question -> new QuestionWithFeedback(question));
 
         return new PagedResult<>(result);
     }

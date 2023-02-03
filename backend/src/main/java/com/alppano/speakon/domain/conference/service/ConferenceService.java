@@ -1,5 +1,6 @@
 package com.alppano.speakon.domain.conference.service;
 
+import com.alppano.speakon.common.exception.ResourceAlreadyExistsException;
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
 import com.alppano.speakon.common.util.RedisUtil;
@@ -43,8 +44,8 @@ public class ConferenceService {
      */
     public Conference retrieveConference(Long interviewRoomId) throws JsonProcessingException {
         String key = String.valueOf(interviewRoomId);
-        Conference conference = redisUtil.getRedisValue(key , Conference.class);
-        if(conference == null) {
+        Conference conference = redisUtil.getRedisValue(key, Conference.class);
+        if (conference == null) {
             throw new ResourceNotFoundException("존재하지 않는 회의입니다.");
         }
         return conference;
@@ -53,33 +54,44 @@ public class ConferenceService {
     /**
      * openvidu 세션 시작 / redis 회의 정보 등록
      */
-      public void createConference(Long requesterId, Long interviewRoomId)
-              throws JsonProcessingException, OpenViduJavaClientException, OpenViduHttpException {
-          InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
-                  .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
+    public void createConference(Long requesterId, Long interviewRoomId)
+            throws JsonProcessingException, OpenViduJavaClientException, OpenViduHttpException {
+        // 세션 생성에 필요한 property -> null 전달 시 기본값
+        SessionProperties properties = SessionProperties.fromJson(null).build();
 
-          if(!interviewRoom.getManager().getId().equals(requesterId)) {
-              throw new ResourceForbiddenException("세션을 생성할 권한이 없습니다.");
-          }
+        InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
 
-          // 세션 생성에 필요한 property -> null 전달 시 기본값
-          SessionProperties properties = SessionProperties.fromJson(null).build();
-          Session session = openvidu.createSession(properties);
-          if (session == null) {
-              throw new ResourceNotFoundException("세션 생성 실패");
-          }
+        if (!interviewRoom.getManager().getId().equals(requesterId)) {
+            throw new ResourceForbiddenException("세션을 생성할 권한이 없습니다.");
+        }
 
-          List<Participant> participants = new ArrayList<>();
-          for (InterviewJoin join : interviewRoom.getInterviewJoins()) {
-              participants.add(new Participant(join.getUser(), join.getId()));
-          }
+        Conference conference = redisUtil.getRedisValue(String.valueOf(interviewRoomId), Conference.class);
+        if(conference != null) { // 이미 Redis에 회의 진행 정보가 존재함
+            openvidu.fetch(); // OpenVidu로 부터 세션 목록 fetch & UPDATE
+            if(openvidu.getActiveSession(conference.getSessionId()) == null) { // 근데 OpenVidu Session이 죽어있음
+                // 세션을 새로 만들고 Redis 값 갱신
+                Session session = openvidu.createSession(properties);
+                conference.setSessionId(session.getSessionId());
+                redisUtil.setRedisValue(String.valueOf(interviewRoomId), conference);
+                return;
+            } else { // OpenVidu Session이 살아있다.
+                throw new ResourceAlreadyExistsException("이미 생성된 회의입니다.");
+            }
+        }
+        Session session = openvidu.createSession(properties);
 
-          Conference conference = new Conference();
-          conference.setSessionId(session.getSessionId());
-          conference.setManagerId(requesterId);
-          conference.setParticipants(participants);
-          redisUtil.setRedisValue(String.valueOf(interviewRoomId), conference);
-      }
+        List<Participant> participants = new ArrayList<>();
+        for (InterviewJoin join : interviewRoom.getInterviewJoins()) {
+            participants.add(new Participant(join.getUser(), join.getId()));
+        }
+
+        conference = new Conference();
+        conference.setSessionId(session.getSessionId());
+        conference.setManagerId(requesterId);
+        conference.setParticipants(participants);
+        redisUtil.setRedisValue(String.valueOf(interviewRoomId), conference);
+    }
 
     /**
      * redis 회의 정보 제거 + openvidu 세션 제거 /
@@ -90,22 +102,22 @@ public class ConferenceService {
         InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
 
-        if(!interviewRoom.getManager().getId().equals(requesterId)) {
+        if (!interviewRoom.getManager().getId().equals(requesterId)) {
             throw new ResourceForbiddenException("세션을 종료할 권한이 없습니다.");
         }
 
         Conference conference = redisUtil.getRedisValue(String.valueOf(interviewRoomId), Conference.class);
-        if(conference == null) {
+        if (conference == null) {
             throw new ResourceNotFoundException("존재하지 않는 회의입니다.");
         }
-
-        Session session = openvidu.getActiveSession(conference.getSessionId());
-        if (session == null) {
-            throw new ResourceNotFoundException("존재하지 않는 세션입니다.");
-        }
-        session.close();
-
         redisUtil.deleteData(String.valueOf(interviewRoomId));
+
+        openvidu.fetch();
+        Session session = openvidu.getActiveSession(conference.getSessionId());
+        if(session != null) {
+            session.close();
+        }
+
     }
 
     /**
@@ -119,10 +131,11 @@ public class ConferenceService {
                 .orElseThrow(() -> new ResourceForbiddenException("참여 중인 면접방만 접근할 수 있습니다."));
 
         Conference conference = redisUtil.getRedisValue(String.valueOf(interviewRoomId), Conference.class);
-        if(conference == null) {
+        if (conference == null) {
             throw new ResourceNotFoundException("존재하지 않는 회의입니다.");
         }
 
+        openvidu.fetch();
         Session session = openvidu.getActiveSession(conference.getSessionId());
         if (session == null) {
             throw new ResourceNotFoundException("존재하지 않는 세션입니다.");
