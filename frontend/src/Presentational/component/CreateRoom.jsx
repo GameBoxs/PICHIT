@@ -103,6 +103,9 @@ function CreateRoom({ setModalOpen }) {
     else if(room.startDate === ''){
       alert ("시작 날짜를 설정해주세요")
     }
+    else if (toggle===true && room.password ===''){
+      alert ("비밀번호를 설정해주세요")
+    }
     else{
       setCreateData(true);
     }
