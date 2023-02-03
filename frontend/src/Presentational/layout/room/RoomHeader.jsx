@@ -1,9 +1,8 @@
-
 import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 import Title from "../../common/Title";
-import Button from "../../common/Button"
+import Button from "../../common/Button";
 import EditRoom from "../../component/EditRoom";
 
 import { useSelector } from "react-redux";
@@ -81,7 +80,7 @@ function RoomHeader({ join, joinRoom, data, host }) {
   //   });
   // };
 
-  function deleteRoom() { 
+  function deleteRoom() {
     setDeleteData(true);
   }
   // const [data, setData] = useState([]);
@@ -107,9 +106,9 @@ function RoomHeader({ join, joinRoom, data, host }) {
       <button onClick={showModal} >수정하기</button>
       {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />} */}
       {/* <LayoutButton text={"삭제하기"} onClick={deleteRoom}> */}
-        <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
+      <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
         삭제하기
-        </Button>
+      </Button>
       {/* </LayoutButton> */}
     </div>
   ) : (
@@ -130,7 +129,7 @@ export default RoomHeader;
 const LayoutButton = styled.div`
   width: 10vw;
   height: 8vh;
-  `
+`;
 
 const Layout = styled.div`
   margin-bottom: 3rem;
@@ -138,8 +137,8 @@ const Layout = styled.div`
   & .Title {
     font-size: 2.5rem;
     text-align: left;
-  margin-block: 3rem;
-  font-family: "SBagrroL";
+    margin-block: 3rem;
+    font-family: "SBagrroL";
   }
 
   & div:nth-child(2) {
@@ -150,7 +149,4 @@ const Layout = styled.div`
       font-size: 1rem;
     }
   }
-`;
-const ButtonSection = styled.div`
-  display: flex;
 `;

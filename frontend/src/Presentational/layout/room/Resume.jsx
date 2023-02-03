@@ -11,7 +11,7 @@ import useAxios from "../../../action/hooks/useAxios";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-function Resume({ idx }) {
+function Resume({ idx, participants }) {
   const [pdfFileList, setPdfFileList] = useState([]);
   const [pdfUrl, setPdfUrl] = useState();
   const [showPdf, setShowPdf] = useState(false);
@@ -69,8 +69,30 @@ function Resume({ idx }) {
     setShowPdf(false);
   };
 
+  console.log(participants);
+
+  const interviewees = participants.map((elem, idx) => {
+    return (
+      <>
+        <input
+          type="radio"
+          name={`radio`}
+          value={elem.name}
+          id={`tab-${idx + 1}`}
+        />
+        <label for={`tab-${idx + 1}`}>
+          <p>{elem.name}</p>
+        </label>
+      </>
+    );
+  });
+
   return (
     <MainContainer>
+      <Member>
+        {interviewees}
+        <MemberColor></MemberColor>
+      </Member>
       <FileContainer>
         {showPdf ? (
           <ModalOverlay visible={showPdf}>
@@ -107,6 +129,67 @@ function Resume({ idx }) {
 }
 
 export default Resume;
+
+const MemberColor = styled.div``;
+
+const Member = styled.div`
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+  width: 20.4rem;
+  margin-bottom: 1rem;
+  border-radius: 1rem !important;
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  & input {
+    display: none;
+  }
+
+  & > input:checked + label {
+    transition: all 0.5s ease;
+    color: var(--primary);
+  }
+
+  & label {
+    width: 5rem;
+    height: 2rem;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: var(--greyDark);
+    transition: all 0.5s ease;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  ${MemberColor} {
+    position: absolute;
+    height: 2rem;
+    width: 5rem;
+    border-radius: 0.8rem !important;
+    box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
+      inset -0.2rem -0.2rem 0.5rem var(--white);
+    pointer-events: none;
+  }
+
+  #tab-1:checked ~ ${MemberColor} {
+    transform: translateX(0);
+    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  #tab-2:checked ~ ${MemberColor} {
+    transform: translateX(5rem);
+    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  #tab-3:checked ~ ${MemberColor} {
+    transform: translateX(10rem);
+    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+`;
 
 const MainContainer = styled.div`
   display: flex;

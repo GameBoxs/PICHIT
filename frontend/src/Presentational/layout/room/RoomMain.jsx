@@ -40,7 +40,7 @@ function RoomMain({ join, host, data }) {
 
   const RoomSection =
     isJoin || host ? (
-      <Resume idx={pdf} />
+      <Resume idx={pdf} participants={participants}/>
     ) : (
       <Intro>방에 참여하면 팀원들의 자소서를 볼 수 있어요</Intro>
     );
@@ -75,6 +75,10 @@ function RoomMain({ join, host, data }) {
 
   return (
     <MainPageContainer>
+      
+      <SectionHeader>
+        <SubTitle title={"Info"} />
+      </SectionHeader>
       <Layout>
         <Section>
           <Card>
@@ -99,6 +103,7 @@ function RoomMain({ join, host, data }) {
           {description}
         </Description>
       </Layout>
+
       <SectionHeader>
         <SubTitle title={"자기소개서"} />
       </SectionHeader>
@@ -135,7 +140,7 @@ const Layout = styled.div`
   margin-bottom: 1em;
   margin-top: 1em;
 
-  &:first-child {
+  &:nth-child(2) {
     background-color: var(--greyLight-1);
     border-radius: 1rem;
     padding: 1rem;
@@ -143,6 +148,7 @@ const Layout = styled.div`
     flex-direction: column;
     align-items: flex-start;
     gap: 1em;
+    margin-bottom: 5rem;
 
     ${Section} {
       height: 100%;
@@ -160,7 +166,6 @@ const Layout = styled.div`
 `;
 
 const SectionHeader = styled.div`
-  border-bottom: 2px solid gray;
   padding-bottom: 10px;
 `;
 
@@ -230,5 +235,6 @@ const PopUp = styled.div`
 const MainPageContainer = styled.div`
   display: flex;
   flex-direction: column;
+  padding-block: 3rem;
   width: 100%;
 `;
