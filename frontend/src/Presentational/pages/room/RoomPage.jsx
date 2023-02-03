@@ -12,7 +12,10 @@ function RoomPage() {
   // useLocation에 넣어논 roomId 값을 가져와서 사용함
   const location = useLocation();
  const roomId = location.state.id
-  
+ const password = location.state.password
+ console.log("이거 받아온 비밀 번호냐?",password)
+ 
+ 
 
   const [join, setJoin] = useState(false);
 
@@ -29,8 +32,7 @@ function RoomPage() {
   };
 
 
-
-  const [host, setHost] = useState(true);
+  const [host, setHost] = useState(false);
 
   // 방장 권한을 어떤 방식으로 주는지 감이 안와서
   //일단 임시로 설정해 놓았습니다.
@@ -45,13 +47,16 @@ function RoomPage() {
   //    host 값 false
   // }
 
+  const [valid, setvalid] = useState(false)
+
   const token = useSelector((state) => state.token);
   const [data, setData] = useState();
 
   const [postData, isLoading] = useAxios(
     `interviewrooms/${roomId}`,
     "POST",
-    token
+    token,
+    password
   );
 
   useEffect(() => {
@@ -60,6 +65,19 @@ function RoomPage() {
       console.log(postData.data);
     }
   }, [postData]);
+
+  const [myId, loading] = useAxios(
+    'userinfo',
+    "GET",
+    token
+  )
+  useEffect (() => {
+    if (postData && postData.data && postData.data.manager.id === myId.data.id ){
+      setHost(true)
+    }
+  })
+
+  
 
   return (
     <Container>
