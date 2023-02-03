@@ -5,18 +5,17 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import useAxios from "../../../action/hooks/useAxios";
 import { useLocation } from "react-router-dom";
-
+import { useParams } from "react-router-dom";
 
 function RoomPage() {
   // roomId 값을 RoomListItem에서 Link state에 받아와서
   // useLocation에 넣어논 roomId 값을 가져와서 사용함
   const location = useLocation();
- const roomId = location.state.id
- const password = location.state.password
- console.log("이거 받아온 비밀 번호냐?",password)
- 
- 
+ const params = useParams();
+ const roomParamsId = params.id
 
+  
+ const password = location.state.password
   const [join, setJoin] = useState(false);
 
   // true: 대가자
@@ -53,10 +52,9 @@ function RoomPage() {
   const [data, setData] = useState();
 
   const [postData, isLoading] = useAxios(
-    `interviewrooms/${roomId}`,
+    `interviewrooms/${roomParamsId}`,
     "POST",
-    token,
-    password
+    token
   );
 
   useEffect(() => {
@@ -69,13 +67,15 @@ function RoomPage() {
   const [myId, loading] = useAxios(
     'userinfo',
     "GET",
-    token
+    token,
+    password
   )
+
   useEffect (() => {
-    if (postData && postData.data && postData.data.manager.id === myId.data.id ){
+    if (postData && postData.data && postData.data.manager?.id === myId?.data.id ){
       setHost(true)
     }
-  })
+  },[postData])
 
   
 

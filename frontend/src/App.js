@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Footer from "./Presentational/common/Footer";
 
@@ -11,20 +11,14 @@ import RoomPage from "./Presentational/pages/room/RoomPage";
 import Pagination from "./Presentational/common/Pagination/Pagination"
 import { GlobalStyle } from "./action/GlobalStyle";
 
-const expenses = [
-  {
-    id: "e1",
-    title: "면접 들어와",
-    people: 4,
-    date: new Date(2023, 1, 15),
-    connect: "010-4125-4629",
-    content:
-      "이 정보는 테스트용 정보 입니다.가나다라마바사아자차카타파하.이 정보는 테스트용 정보 입니다.가나다라마바사아자차카타파하",
-  },
-];
 
 function App() {
   const { pathname } = useLocation();
+  const params =useParams();
+  const roomId = params.id
+  console.log(roomId)
+
+
 
   return (
     <AppContainer>
@@ -34,7 +28,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/review" element={<ReviewPage />} />
-        <Route path="/room/*" element={<RoomPage items={expenses} />} />
+        <Route path="/room/:id" element={<RoomPage />} />
         <Route path="/interview/*" element={<InterviewPage />} />
         <Route path="/pagination" element={<Pagination />} />
       </Routes>
