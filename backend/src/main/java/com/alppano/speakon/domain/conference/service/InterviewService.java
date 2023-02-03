@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -23,7 +24,7 @@ public class InterviewService {
     private final HttpRequestService httpRequestService;
     private final InterviewJoinRepository interviewJoinRepository;
 
-
+    //TODO : AOP로 requester가 회의 참여자인지 묶기
     public Conference retrieveConference(Long interviewRoomId) throws JsonProcessingException {
         String key = String.valueOf(interviewRoomId);
         Conference conference = redisUtil.getRedisValue(key, Conference.class);
@@ -78,6 +79,33 @@ public class InterviewService {
         System.out.println(sl.getStatusCode());
         // Redis에 새로 진행할 질문을 UPDATE
         conference.setQuestionProceeding(req.getQuestionId());
+        redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
+    }
+
+    public void endQuestion(Long requesterId, InterviewRequest req) throws IOException {
+        Conference conference = retrieveConference(req.getInterviewRoomId());
+
+        interviewJoinRepository.findByUserIdAndInterviewRoomId(requesterId, req.getInterviewRoomId())
+                .orElseThrow(() -> new ResourceForbiddenException("회의 참여자만 질문할 수 있습니다..."));
+        if(conference.getQuestionProceeding() == null) {
+            throw new ResourceForbiddenException("질문이 진행 중이지 않습니다...");
+        }
+        if(conference.getCurrentInterviewee() == null) {
+            throw new ResourceForbiddenException("진행 중인 면접자가 없습니다.");
+        }
+        if(!conference.getCurrentInterviewee().equals(req.getIntervieweeId())) {
+            throw new ResourceForbiddenException("잘못된 면접자를 지정하였습니다...");
+        }
+        if(!conference.getQuestionProceeding().equals(req.getQuestionId())) {
+            throw new ResourceForbiddenException("잘못된 질문을 지정하였습니다...");
+        }
+
+        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(), "broadcast-question-end", String.valueOf(req.getQuestionId()));
+        StatusLine sl = response.getStatusLine();
+        System.out.print("STATUS CODE: ");
+        System.out.println(sl.getStatusCode());
+        // Redis에 질문이 끝났다고 UPDATE
+        conference.setQuestionProceeding(null);
         redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
     }
 
