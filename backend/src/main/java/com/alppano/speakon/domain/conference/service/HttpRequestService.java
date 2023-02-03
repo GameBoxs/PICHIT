@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -58,7 +59,7 @@ public class HttpRequestService{
         httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestBuilder.build()).setConnectionTimeToLive(30L, TimeUnit.SECONDS).setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).setSSLContext(sslContext).setDefaultCredentialsProvider(provider).build();
     }
 
-    public HttpResponse broadCastSignal(String session, String type, String data) throws Exception{
+    public HttpResponse broadCastSignal(String session, String type, String data) throws IOException {
         HttpPost request = new HttpPost(OPENVIDU_URL + "openvidu/api/signal");
         request.setHeader("Content-Type", "application/json");
 

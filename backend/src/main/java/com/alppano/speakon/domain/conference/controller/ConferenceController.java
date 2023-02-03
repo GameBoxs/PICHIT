@@ -5,6 +5,7 @@ import com.alppano.speakon.domain.conference.dto.Conference;
 import com.alppano.speakon.domain.conference.dto.InterviewRequest;
 import com.alppano.speakon.domain.conference.service.ConferenceService;
 import com.alppano.speakon.domain.conference.service.HttpRequestService;
+import com.alppano.speakon.domain.conference.service.InterviewService;
 import com.alppano.speakon.security.LoginUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +32,7 @@ public class ConferenceController {
 
     private final HttpRequestService httpRequestService;
     private final ConferenceService conferenceService;
+    private final InterviewService interviewService;
 
     /**
      OpenVidu에 세션 등록 + Redis에 세션 등록
@@ -82,16 +84,7 @@ public class ConferenceController {
     @PostMapping("/interview/interviewee")
     public ResponseEntity<String> selectInterviewee(@RequestBody InterviewRequest requestDto,
                                                     @AuthenticationPrincipal LoginUser loginUser) throws Exception {
-        //TODO: 검사 - 요청자가 방장인가
-        //TODO: 검사 - 지정한 면접자가 참여자인지
-        Conference conference = conferenceService.retrieveConference(requestDto.getInterviewRoomId());
-        String intervieweeId = String.valueOf(requestDto.getIntervieweeId());
-
-        HttpResponse response =	httpRequestService.broadCastSignal(conference.getSessionId(), "broadcast-interviewee", intervieweeId);
-        StatusLine sl = response.getStatusLine();
-        System.out.print("STATUS CODE: ");
-        System.out.println(sl.getStatusCode());
-        //TODO: response 처리 200-성공, 404-존재하지 않는 세션, 400-파라미터 오류, 406-수신자 오류(참여자 없음or유효하지 않은 커넥션ID)
+        interviewService.selectInterviewee(loginUser.getId(), requestDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
