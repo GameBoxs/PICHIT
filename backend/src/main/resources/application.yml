@@ -70,5 +70,5 @@ openvidu:
 logging:
   level:
     com.alppano.speakon: info
-    org.hibernate.SQL: debug
+#    org.hibernate.SQL: debug
 #    org.hibernate.type.descriptor.sql: trace
