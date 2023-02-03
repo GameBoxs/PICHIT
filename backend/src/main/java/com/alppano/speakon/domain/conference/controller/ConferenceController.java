@@ -89,6 +89,16 @@ public class ConferenceController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 현재 진행 중인 면접자 XXX의 '인터뷰' 종료 요청
+    @Operation(summary = "인터뷰 종료")
+    @PostMapping("/interview/end")
+    public ResponseEntity<String> endInterview(@RequestBody InterviewRequest requestDto,
+                                               @AuthenticationPrincipal LoginUser loginUser) throws Exception {
+        interviewService.endInterview(loginUser.getId(), requestDto);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @Operation(summary = "질문 제안")
     @PostMapping("/interview/question/propose")
     public ResponseEntity<String> proposeQuestion(@RequestBody InterviewRequest requestDto,
@@ -103,25 +113,6 @@ public class ConferenceController {
     public ResponseEntity<String> endQuestion(@RequestBody InterviewRequest requestDto,
                                               @AuthenticationPrincipal LoginUser loginUser) throws Exception {
         interviewService.endQuestion(loginUser.getId(), requestDto);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    // 현재 진행 중인 면접자 XXX의 '인터뷰' 종료 요청
-    @Operation(summary = "인터뷰 종료")
-    @PostMapping("/interview/end")
-    public ResponseEntity<String> endInterview(@RequestBody InterviewRequest requestDto,
-                                               @AuthenticationPrincipal LoginUser loginUser) throws Exception {
-        Conference conference = conferenceService.retrieveConference(requestDto.getInterviewRoomId());
-        String intervieweeId = String.valueOf(requestDto.getIntervieweeId());
-        String questionId = String.valueOf(requestDto.getQuestionId());
-        //TODO: 검사 - 현재 진행 중인 면접자인가
-        //TODO: 검사 - 요청자가 방장인가
-
-        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(), "broadcast-interview-end", intervieweeId);
-        StatusLine sl = response.getStatusLine();
-        System.out.print("STATUS CODE: ");
-        System.out.println(sl.getStatusCode());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
