@@ -65,23 +65,23 @@ function RoomHeader({ join, joinRoom, data, host }) {
     }
   }, [deleteResult]);
 
-  // const deleteRoom = () => {
-  //   MySwal.fire({
-  //     text: "면접방을 정말 삭제하시겠습니까?",
-  //     showConfirmButton: true,
-  //     showCancelButton: true,
-  //     confirmButtonText: "삭제",
-  //     cancelButtonText: "취소",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       setDeleteData(true);
-  //     }
-  //   });
-  // };
+  const deleteRoom = () => {
+    MySwal.fire({
+      text: "면접방을 정말 삭제하시겠습니까?",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: "삭제",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setDeleteData(true);
+      }
+    });
+  };
 
-  function deleteRoom() { 
-    setDeleteData(true);
-  }
+  // function deleteRoom() { 
+  //   setDeleteData(true);
+  // }
   // const [data, setData] = useState([]);
 
   // useEffect(() => {
