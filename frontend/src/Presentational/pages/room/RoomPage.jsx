@@ -15,14 +15,9 @@ function RoomPage() {
  const params = useParams();
  const roomParamsId = params.id
  const password = location.state.password
-  const [join, setJoin] = useState(false);
 
   // true: 대가자
   // false: 참여자
-
-  const joinRoom = (join) => {
-    setJoin(join);
-  };
 
   const [host, setHost] = useState(false);
   const [data, setData] = useState();
