@@ -26,7 +26,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class HttpRequestServiceImpl implements HttpRequestService {
+public class HttpRequestService{
 
     @Value("${openvidu.OPENVIDU_URL}")
     private String OPENVIDU_URL;
@@ -58,7 +58,6 @@ public class HttpRequestServiceImpl implements HttpRequestService {
         httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestBuilder.build()).setConnectionTimeToLive(30L, TimeUnit.SECONDS).setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).setSSLContext(sslContext).setDefaultCredentialsProvider(provider).build();
     }
 
-    @Override
     public HttpResponse broadCastSignal(String session, String type, String data) throws Exception{
         HttpPost request = new HttpPost(OPENVIDU_URL + "openvidu/api/signal");
         request.setHeader("Content-Type", "application/json");

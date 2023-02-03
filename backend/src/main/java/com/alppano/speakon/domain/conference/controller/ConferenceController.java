@@ -76,6 +76,8 @@ public class ConferenceController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // ===== 인터뷰 관련 =====
+
     @Operation(summary = "면접자 지정(인터뷰 시작)")
     @PostMapping("/interview/interviewee")
     public ResponseEntity<String> selectInterviewee(@RequestBody InterviewRequest requestDto,
