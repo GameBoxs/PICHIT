@@ -13,4 +13,5 @@ public interface InterviewJoinRepository extends JpaRepository<InterviewJoin, Lo
     Page<InterviewJoin> findAllByFinishedAndUserId(Pageable pageable, Integer finished, Long userId);
 
     Page<InterviewJoin> findAllByUserId(Pageable pageable, Long userId);
+
 }
