@@ -15,7 +15,7 @@ function RoomPage() {
  const roomParamsId = params.id
 
   
-
+ const password = location.state.password
   const [join, setJoin] = useState(false);
 
   // true: 대가자
@@ -31,8 +31,7 @@ function RoomPage() {
   };
 
 
-
-  const [host, setHost] = useState(true);
+  const [host, setHost] = useState(false);
 
   // 방장 권한을 어떤 방식으로 주는지 감이 안와서
   //일단 임시로 설정해 놓았습니다.
@@ -46,6 +45,8 @@ function RoomPage() {
   //   else 아이디 값 !== 방생성 아이디
   //    host 값 false
   // }
+
+  const [valid, setvalid] = useState(false)
 
   const token = useSelector((state) => state.token);
   const [data, setData] = useState();
@@ -62,6 +63,21 @@ function RoomPage() {
       console.log(postData.data);
     }
   }, [postData]);
+
+  const [myId, loading] = useAxios(
+    'userinfo',
+    "GET",
+    token,
+    password
+  )
+
+  useEffect (() => {
+    if (postData && postData.data && postData.data.manager?.id === myId?.data.id ){
+      setHost(true)
+    }
+  },[postData])
+
+  
 
   return (
     <Container>

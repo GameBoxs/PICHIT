@@ -90,14 +90,32 @@ function CreateRoom({ setModalOpen }) {
     console.log(date);
   };
 
-  const roomCreate = () => {
-    setCreateData(true);
+  const roomCreate = (e) => {
+    if (room.title === '') {
+      alert("제목을 입력해주세요")
+    }
+    else if(room.description === ''){
+      alert ("설명을 입력해주세요")
+    }
+    else if (room.maxPersonCount === '') {
+      alert("모집인원을 입력해주세요")
+    }
+    else if(room.startDate === ''){
+      alert ("시작 날짜를 설정해주세요")
+    }
+    else if (toggle===true && room.password ===''){
+      alert ("비밀번호를 설정해주세요")
+    }
+    else if (toggle === true && room.password.length > 10){
+      alert("유효 할 수 없는 비밀번호 입니다. 다시 설정해주세요")
+    }
+    else{
+      setCreateData(true);
+    }
   }
 
   // 면접방 생성에 성공했을 때 감지하는 useEffect 
   useEffect(() => {
-    return () => {
-      setCreateData();
       if (
         createResult &&
         createResult.success === true &&
@@ -128,8 +146,7 @@ function CreateRoom({ setModalOpen }) {
           }
         });
       }
-    }
-  }, [createData]);
+  }, [createResult]);
 
   // 생성하기 버튼 눌렀을 때 활성화 되는 함수
   return (

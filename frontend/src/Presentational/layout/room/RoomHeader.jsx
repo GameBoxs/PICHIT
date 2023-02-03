@@ -1,8 +1,8 @@
+import React, { useEffect, useState } from "react";
+
 import styled from "styled-components";
 import Title from "../../common/Title";
-import PlanTime from "../../component/PlanTime";
-
-import React, { useEffect, useState } from "react";
+import Button from "../../common/Button";
 import EditRoom from "../../component/EditRoom";
 
 import { useSelector } from "react-redux";
@@ -12,6 +12,7 @@ import useAxios from "../../../action/hooks/useAxios";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import AggroL from "../../common/Font/AggroL";
 
 const MySwal = withReactContent(Swal);
 
@@ -19,7 +20,9 @@ function RoomHeader({ join, joinRoom, data, host }) {
   let navigate = useNavigate();
  
 
-  console.log(data);
+
+
+  
   // console.log(roomData)
 
   // roompage에서 받아온 data 값 가공
@@ -34,6 +37,9 @@ function RoomHeader({ join, joinRoom, data, host }) {
   const showModal = () => {
     setModalOpen(true);
   };
+
+  // const myId = useSelector((state) => state)  
+  // console.log(myId)
 
   // axios delete
   const roomId = data.id;
@@ -66,23 +72,31 @@ function RoomHeader({ join, joinRoom, data, host }) {
     }
   }, [deleteResult]);
 
-  // const deleteRoom = () => {
-  //   MySwal.fire({
-  //     text: "면접방을 정말 삭제하시겠습니까?",
-  //     showConfirmButton: true,
-  //     showCancelButton: true,
-  //     confirmButtonText: "삭제",
-  //     cancelButtonText: "취소",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       setDeleteData(true);
-  //     }
-  //   });
-  // };
+  const [myId, isLoading] = useAxios(
+    'userinfo',
+    "GET",
+    token
+  )
+  console.log("이거 내 정보냐?",myId)
 
-  function deleteRoom() { 
-    setDeleteData(true);
-  }
+
+  const deleteRoom = () => {
+    MySwal.fire({
+      text: "면접방을 정말 삭제하시겠습니까?",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: "삭제",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setDeleteData(true);
+      }
+    });
+  };
+
+  // function deleteRoom() { 
+  //   setDeleteData(true);
+  // }
   // const [data, setData] = useState([]);
 
   // useEffect(() => {
@@ -105,16 +119,21 @@ function RoomHeader({ join, joinRoom, data, host }) {
       {/* <LayoutButton text={"수정하기"} onClick={showModal}>수정하기</LayoutButton>
       <button onClick={showModal} >수정하기</button>
       {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />} */}
-      <LayoutButton text={"삭제하기"} onClick={deleteRoom}>
+      {/* <LayoutButton text={"삭제하기"} onClick={deleteRoom}> */}
+      <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
         삭제하기
-      </LayoutButton>
+      </Button>
+      {/* </LayoutButton> */}
     </div>
   ) : (
-    { readyRoom }
+    <div>
+      { readyRoom }
+    </div>
   );
 
   return (
     <Layout>
+      <AggroL />
       <Title title={title} />
       {RoomHost}
     </Layout>
@@ -126,42 +145,16 @@ export default RoomHeader;
 const LayoutButton = styled.div`
   width: 10vw;
   height: 8vh;
-  border-radius: 1rem;
-  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
-    -0.2rem -0.2rem 0.5rem var(--white);
-  justify-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.3s ease;
-  font-weight: 600;
-  grid-column: 1 / 2;
-  grid-row: 1 / 2;
-  background-color: var(--primary-light);
-
-  & {
-    color: var(--white);
-  }
-
-  &:hover {
-    color: var(--primary);
-  }
-
-  &:active {
-    box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
-      inset -0.2rem -0.2rem 0.5rem var(--white);
-  }
 `;
 
 const Layout = styled.div`
-  display: flex;
-  flex-direction: column;
   margin-bottom: 3rem;
 
   & .Title {
-    font-weight: 600;
-    font-size: 3rem;
+    font-size: 2.5rem;
+    text-align: left;
+    margin-block: 3rem;
+    font-family: "SBagrroL";
   }
 
   & div:nth-child(2) {
@@ -172,7 +165,4 @@ const Layout = styled.div`
       font-size: 1rem;
     }
   }
-`;
-const ButtonSection = styled.div`
-  display: flex;
 `;
