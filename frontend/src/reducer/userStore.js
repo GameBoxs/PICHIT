@@ -8,13 +8,13 @@ export const userStore = createSlice({
     email: "",
   },
   reducers: {
-    getUserInfo(state, action) {
+    setUserInfo(state, action) {
         state = {...action.payload?.data}
         return state
     }
   }
 });
 
-export const {getUserInfo} = userStore.actions
+export const {setUserInfo} = userStore.actions
 
 export default userStore.reducer

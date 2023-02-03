@@ -15,8 +15,8 @@ function RoomPage() {
   const [valid, setvalid] = useState(false);
   const roomId = location.state.id;
   const password = location.state.password;
-  const { token, user } = useSelector((state) => state);
-
+  const { token, userinfo } = useSelector((state) => state);
+  
   const [host, setHost] = useState(false);
 
   // 방장 권한을 어떤 방식으로 주는지 감이 안와서
@@ -32,8 +32,6 @@ function RoomPage() {
   //    host 값 false
   // }
 
-  console.log(join)
-
   const [postData, isLoading] = useAxios(
     `interviewrooms/${roomId}`,
     "POST",
@@ -42,39 +40,33 @@ function RoomPage() {
   );
 
   useEffect(() => {
-    if (postData && postData.data && postData.data.manager?.id === user?.id) {
+    if (postData && postData.data && postData.data.manager?.id === userinfo.id) {
       setHost(true);
     }
   }, []);
 
   useEffect(() => {
-    if (postData && postData.data) {
-      setData(postData.data);
+    const tmpData = postData?.data
+
+    if (postData && tmpData) {
+      setData(tmpData);
+
+      const Member = tmpData.participants?.map((elem) => elem.name)
+
+      if (Member.includes(userinfo.name)) {
+        setJoin(true)
+      } else {
+        setJoin(false)
+      }
     }
   }, [postData]);
 
-  useEffect(()=> {
-    if (data !== undefined) {
-      const Member = data.participants.map((elem) => elem.name)
-      
-      if (Member.includes(user?.name)) {
-        setJoin(false)
-      } else {
-        setJoin(true)
-      }
-  
-    }
-  }, [data])
 
   // true: 대가자
   // false: 참여자
 
-  // useEffect(() => {
-  //   console.log("inRoomPage", join);
-  // }, [join]);
-
-  const joinRoom = () => {
-    setJoin(!join);
+  const joinRoom = (join) => {
+    setJoin(join);
   };
 
   return (
@@ -89,6 +81,9 @@ function RoomPage() {
               data={data}
               join={join}
               host={host}
+              token={token}
+              password={password}
+              userinfo={userinfo}
             />
             <RoomMain data={data} join={join} host={host} />
           </>

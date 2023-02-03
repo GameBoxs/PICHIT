@@ -16,53 +16,27 @@ import AggroL from "../../common/Font/AggroL";
 
 const MySwal = withReactContent(Swal);
 
-function RoomHeader({ join, joinRoom, data, host }) {
-  const {id, currentPersonCount, description, finished, manager, maxPersonCount, participants, title} = data
+function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
+  const { id, title, participants } = data;
   const navigate = useNavigate();
-  const token = useSelector((state) => state.token);
-  
-
-  // roompage에서 받아온 data 값 가공
-
-  console.log(data)
-
-  const [enter, setEnter] = useState(false);
-  const enterRes = useAxios(
-    `interviewjoins`,
-    'POST',
-    token,
-    {
-      "interviewRoomId": id,
-      "password": ""
-    },
-    enter
-  )
-
-  const joinHandler = () => {
-    joinRoom(!join);
-    setEnter(true)
-  };
-
-  useEffect(()=>{
-    if (
-      enterRes[0] &&
-      enterRes[0].success &&
-      enterRes[0].success !== undefined
-    ) {
-      alert('성공!')
-    }
-  }, [enterRes])
-
   const [modalOpen, setModalOpen] = useState(false);
-  const showModal = () => {
-    setModalOpen(true);
-  };
-
-  // const myId = useSelector((state) => state)  
-  // console.log(myId)
-
+  const [enter, setEnter] = useState(false);
+  const [quit, setQuit] = useState(false);
   // axios delete
   const [deleteData, setDeleteData] = useState(false);
+  const [joinId, setJoinId] = useState(0);
+
+  const [enterRes] = useAxios(
+    `interviewjoins`,
+    "POST",
+    token,
+    {
+      interviewRoomId: id,
+      password: password,
+    },
+    enter
+  );
+
   const deleteResult = useAxios(
     `interviewrooms/${id}`,
     "DELETE",
@@ -70,6 +44,34 @@ function RoomHeader({ join, joinRoom, data, host }) {
     null,
     deleteData
   );
+
+  const [quitRes] = useAxios(
+    `interviewjoins/${joinId}`,
+    "DELETE",
+    token,
+    { id: joinId },
+    quit
+  );
+
+  useEffect(() => {
+    const tempArr = participants.filter(
+      (person) => person.name === userinfo.name
+    );
+
+    if (tempArr.length !== 0) {
+      setJoinId(tempArr[0].interviewJoinId);
+    }
+  }, [userinfo]);
+
+  useEffect(() => {
+    if (enterRes !== null) {
+      if (enterRes.success) {
+        window.location.reload();
+      } else {
+        alert("이미 참가한 방입니다")
+      }
+    }
+  }, [enterRes]);
 
   useEffect(() => {
     // setDeleteData();
@@ -88,6 +90,32 @@ function RoomHeader({ join, joinRoom, data, host }) {
     }
   }, [deleteResult]);
 
+  useEffect(() => {
+    if (quitRes !== null && quitRes.success) {
+      window.location.reload();
+    }
+  }, [quitRes]);
+
+  // roompage에서 받아온 data 값 가공
+  const joinHandler = (isJoin) => {
+    joinRoom(isJoin);
+    setEnter(true);
+    setQuit(false)
+  };
+
+  const quitHandler = (isJoin) => {
+    joinRoom(isJoin);
+    setEnter(false);
+    setQuit(true);
+  };
+
+  const showModal = () => {
+    setModalOpen(true);
+  };
+
+  // const myId = useSelector((state) => state)
+  // console.log(myId)
+
   const deleteRoom = () => {
     MySwal.fire({
       text: "면접방을 정말 삭제하시겠습니까?",
@@ -102,7 +130,7 @@ function RoomHeader({ join, joinRoom, data, host }) {
     });
   };
 
-  // function deleteRoom() { 
+  // function deleteRoom() {
   //   setDeleteData(true);
   // }
   // const [data, setData] = useState([]);
@@ -115,9 +143,20 @@ function RoomHeader({ join, joinRoom, data, host }) {
   // },[deleteData])
 
   const readyRoom = join ? (
-    <LayoutButton text={"나가기"}>나가기</LayoutButton>
+    <LayoutButton
+      text={"나가기"}
+      onClick={() => {
+        quitHandler(false);
+      }}
+    >
+      나가기
+    </LayoutButton>
   ) : (
-    <LayoutButton isImportant={false} text={"참여하기"} onClick={joinHandler}>
+    <LayoutButton
+      isImportant={false}
+      text={"참여하기"}
+      onClick={() => joinHandler(true)}
+    >
       참여하기
     </LayoutButton>
   );
@@ -134,9 +173,7 @@ function RoomHeader({ join, joinRoom, data, host }) {
       {/* </LayoutButton> */}
     </div>
   ) : (
-    <div>
-      { readyRoom }
-    </div>
+    <div>{readyRoom}</div>
   );
 
   return (

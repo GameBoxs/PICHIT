@@ -69,8 +69,6 @@ function Resume({ idx, participants }) {
     setShowPdf(false);
   };
 
-  console.log(participants);
-
   const interviewees = participants.map((elem, idx) => {
     return (
       <React.Fragment
