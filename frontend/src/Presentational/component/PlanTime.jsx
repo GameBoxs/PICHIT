@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
+import AggroL from "../common/Font/AggroL";
+
+import AggroM from "../common/Font/AggroM";
 
 function PlanTime(props) {
   // const month = props.date.toLocaleString("en-US", { month: "2-digit" });
@@ -32,6 +35,8 @@ function PlanTime(props) {
 
   return (
     <TimeLayout>
+      <AggroM />
+      <AggroL />
       <GlobalStyle />
       {dday}
     </TimeLayout>
@@ -43,6 +48,9 @@ export default PlanTime;
 const DayTitle = styled.div`
   font-weight: 600;
   color: var(--greyLight-2);
+  font-family: SBagrroL;
+  position: relative;
+  top:10px;
 `;
 
 const Text = styled.div`
@@ -50,7 +58,7 @@ const Text = styled.div`
   height: 1.5em;
   font-weight: bolder;
   font-size: 2rem;
-  padding: 1em;
+  padding: 1.1em 1em 1em 1em;
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -63,6 +71,8 @@ const Text = styled.div`
     inset -0.2rem -0.2rem 1rem var(--primary-dark),
     0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--white);
   color: var(--greyLight-1);
+
+  font-family: SBagrroM;
 `;
 
 const Layout = styled.div`

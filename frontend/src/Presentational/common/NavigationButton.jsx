@@ -8,10 +8,12 @@ import LogInModal from "../component/LogInModal";
 import { useDispatch, useSelector } from "react-redux";
 import { slicer } from "../../reducer/tokenSlicer";
 import { getUserInfo } from "../../reducer/userStore";
+import { useNavigate } from "react-router-dom";
 
 const MySwal = withReactContent(Swal);
 
 function NavigationButton(props) {
+  const navigate = useNavigate()
   const token = useSelector(state => state.token)
   const info = useSelector(state => state.userinfo)
   const dispatch = useDispatch()
@@ -43,6 +45,10 @@ function NavigationButton(props) {
     
     window.location.reload()
   }
+  
+  const movePage = () => {
+    navigate('/review')
+  }
 
   return (
     <NavStyle className="navigation" ref={menuToggle} token={token}>
@@ -56,7 +62,7 @@ function NavigationButton(props) {
       {
         (token !== null) ?
         <MenuList className="menuList">
-          <MenuItem>피드백</MenuItem> 
+          <MenuItem onClick={movePage}>피드백</MenuItem> 
           <MenuItem onClick={logout}>로그아웃</MenuItem> 
         </MenuList>
         :
