@@ -3,21 +3,31 @@ import Title from "../../../../common/Title";
 import SubTitle from "../../../../common/SubTitle";
 import FeedBackItem from "./FeedBackItem";
 
+import { memo, useRef } from "react";
+import { useEffect } from "react";
+
 const FeedBackArea = ({title, data}) => {
-    if(title !== null && title !== "" && title !== undefined)
+    const targetElement = useRef(null);
+    
+    useEffect(() => {
+        targetElement.current.scrollIntoView({behavior:'smooth'});
+    },[title])
+
     return(
         <FeedBackWrap>
             <Title title={title}></Title>
             <SubTitle title="피드백"></SubTitle>
-            {
-                data.map((data) => {
-                    return(
-                        <FeedBackItem data={data}/>
-                    )
-                })
-            }
+            <div ref={targetElement}>
+                {
+                    data ? data.map((datas,idx) => {
+                        return(
+                            <FeedBackItem data={datas} key={idx}/>
+                        )
+                    }) : null
+                }
+            </div>
         </FeedBackWrap>
-)
+    )
 }
 
 const FeedBackWrap = styled.div`
@@ -38,4 +48,4 @@ const FeedBackWrap = styled.div`
     }
 `
 
-export default FeedBackArea;
+export default memo(FeedBackArea);

@@ -1,49 +1,63 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 import SubTitle from "../../../common/SubTitle";
 import FeedBackArea from "./FeedBack/FeedBackArea";
 import SoundArea from "./SoundArea";
 import PageBar from "../../../common/Pagination/PageBar";
+import useAxios from "../../../../action/hooks/useAxios";
+import { useSelector } from "react-redux";
 
+const DetailArea = ({selectedID}) => {
+    // const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcGVha29uIiwibmFtZSI6IuydtO2drOyImCIsImlkIjoxLCJleHAiOjE2NzY1NTY2ODcsImlhdCI6MTY3NDc0MjI4NywidXNlcklkIjoia2FrYW9fMjYyOTgzOTQ2MiJ9.TxhacA4jIPlIJLQt8Dlz5Xl-loXmfhtnnUOofpBAUnO8IT2e3t5vi_KY-yQ194QMcI4l7bLHKL5EIUqsnVCWAg'
+    const token = useSelector(state => state.token);
 
-const DetailArea = ({data}) => {
-    //pagination 데이터
-//   // 전체데이터, 현재페이지, 페이지당 포스트갯수
-//   // const [dumyData, setDumyData] = useState(DUMMY_DATA);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(1);
+    // console.log('Detaile selectedID');
+    // console.log(selectedID);
 
-//   //현재 페이지에 렌더할 데이터를 추출하기위한 값들
-  const lastPostIndex = currentPage * postsPerPage; //렌더할 페이지에 해당하는 마지막 인덱스값
-  const firstPostIndex = lastPostIndex - postsPerPage; //렌더할 페이지에 해당하는 첫번째 인덱스값
-  const currentPosts = data.slice(firstPostIndex, lastPostIndex); //현재 페이지에서 렌더할 데이터항목
-  const currentPost = data[currentPage-1]
+    const [data, setData] = useState();
+    const [nowPage, setNowPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(0);
+    const [getData, isLoading] = useAxios(`interviewjoins/${selectedID}/questions?size=2000`,'GET',token,null, selectedID ? true : false);
+    
+    useEffect(() => {
+        if(getData && getData.success && getData.data) {
+            setData(getData.data.content); 
+            setTotalPage(getData.data.totalElements);
+        }
+    },[getData]);
+
+    useEffect(() => {
+        setNowPage(1);
+    },[selectedID])
+
+    // console.log(data);
+    // console.log(totalPage);
+
     return (
         <DetailWrap>
             <SubTitle title="면접 피드백" />
             <Line/>
-            {/* {
-                data.title !== null && data.title !== "" & data.title !== undefined ? <SoundArea/> : null
-            }
             {
-                data.title !== null && data.title !== "" & data.title !== undefined ? <FeedBackArea title={data.title} data={data.item}/> : null
-            } */}
-            {
-                data !== null && data !== "" & data !== undefined ? <SoundArea/> : null
+                selectedID && data ?
+                isLoading === true ? <div>loading...</div>:
+                <>
+                    <SoundArea/>
+                    <PageBar
+                        setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
+                        currentPage={nowPage} //현재페이지
+                        totalpages={totalPage}
+                    />
+                    <FeedBackArea title={data[nowPage-1].content} data={data[nowPage-1].feedbacks}/>
+                </>
+                    /* <FeedBackArea title={currentPost.question} data={currentPost.reviews}/> */
+                :null
             }
-            <PageBar
-              totalPosts={data.length} //전체 데이터 길이(상황에 맞게변경)
-              postsPerPage={postsPerPage}  //페이지당 게시물 수
-              setCurrentPage={setCurrentPage} //현재 페이지를 계산하는 함수
-              currentPage={currentPage} //현재페이지
-            />
-            <FeedBackArea title={currentPost.question} data={currentPost.reviews}/>
         </DetailWrap>
     )
 }
 
-export default DetailArea;
+export default memo(DetailArea);
 
 const DetailWrap = styled.div`
     width: 100%;
