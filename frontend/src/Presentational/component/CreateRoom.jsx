@@ -106,6 +106,9 @@ function CreateRoom({ setModalOpen }) {
     else if (toggle===true && room.password ===''){
       alert ("비밀번호를 설정해주세요")
     }
+    else if (toggle === true && room.password.length > 10){
+      alert("유효 할 수 없는 비밀번호 입니다. 다시 설정해주세요")
+    }
     else{
       setCreateData(true);
     }
