@@ -120,7 +120,7 @@ function CreateRoom({ setModalOpen }) {
         }).then((result) => {
           if (result.isConfirmed) {
             console.log(createResult.data.id);
-            navigate("/room", {
+            navigate(`/room/${createResult.data.id}`, {
               state: {
                 id: createResult.data.id,
               },

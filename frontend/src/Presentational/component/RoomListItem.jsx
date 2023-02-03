@@ -19,6 +19,7 @@ const MySwal = withReactContent(Swal);
 function RoomListItem(props) {
     // 비밀방 클릭시, 비밀번호 입력 모달 띄우도록 설정,
   let navigate = useNavigate();
+  const roomId = props.id
   const showSwalWithLink = () => {
     MySwal.fire({
       title: "비밀번호 입력",
@@ -41,7 +42,7 @@ function RoomListItem(props) {
 
   const clickRoomItem = () => {
     console.log(props.id)
-    navigate('/room', {
+    navigate(`/room/${roomId}`, {
       state: {
         id:props.id
       }
