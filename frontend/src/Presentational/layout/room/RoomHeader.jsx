@@ -3,12 +3,12 @@ import Title from "../../common/Title";
 import PlanTime from "../../component/PlanTime";
 
 import React, { useEffect, useState } from "react";
-import useAxios from "../../../action/hooks/useAxios";
 import EditRoom from "../../component/EditRoom";
 
 import { useSelector } from "react-redux";
 import { testToken } from "../../../store/values";
 import { useNavigate } from "react-router-dom";
+import useAxios from "../../../action/hooks/useAxios";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -63,21 +63,25 @@ function RoomHeader({ join, joinRoom, data, host }) {
       });
       navigate("/");
     }
-  }, [deleteData]);
+  }, [deleteResult]);
 
-  const deleteRoom = () => {
-    MySwal.fire({
-      text: "면접방을 정말 삭제하시겠습니까?",
-      showConfirmButton: true,
-      showCancelButton: true,
-      confirmButtonText: "삭제",
-      cancelButtonText: "취소",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setDeleteData(true);
-      }
-    });
-  };
+  // const deleteRoom = () => {
+  //   MySwal.fire({
+  //     text: "면접방을 정말 삭제하시겠습니까?",
+  //     showConfirmButton: true,
+  //     showCancelButton: true,
+  //     confirmButtonText: "삭제",
+  //     cancelButtonText: "취소",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       setDeleteData(true);
+  //     }
+  //   });
+  // };
+
+  function deleteRoom() { 
+    setDeleteData(true);
+  }
   // const [data, setData] = useState([]);
 
   // useEffect(() => {
