@@ -7,7 +7,7 @@ import withReactContent from 'sweetalert2-react-content'
 import LogInModal from "../component/LogInModal";
 import { useDispatch, useSelector } from "react-redux";
 import { slicer } from "../../reducer/tokenSlicer";
-import { getUserInfo } from "../../reducer/userStore";
+import { setUserInfo } from "../../reducer/userStore";
 import { useNavigate } from "react-router-dom";
 
 const MySwal = withReactContent(Swal);
@@ -37,7 +37,7 @@ function NavigationButton(props) {
   const logout = () => {
     localStorage.removeItem('token')
     dispatch(slicer(''))
-    dispatch(getUserInfo({
+    dispatch(setUserInfo({
       id: 0,
       name: "",
       email: "",

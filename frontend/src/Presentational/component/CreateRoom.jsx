@@ -23,7 +23,6 @@ function CreateRoom({ setModalOpen }) {
 
   const Togglehandler = (toggle) => {
     setToggle(toggle);
-    console.log(toggle);
   };
 
   // 방 생성 정보 들어감

@@ -7,7 +7,7 @@ import { KAKAO_AUTH_SERVER, testToken } from "../../store/values"
 import { useDispatch, useSelector } from "react-redux";
 import { slicer } from "../../reducer/tokenSlicer";
 import useAxios from "../../action/hooks/useAxios";
-import { getUserInfo } from "../../reducer/userStore";
+import { setUserInfo } from "../../reducer/userStore";
 
 
 function Navigation() {
@@ -78,9 +78,7 @@ function Navigation() {
   //토큰 불러와서 불러온 userInfo 이용해서 리덕스에 사용자 정보 넣기
   const token = useSelector(state => state.token)
   data = useAxios('userinfo', "GET", token)
-  dispatch(getUserInfo(data[0]))
-
-  console.log(data[0])
+  dispatch(setUserInfo(data[0]))
 
   return (
     <NavBody>

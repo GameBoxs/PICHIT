@@ -86,7 +86,7 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   function makeBlank() {
     let result = [];
     for (let i = 0; i < cnt; i++) {
-      result.push(<CamCompo className="in">aa</CamCompo>);
+      result.push(<CamCompo className="in" key={i}>aa</CamCompo>);
     }
     return result;
   }
@@ -99,8 +99,8 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   };
 
   //질문 렌더링
-  const Questions = dummy.map((el) => {
-    return <QuestionCompo key={el.id} questionInfo={el} />;
+  const Questions = dummy.map((el, id) => {
+    return <QuestionCompo key={id} questionInfo={el} />;
   });
 
   //별점 값 받아오는 함수
@@ -140,17 +140,19 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
 
   const interviewees = dummyPlayer.map((elem, idx) => {
       return (
-        <>
+        <React.Fragment
+          key={idx}
+        >
           <input
             type="radio"
             name={`radio`}
             value={elem}
             id={`tab-${idx + 1}`}
           />
-          <label for={`tab-${idx + 1}`}>
+          <label htmlFor={`tab-${idx + 1}`}>
             <p>{elem}</p>
           </label>
-        </>
+        </React.Fragment>
     );
   });
 
@@ -181,7 +183,7 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
             </CamCompo>
             {info.subscribers.map((sub, i) =>
               sub.stream.connection.connectionId === info.interviewee ? null : (
-                <CamCompo className="in">
+                <CamCompo className="in" key={i}>
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>
               )
@@ -192,7 +194,7 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
             <InterviewerTag>면접자</InterviewerTag>
             {info.subscribers.map((sub, i) =>
               sub.stream.connection.connectionId === info.interviewee ? (
-                <CamCompo>
+                <CamCompo key={i}>
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>
               ) : null
