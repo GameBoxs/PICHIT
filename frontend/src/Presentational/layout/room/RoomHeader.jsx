@@ -19,7 +19,7 @@ const MySwal = withReactContent(Swal);
 function RoomHeader({ join, joinRoom, data, host }) {
   let navigate = useNavigate();
  
-
+  console.log(host)
 
 
   
@@ -53,7 +53,6 @@ function RoomHeader({ join, joinRoom, data, host }) {
     null,
     deleteData
   );
-  console.log(deleteResult);
 
   useEffect(() => {
     // setDeleteData();
@@ -71,13 +70,6 @@ function RoomHeader({ join, joinRoom, data, host }) {
       navigate("/");
     }
   }, [deleteResult]);
-
-  const [myId, isLoading] = useAxios(
-    'userinfo',
-    "GET",
-    token
-  )
-  console.log("이거 내 정보냐?",myId)
 
 
   const deleteRoom = () => {

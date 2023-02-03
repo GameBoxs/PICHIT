@@ -14,11 +14,6 @@ import { GlobalStyle } from "./action/GlobalStyle";
 
 function App() {
   const { pathname } = useLocation();
-  const params =useParams();
-  const roomId = params.id
-  console.log(roomId)
-
-
 
   return (
     <AppContainer>
