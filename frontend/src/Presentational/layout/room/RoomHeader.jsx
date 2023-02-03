@@ -136,8 +136,7 @@ const Layout = styled.div`
   margin-bottom: 3rem;
 
   & .Title {
-    font-weight: 600;
-    font-size: 3rem;
+    font-size: 2.5rem;
     text-align: left;
   margin-block: 3rem;
   font-family: "SBagrroL";

@@ -103,8 +103,8 @@ function RoomMain({ join, host, data }) {
         <SubTitle title={"자기소개서"} />
       </SectionHeader>
       <Layout>
-        <Section width="70%">{RoomSection}</Section>
-        <Section width="30%">{RoomQuestion}</Section>
+        <Section>{RoomSection}</Section>
+        <Section>{RoomQuestion}</Section>
       </Layout>
     </MainPageContainer>
   );
@@ -112,26 +112,14 @@ function RoomMain({ join, host, data }) {
 
 export default RoomMain;
 
-const TopLayout = styled.div``;
-
-const Layout = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1em;
-  width: 100%;
-  margin-bottom: 1em;
-  margin-top: 1em;
-
-  &:first-child {
-    background-color: var(--greyLight-1);
-    border-radius: 1rem;
-    padding: 1rem 1rem 2rem 1rem;
-  }
-`;
-
 const Description = styled.div`
-  margin: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
+    -0.2rem -0.2rem 0.5rem var(--white);
+  transition: 0.3s ease;
+  padding: 2rem 1rem;
+
+  width: 100%;
 
   .SubTitle {
     margin-bottom: 1rem;
@@ -140,10 +128,35 @@ const Description = styled.div`
 
 const Section = styled.div`
   width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 1rem;
+`;
+
+const Layout = styled.div`
+  width: 100%;
+  margin-bottom: 1em;
+  margin-top: 1em;
+
+  &:first-child {
+    background-color: var(--greyLight-1);
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1em;
+
+    ${Section} {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+  }
+
+  &:last-child {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+  }
 `;
 
 const SectionHeader = styled.div`
@@ -163,7 +176,6 @@ const Card = styled.div`
   border-radius: 1rem;
   box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
     -0.2rem -0.2rem 0.5rem var(--white);
-
   transition: 0.3s ease;
   padding: 1rem;
   width: 100%;
@@ -192,7 +204,7 @@ const Card = styled.div`
     flex-direction: row;
     gap: 0.5rem;
     font-size: 2.5vw;
-    margin-block:0.5rem;
+    margin-block: 0.5rem;
     color: var(--greyDark);
   }
 `;
@@ -218,4 +230,5 @@ const PopUp = styled.div`
 const MainPageContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
