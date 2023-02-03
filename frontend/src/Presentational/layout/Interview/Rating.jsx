@@ -7,7 +7,9 @@ const Rating = ({ RatingHandler }) => {
     .fill(0)
     .map((_, idx) => {
       return (
-        <>
+        <React.Fragment
+        key={idx}
+      >
           <RatingLabel
             key={idx}
             aria-label={`${idx + 1} stars`}
@@ -24,7 +26,7 @@ const Rating = ({ RatingHandler }) => {
             type="radio"
             onClick={RatingHandler}
           />
-        </>
+        </React.Fragment>
       );
     });
 

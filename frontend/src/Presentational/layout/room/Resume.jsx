@@ -73,7 +73,9 @@ function Resume({ idx, participants }) {
 
   const interviewees = participants.map((elem, idx) => {
     return (
-      <>
+      <React.Fragment
+      key={idx}
+    >
         <input
           type="radio"
           name={`radio`}
@@ -83,7 +85,7 @@ function Resume({ idx, participants }) {
         <label htmlFor={`tab-${idx + 1}`}>
           <p>{elem.name}</p>
         </label>
-      </>
+      </React.Fragment>
     );
   });
 

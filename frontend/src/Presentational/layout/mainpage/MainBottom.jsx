@@ -102,7 +102,7 @@ function MainBottom() {
   return (
     <Layout>
       <Header>
-        <h1> LOOM LIST</h1>
+        <h1> ROOM LIST</h1>
         <Titlesection>
           <p>{roomPosition ? '내가 참여한 목록입니다(예정만 보여줌)' : '모든방 목록입니다'}</p>
           <div>
