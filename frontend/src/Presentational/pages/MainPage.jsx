@@ -153,4 +153,6 @@ const MainPageLayout = styled.div`
   height: 250vh;
   margin: 0 auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 `;
