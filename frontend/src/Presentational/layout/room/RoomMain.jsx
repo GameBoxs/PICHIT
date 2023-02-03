@@ -74,7 +74,7 @@ function RoomMain({ join, host, data, userinfo }) {
         <Section>
           <Card>
             <SubTitle title={"시작 일자"} />
-            <PlanTime />
+            <PlanTime startDate={startDate}/>
           </Card>
           <Card>
             <SubTitle title={"참가 멤버"} />
