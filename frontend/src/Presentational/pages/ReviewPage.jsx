@@ -1,5 +1,5 @@
 //#region import
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
 import Title from "../common/Title";
 import SubTitle from "../common/SubTitle";
@@ -7,14 +7,21 @@ import SubTitle from "../common/SubTitle";
 import FilterArea from "../component/Review/Filter/FilterArea";
 import HistoryList from "../component/Review/History/HistoryList";
 import DetailArea from "../component/Review/Detail/DetailArea";
+import { useSelector } from "react-redux";
+
+import { useState } from "react";
+import { useEffect } from "react";
 //#endregion
 
 const ReviewPage = (props) => {
+  const user = useSelector(state => state.userinfo);
+  const [selectedID, setSelectedID] = useState();
+
   //#region 타이틀 텍스트 변수
   // 피드백 타이틀 텍스트
   const titleText = (
     <div>
-      안녕하세요 <br /> 김지훈님
+      안녕하세요 <br /> {user.name}님
     </div>
   );
 
@@ -27,7 +34,7 @@ const ReviewPage = (props) => {
   //#endregion
 
   //#region Test Data
-  const data = [
+  const data123 = [
     {
       Title: "2022 연말 콘서트-이희수 전국 투어",
       Day: "23.01.12",
@@ -149,16 +156,15 @@ const ReviewPage = (props) => {
   // const detailData = {};
 
   //#endregion
-
+  console.log(selectedID)
   return (
     <ReviewMainBody>
       <Title title={titleText}></Title>
       <SubTitle title={subtitleText}></SubTitle>
       <Line></Line>
-      <FilterArea />
-      <FilterArea />
-      <HistoryList data={data} />
-      <DetailArea data={testdata} />
+      {/* <FilterArea /> */}
+      <HistoryList setSelectedID={setSelectedID}/>
+      <DetailArea selectedID={selectedID} />
     </ReviewMainBody>
   );
 };
@@ -169,7 +175,7 @@ const Line = styled.hr`
   margin: 15px 0 15px 0;
 `;
 const ReviewMainBody = styled.div`
-  margin: 0 10em 0 10em;
+  margin: 10em 10em 0 10em;
   height: 100%;
 
   & {

@@ -3,27 +3,34 @@ import Title from "../../../common/Title";
 import SubTitle from "../../../common/SubTitle";
 
 const ListItem = (props) => {
-    let CurrentState = "";
-  
-    if(props.item.Processing==="Y") {
-      CurrentState = "진행중";
-    } else if(props.item.Processing==="N") {
-      CurrentState = "진행 예정";
-    } else if(props.item.Processing==="E") {
-      CurrentState = "종료";
+  // console.log('ListItem');
+  // console.log(props);
+  const tempDate = props.item.startDate !== undefined ? new Date((props.item.startDate).toString()) : null;
+  const date = tempDate !== null ? tempDate.getFullYear().toString().slice(2,4) + '.' +  (tempDate.getMonth()+1).toString() + '.' + tempDate.getDate().toString() : null;
+  const changeID = () => {
+    if(props.item.startDate !== undefined){
+      props.setSelectedID(props.myID);
     }
-  console.log(props.item)
+  }
     return(
       <>
-        {/* <Line></Line> */}
-            <ItemWrap>
-            <Title title={props.item.Title}></Title>
-            <SubTitle title={props.item.Day}></SubTitle>
-            <SubTitle title={CurrentState}></SubTitle>
-            {props.item.Title !=="" && props.item.Title !== null && props.item.Title !== undefined ? <SubTitle title=">"></SubTitle> : null }
-            </ItemWrap>
-            <Line></Line>
-        {/* {props.index === props.postsPerPage-1 || props.index+1 === ""? <Line></Line> : null} */}
+        <ItemWrap onClick={changeID} cursor={props.cursor}>
+          {
+            props.item && props.item.title ?
+            <>
+              <Title title={props.item.title} />
+            </>
+            : 
+            <Title title="" />
+          }
+          {
+            props.item && props.item.title ?
+            <SubTitle title={date}></SubTitle>
+            : <SubTitle title=""></SubTitle>
+          }
+          {props.item.title !=="" && props.item.title !== null && props.item.title !== undefined ? <SubTitle title=">"></SubTitle> : null }
+        </ItemWrap>
+        <Line></Line>
       </>
     )
   }
@@ -40,21 +47,23 @@ const ListItem = (props) => {
         font-weight: bolder;
     }
     & div:nth-child(1) {
-        cursor: pointer;
-        width: 75%;
+      /* cursor: pointer; */
+      cursor: ${props => props.cursor};
+      width: 85%;
     }
     & div:nth-child(2) {
-        width: 10%;
+      width: 10%;
     }
     & div:nth-child(3) {
-        width: 10%;
+      /* cursor: pointer; */
+      cursor: ${props => props.cursor};
+      width: 5%;
+      font-size: 30px;
     }
-    & div:nth-child(4) {
-        cursor: pointer;
-        width: 5%;
-        font-size: 30px;
+    &:hover {
+      background-color: #5555551e;
     }
-    `
+  `
 
     const Line = styled.hr`
         margin: 15px 0 15px 0;
