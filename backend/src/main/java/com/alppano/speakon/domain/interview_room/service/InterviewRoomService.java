@@ -130,31 +130,33 @@ public class InterviewRoomService {
             throw new ResourceForbiddenException("방장만 면접방 상태를 수정할 수 있습니다.");
         }
 
-        if(dto.getTitle() != null) {
+        if (dto.getTitle() != null) {
             interviewRoom.setTitle(dto.getTitle());
         }
 
-        if(dto.getDescription() != null) {
+        if (dto.getDescription() != null) {
             interviewRoom.setDescription(dto.getDescription());
         }
 
-        if(dto.getContactWay() != null) {
+        if (dto.getContactWay() != null) {
             interviewRoom.setContactWay(dto.getContactWay());
         }
 
-        if(dto.getMaxPersonCount() != null) {
-            // TODO: 검증이 필요함
-            interviewRoom.setPassword(dto.getPassword());
+        if (dto.getMaxPersonCount() != null) {
+            if (interviewRoom.getInterviewJoins().size() > dto.getMaxPersonCount()) {
+                throw new ResourceForbiddenException("수정하려는 최대 인원 수가 현재 인원 수보다 작습니다.");
+            }
+            interviewRoom.setMaxPersonCount(dto.getMaxPersonCount());
         }
 
-        if(dto.getStartDate() != null) {
+        if (dto.getStartDate() != null) {
             interviewRoom.setStartDate(dto.getStartDate());
         }
 
-        if(dto.getPassword() != null) {
-            // TODO: 검증이 필요함
-            interviewRoom.setPassword(dto.getPassword());
+        String password = null;
+        if (dto.getPassword() != null && dto.getPassword().trim().length() != 0) {
+            password = dto.getPassword().trim();
         }
-
+        interviewRoom.setPassword(password);
     }
 }
