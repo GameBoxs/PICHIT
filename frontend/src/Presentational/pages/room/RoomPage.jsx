@@ -63,7 +63,7 @@ function RoomPage() {
 
   return (
     <Container>
-      <Page>
+      <Room>
         {
           isLoading === true ? <div>loading...</div> :
           data && data.id ?
@@ -72,16 +72,19 @@ function RoomPage() {
             <RoomMain data={data} join={join} host={host} />
           </> : <div>없는디여</div>
         }
-      </Page>
+      </Room>
     </Container>
   );
 }
 export default RoomPage;
 
-const Page = styled.div`
+const Room = styled.div`
   margin-left: 10%;
   margin-right: 10%;
-  width: 65vw;
+  width: 80vw;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  align-items: flex-start;
 `;
 
 const Container = styled.div`

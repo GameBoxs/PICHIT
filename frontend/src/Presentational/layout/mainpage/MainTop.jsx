@@ -33,6 +33,9 @@ const TopBody = styled.div`
   //   /* height: 100vh; */
   margin: 10vh 0 0 0;
   padding: 0;
+  width: 96vw;
+  display: flex;
+  justify-content: center;
   /* margin-left: 150px; */
 `;
 

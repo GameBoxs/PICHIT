@@ -106,6 +106,7 @@ const BackgroundTape = styled.div`
 `;
 
 const MoveBtn = styled.div`
+  /* height: 100%; */
   cursor: pointer;
   position: absolute;
   z-index: 10;
@@ -152,4 +153,6 @@ const MainPageLayout = styled.div`
   height: 250vh;
   margin: 0 auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 `;

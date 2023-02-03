@@ -2,12 +2,13 @@ import styled from "styled-components";
 import Title from "../../common/Title";
 import PlanTime from "../../component/PlanTime";
 
-import React, { useEffect, useState,useLayoutEffect } from "react";
+import React, { useEffect, useState } from "react";
 import EditRoom from "../../component/EditRoom";
+
 import { useSelector } from "react-redux";
 import { testToken } from "../../../store/values";
-import useAxios from "../../../action/hooks/useAxios";
 import { useNavigate } from "react-router-dom";
+import useAxios from "../../../action/hooks/useAxios";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -47,7 +48,8 @@ function RoomHeader({ join, joinRoom, data, host }) {
   );
   console.log(deleteResult);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    // setDeleteData();
     if (
       deleteResult[0] &&
       deleteResult[0].success &&
@@ -153,8 +155,7 @@ const LayoutButton = styled.div`
 
 const Layout = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  flex-direction: column;
   margin-bottom: 3rem;
 
   & .Title {
