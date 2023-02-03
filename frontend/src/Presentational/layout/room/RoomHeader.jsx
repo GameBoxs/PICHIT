@@ -17,20 +17,41 @@ import AggroL from "../../common/Font/AggroL";
 const MySwal = withReactContent(Swal);
 
 function RoomHeader({ join, joinRoom, data, host }) {
-  let navigate = useNavigate();
-
-
-
+  const {id, currentPersonCount, description, finished, manager, maxPersonCount, participants, title} = data
+  const navigate = useNavigate();
+  const token = useSelector((state) => state.token);
   
-  // console.log(roomData)
 
   // roompage에서 받아온 data 값 가공
-  const title = data.title;
-  const startDate = data.startDate;
+
+  console.log(data)
+
+  const [enter, setEnter] = useState(false);
+  const enterRes = useAxios(
+    `interviewjoins`,
+    'POST',
+    token,
+    {
+      "interviewRoomId": id,
+      "password": ""
+    },
+    enter
+  )
 
   const joinHandler = () => {
     joinRoom(!join);
+    setEnter(true)
   };
+
+  useEffect(()=>{
+    if (
+      enterRes[0] &&
+      enterRes[0].success &&
+      enterRes[0].success !== undefined
+    ) {
+      alert('성공!')
+    }
+  }, [enterRes])
 
   const [modalOpen, setModalOpen] = useState(false);
   const showModal = () => {
@@ -41,18 +62,14 @@ function RoomHeader({ join, joinRoom, data, host }) {
   // console.log(myId)
 
   // axios delete
-  const roomId = data.id;
-  const token = useSelector((state) => state.token);
-
   const [deleteData, setDeleteData] = useState(false);
   const deleteResult = useAxios(
-    `interviewrooms/${roomId}`,
+    `interviewrooms/${id}`,
     "DELETE",
     token,
     null,
     deleteData
   );
-  console.log(deleteResult);
 
   useEffect(() => {
     // setDeleteData();
@@ -70,14 +87,6 @@ function RoomHeader({ join, joinRoom, data, host }) {
       navigate("/");
     }
   }, [deleteResult]);
-
-  const [myId, isLoading] = useAxios(
-    'userinfo',
-    "GET",
-    token
-  )
-  console.log("이거 내 정보냐?",myId)
-
 
   const deleteRoom = () => {
     MySwal.fire({

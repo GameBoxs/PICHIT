@@ -80,7 +80,7 @@ function Resume({ idx, participants }) {
           value={elem.name}
           id={`tab-${idx + 1}`}
         />
-        <label for={`tab-${idx + 1}`}>
+        <label htmlFor={`tab-${idx + 1}`}>
           <p>{elem.name}</p>
         </label>
       </>

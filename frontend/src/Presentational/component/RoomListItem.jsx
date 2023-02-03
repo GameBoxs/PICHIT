@@ -54,7 +54,6 @@ function RoomListItem(props) {
           return { password: password };
         },
       }).then((result) => {
-        console.log(result.value.password)
         navigate("/room", {
           state: {
             id: props.id,

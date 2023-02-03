@@ -6,31 +6,16 @@ import { useSelector } from "react-redux";
 import useAxios from "../../../action/hooks/useAxios";
 import { useLocation } from "react-router-dom";
 
-
 function RoomPage() {
   // roomId 값을 RoomListItem에서 Link state에 받아와서
   // useLocation에 넣어논 roomId 값을 가져와서 사용함
-  const location = useLocation();
- const roomId = location.state.id
- const password = location.state.password
- console.log("이거 받아온 비밀 번호냐?",password)
- 
- 
-
   const [join, setJoin] = useState(false);
-
-  // true: 대가자
-  // false: 참여자
-
-  useEffect(() => {
-    console.log("inRoomPage", join);
-  }, [join]);
-
-  const joinRoom = (join) => {
-    setJoin(join);
-    console.log(join);
-  };
-
+  const [data, setData] = useState();
+  const location = useLocation();
+  const [valid, setvalid] = useState(false);
+  const roomId = location.state.id;
+  const password = location.state.password;
+  const { token, user } = useSelector((state) => state);
 
   const [host, setHost] = useState(false);
 
@@ -47,10 +32,7 @@ function RoomPage() {
   //    host 값 false
   // }
 
-  const [valid, setvalid] = useState(false)
-
-  const token = useSelector((state) => state.token);
-  const [data, setData] = useState();
+  console.log(join)
 
   const [postData, isLoading] = useAxios(
     `interviewrooms/${roomId}`,
@@ -60,36 +42,59 @@ function RoomPage() {
   );
 
   useEffect(() => {
+    if (postData && postData.data && postData.data.manager?.id === user?.id) {
+      setHost(true);
+    }
+  }, []);
+
+  useEffect(() => {
     if (postData && postData.data) {
       setData(postData.data);
-      console.log(postData.data);
     }
   }, [postData]);
 
-  const [myId, loading] = useAxios(
-    'userinfo',
-    "GET",
-    token
-  )
-  useEffect (() => {
-    if (postData && postData.data && postData.data.manager.id === myId.data.id ){
-      setHost(true)
-    }
-  })
-
+  useEffect(()=> {
+    if (data !== undefined) {
+      const Member = data.participants.map((elem) => elem.name)
+      
+      if (Member.includes(user?.name)) {
+        setJoin(false)
+      } else {
+        setJoin(true)
+      }
   
+    }
+  }, [data])
+
+  // true: 대가자
+  // false: 참여자
+
+  // useEffect(() => {
+  //   console.log("inRoomPage", join);
+  // }, [join]);
+
+  const joinRoom = () => {
+    setJoin(!join);
+  };
 
   return (
     <Container>
       <Room>
-        {
-          isLoading === true ? <div>loading...</div> :
-          data && data.id ?
+        {isLoading === true ? (
+          <div>loading...</div>
+        ) : data && data.id ? (
           <>
-            <RoomHeader joinRoom={joinRoom} data={data} join={join} host={host} />
+            <RoomHeader
+              joinRoom={joinRoom}
+              data={data}
+              join={join}
+              host={host}
+            />
             <RoomMain data={data} join={join} host={host} />
-          </> : <div>없는디여</div>
-        }
+          </>
+        ) : (
+          <div>없는디여</div>
+        )}
       </Room>
     </Container>
   );
@@ -111,4 +116,4 @@ const Container = styled.div`
   justify-content: center;
   padding-top: 10vh;
   background-color: var(--white);
-`
+`;

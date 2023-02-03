@@ -73,18 +73,16 @@ function MainBottom() {
     );
     useEffect(() => {
       if(APIurl===myCategory){
-        console.log(getData.data)
+        // console.log(getData.data)
       }
       if(getData && getData.data){
-        console.log(getData.data)
+        // console.log(getData.data)
         setData(getData)
         setTotalElements(getData.data.totalElements) //데이터 전체 수
         setTotalPages(getData.data.totalPages) //페이지 전체 수
-        console.log('데이터 불러오는중')
-      }
-      console.log('페이지가변하면서 얘도 바뀜')
+      }  
     }, [getData]);
-    console.log(isLogined+'사용자'+APIurl+'일 때'+roomPosition+'이고, 엑시오스 상태'+getData)/////////////////////////////////
+    // console.log(isLogined+'사용자'+APIurl+'일 때'+roomPosition+'이고, 엑시오스 상태'+getData)/////////////////////////////////
 
     useEffect(()=>{
       if(roomPosition){
@@ -121,7 +119,7 @@ function MainBottom() {
                   roomSwitch("toMy");
                 }
                 else{
-                  console.log('못넘어간다')//여기에 스윗알럿 하면 될듯
+                  // console.log('못넘어간다')//여기에 스윗알럿 하면 될듯
                 }
               }}
             >

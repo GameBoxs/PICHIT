@@ -13,7 +13,10 @@ import { getUserInfo } from "../../reducer/userStore";
 function Navigation() {
   const [popup, setPopup] = useState();  
   const dispatch = useDispatch()
+  const [isToken, setIsToken] = useState(false)
+  const token = useSelector(state => state.token)
   let data = {}
+  data = useAxios('userinfo', "GET", token, null, isToken)
 
   const handleOpenPop = () => {  //팝업 생성 함수
     const width = 400;
@@ -47,10 +50,10 @@ function Navigation() {
       //Redux state 저장
       dispatch(slicer(token))
 
-      console.log(e.data)
-
       //로컬스토리지에 token이란 이름으로 값 저장 
       localStorage.setItem('token', token)
+
+      setIsToken(true)
 
       //작업 완료 후 알아서 팝업창 꺼지게
       popup?.close()
@@ -76,11 +79,7 @@ function Navigation() {
   }, [popup])
   
   //토큰 불러와서 불러온 userInfo 이용해서 리덕스에 사용자 정보 넣기
-  const token = useSelector(state => state.token)
-  data = useAxios('userinfo', "GET", token)
   dispatch(getUserInfo(data[0]))
-
-  console.log(data[0])
 
   return (
     <NavBody>
