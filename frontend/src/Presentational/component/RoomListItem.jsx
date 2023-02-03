@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import Swal from "sweetalert2";
@@ -20,6 +20,8 @@ const MySwal = withReactContent(Swal);
 function RoomListItem(props) {
   // 비밀방 클릭시, 비밀번호 입력 모달 띄우도록 설정,
   let navigate = useNavigate();
+  const roomId = props.id
+
   const showSwalWithLink = () => {
     MySwal.fire({
       title: "비밀번호 입력",
@@ -55,7 +57,7 @@ function RoomListItem(props) {
         },
       }).then((result) => {
         console.log(result.value.password)
-        navigate("/room", {
+        navigate(`/room/${roomId}`, {
           state: {
             id: props.id,
             password: result.value.password,
@@ -63,7 +65,7 @@ function RoomListItem(props) {
         });
       });
     } else {
-      navigate("/room", {
+      navigate(`/room/${roomId}`, {
         state: {
           id: props.id,
         },
