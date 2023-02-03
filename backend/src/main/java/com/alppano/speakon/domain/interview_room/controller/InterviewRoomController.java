@@ -8,6 +8,9 @@ import com.alppano.speakon.domain.interview_room.dto.InterviewRoomInfo;
 import com.alppano.speakon.domain.interview_room.dto.InterviewRoomRequest;
 import com.alppano.speakon.domain.interview_room.service.InterviewRoomService;
 import com.alppano.speakon.security.LoginUser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +55,7 @@ public class InterviewRoomController {
     @Operation(summary = "면접방 상세조회")
     @PostMapping("/interviewrooms/{id}")
     public ResponseEntity<ApiResponse<InterviewRoomDetailInfo>> getInterviewRoomDetailInfo(@PathVariable("id") Long interviewRoomId,
-                                                                                           @RequestBody(required = false) InterviewRoomEnterRequest dto) {
+                                                                                           @RequestBody(required = false) InterviewRoomEnterRequest dto) throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
         InterviewRoomDetailInfo interviewRoomDetailInfo = interviewRoomService.getInterviewRoomDetailInfo(interviewRoomId, dto);
         ApiResponse<InterviewRoomDetailInfo> result = new ApiResponse(Boolean.TRUE, "조회 성공", interviewRoomDetailInfo);
         return new ResponseEntity<>(result, HttpStatus.OK);
