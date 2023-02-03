@@ -18,7 +18,9 @@ const MySwal = withReactContent(Swal);
 function RoomHeader({ join, joinRoom, data, host }) {
   let navigate = useNavigate();
 
-  console.log(data);
+
+
+  
   // console.log(roomData)
 
   // roompage에서 받아온 data 값 가공
@@ -33,6 +35,9 @@ function RoomHeader({ join, joinRoom, data, host }) {
   const showModal = () => {
     setModalOpen(true);
   };
+
+  // const myId = useSelector((state) => state)  
+  // console.log(myId)
 
   // axios delete
   const roomId = data.id;
@@ -64,6 +69,14 @@ function RoomHeader({ join, joinRoom, data, host }) {
       navigate("/");
     }
   }, [deleteResult]);
+
+  const [myId, isLoading] = useAxios(
+    'userinfo',
+    "GET",
+    token
+  )
+  console.log("이거 내 정보냐?",myId)
+
 
   const deleteRoom = () => {
     MySwal.fire({
@@ -109,7 +122,9 @@ function RoomHeader({ join, joinRoom, data, host }) {
       </LayoutButton>
     </div>
   ) : (
-    { readyRoom }
+    <div>
+      { readyRoom }
+    </div>
   );
 
   return (
