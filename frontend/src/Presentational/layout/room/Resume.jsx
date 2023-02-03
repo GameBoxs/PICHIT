@@ -1,13 +1,15 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ViewPdf from "../../component/room/resume/ViewPdf";
-import * as pdfjs from "pdfjs-dist"
+import * as pdfjs from "pdfjs-dist";
 
-// 근데 import * as 안하면 에러남 필수로 해줄 것!  
+import useAxios from "../../../action/hooks/useAxios";
+
+// 근데 import * as 안하면 에러남 필수로 해줄 것!
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-function Resume({idx}) {
+function Resume({ idx }) {
   const [pdfFileList, setPdfFileList] = useState([]);
   const [pdfUrl, setPdfUrl] = useState();
   const [showPdf, setShowPdf] = useState(false);
@@ -16,6 +18,8 @@ function Resume({idx}) {
     const blob = new Blob([file]);
     const pdfUrl = URL.createObjectURL(blob);
     setPdfUrl(pdfUrl);
+    console.log(pdfUrl)
+    
   };
 
   const onPdfFileUpload = (e) => {
@@ -61,34 +65,33 @@ function Resume({idx}) {
   return (
     <MainContainer>
       <FileContainer>
-        { showPdf ?
-        
-        <ModalOverlay visible={showPdf}>
-          <PdfContainer>
-            <ButtonContainer>
-              <CloseButton onClick={onPdfClose}>X</CloseButton>
-            </ButtonContainer>
-            <ViewPdf fileUrl={pdfUrl} />
-          </PdfContainer>
-        </ModalOverlay>
-       :(
-        <FileList>
-          <FileListTitle>파일 목록, {idx}</FileListTitle>
-          {pdfFileList.length === 0 ? (
-            <FileListBody>
-              <Label htmlFor="uploadFile">파일 업로드하기</Label>
-              <Input
-                id="uploadFile"
-                accept="application/pdf"
-                multiple={true}
-                onChange={onPdfFileUpload}
-              />
-            </FileListBody>
-          ) : (
-            <FileResultList />
-          )}
-        </FileList>
-       ) }
+        {showPdf ? (
+          <ModalOverlay visible={showPdf}>
+            <PdfContainer>
+              <ButtonContainer>
+                <CloseButton onClick={onPdfClose}>X</CloseButton>
+              </ButtonContainer>
+              <ViewPdf fileUrl={pdfUrl} />
+            </PdfContainer>
+          </ModalOverlay>
+        ) : (
+          <FileList>
+            <FileListTitle>파일 목록, {idx}</FileListTitle>
+            {pdfFileList.length === 0 ? (
+              <FileListBody>
+                <Label htmlFor="uploadFile">파일 업로드하기</Label>
+                <Input
+                  id="uploadFile"
+                  accept="application/pdf"
+                  multiple={true}
+                  onChange={onPdfFileUpload}
+                />
+              </FileListBody>
+            ) : (
+              <FileResultList />
+            )}
+          </FileList>
+        )}
       </FileContainer>
     </MainContainer>
   );
@@ -142,7 +145,7 @@ const FileResultRow = styled.div`
   padding-left: 10px;
   justify-content: space-between;
 `;
-const Input = styled.input.attrs({type:"file"})`
+const Input = styled.input.attrs({ type: "file" })`
   position: absolute;
   width: 0;
   height: 0;

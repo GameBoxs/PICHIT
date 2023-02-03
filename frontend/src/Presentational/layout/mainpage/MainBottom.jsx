@@ -20,8 +20,8 @@ import _ from "lodash";
   // const info = useSelector(state => state.userinfo)
   // https://i8d107.p.ssafy.io/api
 
-const MySwal = withReactContent(Swal);
-// React sweet alert 쓸려고 사용함
+// const MySwal = withReactContent(Swal);
+// // React sweet alert 쓸려고 사용함 
 
 function MainBottom() {
   
@@ -95,30 +95,12 @@ function MainBottom() {
       }
     },[totalCategory, myCategory])
 
-  // sweet alert로 방 만들기 모달 생성
-  const showSwalWithLink = () => {
-    MySwal.fire({
-      title: "방 생성하기",
-      width: 800,
-      showConfirmButton: true,
-      showCancelButton: true,
-      confirmButtonText: "생성하기",
-      cancelButtonText: "취소",
-      html: (
-        <div>
-          <CreateRoom />
-        </div>
-      ),
-    });
-  };
-  // 물어볼거
-  // 페이지네이션 ->페이지정보까지 받아서 axios까지는 들어가는데 결과값이 (setdata가) 변하지 않는다
-  // 내가 참여한 방 리스트 정보를 불러올때 interviewRoomId가 방 고유 id값인거 같은데, 그럼 이걸가지고 다시 방 검색을 할수 있어야 한다던지, 방 검색에서 내가참여한 방만 볼수있는 걸로 하던지 해야할듯. 지금주는 자신의 면접참여목록조회로 마이데이터 카테고리로는 정보가 부족함(인원수라던지, 시크릿방인지 같은거)
-  // 해야할거
-  // 비로그인 사용자 마이카테고리 막기(스윗알럿)
-  // 페이지네이션 더보기 버튼(특정페이지수가 넘어갈때)
-  console.log('페이지네이션'+totalElements+'/'+postsPerPage+'/'+currentPage+'/'+totalpages)
-  console.log('totalCategory///'+totalCategory)
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const showModal = () => {
+      setModalOpen(true)
+    }
+
   return (
     <Layout>
       <Header>
@@ -171,7 +153,8 @@ function MainBottom() {
           />
         </Main>
         <Footer>
-          <button onClick={showSwalWithLink}>방만들기</button>
+          <button onClick={showModal}>방만들기</button>
+          {modalOpen && <CreateRoom setModalOpen={setModalOpen} />}
         </Footer>
       </section>
       }

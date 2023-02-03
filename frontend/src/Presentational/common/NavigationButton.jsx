@@ -78,7 +78,7 @@ const MenuItem = styled.li`
   text-align: center;
   padding-top: 20px;
   &:hover {
-    background: rgba(0,0,0,0.1);
+    background: var(--primary-dark);
   }
 `
 
@@ -91,7 +91,7 @@ const MenuList = styled.ul`
   margin-top: 60px;
   ${MenuItem}{
     &:first-child {
-      border-top: 1px solid rgba(0,0,0,0.5);
+      border-top: 1px solid rgba(0,0,0,0.1);
     }
     border-top: 1px solid rgba(0,0,0,0.1);
   }
@@ -102,7 +102,7 @@ const NavUser = styled.div`
   position: relative;
   width: 0px;
   height: 60px;
-  background: white;
+  background: var(--primary);
   overflow: hidden;
   align-items: center;
   border-radius: 10%;
@@ -113,7 +113,7 @@ const NavUser = styled.div`
 const UserName = styled.span`
   border-radius: 20%;
   white-space: nowrap;
-  color: #555;
+  color: var(--white);
   font-size: 1.1em;
   transition: 0.5s;
   display: table-cell;
@@ -126,7 +126,7 @@ const MenuToggle = styled.div`
   position: relative;
   width: 60px;
   height: 60px;
-  background: white;
+  background: var(--primary);
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -138,9 +138,9 @@ const MenuToggle = styled.div`
     position: absolute;
     width: 32px;
     height: 2px;
-    background: #555;
+    background: var(--white);
     transform: translateY(-10px);
-    box-shadow: 0 10px #555;
+    box-shadow: 0 10px var(--white);
     transition: 0.5s;
   }
   &::after {
@@ -148,7 +148,7 @@ const MenuToggle = styled.div`
     position: absolute;
     width: 32px;
     height: 2px;
-    background: #555;
+    background: var(--white);
     transform: translateY(10px);
     transition: 0.5s;
   }
@@ -162,20 +162,20 @@ const NavStyle = styled.div`
   right: 20px;
   width: 60px;
   height: 60px;
-  background: white;
-  box-shadow: 0 25px 35px rgba(0,0,0,0.1);
+  background: var(--primary);
+  box-shadow: 0 25px 35px var(--greyLight-1);
   display: flex;
   justify-content: space-between;
   transition: height 0.5s, width 0.5s;
   transition-delay: 0s, 0.75s;
   overflow: hidden;
-  border: 1px solid #555;
+  color: var(--white);
   
   &.active {
     ${MenuToggle} {
       &::before {
         transform: translateY(0px) rotate(45deg);
-        box-shadow: 0 0px #555;
+        box-shadow: 0 0px var(--greyLight-1);
       }
       &::after {
         transform: translateY(0px) rotate(-45deg);

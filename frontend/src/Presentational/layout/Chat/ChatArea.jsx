@@ -64,12 +64,15 @@ const ChatWrap = styled.div`
     border-radius: 0;
 `
 const ChatBody = styled.div`
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #79c7c42b;
+    margin-top: 2%;
+    padding: 0 3% 7% 5% ;
     width: calc(100%-10px);
-    height: 91%;
+    height: 90%;
     overflow: auto;
+    
+    &::-webkit-scrollbar {
+        display: none;
+    }
 `
 const InputBody = styled.div`
     padding-inline: 1.5vw;
