@@ -39,16 +39,15 @@ public class ConferenceService {
         this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
-    /**
-     * 회의 진행 정보 불러오기
-     */
-    public Conference retrieveConference(Long interviewRoomId) throws JsonProcessingException {
+    public boolean isSessionOpened(Long interviewRoomId) throws JsonProcessingException, OpenViduJavaClientException, OpenViduHttpException {
         String key = String.valueOf(interviewRoomId);
         Conference conference = redisUtil.getRedisValue(key, Conference.class);
-        if (conference == null) {
-            throw new ResourceNotFoundException("존재하지 않는 회의입니다.");
+        if(conference == null) {
+            return false;
         }
-        return conference;
+        openvidu.fetch();
+        Session session = openvidu.getActiveSession(conference.getSessionId());
+        return session != null;
     }
 
     /**

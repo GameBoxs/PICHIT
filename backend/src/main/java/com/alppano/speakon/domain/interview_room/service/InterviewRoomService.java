@@ -3,6 +3,9 @@ package com.alppano.speakon.domain.interview_room.service;
 import com.alppano.speakon.common.dto.PagedResult;
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
+import com.alppano.speakon.common.util.RedisUtil;
+import com.alppano.speakon.domain.conference.dto.Conference;
+import com.alppano.speakon.domain.conference.service.ConferenceService;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
 import com.alppano.speakon.domain.interview_join.entity.Participant;
 import com.alppano.speakon.domain.interview_join.repository.InterviewJoinRepository;
@@ -14,7 +17,11 @@ import com.alppano.speakon.domain.interview_room.entity.InterviewRoom;
 import com.alppano.speakon.domain.interview_room.repository.InterviewRoomRepository;
 import com.alppano.speakon.domain.user.entity.User;
 import com.alppano.speakon.domain.user.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,9 +35,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InterviewRoomService {
 
+
     private final InterviewRoomRepository interviewRoomRepository;
     private final InterviewJoinRepository interviewJoinRepository;
     private final UserRepository userRepository;
+
+    private final ConferenceService conferenceService;
 
     @Transactional
     public InterviewRoomInfo createInterviewRoom(InterviewRoomRequest dto, Long userId) {
@@ -78,7 +88,7 @@ public class InterviewRoomService {
         interviewRoomRepository.delete(interviewRoom);
     }
 
-    public InterviewRoomDetailInfo getInterviewRoomDetailInfo(Long interviewRoomId, InterviewRoomEnterRequest dto) {
+    public InterviewRoomDetailInfo getInterviewRoomDetailInfo(Long interviewRoomId, InterviewRoomEnterRequest dto) throws JsonProcessingException, OpenViduJavaClientException, OpenViduHttpException {
         InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
 
@@ -89,7 +99,8 @@ public class InterviewRoomService {
             }
         }
 
-        InterviewRoomDetailInfo interviewRoomDetailInfo = new InterviewRoomDetailInfo(interviewRoom);
+        boolean sessionOpened = conferenceService.isSessionOpened(interviewRoomId);
+        InterviewRoomDetailInfo interviewRoomDetailInfo = new InterviewRoomDetailInfo(interviewRoom, sessionOpened);
 
         // 참가자 정보
         List<Participant> participants = new ArrayList<>();
