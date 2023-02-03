@@ -5,13 +5,15 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import useAxios from "../../../action/hooks/useAxios";
 import { useLocation } from "react-router-dom";
-
+import { useParams } from "react-router-dom";
 
 function RoomPage() {
   // roomId 값을 RoomListItem에서 Link state에 받아와서
   // useLocation에 넣어논 roomId 값을 가져와서 사용함
   const location = useLocation();
- const roomId = location.state.id
+ const params = useParams();
+ const roomParamsId = params.id
+
   
 
   const [join, setJoin] = useState(false);
@@ -49,7 +51,7 @@ function RoomPage() {
   const [data, setData] = useState();
 
   const [postData, isLoading] = useAxios(
-    `interviewrooms/${roomId}`,
+    `interviewrooms/${roomParamsId}`,
     "POST",
     token
   );

@@ -17,6 +17,7 @@ const MySwal = withReactContent(Swal);
 
 function RoomHeader({ join, joinRoom, data, host }) {
   let navigate = useNavigate();
+ 
 
   console.log(data);
   // console.log(roomData)

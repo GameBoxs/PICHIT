@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Footer from "./Presentational/common/Footer";
 
@@ -14,7 +14,9 @@ import { GlobalStyle } from "./action/GlobalStyle";
 
 function App() {
   const { pathname } = useLocation();
-  const location = useLocation();
+  const params =useParams();
+  const roomId = params.id
+  console.log(roomId)
 
 
 
