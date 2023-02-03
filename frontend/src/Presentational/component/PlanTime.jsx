@@ -2,22 +2,22 @@ import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
 
 function PlanTime(props) {
-  const month = props.date.toLocaleString("en-US", { month: "2-digit" });
-  const day = props.date.toLocaleString("en-US", { day: "2-digit" });
-  const year = props.date.getFullYear().toString().slice(2);
+  // const month = props.date.toLocaleString("en-US", { month: "2-digit" });
+  // const day = props.date.toLocaleString("en-US", { day: "2-digit" });
+  // const year = props.date.getFullYear().toString().slice(2);
 
   const date = [
     {
       type: "YEAR",
-      value: year,
+      value: "23",
     },
     {
       type: "MONTH",
-      value: month,
+      value: "02",
     },
     {
       type: "DAY",
-      value: day,
+      value: "12",
     },
   ];
 
@@ -42,6 +42,7 @@ export default PlanTime;
 
 const DayTitle = styled.div`
   font-weight: 600;
+  color: var(--greyLight-2);
 `;
 
 const Text = styled.div`
@@ -67,6 +68,7 @@ const Text = styled.div`
 const Layout = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 0.5rem;
 `;
@@ -76,5 +78,4 @@ const TimeLayout = styled.div`
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 4rem;
 `;
