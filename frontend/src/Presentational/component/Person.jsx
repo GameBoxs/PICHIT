@@ -16,7 +16,9 @@ function Person({ name, isHost, people }) {
 
 export default Person;
 
-const Name = styled.div``;
+const Name = styled.div`
+  text-align: center;
+`;
 
 const Background = styled.div`
 position: relative;
@@ -38,6 +40,6 @@ const PersonContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${props => `calc(100%/${props.people})`};
-  gap: 1rem;
+  max-width: ${props => `calc(100%/${props.people})`};
+  min-width: 5vw;
 `;

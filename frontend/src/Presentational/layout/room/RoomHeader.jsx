@@ -3,10 +3,11 @@ import Title from "../../common/Title";
 import PlanTime from "../../component/PlanTime";
 
 import React, { useEffect, useState } from "react";
+import useAxios from "../../../action/hooks/useAxios";
 import EditRoom from "../../component/EditRoom";
+
 import { useSelector } from "react-redux";
 import { testToken } from "../../../store/values";
-import useAxios from "../../../action/hooks/useAxios";
 import { useNavigate } from "react-router-dom";
 
 import Swal from "sweetalert2";
@@ -48,7 +49,7 @@ function RoomHeader({ join, joinRoom, data, host }) {
   console.log(deleteResult);
 
   useEffect(() => {
-    setDeleteData();
+    // setDeleteData();
     if (
       deleteResult[0] &&
       deleteResult[0].success &&
@@ -150,8 +151,7 @@ const LayoutButton = styled.div`
 
 const Layout = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  flex-direction: column;
   margin-bottom: 3rem;
 
   & .Title {
