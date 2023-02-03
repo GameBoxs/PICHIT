@@ -6,10 +6,13 @@ import ListItem from "./ListItem";
 import PageBar from "../../../common/Pagination/PageBar";
 
 import useAxios from "../../../../action/hooks/useAxios";
+import { useSelector } from "react-redux";
 
 const HistoryList = ({setSelectedID}) => {
-  const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcGVha29uIiwibmFtZSI6IuydtO2drOyImCIsImlkIjoxLCJleHAiOjE2NzY1NTY2ODcsImlhdCI6MTY3NDc0MjI4NywidXNlcklkIjoia2FrYW9fMjYyOTgzOTQ2MiJ9.TxhacA4jIPlIJLQt8Dlz5Xl-loXmfhtnnUOofpBAUnO8IT2e3t5vi_KY-yQ194QMcI4l7bLHKL5EIUqsnVCWAg'
-  
+  // const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcGVha29uIiwibmFtZSI6IuydtO2drOyImCIsImlkIjoxLCJleHAiOjE2NzY1NTY2ODcsImlhdCI6MTY3NDc0MjI4NywidXNlcklkIjoia2FrYW9fMjYyOTgzOTQ2MiJ9.TxhacA4jIPlIJLQt8Dlz5Xl-loXmfhtnnUOofpBAUnO8IT2e3t5vi_KY-yQ194QMcI4l7bLHKL5EIUqsnVCWAg'
+  const token = useSelector(state => state.token);
+  // console.log(token);
+
   const [data, setData] = useState();
   const [nowPage, setNowPage] = useState(1);
   const [nowPageElements, setNowPageElements] = useState(0);
@@ -21,17 +24,17 @@ const HistoryList = ({setSelectedID}) => {
     if(getData && getData.data){
       setData(getData); 
       setCurrentPosts(getData.data.content);
-      setTotalPage(getData.data.totalPage);
+      setTotalPage(getData.data.totalPages);
       setNowPageElements(getData.data.numberOfElements);
     }
   },[getData]);
 
-  console.log('HistoryList data');
-  console.log(data);
-  console.log('HistoryList currentPosts');
-  console.log(currentPosts);
+  // console.log('HistoryList data');
+  // console.log(data);
+  // console.log('HistoryList currentPosts');
+  // console.log(currentPosts);
   let blankPosts = new Array(5-nowPageElements).fill({item:{title:"",startDate:""}});
-  console.log(blankPosts);
+  // console.log(blankPosts);
 
   return (
     <>

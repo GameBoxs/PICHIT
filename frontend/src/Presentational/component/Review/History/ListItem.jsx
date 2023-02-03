@@ -3,8 +3,8 @@ import Title from "../../../common/Title";
 import SubTitle from "../../../common/SubTitle";
 
 const ListItem = (props) => {
-  console.log('ListItem');
-  console.log(props);
+  // console.log('ListItem');
+  // console.log(props);
   const tempDate = props.item.startDate !== undefined ? new Date((props.item.startDate).toString()) : null;
   const date = tempDate !== null ? tempDate.getFullYear().toString().slice(2,4) + '.' +  (tempDate.getMonth()+1).toString() + '.' + tempDate.getDate().toString() : null;
   const changeID = () => {
@@ -47,20 +47,23 @@ const ListItem = (props) => {
         font-weight: bolder;
     }
     & div:nth-child(1) {
-        /* cursor: pointer; */
-        cursor: ${props => props.cursor};
-        width: 85%;
-      }
-      & div:nth-child(2) {
-        width: 10%;
-      }
-      & div:nth-child(3) {
-        /* cursor: pointer; */
-        cursor: ${props => props.cursor};
-        width: 5%;
-        font-size: 30px;
+      /* cursor: pointer; */
+      cursor: ${props => props.cursor};
+      width: 85%;
     }
-    `
+    & div:nth-child(2) {
+      width: 10%;
+    }
+    & div:nth-child(3) {
+      /* cursor: pointer; */
+      cursor: ${props => props.cursor};
+      width: 5%;
+      font-size: 30px;
+    }
+    &:hover {
+      background-color: #5555551e;
+    }
+  `
 
     const Line = styled.hr`
         margin: 15px 0 15px 0;
