@@ -22,12 +22,10 @@ function RoomPage() {
   // false: 참여자
 
   useEffect(() => {
-    console.log("inRoomPage", join);
   }, [join]);
 
   const joinRoom = (join) => {
     setJoin(join);
-    console.log(join);
   };
 
 
@@ -46,7 +44,9 @@ function RoomPage() {
   //    host 값 false
   // }
 
-  const [valid, setvalid] = useState(false)
+  const [valid ,setValid] = useState({
+    "password":password
+  })
 
   const token = useSelector((state) => state.token);
   const [data, setData] = useState();
@@ -54,7 +54,8 @@ function RoomPage() {
   const [postData, isLoading] = useAxios(
     `interviewrooms/${roomParamsId}`,
     "POST",
-    token
+    token,
+    valid
   );
 
   useEffect(() => {
@@ -67,15 +68,14 @@ function RoomPage() {
   const [myId, loading] = useAxios(
     'userinfo',
     "GET",
-    token,
-    password
+    token
   )
 
   useEffect (() => {
     if (postData && postData.data && postData.data.manager?.id === myId?.data.id ){
       setHost(true)
     }
-  },[postData])
+  },[postData,myId])
 
   
 
