@@ -249,7 +249,6 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
             </SubNav>
             <Member>
               {interviewees}
-      
               <MemberColor></MemberColor>
             </Member>
             <AllQuestions onClick={QuestionHandler} chatOn={chatOn}>

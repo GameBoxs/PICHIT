@@ -14,21 +14,24 @@ const ViewPDF = ({ fileUrl }) => {
         <Page pageNumber={pageNumber} />
       </Document>
     </Layout>
-
   );
 };
 
 export default ViewPDF;
 
 const Layout = styled.div`
-   & div div div{
-    &:nth-child(2){
-      display: none;
-    }
-    &:nth-child(3){
-      display: none;
-    }
-   }
-  
+  width: 100%;
 
-`
+  * {
+    border-radius: 1rem;
+  }
+
+  & div div div {
+    &:nth-child(2) {
+      display: none;
+    }
+    &:nth-child(3) {
+      display: none;
+    }
+  }
+`;
