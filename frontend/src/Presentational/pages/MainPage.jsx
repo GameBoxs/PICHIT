@@ -6,6 +6,7 @@ import MainBottom from "../layout/mainpage/MainBottom";
 import MainTop from "../layout/mainpage/MainTop";
 
 import { TiStarburst, TiStarburstOutline } from "react-icons/ti";
+import AggroM from "../common/Font/AggroM";
 
 const MainPage = () => {
   const MainDiv = useRef([]);
@@ -41,6 +42,7 @@ const MainPage = () => {
 
   return (
     <MainPageLayout>
+      <AggroM />
       <First ref={(el) => (MainDiv.current[0] = el)}>
         <MoveBtn onClick={() => scrollWithUseRef(0)}>게시판 바로가기</MoveBtn>
         <MainTop />
@@ -72,6 +74,7 @@ const Tape = styled.div`
   display:flex;
   align-items: center;
   margin-inline: 1rem;
+        font-family: "SBagrroM";
 
   * {
     margin-inline: 1rem;
