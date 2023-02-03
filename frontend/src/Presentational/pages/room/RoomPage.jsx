@@ -11,25 +11,25 @@ function RoomPage() {
   // roomId 값을 RoomListItem에서 Link state에 받아와서
   // useLocation에 넣어논 roomId 값을 가져와서 사용함
   const location = useLocation();
+  const [join, setJoin] = useState(false);
  const params = useParams();
  const roomParamsId = params.id
-
-  
  const password = location.state.password
   const [join, setJoin] = useState(false);
 
   // true: 대가자
   // false: 참여자
 
-  useEffect(() => {
-  }, [join]);
-
   const joinRoom = (join) => {
     setJoin(join);
   };
 
-
   const [host, setHost] = useState(false);
+  const [data, setData] = useState();
+  const { token, userinfo } = useSelector((state) => state);
+  const [valid ,setValid] = useState({
+    "password":password
+  })
 
   // 방장 권한을 어떤 방식으로 주는지 감이 안와서
   //일단 임시로 설정해 놓았습니다.
@@ -44,13 +44,6 @@ function RoomPage() {
   //    host 값 false
   // }
 
-  const [valid ,setValid] = useState({
-    "password":password
-  })
-
-  const token = useSelector((state) => state.token);
-  const [data, setData] = useState();
-
   const [postData, isLoading] = useAxios(
     `interviewrooms/${roomParamsId}`,
     "POST",
@@ -59,37 +52,56 @@ function RoomPage() {
   );
 
   useEffect(() => {
-    if (postData && postData.data) {
-      setData(postData.data);
-      console.log(postData.data);
+    if (postData && postData.data && postData.data.manager.id === userinfo.id) {
+      setHost(true);
     }
   }, [postData]);
 
-  const [myId, loading] = useAxios(
-    'userinfo',
-    "GET",
-    token
-  )
+  useEffect(() => {
+    const tmpData = postData?.data
 
-  useEffect (() => {
-    if (postData && postData.data && postData.data.manager?.id === myId?.data.id ){
-      setHost(true)
+    if (postData && tmpData) {
+      setData(tmpData);
+
+      const Member = tmpData.participants?.map((elem) => elem.name)
+
+      if (Member.includes(userinfo.name)) {
+        setJoin(true)
+      } else {
+        setJoin(false)
+      }
     }
-  },[postData,myId])
+  }, [postData]);
 
-  
+
+  // true: 대가자
+  // false: 참여자
+
+  const joinRoom = (join) => {
+    setJoin(join);
+  };
 
   return (
     <Container>
       <Room>
-        {
-          isLoading === true ? <div>loading...</div> :
-          data && data.id ?
+        {isLoading === true ? (
+          <div>loading...</div>
+        ) : data && data.id ? (
           <>
-            <RoomHeader joinRoom={joinRoom} data={data} join={join} host={host} />
+            <RoomHeader
+              joinRoom={joinRoom}
+              data={data}
+              join={join}
+              host={host}
+              token={token}
+              password={password}
+              userinfo={userinfo}
+            />
             <RoomMain data={data} join={join} host={host} />
-          </> : <div>없는디여</div>
-        }
+          </>
+        ) : (
+          <div>없는디여</div>
+        )}
       </Room>
     </Container>
   );
@@ -111,4 +123,4 @@ const Container = styled.div`
   justify-content: center;
   padding-top: 10vh;
   background-color: var(--white);
-`
+`;

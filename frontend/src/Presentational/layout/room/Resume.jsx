@@ -69,21 +69,21 @@ function Resume({ idx, participants }) {
     setShowPdf(false);
   };
 
-  console.log(participants);
-
   const interviewees = participants.map((elem, idx) => {
     return (
-      <>
+      <React.Fragment
+      key={idx}
+    >
         <input
           type="radio"
           name={`radio`}
           value={elem.name}
           id={`tab-${idx + 1}`}
         />
-        <label for={`tab-${idx + 1}`}>
+        <label htmlFor={`tab-${idx + 1}`}>
           <p>{elem.name}</p>
         </label>
-      </>
+      </React.Fragment>
     );
   });
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 
 import styled from "styled-components";
 import Title from "../../common/Title";
@@ -16,43 +16,64 @@ import AggroL from "../../common/Font/AggroL";
 
 const MySwal = withReactContent(Swal);
 
-function RoomHeader({ join, joinRoom, data, host }) {
-  let navigate = useNavigate();
- 
-  console.log(host)
-
-
-  
-  // console.log(roomData)
-
-  // roompage에서 받아온 data 값 가공
-  const title = data.title;
-  const startDate = data.startDate;
-
-  const joinHandler = () => {
-    joinRoom(!join);
-  };
-
+function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
+  const { id, title, participants } = data;
+  const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
-  const showModal = () => {
-    setModalOpen(true);
-  };
-
-  // const myId = useSelector((state) => state)  
-  // console.log(myId)
-
+  const [enter, setEnter] = useState(false);
+  const [quit, setQuit] = useState(false);
   // axios delete
-  const roomId = data.id;
-  const token = useSelector((state) => state.token);
-
   const [deleteData, setDeleteData] = useState(false);
+  const [joinId, setJoinId] = useState(0);
+
+  const [enterRes] = useAxios(
+    `interviewjoins`,
+    "POST",
+    token,
+    {
+      interviewRoomId: id,
+      password: password,
+    },
+    enter
+  );
+
   const deleteResult = useAxios(
-    `interviewrooms/${roomId}`,
+    `interviewrooms/${id}`,
     "DELETE",
     token,
     null,
     deleteData
   );
+
+  const [quitRes] = useAxios(
+    `interviewjoins/${joinId}`,
+    "DELETE",
+    token,
+    { id: joinId },
+    quit
+  );
+
+  useEffect(() => {
+    console.log("===userinfo===");
+    const tempArr = participants.filter(
+      (person) => person.name === userinfo.name
+    );
+
+    if (tempArr.length !== 0) {
+      setJoinId(tempArr[0].interviewJoinId);
+    }
+  }, [userinfo]);
+
+  useLayoutEffect(() => {
+    console.log("===enterRes===");
+    if (enterRes !== null) {
+      if (enterRes.success) {
+        alert("참가");
+      } else {
+        alert("이미 참가한 방입니다");
+      }
+    }
+  }, [enterRes]);
 
   useEffect(() => {
     // setDeleteData();
@@ -71,6 +92,33 @@ function RoomHeader({ join, joinRoom, data, host }) {
     }
   }, [deleteResult]);
 
+  useLayoutEffect(() => {
+    console.log("===quitRes===");
+    if (quitRes !== null && quitRes.success) {
+      // window.location.reload();
+      alert("탈퇴");
+    }
+  }, [quitRes]);
+
+  // roompage에서 받아온 data 값 가공
+  const joinHandler = (isJoin) => {
+    joinRoom(isJoin);
+    setEnter(true);
+    setQuit(false);
+  };
+
+  const quitHandler = (isJoin) => {
+    joinRoom(isJoin);
+    setEnter(false);
+    setQuit(true);
+  };
+
+  const showModal = () => {
+    setModalOpen(true);
+  };
+
+  // const myId = useSelector((state) => state)
+  // console.log(myId)
 
   const deleteRoom = () => {
     MySwal.fire({
@@ -86,7 +134,7 @@ function RoomHeader({ join, joinRoom, data, host }) {
     });
   };
 
-  // function deleteRoom() { 
+  // function deleteRoom() {
   //   setDeleteData(true);
   // }
   // const [data, setData] = useState([]);
@@ -99,9 +147,20 @@ function RoomHeader({ join, joinRoom, data, host }) {
   // },[deleteData])
 
   const readyRoom = join ? (
-    <LayoutButton text={"나가기"}>나가기</LayoutButton>
+    <LayoutButton
+      text={"나가기"}
+      onClick={() => {
+        quitHandler(false);
+      }}
+    >
+      나가기
+    </LayoutButton>
   ) : (
-    <LayoutButton isImportant={false} text={"참여하기"} onClick={joinHandler}>
+    <LayoutButton
+      isImportant={false}
+      text={"참여하기"}
+      onClick={() => joinHandler(true)}
+    >
       참여하기
     </LayoutButton>
   );
@@ -112,15 +171,18 @@ function RoomHeader({ join, joinRoom, data, host }) {
       <button onClick={showModal} >수정하기</button>
       {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />} */}
       {/* <LayoutButton text={"삭제하기"} onClick={deleteRoom}> */}
+      {participants.length >= 2 ? (
+        <Button text={"스터디 시작하기"} isImportant={true}>
+          화상채팅 시작하기
+        </Button>
+      ) : null}
       <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
         삭제하기
       </Button>
       {/* </LayoutButton> */}
     </div>
   ) : (
-    <div>
-      { readyRoom }
-    </div>
+    <div>{readyRoom}</div>
   );
 
   return (

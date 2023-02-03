@@ -16,7 +16,7 @@ function RoomList(props) {
         <RoomListul>
             {props.rooms.map((room,index)=>
                 <RoomListItem
-                    key={room.id} 
+                    key={index} 
                     id={room.id} 
                     index={index}
                     title={room.title} 

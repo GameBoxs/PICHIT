@@ -8,13 +8,6 @@ import Person from "../../component/Person";
 
 import { BsFillPersonFill } from "react-icons/bs";
 
-const dummy = [
-  { isHost: true, name: "연예인 희수" },
-  { isHost: false, name: "희수" },
-  { isHost: false, name: "연예인 희수" },
-  { isHost: false, name: "연예인 희수" },
-];
-
 function RoomMain({ join, host, data }) {
   const {
     createdDate,
@@ -28,12 +21,11 @@ function RoomMain({ join, host, data }) {
     startDate,
     title,
   } = data;
-  const [isJoin, setIsJoin] = useState(true);
+  const [isJoin, setIsJoin] = useState(false);
   const [pdf, setPdf] = useState(0);
 
   useEffect(() => {
     setIsJoin(join);
-    console.log("isJoin", isJoin);
   }, [join]);
 
   // roompage에 있는 join 값이 바뀔 때 마다 setIsJoin 실행 함
@@ -70,12 +62,11 @@ function RoomMain({ join, host, data }) {
   });
 
   const RecuritmentList = new Array(Recuritment).fill().map((_, idx) => {
-    return <BsFillPersonFill />;
+    return <BsFillPersonFill key={idx} />;
   });
 
   return (
     <MainPageContainer>
-      
       <SectionHeader>
         <SubTitle title={"Info"} />
       </SectionHeader>
