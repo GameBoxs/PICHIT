@@ -37,9 +37,9 @@ public class QuestionController {
     }
 
     @Operation(summary = "질문 내용 수정")
-    @PutMapping("/questions/{id}")
+    @PutMapping("/questions/{questionId}")
     public ResponseEntity<ApiResponse<QuestionInfo>> createQuestion(@AuthenticationPrincipal LoginUser loginUser,
-                                                                    @PathVariable("id") Long questionId,
+                                                                    @PathVariable Long questionId,
                                                                     @RequestBody QuestionRequest dto) {
         QuestionInfo questionInfo = questionService.updateQuestion(dto, questionId, loginUser.getId());
         ApiResponse result = new ApiResponse<>(true, "질문 수정 성공", questionInfo);
@@ -47,31 +47,40 @@ public class QuestionController {
     }
 
     @Operation(summary = "질문 삭제")
-    @DeleteMapping("/questions/{id}")
+    @DeleteMapping("/questions/{questionId}")
     public ResponseEntity<ApiResponse> createQuestion(@AuthenticationPrincipal LoginUser loginUser,
-                                                      @PathVariable("id") Long questionId) {
+                                                      @PathVariable Long questionId) {
         questionService.deleteQuestion(questionId, loginUser.getId());
         ApiResponse result = new ApiResponse<>(true, "질문 삭제 성공");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Operation(summary = "질문 단일 조회")
-    @GetMapping("/questions/{id}")
+    @GetMapping("/questions/{questionId}")
     public ResponseEntity<ApiResponse<QuestionInfo>> getQuestion(@AuthenticationPrincipal LoginUser loginUser,
-                                                                 @PathVariable("id") Long questionId) {
+                                                                 @PathVariable Long questionId) {
         QuestionInfo questionInfo = questionService.getQuestion(questionId, loginUser.getId());
         ApiResponse<QuestionInfo> result = new ApiResponse<>(true, "질문 단일 조회 성공", questionInfo);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @Operation(summary = "면접 참여자의 질문 목록 조회")
-    @GetMapping("/interviewjoins/{id}/questions")
-    public ResponseEntity<ApiResponse<PagedResult<QuestionWithFeedback>>> getQuestionListByInterviewJoin(@PageableDefault(size = 1, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-                                                                                                         @AuthenticationPrincipal LoginUser loginUser,
-                                                                                                         @PathVariable("id") Long interviewJoinId) {
+    @Operation(summary = "면접 참여자의 질문(+피드백) 목록 조회 (복기)")
+    @GetMapping("/interviewjoins/{interviewJoinId}/questions-with-feedbacks")
+    public ResponseEntity<ApiResponse<PagedResult<QuestionWithFeedback>>> getQuestionsWithFeedbackByInterviewJoin(@PageableDefault(size = 1, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+                                                                                                      @AuthenticationPrincipal LoginUser loginUser,
+                                                                                                      @PathVariable Long interviewJoinId) {
         PagedResult<QuestionWithFeedback> list = questionService.getQuestionListByInterviewJoin(pageable, interviewJoinId, loginUser.getId());
         ApiResponse<PagedResult<QuestionWithFeedback>> result = new ApiResponse<>(true, "질문 목록 조회 성공", list);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @Operation(summary = "면접 참여자의 질문 목록 조회 (면접방)")
+    @GetMapping("/interviewjoins/{interviewJoinId}/questions")
+    public ResponseEntity<ApiResponse<PagedResult<QuestionInfo>>> getQuestionsByInterviewJoin(@PageableDefault(size = 1, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+                                                                                                                     @AuthenticationPrincipal LoginUser loginUser,
+                                                                                                                     @PathVariable Long interviewJoinId) {
+        PagedResult<QuestionInfo> list = questionService.getQuestionsByInterviewJoin(pageable, interviewJoinId, loginUser.getId());
+        ApiResponse<PagedResult<QuestionInfo>> result = new ApiResponse<>(true, "질문 목록 조회 성공", list);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
