@@ -100,7 +100,7 @@ function RoomPage() {
               host={host}
               token={token}
               password={password}
-              userinfo={userinfo}
+              userinfo={aboutUser}
             />
             <RoomMain
               data={data}
