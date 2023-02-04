@@ -3,16 +3,14 @@ import React, { useEffect, useState, useLayoutEffect } from "react";
 import styled from "styled-components";
 import Title from "../../common/Title";
 import Button from "../../common/Button";
-import EditRoom from "../../component/EditRoom";
 
-import { useSelector } from "react-redux";
-import { testToken } from "../../../store/values";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAxios from "../../../action/hooks/useAxios";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import AggroL from "../../common/Font/AggroL";
+import { createSession } from "../../../action/modules/chatModule";
 
 const MySwal = withReactContent(Swal);
 
@@ -28,10 +26,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   });
   const [deleteData, setDeleteData] = useState(false);
   const [joinId, setJoinId] = useState(0);
-  const [isSessionOpen, setIsSessionOpen] = useState(false);
-
-  console.log(sessionOpened)
-
 
   // axios 통신 시 보낼 정보들
   const enterObj = {
@@ -40,8 +34,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   };
 
   const quitObj = { id: joinId };
-  const sessionObj = { interviewRoomId: id }
-
 
   //useAxios
   const [enterRes] = useAxios(
@@ -70,17 +62,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     quitObj,
     userJoin.quit
   );
-
-  const [createSession] = useAxios(
-    //세션 생성
-    `conference/sessions/${id}`,
-    'POST',
-    token,
-    sessionObj,
-    isSessionOpen
-  )
-
-
 
   //useEffect
   useEffect(() => {
@@ -121,14 +102,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       window.location.reload();
     }
   }, [quitRes]);
-
-  useEffect(()=>{
-    if(createSession!==null && createSession.success) {
-      window.location.reload();
-    } 
-  }, [createSession])
-
-
 
   //Event Function
   const joinHandler = (isJoin) => {
@@ -182,20 +155,23 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   };
 
   const createRoom = () => {
-    setIsSessionOpen(true)
-  }
-
+    
+    createSession(id, token).then((res) => {
+      if (res.success) {
+        window.location.reload();
+      }
+    });
+    
+  };
 
   //JSX 변수
   const ReadyBtn = (
-    <Button text={"방 만들기"} handler={ createRoom} isImportant={true} />
+    <Button text={"방 만들기"} handler={createRoom} isImportant={true} />
   );
 
   const StartBtn = (
     <Button text={"방 입장하기"} handler={moveToRoom} isImportant={true} />
   );
-
-
 
   //화면 렌더링 함수
   const readyRoom = join ? (
