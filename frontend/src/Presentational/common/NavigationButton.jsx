@@ -169,7 +169,7 @@ const NavStyle = styled.div`
   width: 60px;
   height: 60px;
   background: var(--primary);
-  box-shadow: 0 25px 35px var(--greyLight-1);
+  box-shadow: 0 25px 35px rgba(0,0,0,0.1);
   display: flex;
   justify-content: space-between;
   transition: height 0.5s, width 0.5s;
