@@ -26,8 +26,8 @@ const InterviewPage = () => {
   const [info, setInfo] = useState({
     interviewee: "미지정",
     mySessionId: mySession,
-    // myUserName: "Participant" + Math.floor(Math.random() * 100),
-    myUserName: "Participant" + Mat,
+    myUserName: "Participant" + Math.floor(Math.random() * 100),
+    // myUserName: "Participant" + Mat,
     session: undefined,
     mainStreamManager: undefined,
     publisher: undefined,
