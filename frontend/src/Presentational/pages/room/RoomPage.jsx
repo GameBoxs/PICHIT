@@ -1,9 +1,13 @@
+import React, { useCallback, useState, useEffect } from "react";
 import styled from "styled-components";
+import useAxios from "../../../action/hooks/useAxios";
+
 import RoomHeader from "../../layout/room/RoomHeader";
 import RoomMain from "../../layout/room/RoomMain";
-import React, { useCallback, useState, useEffect } from "react";
+import RoomHeaderLoading from "./RoomHeaderLoading";
+import RoomMainLoading from "../room/RoomMainLoading";
+
 import { useSelector } from "react-redux";
-import useAxios from "../../../action/hooks/useAxios";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
@@ -12,7 +16,7 @@ function RoomPage() {
   // useLocation에 넣어논 roomId 값을 가져와서 사용함
   const location = useLocation();
   const params = useParams();
-  
+
   const roomParamsId = params.id;
   const password = location.state?.password;
   const { token, userinfo } = useSelector((state) => state);
@@ -23,7 +27,7 @@ function RoomPage() {
   const [valid, setValid] = useState({
     password: password,
   });
-  const [aboutUser, setAboutUser] = useState({}) 
+  const [aboutUser, setAboutUser] = useState({});
 
   // 방장 권한을 어떤 방식으로 주는지 감이 안와서
   //일단 임시로 설정해 놓았습니다.
@@ -38,17 +42,13 @@ function RoomPage() {
   //    host 값 false
   // }
 
-  const [postData, isLoading] = useCallback(useAxios(
-    `interviewrooms/${roomParamsId}`,
-    "POST",
-    token,
-    valid
-  ));
-  console.log(postData)
+  const [postData, isLoading] = useCallback(
+    useAxios(`interviewrooms/${roomParamsId}`, "POST", token, valid)
+  );
 
-  useEffect(()=>{
-    setAboutUser(userinfo)
-  }, [userinfo])
+  useEffect(() => {
+    setAboutUser(userinfo);
+  }, [userinfo]);
 
   useEffect(() => {
     if (postData && postData.data && postData.data.manager.id === userinfo.id) {
@@ -60,27 +60,24 @@ function RoomPage() {
     const tmpData = postData?.data;
 
     if (postData && tmpData) {
-      setData(tmpData);
+      setData(tmpData); // 데이터 저장
 
-      const MemberArr = tmpData.participants
-      let isIN = false
+      const MemberArr = tmpData.participants; // 참가자 명단
+      let isIN = false; // 내가 참가했는지 판단하는 변수
 
+      // Participants 안에 user 이름이 있으면 해당 정보(interviewjoinId 포함)를 aboutUser에 저장, 이후 자식 컴포넌트에 전달됨
       if (MemberArr?.length >= 2) {
         for (let i = 0; i < MemberArr.length; i++) {
           if (MemberArr[i].name === userinfo.name) {
             isIN = true;
 
-            setAboutUser({...MemberArr[i]})
-          } else continue
+            setAboutUser({ ...MemberArr[i] });
+          } else continue;
         }
       }
-      // const Member = tmpData.participants?.map((elem) => elem.name);
 
-      if (isIN) {
-        setJoin(true);
-      } else {
-        setJoin(false);
-      }
+      //있으면 join 값 바꿔줌
+      setJoin(isIN ? true : false);
     }
   }, [postData]);
 
@@ -94,9 +91,7 @@ function RoomPage() {
   return (
     <Container>
       <Room>
-        {isLoading === true ? (
-          <div>loading...</div>
-        ) : data && data.id ? (
+        {((data && data.id) && !isLoading) ? (
           <>
             <RoomHeader
               joinRoom={joinRoom}
@@ -105,12 +100,19 @@ function RoomPage() {
               host={host}
               token={token}
               password={password}
-              userinfo={userinfo}
+              userinfo={aboutUser}
             />
-            <RoomMain data={data} join={join} host={host} userinfo={aboutUser} />
+            <RoomMain
+              data={data}
+              join={join}
+              host={host}
+              userinfo={aboutUser}
+            />
           </>
         ) : (
-          <div>없는디여</div>
+          <>
+            <RoomHeaderLoading />
+          </>
         )}
       </Room>
     </Container>

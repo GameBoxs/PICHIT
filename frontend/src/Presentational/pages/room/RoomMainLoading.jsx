@@ -1,69 +1,11 @@
 import styled from "styled-components";
 import SubTitle from "../../common/SubTitle";
 import React, { useState, useEffect } from "react";
-import QuestionBox from "./QuestionBox";
-import Resume from "./Resume";
-import PlanTime from "../../component/PlanTime";
-import Person from "../../component/Person";
 
 import { BsFillPersonFill } from "react-icons/bs";
 
-function RoomMain({ join, host, data, userinfo }) {
-  const {
-    createdDate,
-    currentPersonCount,
-    description,
-    finished,
-    id,
-    manager,
-    maxPersonCount,
-    participants,
-    startDate,
-    title,
-  } = data;
-  const [isJoin, setIsJoin] = useState(false);
-  const [pdf, setPdf] = useState(0);
-
-  useEffect(() => {
-    setIsJoin(join);
-  }, [join]);
-
-  // roompage에 있는 join 값이 바뀔 때 마다 setIsJoin 실행 함
-
-  const RoomSection =
-    isJoin || host ? (
-      <Resume idx={pdf} participants={participants}/>
-    ) : (
-      <Intro>방에 참여하면 팀원들의 자소서를 볼 수 있어요</Intro>
-    );
-
-  const RoomQuestion =
-    isJoin || host ? (
-      <QuestionBox idx={pdf} userinfo={userinfo} />
-    ) : (
-      <PopUp>질문을 볼 수 없습니다.</PopUp>
-    );
-
-  // isJoin값에 따라서 볼 수 있는 컴포넌트가 변경됨
-
-  const pdfHandler = (person, idx) => {
-    console.log(person);
-    setPdf(idx);
-  };
-
-  const Recuritment = maxPersonCount - currentPersonCount;
-
-  const PersonList = participants.map((elem, idx) => {
-    if (elem.name === manager.name) {
-      return <Person name={elem.name} isHost={true} key={idx} />;
-    } else {
-      return <Person name={elem.name} isHost={false} key={idx} />;
-    }
-  });
-
-  const RecuritmentList = new Array(Recuritment).fill().map((_, idx) => {
-    return <BsFillPersonFill key={idx} />;
-  });
+function RoomMainLoading() {
+  
 
   return (
     <MainPageContainer>
@@ -74,24 +16,17 @@ function RoomMain({ join, host, data, userinfo }) {
         <Section>
           <Card>
             <SubTitle title={"시작 일자"} />
-            <PlanTime startDate={startDate}/>
           </Card>
           <Card>
             <SubTitle title={"참가 멤버"} />
-            <BlockList>{PersonList}</BlockList>
           </Card>
           <Card>
             <SubTitle title={"남은 인원 수"} />
-            <div>
-              <BlockList>{RecuritmentList}</BlockList>
-              {Recuritment}명
-            </div>
           </Card>
         </Section>
 
         <Description>
           <SubTitle title={"Introduce"} />
-          {description}
         </Description>
       </Layout>
 
@@ -99,14 +34,12 @@ function RoomMain({ join, host, data, userinfo }) {
         <SubTitle title={"자기소개서"} />
       </SectionHeader>
       <Layout>
-        <Section>{RoomSection}</Section>
-        <Section>{RoomQuestion}</Section>
       </Layout>
     </MainPageContainer>
   );
 }
 
-export default RoomMain;
+export default RoomMainLoading;
 
 const Description = styled.div`
   border-radius: 1rem;
