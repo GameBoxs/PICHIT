@@ -7,7 +7,7 @@ import EditRoom from "../../component/EditRoom";
 
 import { useSelector } from "react-redux";
 import { testToken } from "../../../store/values";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useAxios from "../../../action/hooks/useAxios";
 
 import Swal from "sweetalert2";
@@ -18,10 +18,16 @@ const MySwal = withReactContent(Swal);
 
 function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   const { id, title, participants } = data;
+
+  //확인용
+  const location = useLocation()
+
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
-  const [enter, setEnter] = useState(false);
-  const [quit, setQuit] = useState(false);
+  const [userJoin, setUserJoin] = useState({
+    enter : false,
+    quit: false
+  })
   // axios delete
   const [deleteData, setDeleteData] = useState(false);
   const [joinId, setJoinId] = useState(0);
@@ -35,7 +41,8 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       interviewRoomId: id,
       password: password,
     },
-    enter
+    userJoin.enter,
+    location.pathname
   );
 
   const deleteResult = useAxios(
@@ -43,7 +50,8 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     "DELETE",
     token,
     null,
-    deleteData
+    deleteData,
+    location.pathname
   );
 
   const [quitRes] = useAxios(
@@ -51,7 +59,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     "DELETE",
     token,
     { id: joinId },
-    quit
+    userJoin.quit
   );
 
   // const [getSession] = useAxios(
@@ -64,8 +72,9 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
 
   // console.log(getSession, '-------------')
 
+  console.log("--------------------------")
+  
   useEffect(() => {
-    console.log("===userinfo===");
     const tempArr = participants.filter(
       (person) => person.name === userinfo.name
     );
@@ -76,7 +85,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   }, [userinfo]);
 
   useLayoutEffect(() => {
-    console.log("===enterRes===");
     if (enterRes !== null) {
       if (enterRes.success) {
       } else {
@@ -103,7 +111,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   }, [deleteResult]);
 
   useLayoutEffect(() => {
-    console.log("===quitRes===");
     if (quitRes !== null && quitRes.success) {
       // window.location.reload();
     }
@@ -112,14 +119,18 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   // roompage에서 받아온 data 값 가공
   const joinHandler = (isJoin) => {
     joinRoom(isJoin);
-    setEnter(true);
-    setQuit(false);
+    setUserJoin({
+      enter: true,
+      quit: false
+    })
   };
 
   const quitHandler = (isJoin) => {
     joinRoom(isJoin);
-    setEnter(false);
-    setQuit(true);
+    setUserJoin({
+      enter: false,
+      quit: true
+    })
   };
 
   const showModal = () => {

@@ -25,7 +25,6 @@ const QuestionInsert = ({ userinfo }) => {
       setClick(false);
       console.log(postData);
     }
-    console.log("useEffect 실행됨?");
   }, [postData]);
 
   const inputHandler = (e) => {
