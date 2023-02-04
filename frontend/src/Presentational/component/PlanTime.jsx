@@ -4,23 +4,21 @@ import AggroL from "../common/Font/AggroL";
 
 import AggroM from "../common/Font/AggroM";
 
-function PlanTime(props) {
-  // const month = props.date.toLocaleString("en-US", { month: "2-digit" });
-  // const day = props.date.toLocaleString("en-US", { day: "2-digit" });
-  // const year = props.date.getFullYear().toString().slice(2);
+function PlanTime({startDate}) {
+  const Date = startDate.slice(0,10).split("-")
 
   const date = [
     {
       type: "YEAR",
-      value: "23",
+      value: Date[0].slice(0,2),
     },
     {
       type: "MONTH",
-      value: "02",
+      value: Date[1],
     },
     {
       type: "DAY",
-      value: "12",
+      value: Date[2],
     },
   ];
 

@@ -8,7 +8,7 @@ import Person from "../../component/Person";
 
 import { BsFillPersonFill } from "react-icons/bs";
 
-function RoomMain({ join, host, data }) {
+function RoomMain({ join, host, data, userinfo }) {
   const {
     createdDate,
     currentPersonCount,
@@ -39,7 +39,7 @@ function RoomMain({ join, host, data }) {
 
   const RoomQuestion =
     isJoin || host ? (
-      <QuestionBox idx={pdf} />
+      <QuestionBox idx={pdf} userinfo={userinfo} />
     ) : (
       <PopUp>질문을 볼 수 없습니다.</PopUp>
     );
@@ -74,7 +74,7 @@ function RoomMain({ join, host, data }) {
         <Section>
           <Card>
             <SubTitle title={"시작 일자"} />
-            <PlanTime />
+            <PlanTime startDate={startDate}/>
           </Card>
           <Card>
             <SubTitle title={"참가 멤버"} />
