@@ -1,23 +1,20 @@
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useAxios from "../../../../action/hooks/useAxios";
 
 const QuestionInsert = ({ userinfo }) => {
   const token = useSelector((state) => state.token);
-
-  const [content, setContent] = useState("");
   const [click, setClick] = useState(false);
-  const [postData] = useAxios(
-    "questions",
-    "POST",
-    token,
-    {
-      content: content,
-      interviewJoinId: userinfo.interviewJoinId,
-      writerId: userinfo.id,
-    },
-    click
+
+  const [question, setQuestion] = useState({
+    content: "",
+    interviewJoinId: userinfo.interviewJoinId,
+    writerId: userinfo.id,
+  });
+
+  const [postData] = useCallback(
+    useAxios("questions", "POST", token, question, click),[]
   );
 
   useEffect(() => {
@@ -25,23 +22,29 @@ const QuestionInsert = ({ userinfo }) => {
       setClick(false);
       console.log(postData);
     }
-    console.log("useEffect 실행됨?");
   }, [postData]);
 
   const inputHandler = (e) => {
-    setContent(e.target.value);
+    setQuestion({
+      ...question,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const QuestionHandler = (e) => {
     e.preventDefault();
     setClick(true);
-    console.log(content);
+    console.log(question);
   };
 
   return (
     <>
       <form>
-        <Input value={content} onChange={inputHandler}></Input>
+        <Input
+          name="content"
+          value={question.content}
+          onChange={inputHandler}
+        ></Input>
         <Button onClick={QuestionHandler}>작성</Button>
       </form>
 

@@ -20,9 +20,10 @@ const InterviewPage = () => {
     id : 해당 유저 아이디
     rommId : 방 아이디
   */
-  const {id, roomId} = useLocation().state;
-  // const mySession = useSelector((state) => state.chatSession);
-  const mySession = roomId;
+  const {userinfo, roomId} = useLocation().state;
+  const mySession = useSelector((state) => state.chatSession);
+
+  console.log('----------------------------', userinfo, roomId)
 
   const [info, setInfo] = useState({
     interviewee: "미지정",

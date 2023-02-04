@@ -185,7 +185,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     // setGoSession(true)
     navigate("/interview", {
       state: {
-        userinfo: {id: userinfo.id, name:userinfo.name, interviewJoinId: userinfo.interviewJoinId},
+        id: userinfo.id,
         roomId: id,
       },
     });
