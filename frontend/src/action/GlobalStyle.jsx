@@ -7,6 +7,7 @@ export const GlobalStyle = createGlobalStyle`
         margin: 0;
         box-sizing: border-box;
         transition: 0.2s;
+        font-size: 1rem;
     }
 
     :root {

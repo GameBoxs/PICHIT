@@ -1,11 +1,10 @@
 import styled from "styled-components";
 import React, { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import useAxios from "../../../../action/hooks/useAxios";
+import { MdAddCircle } from "react-icons/md";
 
 const QuestionInsert = (props) => {
-  const {userinfo, pdfhandler} = props
-  const token = useSelector((state) => state.token);
+  const { userinfo, pdfhandler, token } = props;
   const [click, setClick] = useState(false);
 
   const [question, setQuestion] = useState({
@@ -15,17 +14,18 @@ const QuestionInsert = (props) => {
   });
 
   const [postData] = useCallback(
-    useAxios("questions", "POST", token, question, click),[]
+    useAxios("questions", "POST", token, question, click),
+    []
   );
 
-  useEffect(()=>{
+  useEffect(() => {
     setQuestion({
       content: "",
       interviewJoinId: pdfhandler.interviewJoinId,
       writerId: userinfo.id,
-    })
-  }, [props])
-  
+    });
+  }, [props]);
+
   useEffect(() => {
     if (postData && postData.data) {
       setClick(false);
@@ -47,14 +47,17 @@ const QuestionInsert = (props) => {
   };
 
   return (
-    <>
+    <QuestionInputBox>
       <form>
         <Input
           name="content"
           value={question.content}
           onChange={inputHandler}
+          placeholder={"질문을 입력하세요"}
         ></Input>
-        <Button onClick={QuestionHandler}>작성</Button>
+        <Button onClick={QuestionHandler}>
+          <MdAddCircle />
+        </Button>
       </form>
 
       {/* <form onSubmit={onSubmit}>
@@ -65,10 +68,55 @@ const QuestionInsert = (props) => {
       onChange={onChange} ></input>
        <button type="submit">작성</button>    
     </form> */}
-    </>
+    </QuestionInputBox>
   );
 };
 export default QuestionInsert;
 
-const Input = styled.input.attrs({ type: "text" })``;
-const Button = styled.button.attrs({ type: "submit" })``;
+const Input = styled.input.attrs({ type: "text" })`
+  width: 100%;
+  height: 5vh;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  padding-left: 1.4rem;
+  box-shadow: inset .2rem .2rem .5rem var(--greyLight-2), inset -.2rem -.2rem .5rem var(--white);
+  background: none;
+  font-family: inherit;
+  color: var(--greyDark);
+
+  &::placeholder {
+    color: var(--greyLight-3);
+  }
+  &:focus {
+    outline: none;
+    box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
+      -0.2rem -0.2rem 0.5rem var(--white);
+  }
+`;
+
+const Button = styled.button.attrs({ type: "submit" })`
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  background-color: transparent;
+  color: var(--primary);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary-dark);
+  }
+`;
+
+const QuestionInputBox = styled.div`
+  width: 100%;
+  padding-bottom: 1rem;
+
+  form {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+`;

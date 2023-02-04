@@ -11,11 +11,13 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import AggroL from "../../common/Font/AggroL";
 import { createSession } from "../../../action/modules/chatModule";
+import { TiStarburst } from "react-icons/ti";
+import SubTitle from "../../common/SubTitle";
 
 const MySwal = withReactContent(Swal);
 
 function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
-  const { id, title, participants, sessionOpened } = data;
+  const { id, title, participants, sessionOpened, manager } = data;
 
   const navigate = useNavigate();
 
@@ -155,13 +157,11 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   };
 
   const createRoom = () => {
-    
     createSession(id, token).then((res) => {
       if (res.success) {
         window.location.reload();
       }
     });
-    
   };
 
   //JSX 변수
@@ -212,13 +212,33 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   return (
     <Layout>
       <AggroL />
+      <TiStarburst />
       <Title title={title} />
+
+      <ManagerLayout>
+        <SubTitle title={"방장"} />
+        <SubTitle title={manager.name} />
+      </ManagerLayout>
       {RoomHost}
     </Layout>
   );
 }
 
 export default RoomHeader;
+
+const ManagerLayout = styled.div`
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  font-family: "SBagrroL";
+  color: var(--greyDark);
+
+  & .SubTitle:first-child {
+    color: var(--greyLight-3);
+  }
+
+  margin-bottom: 3rem;
+`;
 
 const BtnContainer = styled.div`
   display: flex;
@@ -233,11 +253,16 @@ const LayoutButton = styled.div`
 
 const Layout = styled.div`
   margin-bottom: 3rem;
+  height: inherit;
+  padding: 1rem;
+  border-radius: 1rem;
+  color: var(--primary);
+  margin-top: 6vh;
 
   & .Title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     text-align: left;
-    margin-block: 3rem;
+    margin-block: 1rem;
     font-family: "SBagrroL";
   }
 
@@ -248,5 +273,10 @@ const Layout = styled.div`
     & * {
       font-size: 1rem;
     }
+  }
+
+  svg {
+    margin-top: 0rem;
+    font-size: 2rem;
   }
 `;

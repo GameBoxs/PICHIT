@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 import MainBottom from "../layout/mainpage/MainBottom";
 import MainTop from "../layout/mainpage/MainTop";
+import TapeCompo from "../component/TapeCompo";
 
 import { TiStarburst, TiStarburstOutline } from "react-icons/ti";
 import AggroL from "../common/Font/AggroL";
@@ -48,26 +49,6 @@ const MainPage = () => {
 
 export default MainPage;
 
-function TapeCompo({ num }) {
-  return (
-    <Tape>
-      {num % 2 === 0 ? <TiStarburst /> : <TiStarburstOutline />}
-      PICHIT
-    </Tape>
-  );
-}
-
-const Tape = styled.div`
-  color:var(--white);
-  display:flex;
-  align-items: center;
-  margin: 0.5rem 1rem 0 1rem;
-        font-family: SBagrroL;
-
-  * {
-    margin-inline: 1rem;
-  }
-`;
 
 const FrontTape = styled.div`
   width: 120vw;
