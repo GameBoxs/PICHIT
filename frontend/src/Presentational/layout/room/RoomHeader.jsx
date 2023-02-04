@@ -94,7 +94,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   }, [enterRes]);
 
   useEffect(() => {
-    // setDeleteData();
     if (
       deleteResult[0] &&
       deleteResult[0].success &&
@@ -150,6 +149,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     }).then((result) => {
       if (result.isConfirmed) {
         setDeleteData(true);
+        console.log(deleteResult)
       }
     });
   };
@@ -197,10 +197,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
 
   const RoomHost = host ? (
     <BtnContainer>
-      {/* <LayoutButton text={"수정하기"} onClick={showModal}>수정하기</LayoutButton>
-      <button onClick={showModal} >수정하기</button>
-      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />} */}
-      {/* <LayoutButton text={"삭제하기"} onClick={deleteRoom}> */}
+  
       {participants.length >= 2 ? (
         <Button
           text={"스터디 시작하기"}
@@ -213,7 +210,8 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
         삭제하기
       </Button>
-      {/* </LayoutButton> */}
+          <Button text={"수정하기"} handler={showModal}>수정하기</Button>
+      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
     </BtnContainer>
   ) : (
     <div>{readyRoom}</div>

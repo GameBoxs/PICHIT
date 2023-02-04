@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import { ToggleButton } from "../common/ToggleButton";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
@@ -7,30 +7,37 @@ import "react-day-picker/dist/style.css";
 import Title from "../common/Title";
 
 import useAxios from "../../action/hooks/useAxios";
-import { useSelector } from "react-redux";
+import { useSelector} from "react-redux";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { testToken } from "../../store/values";
+import { useParams } from "react-router-dom";
 
 function EditRoom({ setModalOpen, data }) {
+  const navigate = useNavigate();
+  const params = useParams();
+  
+  const roomParamsId = params.id;
+
   const [toggle, setToggle] = useState(false);
   const Togglehandler = (toggle) => {
     setToggle(toggle);
     console.log(toggle);
   };
 
-  // 방 수정 정보 들어감
+  // 방 수정 정보 들어감 -> 이전 정보 값 들고 옴 
   const [room, setRoom] = useState({
-    title: "",
-    description: "",
-    maxPersonCount: 0,
-    password: "",
+    title: data.title,
+    description: data.description,
+    maxPersonCount: data.maxPersonCount,
+    contactWay: data.contactWay,
+    password: data.password,
     finished: 0,
-    startDate: "",
+    startDate: data.startDate,
     managerId: 0,
   });
 
   // 방 수정하기 모달에 적은 input 값 넣어줌
-
 
   const InputHandler = (e) => {
     setRoom({
@@ -59,13 +66,10 @@ function EditRoom({ setModalOpen, data }) {
   };
 
 
-  
- 
-  //Axios put 통신
 
-  // const [editData, setEditData] = useState(false);
-  // const token = useSelector((state) => state.token);
-  // const roomId = data.id;
+  const [editData, setEditData] = useState(false);
+  const token = useSelector((state) => state.token);
+  const roomId = data.id;
   // console.log(roomId);
 
   const handleDaySelect = (date) => {
@@ -77,25 +81,36 @@ function EditRoom({ setModalOpen, data }) {
     console.log(date);
   };
 
-  // const [putData, isLoading] = useAxios(
-  //   `interviewrooms/${roomId}/finished?finished=1`,
-  //   "PUT",    token,
-  //   room,
-  //   editData
-  // );
-  // const EditRoom = () => {
-  //   console.log(room)
-  //   // setEditData(true)
-  //   console.log(putData)
-  // };
+  //Axios put 통신  
+  const [putData, isLoading] = useAxios(
+    `interviewrooms/${roomParamsId}`,
+    "PUT",
+      token,
+    room,
+    editData
+  );
 
+  const RoomEdit = (e) => {
+    console.log(room);
+    setEditData(true)
+  };
+  useEffect(() =>{
+    if (
+      putData &&
+      putData.success === true &&
+      putData.success !== undefined
+    ){
+      setModalOpen(false);
+      console.log(putData)
+      navigate(`/room/${roomParamsId}`)
+      document.location.reload()
+    }
+  },[putData])
 
   return (
     <Wrap onClick={closeModal}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <Header>
-          <Title title="방 수정하기" />
-        </Header>
+        <Header>방 수정하기</Header>
         <Layout height="40%">
           <Section width="50%">
             <DayPicker
@@ -103,7 +118,7 @@ function EditRoom({ setModalOpen, data }) {
               selected={selected}
               onDayClick={handleDayClick}
               name="startDate"
-              value={data.startDate}
+              value={room.startDate}
               onChange={handleDaySelect}
             />
           </Section>
@@ -113,7 +128,7 @@ function EditRoom({ setModalOpen, data }) {
                 <InfoText>방 이름</InfoText>
                 <InfoInput
                   name="title"
-                  value={data.title}
+                  value={room.title}
                   onChange={InputHandler}
                 />
               </Info>
@@ -124,13 +139,17 @@ function EditRoom({ setModalOpen, data }) {
                   min="2"
                   step="1"
                   name="maxPersonCount"
-                  value={data.maxPersonCount}
+                  value={room.maxPersonCount}
                   onChange={InputHandler}
                 />
               </Info>
               <Info>
                 <InfoText>연락 방법</InfoText>
-                <InfoInput />
+                <InfoInput
+                  name="contectWay"
+                  Value={room.contactWay}
+                  onChange={InputHandler}
+                />
               </Info>
               <Info>
                 <InfoText>비밀방 여부</InfoText>
@@ -142,7 +161,7 @@ function EditRoom({ setModalOpen, data }) {
                 {toggle ? (
                   <InfoInput
                     name="password"
-                    value={data.password}
+                    defaultValue={room.password}
                     onChange={InputHandler}
                   />
                 ) : null}
@@ -150,18 +169,17 @@ function EditRoom({ setModalOpen, data }) {
             </InfoList>
           </Section>
         </Layout>
-        <Layout height="30%">
+        <Layout height="0">
           <Section width="100%">
             <RoomText
               placeholder="방 생성에 필요한 정보를 입력하세요"
               name="description"
-              value={data.description}
               onChange={InputHandler}
             ></RoomText>
           </Section>
         </Layout>
         <Layout height="20%">
-          <button onClick={EditRoom}>생성하기</button>
+          <button onClick={RoomEdit}>생성하기</button>
           <button onClick={closeModal}>취소하기</button>
         </Layout>
       </ModalContainer>
@@ -174,10 +192,10 @@ const Wrap = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100vh;
+  bottom: 0;
+  right: 0;
   background: rgba(0, 0, 0, 0.8);
-  z-index: 100;
+  z-index: 9998;
 `;
 
 const ModalContainer = styled.div`
@@ -193,7 +211,7 @@ const ModalContainer = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(0%, 0%);
+  transform: translate(-50%, -50%);
 
   /* 모달창 디자인 */
   background-color: #ffffff;
@@ -258,4 +276,5 @@ const RoomText = styled.textarea`
 const Header = styled.div`
   margin: 10px;
   text-align: center;
+  font-size: 18px;
 `;

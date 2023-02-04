@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import RoomHeader from "../../layout/room/RoomHeader";
 import RoomMain from "../../layout/room/RoomMain";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback } from "react";
 import { useSelector } from "react-redux";
 import useAxios from "../../../action/hooks/useAxios";
 import { useLocation } from "react-router-dom";
