@@ -158,7 +158,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   const readyRoom = join ? (
     <Button
       text={"나가기"}
-      onClick={() => {
+      handler={() => {
         quitHandler(false);
       }}
     >
@@ -168,7 +168,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     <Button
       isImportant={false}
       text={"참여하기"}
-      onClick={() => joinHandler(true)}
+      handler={() => joinHandler(true)}
     >
       참여하기
     </Button>
