@@ -32,7 +32,7 @@ export const getToken = async (roomId,myToken) => {
 
 export const createSession = async (roomId, myToken) => {
   const response = await axios.post(
-    APPLICATION_SERVER_URL + "conference/sessions" + roomId,
+    APPLICATION_SERVER_URL + "conference/sessions/" + roomId,
     {},
     {
       headers: { "Content-Type": "application/json", "Authorization":myToken },
