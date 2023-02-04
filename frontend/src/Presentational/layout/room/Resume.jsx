@@ -11,7 +11,7 @@ import useAxios from "../../../action/hooks/useAxios";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-function Resume({ idx, participants }) {
+function Resume({ idx, participants, setPdfHandler }) {
   const [pdfFileList, setPdfFileList] = useState([]);
   const [pdfUrl, setPdfUrl] = useState();
   const [showPdf, setShowPdf] = useState(false);
@@ -69,6 +69,10 @@ function Resume({ idx, participants }) {
     setShowPdf(false);
   };
 
+  const getPdfOwner = (elem) => {
+    setPdfHandler({...elem})
+  }
+
   const interviewees = participants.map((elem, idx) => {
     return (
       <React.Fragment
@@ -77,10 +81,11 @@ function Resume({ idx, participants }) {
         <input
           type="radio"
           name={`radio`}
-          value={elem.name}
           id={`tab-${idx + 1}`}
+          onClick={()=>getPdfOwner(elem)}
         />
-        <label htmlFor={`tab-${idx + 1}`}>
+        <label htmlFor={`tab-${idx + 1}`}
+        >
           <p>{elem.name}</p>
         </label>
       </React.Fragment>

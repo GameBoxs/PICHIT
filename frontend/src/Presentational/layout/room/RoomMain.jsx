@@ -23,6 +23,9 @@ function RoomMain({ join, host, data, userinfo }) {
   } = data;
   const [isJoin, setIsJoin] = useState(false);
   const [pdf, setPdf] = useState(0);
+  const [pdfhandler, setPdfHandler] = useState({})
+
+  console.log(pdfhandler, "RoomMain")
 
   useEffect(() => {
     setIsJoin(join);
@@ -32,14 +35,14 @@ function RoomMain({ join, host, data, userinfo }) {
 
   const RoomSection =
     isJoin || host ? (
-      <Resume idx={pdf} participants={participants}/>
+      <Resume idx={pdf} participants={participants} setPdfHandler={setPdfHandler} />
     ) : (
       <Intro>방에 참여하면 팀원들의 자소서를 볼 수 있어요</Intro>
     );
 
   const RoomQuestion =
     isJoin || host ? (
-      <QuestionBox idx={pdf} userinfo={userinfo} />
+      <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} />
     ) : (
       <PopUp>질문을 볼 수 없습니다.</PopUp>
     );
@@ -52,6 +55,8 @@ function RoomMain({ join, host, data, userinfo }) {
   };
 
   const Recuritment = maxPersonCount - currentPersonCount;
+
+  console.log(id)
 
   const PersonList = participants.map((elem, idx) => {
     if (elem.name === manager.name) {
