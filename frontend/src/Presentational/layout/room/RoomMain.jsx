@@ -8,7 +8,8 @@ import Person from "../../component/Person";
 
 import { BsFillPersonFill } from "react-icons/bs";
 
-function RoomMain({ join, host, data, userinfo }) {
+function RoomMain(props) {
+  const { join, host, data, userinfo } = props;
   const {
     createdDate,
     currentPersonCount,
@@ -29,6 +30,7 @@ function RoomMain({ join, host, data, userinfo }) {
 
   useEffect(() => {
     setIsJoin(join);
+    setPdfHandler({...participants[0]})
   }, [join]);
 
   // roompage에 있는 join 값이 바뀔 때 마다 setIsJoin 실행 함
@@ -49,10 +51,10 @@ function RoomMain({ join, host, data, userinfo }) {
 
   // isJoin값에 따라서 볼 수 있는 컴포넌트가 변경됨
 
-  const pdfHandler = (person, idx) => {
-    console.log(person);
-    setPdf(idx);
-  };
+  // const pdfHandler = (person, idx) => {
+  //   console.log(person);
+  //   setPdf(idx);
+  // };
 
   const Recuritment = maxPersonCount - currentPersonCount;
 

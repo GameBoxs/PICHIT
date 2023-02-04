@@ -3,7 +3,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useAxios from "../../../../action/hooks/useAxios";
 
-const QuestionInsert = ({ userinfo, pdfhandler }) => {
+const QuestionInsert = (props) => {
+  const {userinfo, pdfhandler} = props
   const token = useSelector((state) => state.token);
   const [click, setClick] = useState(false);
 
@@ -23,7 +24,7 @@ const QuestionInsert = ({ userinfo, pdfhandler }) => {
       interviewJoinId: pdfhandler.interviewJoinId,
       writerId: userinfo.id,
     })
-  }, [userinfo, pdfhandler])
+  }, [props])
   
   useEffect(() => {
     if (postData && postData.data) {
