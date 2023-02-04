@@ -21,12 +21,14 @@ const InterviewPage = () => {
     rommId : 방 아이디
   */
   const {id, roomId} = useLocation().state;
-  const mySession = useSelector((state) => state.chatSession);
+  // const mySession = useSelector((state) => state.chatSession);
+  const mySession = roomId;
 
   const [info, setInfo] = useState({
     interviewee: "미지정",
     mySessionId: mySession,
-    myUserName: "Participant" + Math.floor(Math.random() * 100),
+    // myUserName: "Participant" + Math.floor(Math.random() * 100),
+    myUserName: "Participant" + Mat,
     session: undefined,
     mainStreamManager: undefined,
     publisher: undefined,
