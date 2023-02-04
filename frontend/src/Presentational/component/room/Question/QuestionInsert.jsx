@@ -5,22 +5,20 @@ import useAxios from "../../../../action/hooks/useAxios";
 
 const QuestionInsert = ({ userinfo }) => {
   const token = useSelector((state) => state.token);
+  // useAxios 실행 조건 click = true 일 때 실행 됨
   const [click, setClick] = useState(false);
-  
-const [question, setQuestion] = useState({
-  content: "",
-  interviewJoinId: userinfo.interviewJoinId,
-  writerId: userinfo.id,
-})
-  const [postData] = useCallback(useAxios(
-    "questions",
-    "POST",
-    token,
-    question,
-    click
-  ));
+  // 질문 입력을 위한 body 값
+  const [question, setQuestion] = useState({
+    content: "",
+    interviewJoinId: userinfo.interviewJoinId,
+    writerId: userinfo.id,
+  });
+  // 질문 등록 useAxios
+  const [postData] = useCallback(
+    useAxios("questions", "POST", token, question, click)
+  );
 
-
+  //질문 등록 성공시 Axios 데이터 감지해서 click=false로 변경
   useEffect(() => {
     if (postData && postData.data) {
       setClick(false);
@@ -28,34 +26,33 @@ const [question, setQuestion] = useState({
     }
   }, [postData]);
 
+  // content 입력값 감지 
   const inputHandler = (e) => {
     setQuestion({
       ...question,
-      [e.target.name]:e.target.value
-    })
+      [e.target.name]: e.target.value,
+    });
   };
 
+  // 질문 작성 handler 작성 버튼 클릭시 click=true로 활성화 됨 
   const QuestionHandler = (e) => {
     e.preventDefault();
     setClick(true);
+    setQuestion({...question,
+    content:""})
     console.log(question);
   };
 
   return (
     <>
       <form>
-        <Input name="content" value={question.content} onChange={inputHandler}></Input>
+        <Input
+          name="content"
+          value={question.content}
+          onChange={inputHandler}
+        ></Input>
         <Button onClick={QuestionHandler}>작성</Button>
       </form>
-
-      {/* <form onSubmit={onSubmit}>
-      <input 
-      type='text'
-      placeholder="질문을 입력 해주세요"
-      value={value}
-      onChange={onChange} ></input>
-       <button type="submit">작성</button>    
-    </form> */}
     </>
   );
 };
