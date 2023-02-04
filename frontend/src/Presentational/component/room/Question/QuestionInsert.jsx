@@ -6,20 +6,16 @@ import useAxios from "../../../../action/hooks/useAxios";
 const QuestionInsert = ({ userinfo }) => {
   const token = useSelector((state) => state.token);
   const [click, setClick] = useState(false);
-  
-const [question, setQuestion] = useState({
-  content: "",
-  interviewJoinId: userinfo.interviewJoinId,
-  writerId: userinfo.id,
-})
-  const [postData] = useCallback(useAxios(
-    "questions",
-    "POST",
-    token,
-    question,
-    click
-  ));
 
+  const [question, setQuestion] = useState({
+    content: "",
+    interviewJoinId: userinfo.interviewJoinId,
+    writerId: userinfo.id,
+  });
+
+  const [postData] = useCallback(
+    useAxios("questions", "POST", token, question, click),[]
+  );
 
   useEffect(() => {
     if (postData && postData.data) {
@@ -31,8 +27,8 @@ const [question, setQuestion] = useState({
   const inputHandler = (e) => {
     setQuestion({
       ...question,
-      [e.target.name]:e.target.value
-    })
+      [e.target.name]: e.target.value,
+    });
   };
 
   const QuestionHandler = (e) => {
@@ -44,7 +40,11 @@ const [question, setQuestion] = useState({
   return (
     <>
       <form>
-        <Input name="content" value={question.content} onChange={inputHandler}></Input>
+        <Input
+          name="content"
+          value={question.content}
+          onChange={inputHandler}
+        ></Input>
         <Button onClick={QuestionHandler}>작성</Button>
       </form>
 
