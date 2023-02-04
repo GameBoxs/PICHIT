@@ -23,8 +23,6 @@ const InterviewPage = () => {
   const {userinfo, roomId} = useLocation().state;
   const mySession = useSelector((state) => state.chatSession);
 
-  console.log('----------------------------', userinfo, roomId)
-
   const [info, setInfo] = useState({
     interviewee: "미지정",
     mySessionId: mySession,
