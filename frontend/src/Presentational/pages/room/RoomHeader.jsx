@@ -5,40 +5,35 @@ import Title from "../../common/Title";
 import Button from "../../common/Button";
 import EditRoom from "../../component/EditRoom";
 
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { testToken } from "../../../store/values";
+import { useLocation, useNavigate } from "react-router-dom";
 import useAxios from "../../../action/hooks/useAxios";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import AggroL from "../../common/Font/AggroL";
-import { createSession } from "../../../action/modules/chatModule";
 
 const MySwal = withReactContent(Swal);
 
 function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
-  const { id, title, participants, sessionOpened } = data;
-
+  const { id, title, participants } = data;
   const navigate = useNavigate();
-
   const [modalOpen, setModalOpen] = useState(false);
   const [userJoin, setUserJoin] = useState({
     enter: false,
     quit: false,
   });
+  // axios delete
   const [deleteData, setDeleteData] = useState(false);
-  const [joinId, setJoinId] = useState(0);
-
-  // axios 통신 시 보낼 정보들
+  const [joinId, setJoinId] = useState({ id: 0 });
   const enterObj = {
     interviewRoomId: id,
     password: password,
   };
+  // const [goSession, setGoSession] = useState(false);
 
-  const quitObj = { id: joinId };
-
-  //useAxios
   const [enterRes] = useAxios(
-    //방 참가하기
     `interviewjoins`,
     "POST",
     token,
@@ -47,7 +42,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   );
 
   const deleteResult = useAxios(
-    //방 삭제하기
     `interviewrooms/${id}`,
     "DELETE",
     token,
@@ -56,21 +50,36 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   );
 
   const [quitRes] = useAxios(
-    //방 나가기
-    `interviewjoins/${id}`,
+    `interviewjoins/${joinId.id}`,
     "DELETE",
     token,
-    quitObj,
+    joinId,
     userJoin.quit
   );
 
-  //useEffect
+  // const [getSession] = useAxios(
+  //   `conference/sessions/${id}`,
+  //   "POST",
+  //   token,
+  //   {interviewRoomId:id},
+  //   goSession
+  // )
+
+  // console.log(getSession, '-------------')
+
+  console.log("--------------------------");
+
   useEffect(() => {
-    setJoinId(userinfo.interviewJoinId);
+    const tempArr = participants.filter(
+      (person) => person.name === userinfo.name
+    );
+
+    if (tempArr.length !== 0) {
+      setJoinId({ id: tempArr[0].interviewJoinId });
+    }
   }, [userinfo]);
 
   useLayoutEffect(() => {
-    //방 참여하기 성공 후 새로고침
     if (enterRes !== null) {
       if (enterRes.success) {
         window.location.reload();
@@ -81,7 +90,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   }, [enterRes]);
 
   useEffect(() => {
-    //방 삭제하기
+    // setDeleteData();
     if (
       deleteResult[0] &&
       deleteResult[0].success &&
@@ -98,15 +107,13 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   }, [deleteResult]);
 
   useLayoutEffect(() => {
-    //방 탈퇴하기 성공 후 새로고침
     if (quitRes !== null && quitRes.success) {
       window.location.reload();
     }
   }, [quitRes]);
 
-  //Event Function
+  // roompage에서 받아온 data 값 가공
   const joinHandler = (isJoin) => {
-    //방 참여하기
     joinRoom(isJoin);
     setUserJoin({
       enter: true,
@@ -115,7 +122,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   };
 
   const quitHandler = (isJoin) => {
-    //방 탈퇴하기
     joinRoom(isJoin);
     setUserJoin({
       enter: false,
@@ -127,6 +133,9 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     setModalOpen(true);
   };
 
+  // const myId = useSelector((state) => state)
+  // console.log(myId)
+
   const deleteRoom = () => {
     MySwal.fire({
       text: "면접방을 정말 삭제하시겠습니까?",
@@ -137,45 +146,22 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     }).then((result) => {
       if (result.isConfirmed) {
         setDeleteData(true);
-        console.log(deleteResult)
       }
     });
   };
 
-  const moveToRoom = () => {
-    // setGoSession(true)
-    navigate("/interview", {
-      state: {
-        userinfo: {
-          id: userinfo.id,
-          name: userinfo.name,
-          interviewJoinId: userinfo.interviewJoinId,
-        },
-        roomId: id,
-      },
-    });
-  };
+  // function deleteRoom() {
+  //   setDeleteData(true);
+  // }
+  // const [data, setData] = useState([]);
 
-  const createRoom = () => {
-    
-    createSession(id, token).then((res) => {
-      if (res.success) {
-        window.location.reload();
-      }
-    });
-    
-  };
+  // useEffect(() => {
+  //   if (deleteData && deleteData.data) {
+  //     setData(deleteData.data);
+  //     console.log(deleteData.data)
+  //   }
+  // },[deleteData])
 
-  //JSX 변수
-  const ReadyBtn = (
-    <Button text={"방 만들기"} handler={createRoom} isImportant={true} />
-  );
-
-  const StartBtn = (
-    <Button text={"방 입장하기"} handler={moveToRoom} isImportant={true} />
-  );
-
-  //화면 렌더링 함수
   const readyRoom = join ? (
     <Button
       text={"나가기"}
@@ -195,14 +181,35 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     </Button>
   );
 
+  const moveSession = () => {
+    // setGoSession(true)
+    navigate("/interview", {
+      state: {
+        id: userinfo.id,
+        roomId: id,
+      },
+    });
+  };
+
   const RoomHost = host ? (
     <BtnContainer>
-      {participants.length >= 2 ? (sessionOpened ? StartBtn : ReadyBtn) : null}
+      {/* <LayoutButton text={"수정하기"} onClick={showModal}>수정하기</LayoutButton>
+      <button onClick={showModal} >수정하기</button>
+      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />} */}
+      {/* <LayoutButton text={"삭제하기"} onClick={deleteRoom}> */}
+      {participants.length >= 2 ? (
+        <Button
+          text={"스터디 시작하기"}
+          handler={moveSession}
+          isImportant={true}
+        >
+          화상채팅 시작하기
+        </Button>
+      ) : null}
       <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
         삭제하기
       </Button>
-          <Button text={"수정하기"} handler={showModal}>수정하기</Button>
-      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
+      {/* </LayoutButton> */}
     </BtnContainer>
   ) : (
     <div>{readyRoom}</div>
