@@ -94,6 +94,8 @@ function EditRoom({ setModalOpen, data }) {
     console.log(room);
     setEditData(true)
   };
+
+  // 방 수정했을 때 방장 확인을 못하는 오류로 state로 host 값을 직접 전달해줌
   useEffect(() =>{
     if (
       putData &&
@@ -102,8 +104,12 @@ function EditRoom({ setModalOpen, data }) {
     ){
       setModalOpen(false);
       console.log(putData)
-      navigate(`/room/${roomParamsId}`)
-      document.location.reload()
+      navigate(`/room/${roomParamsId}`,{
+        state:{
+          host : true
+        }
+      })
+      window.location.reload();
     }
   },[putData])
 
