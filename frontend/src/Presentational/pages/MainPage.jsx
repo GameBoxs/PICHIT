@@ -25,7 +25,7 @@ const MainPage = () => {
       });
   };
 
-  const TapeContent = new Array(10).fill().map((_, idx) => {
+  const TapeContent = new Array(12).fill().map((_, idx) => {
     return <TapeCompo key={idx} num={idx}/>;
   });
 

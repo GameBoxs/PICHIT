@@ -28,12 +28,10 @@ function RoomMain(props) {
   const [pdf, setPdf] = useState(0);
   const [pdfhandler, setPdfHandler] = useState({});
 
-  console.log(pdfhandler, "RoomMain");
-
   useEffect(() => {
     setIsJoin(join);
     setPdfHandler({ ...participants[0] });
-  }, [join]);
+  }, [props]);
 
   // roompage에 있는 join 값이 바뀔 때 마다 setIsJoin 실행 함
 

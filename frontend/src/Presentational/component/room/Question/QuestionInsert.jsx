@@ -5,7 +5,7 @@ import { MdAddCircle } from "react-icons/md";
 
 const QuestionInsert = (props) => {
   const { userinfo, pdfhandler, token } = props;
-  const [click, setClick] = useState(false);
+  const [ click, setClick ] = useState(false);
 
   const [question, setQuestion] = useState({
     content: "",
@@ -13,10 +13,7 @@ const QuestionInsert = (props) => {
     writerId: 0,
   });
 
-  const [postData] = useCallback(
-    useAxios("questions", "POST", token, question, click),
-    []
-  );
+  const [postData] = useAxios("questions", "POST", token, question, click);
 
   useEffect(() => {
     setQuestion({
@@ -27,23 +24,24 @@ const QuestionInsert = (props) => {
   }, [props]);
 
   useEffect(() => {
-    if (postData && postData.data) {
+    if (postData !== null && postData.success) {
       setClick(false);
-      console.log(postData);
     }
   }, [postData]);
 
+  // content 입력값 감지 
   const inputHandler = (e) => {
     setQuestion({
       ...question,
-      [e.target.name]: e.target.value,
+      content: e.target.value,
     });
   };
 
+
+  // 질문 작성 handler 작성 버튼 클릭시 click=true로 활성화 됨 
   const QuestionHandler = (e) => {
     e.preventDefault();
     setClick(true);
-    console.log(question);
   };
 
   return (
@@ -100,13 +98,16 @@ const Button = styled.button.attrs({ type: "submit" })`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2rem;
   background-color: transparent;
   color: var(--primary);
   cursor: pointer;
 
   &:hover {
     color: var(--primary-dark);
+  }
+
+  *{
+    font-size: 2rem;
   }
 `;
 

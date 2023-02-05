@@ -4,7 +4,7 @@ import QuestionItem from "./QuestionItem";
 import SubTitle from "../../../common/SubTitle";
 import AggroL from "../../../common/Font/AggroL";
 
-const QuestionList = ({ Questions, idx }) => {
+const QuestionList = ({ Questions }) => {
   return (
     <List>
       <AggroL />

@@ -5,25 +5,39 @@ import React, { useState } from "react";
 import useAxios from "../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 import PageBar from "../../common/Pagination/PageBar";
+import { useEffect } from "react";
 
 const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
   const token = useSelector((state) => state.token);
 
   const [Questions, setQuestions] = useState([]);
   const [questObj, setQuestObj] = useState({
-    page: 0,
-    size: 1,
+    page: 10,
+    size: 10,
     sort: [],
   });
+  const [getUser, setGetUser] = useState(false)
 
   const [getQuestion] = useAxios(
     `interviewjoins/${pdfhandler.interviewJoinId}/questions`,
     "GET",
+    token,
     questObj,
-    token
+    getUser
   );
 
-  console.log(getQuestion);
+  useEffect(()=>{
+    if (pdfhandler !== undefined) {
+      setGetUser(true)
+    }
+  }, [pdfhandler])
+
+  useEffect(()=>{
+    if (getQuestion !== null && getQuestion.success) {
+      console.log(getQuestion?.data)
+      setQuestions([...getQuestion?.data.content])
+    }
+  }, [getQuestion])
 
   return (
     <Question>
