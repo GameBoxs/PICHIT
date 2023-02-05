@@ -11,25 +11,28 @@ const QuestionInsert = (props) => {
  // 질문 입력을 위한 body 값
   const [question, setQuestion] = useState({
     content: "",
-    interviewJoinId: 0,
-    writerId: 0,
+    interviewJoinId: pdfhandler.interviewJoinId,
+    writerId: userinfo.id,
   });
  // 질문 등록 useAxios
   const [postData] = useCallback(
     useAxios("questions", "POST", token, question, click),[]
   );
   //질문 등록 성공시 Axios 데이터 감지해서 click=false로 변경
-  useEffect(()=>{
-    setQuestion({
-      content: "",
-      interviewJoinId: pdfhandler.interviewJoinId,
-      writerId: userinfo.id,
-    })
-  }, [props])
+  // useEffect(()=>{
+  //   setQuestion({
+  //     content: "",
+  //     interviewJoinId: pdfhandler.interviewJoinId,
+  //     writerId: userinfo.id,
+  //   })
+  // }, [props])
   
+  console.log(postData)
   useEffect(() => {
     if (postData && postData.data) {
       setClick(false);
+      setQuestion({...question,
+        content:""})
       console.log(postData);
     }
   }, [postData]);
@@ -47,8 +50,6 @@ const QuestionInsert = (props) => {
   const QuestionHandler = (e) => {
     e.preventDefault();
     setClick(true);
-    setQuestion({...question,
-    content:""})
     console.log(question);
   };
 
