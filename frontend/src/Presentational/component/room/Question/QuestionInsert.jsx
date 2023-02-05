@@ -8,8 +8,6 @@ const QuestionInsert = (props) => {
   const insertRef = useRef()
 
   const { userinfo, pdfhandler, token, commentHandler } = props;
-  const [ click, setClick ] = useState(false);
-  const token = useSelector((state) => state.token);
   // useAxios 실행 조건 click = true 일 때 실행 됨
   const [click, setClick] = useState(false);
  // 질문 입력을 위한 body 값
