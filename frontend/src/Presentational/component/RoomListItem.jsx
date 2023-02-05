@@ -5,42 +5,55 @@ import styled from "styled-components";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import useAxios from "../../action/hooks/useAxios";
+import { useSelector } from "react-redux";
+import LogInModal from "./LogInModal";
 
 const MySwal = withReactContent(Swal);
 
 function RoomListItem(props) {
   // 비밀방 클릭시, 비밀번호 입력 모달 띄우도록 설정,
+  const token = useSelector(state => state.token)
   let navigate = useNavigate();
   const roomId = props.id
 
   const clickRoomItem = () => {
-    if (props.secretRoom === true) {
+    if (token === null ){
       MySwal.fire({
-        title: "비밀번호 입력",
-        html: `<input type="text" id="password" class="swal2-input" placeholder="password">`,
-        confirmButtonText: "입장하기",
-        preConfirm: () => {
-          const password = Swal.getPopup().querySelector("#password").value;
-          if (!password) {
-            Swal.showValidationMessage(`Please enter login and password`);
-          }
-          return { password: password };
-        },
-      }).then((result) => {
-        console.log(result.value.password)
+        text: "로그인이 필요한 서비스 입니다.",
+        showConfirmButton:false,
+        icon:'warning',
+        timer: 1500
+      })
+    }
+    else{
+      if (props.secretRoom === true) {
+        MySwal.fire({
+          title: "비밀번호 입력",
+          html: `<input type="text" id="password" class="swal2-input" placeholder="password">`,
+          confirmButtonText: "입장하기",
+          preConfirm: () => {
+            const password = Swal.getPopup().querySelector("#password").value;
+            if (!password) {
+              Swal.showValidationMessage(`Please enter login and password`);
+            }
+            return { password: password };
+          },
+        }).then((result) => {
+          console.log(result.value.password)
+          navigate(`/room/${roomId}`, {
+            state: {
+              id: props.id,
+              password: result.value.password,
+            },
+          });
+        });
+      } else {
         navigate(`/room/${roomId}`, {
           state: {
             id: props.id,
-            password: result.value.password,
           },
         });
-      });
-    } else {
-      navigate(`/room/${roomId}`, {
-        state: {
-          id: props.id,
-        },
-      });
+      }
     }
   };
   return (
