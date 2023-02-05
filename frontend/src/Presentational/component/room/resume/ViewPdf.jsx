@@ -24,6 +24,7 @@ const Layout = styled.div`
 
   * {
     border-radius: 1rem;
+    width: 100%;
   }
 
   & div div div {
@@ -33,5 +34,10 @@ const Layout = styled.div`
     &:nth-child(3) {
       display: none;
     }
+  }
+
+  canvas {
+    width: inherit !important;
+    height: auto !important;
   }
 `;

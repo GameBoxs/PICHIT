@@ -176,6 +176,7 @@ const NavStyle = styled.div`
   transition-delay: 0s, 0.75s;
   overflow: hidden;
   color: var(--white);
+  border: var(--white) solid 1px;
   
   &.active {
     ${MenuToggle} {
