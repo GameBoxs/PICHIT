@@ -21,13 +21,15 @@ const InterviewPage = () => {
     rommId : 방 아이디
   */
   const {userinfo, roomId} = useLocation().state;
-  const mySession = useSelector((state) => state.chatSession);
+  // const mySession = useSelector((state) => state.chatSession);
+  const mySession = roomId;
+  const myToken = useSelector((state) => state.token);
 
   const [info, setInfo] = useState({
     interviewee: "미지정",
     mySessionId: mySession,
-    myUserName: "Participant" + Math.floor(Math.random() * 100),
-    // myUserName: "Participant" + Mat,
+    // myUserName: "Participant" + Math.floor(Math.random() * 100),
+    myUserName: userinfo.name,
     session: undefined,
     mainStreamManager: undefined,
     publisher: undefined,
@@ -60,7 +62,8 @@ const InterviewPage = () => {
         session: undefined,
         subscribers: [],
         mySessionId: mySession,
-        myUserName: "Participant" + Math.floor(Math.random() * 100),
+        // myUserName: "Participant" + Math.floor(Math.random() * 100),
+        myUserName: userinfo.name,
         mainStreamManager: undefined,
         publisher: undefined,
       };
@@ -144,7 +147,7 @@ const InterviewPage = () => {
       })
 
       // 내 세션에 토큰으로 인증
-      getToken(info.mySessionId).then((token) => {
+      getToken(info.mySessionId,myToken).then((token) => {
         mySession
           .connect(token, { clientData: info.myUserName })
           .then(async () => {
