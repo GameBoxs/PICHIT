@@ -20,6 +20,8 @@ function RoomPage() {
   const roomParamsId = params.id;
   const password = location.state?.password;
   const { token, userinfo } = useSelector((state) => state);
+  const editHost = location.state?.host 
+  console.log(editHost)
 
   const [join, setJoin] = useState(false);
   const [host, setHost] = useState(false);
@@ -42,6 +44,9 @@ function RoomPage() {
   useEffect(() => {
     if (postData && postData.data && postData.data.manager.id === userinfo.id) {
       setHost(true);
+    }
+    if (editHost === true){
+      setHost(true)
     }
   }, [postData]);
 
