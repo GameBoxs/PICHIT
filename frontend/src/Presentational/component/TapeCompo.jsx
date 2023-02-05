@@ -21,6 +21,7 @@ const Tape = styled.div`
 
   * {
     margin-inline: 1rem;
+  font-size: 3rem;
   }
 `;
 

@@ -243,7 +243,7 @@ const Card = styled.div`
 const Intro = styled.div`
   width: 100%;
   height: 100%;
-  min-height: 300px;
+  min-height: 400px;
   border-radius: 1rem;
   text-align: center;
   background-color: var(--greyDark);
@@ -256,7 +256,7 @@ const Intro = styled.div`
 const PopUp = styled.div`
   width: 100%;
   height: 100%;
-  min-height: 300px;
+  min-height: 400px;
   border-radius: 1rem;
   text-align: center;
 

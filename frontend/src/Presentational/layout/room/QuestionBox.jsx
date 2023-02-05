@@ -12,17 +12,18 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
 
   const [Questions, setQuestions] = useState([]);
   const [questObj, setQuestObj] = useState({
-    page: 10,
+    page: 0,
     size: 10,
     sort: [],
   });
   const [getUser, setGetUser] = useState(false)
+  const [allQuestion, setAllQuestion] = useState(0);
 
   const [getQuestion] = useAxios(
-    `interviewjoins/${pdfhandler.interviewJoinId}/questions`,
+    `interviewjoins/${pdfhandler.interviewJoinId}/questions?page=${questObj.page}&size=${questObj.size}&sort=${questObj.sort}`,
     "GET",
     token,
-    questObj,
+    {},
     getUser
   );
 
@@ -34,19 +35,26 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
 
   useEffect(()=>{
     if (getQuestion !== null && getQuestion.success) {
-      console.log(getQuestion?.data)
       setQuestions([...getQuestion?.data.content])
+      setGetUser(false)
+
+      setAllQuestion(getQuestion?.data.totalElements)
     }
   }, [getQuestion])
 
   return (
-    <Question>
+    <Question> 
+      <QuestionBoxTitle>
+        <div>질문</div>
+        <div>{allQuestion}</div>
+      </QuestionBoxTitle>
       <QuestionList idx={idx} Questions={Questions} />
       <Controler>
         <QuestionInsert
           userinfo={userinfo}
           pdfhandler={pdfhandler}
           token={token}
+          commentHandler={setGetUser}
         />
         <PageBar
           totalPosts={15} //전체 데이터 길이
@@ -62,17 +70,29 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
 
 export default QuestionBox;
 
+const QuestionBoxTitle = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  font-family: SBagrroL;
+  color: var(--greyDark);
+`;
+
+
 const Controler = styled.div`
-  position: absolute;
-  bottom: 5%;
-  left: 5%;
-  width: 90%;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+  align-items: center;
 `;
 
 const Question = styled.div`
   position: relative;
-  min-height: 500px;
-  height: 60%;
+  display: grid;
+  grid-template-rows: 1fr 16fr 4fr;
+  height: 600px;
   padding: 5%;
   width: 100%;
   background-color: var(--greyLight-1);

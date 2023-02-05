@@ -2,9 +2,12 @@ import styled from "styled-components";
 import React, { useCallback, useEffect, useState } from "react";
 import useAxios from "../../../../action/hooks/useAxios";
 import { MdAddCircle } from "react-icons/md";
+import { useRef } from "react";
 
 const QuestionInsert = (props) => {
-  const { userinfo, pdfhandler, token } = props;
+  const insertRef = useRef()
+
+  const { userinfo, pdfhandler, token, commentHandler } = props;
   const [ click, setClick ] = useState(false);
 
   const [question, setQuestion] = useState({
@@ -26,6 +29,12 @@ const QuestionInsert = (props) => {
   useEffect(() => {
     if (postData !== null && postData.success) {
       setClick(false);
+      insertRef.current.value = ''
+      setQuestion({
+        ...question,
+        content: '',
+      });
+      commentHandler(true)
     }
   }, [postData]);
 
@@ -52,6 +61,7 @@ const QuestionInsert = (props) => {
           value={question.content}
           onChange={inputHandler}
           placeholder={"질문을 입력하세요"}
+          ref={insertRef}
         ></Input>
         <Button onClick={QuestionHandler}>
           <MdAddCircle />
@@ -113,11 +123,15 @@ const Button = styled.button.attrs({ type: "submit" })`
 
 const QuestionInputBox = styled.div`
   width: 100%;
-  padding-bottom: 1rem;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  z-index: 3;
 
   form {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 15fr 2fr;
+    grid-gap: 0.5rem;
   }
 `;

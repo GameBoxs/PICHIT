@@ -235,7 +235,7 @@ const FileResultBody = styled.div`
   align-items: center;
   gap: 1rem;
   width: 100%;
-  height: 450px;
+  height: 550px;
   border-radius: 1rem;
   background-color: var(--greyLight-1);
   padding: 2rem;
@@ -376,9 +376,9 @@ const MainContainer = styled.div`
   align-items: flex-start;
   width: 100%;
   height: fit-content;
-  min-height: 450px;
+  min-height: 550px;
 
   & ${FileListBody} {
-    height: 450px;
+    height: 550px;
   }
 `;

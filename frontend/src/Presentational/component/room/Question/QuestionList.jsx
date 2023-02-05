@@ -8,10 +8,6 @@ const QuestionList = ({ Questions }) => {
   return (
     <List>
       <AggroL />
-      <Title>
-        <div>질문</div>
-        <div>{Questions?.length}</div>
-      </Title>
       {Questions.map((Question) => (
         <QuestionItem Question={Question} key={Question.id} />
       ))}
@@ -20,12 +16,23 @@ const QuestionList = ({ Questions }) => {
 };
 
 export default QuestionList;
-const List = styled.div``;
 
-const Title = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  gap: 1rem;
-  font-family: SBagrroL;
-  color: var(--greyDark);
+const List = styled.div`
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  
+  &::-webkit-scrollbar {
+    width: 7px;
+    border-radius: 1rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--greyLight-2);
+    border-radius: 1rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: var(--greyLight-1);
+  }
 `;
