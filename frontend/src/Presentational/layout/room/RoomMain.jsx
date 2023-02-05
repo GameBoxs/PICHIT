@@ -8,7 +8,8 @@ import Person from "../../component/Person";
 
 import { BsFillPersonFill } from "react-icons/bs";
 
-function RoomMain({ join, host, data, userinfo }) {
+function RoomMain(props) {
+  const { join, host, data, userinfo } = props;
   const {
     createdDate,
     currentPersonCount,
@@ -23,35 +24,41 @@ function RoomMain({ join, host, data, userinfo }) {
   } = data;
   const [isJoin, setIsJoin] = useState(false);
   const [pdf, setPdf] = useState(0);
+  const [pdfhandler, setPdfHandler] = useState({})
+
+  console.log(pdfhandler, "RoomMain")
 
   useEffect(() => {
     setIsJoin(join);
+    setPdfHandler({...participants[0]})
   }, [join]);
 
   // roompage에 있는 join 값이 바뀔 때 마다 setIsJoin 실행 함
 
   const RoomSection =
     isJoin || host ? (
-      <Resume idx={pdf} participants={participants}/>
+      <Resume idx={pdf} participants={participants} setPdfHandler={setPdfHandler} />
     ) : (
       <Intro>방에 참여하면 팀원들의 자소서를 볼 수 있어요</Intro>
     );
 
   const RoomQuestion =
     isJoin || host ? (
-      <QuestionBox idx={pdf} userinfo={userinfo} />
+      <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} />
     ) : (
       <PopUp>질문을 볼 수 없습니다.</PopUp>
     );
 
   // isJoin값에 따라서 볼 수 있는 컴포넌트가 변경됨
 
-  const pdfHandler = (person, idx) => {
-    console.log(person);
-    setPdf(idx);
-  };
+  // const pdfHandler = (person, idx) => {
+  //   console.log(person);
+  //   setPdf(idx);
+  // };
 
   const Recuritment = maxPersonCount - currentPersonCount;
+
+  console.log(id)
 
   const PersonList = participants.map((elem, idx) => {
     if (elem.name === manager.name) {
