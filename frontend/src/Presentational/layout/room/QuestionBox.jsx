@@ -42,6 +42,9 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
     }
   }, [getQuestion])
 
+  // QuestionList: 해당 참가자에게 달려있는 질문 list 목록 
+  // QuestionInsert: 질문 입력 칸 
+
   return (
     <Question> 
       <QuestionBoxTitle>

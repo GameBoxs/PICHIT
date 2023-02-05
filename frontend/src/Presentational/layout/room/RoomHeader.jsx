@@ -3,6 +3,7 @@ import React, { useEffect, useState, useLayoutEffect } from "react";
 import styled from "styled-components";
 import Title from "../../common/Title";
 import Button from "../../common/Button";
+import EditRoom from "../../component/EditRoom";
 
 import { useNavigate } from "react-router-dom";
 import useAxios from "../../../action/hooks/useAxios";
@@ -138,6 +139,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     }).then((result) => {
       if (result.isConfirmed) {
         setDeleteData(true);
+        console.log(deleteResult)
       }
     });
   };
@@ -195,15 +197,12 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
 
   const RoomHost = host ? (
     <BtnContainer>
-      {/* <LayoutButton text={"수정하기"} onClick={showModal}>수정하기</LayoutButton>
-      <button onClick={showModal} >수정하기</button>
-      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />} */}
-      {/* <LayoutButton text={"삭제하기"} onClick={deleteRoom}> */}
       {participants.length >= 2 ? (sessionOpened ? StartBtn : ReadyBtn) : null}
       <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
         삭제하기
       </Button>
-      {/* </LayoutButton> */}
+          <Button text={"수정하기"} handler={showModal}>수정하기</Button>
+      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
     </BtnContainer>
   ) : (
     <div>{readyRoom}</div>

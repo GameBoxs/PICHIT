@@ -11,8 +11,6 @@ function LogInModal({handleOpenPop}) {
       </KakaoBtn>
       <br></br>
       카카오로 간편 로그인
-      <br></br>
-      회원이 아니신가요? <a href="#">회원가입하기</a>
     </LayOut>
   );
 }

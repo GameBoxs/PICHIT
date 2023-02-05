@@ -9,11 +9,14 @@ const QuestionInsert = (props) => {
 
   const { userinfo, pdfhandler, token, commentHandler } = props;
   const [ click, setClick ] = useState(false);
-
+  const token = useSelector((state) => state.token);
+  // useAxios 실행 조건 click = true 일 때 실행 됨
+  const [click, setClick] = useState(false);
+ // 질문 입력을 위한 body 값
   const [question, setQuestion] = useState({
     content: "",
-    interviewJoinId: 0,
-    writerId: 0,
+    interviewJoinId: pdfhandler.interviewJoinId,
+    writerId: userinfo.id,
   });
 
   const [postData] = useAxios("questions", "POST", token, question, click);
@@ -25,6 +28,7 @@ const QuestionInsert = (props) => {
       writerId: userinfo.id,
     });
   }, [props]);
+
 
   useEffect(() => {
     if (postData !== null && postData.success) {
@@ -67,15 +71,6 @@ const QuestionInsert = (props) => {
           <MdAddCircle />
         </Button>
       </form>
-
-      {/* <form onSubmit={onSubmit}>
-      <input 
-      type='text'
-      placeholder="질문을 입력 해주세요"
-      value={value}
-      onChange={onChange} ></input>
-       <button type="submit">작성</button>    
-    </form> */}
     </QuestionInputBox>
   );
 };
