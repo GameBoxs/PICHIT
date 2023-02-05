@@ -18,7 +18,7 @@ function PageBar({
 
   return (
     <>
-      <Bar>
+      <Bar className="paginationBar">
         {pages.map((page, index) => {
           return (
             <Button
@@ -40,29 +40,30 @@ const Bar = styled.div`
   width: 100%;
   height: 23px;
   display: flex;
-  justify-content: center
+  justify-content: center;
+  align-items: center;
 `;
 
 const Button = styled.button`
   width: 20px;
   height: 20px;
-  border-radius: 20px;
+  border-radius: 1em;
   margin-right: 20px;
   border: none;
-  background-color: #aeaeae;
+  background-color: var(--primary);
   cursor: pointer;
   transition: 0.3s ease width;
   &:last-child {
     margin-right: 0;
   }
   &:hover {
-    background: #676767;
+    background: var(--primary-dark);
     cursor: pointer;
   }
   ${(props) =>
     props.active &&
     css`
-      width: 50px;
+      width: 50px !important;
       cursor: auto;
     `};
 `;

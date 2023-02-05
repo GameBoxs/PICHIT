@@ -7,6 +7,8 @@ import PlanTime from "../../component/PlanTime";
 import Person from "../../component/Person";
 
 import { BsFillPersonFill } from "react-icons/bs";
+import AggroL from "../../common/Font/AggroL";
+import { TiStarburstOutline } from "react-icons/ti";
 
 function RoomMain(props) {
   const { join, host, data, userinfo } = props;
@@ -24,20 +26,22 @@ function RoomMain(props) {
   } = data;
   const [isJoin, setIsJoin] = useState(false);
   const [pdf, setPdf] = useState(0);
-  const [pdfhandler, setPdfHandler] = useState({})
-
-  console.log(pdfhandler, "RoomMain")
+  const [pdfhandler, setPdfHandler] = useState({});
 
   useEffect(() => {
     setIsJoin(join);
-    setPdfHandler({...participants[0]})
-  }, [join]);
+    setPdfHandler({ ...participants[0] });
+  }, [props]);
 
   // roompage에 있는 join 값이 바뀔 때 마다 setIsJoin 실행 함
 
   const RoomSection =
     isJoin || host ? (
-      <Resume idx={pdf} participants={participants} setPdfHandler={setPdfHandler} />
+      <Resume
+        idx={pdf}
+        participants={participants}
+        setPdfHandler={setPdfHandler}
+      />
     ) : (
       <Intro>방에 참여하면 팀원들의 자소서를 볼 수 있어요</Intro>
     );
@@ -58,8 +62,6 @@ function RoomMain(props) {
 
   const Recuritment = maxPersonCount - currentPersonCount;
 
-  console.log(id)
-
   const PersonList = participants.map((elem, idx) => {
     if (elem.name === manager.name) {
       return <Person name={elem.name} isHost={true} key={idx} />;
@@ -74,14 +76,15 @@ function RoomMain(props) {
 
   return (
     <MainPageContainer>
+      <AggroL />
       <SectionHeader>
-        <SubTitle title={"Info"} />
+        <SubTitle title={"상세 정보"} />
       </SectionHeader>
       <Layout>
         <Section>
           <Card>
             <SubTitle title={"시작 일자"} />
-            <PlanTime startDate={startDate}/>
+            <PlanTime startDate={startDate} />
           </Card>
           <Card>
             <SubTitle title={"참가 멤버"} />
@@ -103,7 +106,7 @@ function RoomMain(props) {
       </Layout>
 
       <SectionHeader>
-        <SubTitle title={"자기소개서"} />
+        <SubTitle title={"자기소개서 보기"} />
       </SectionHeader>
       <Layout>
         <Section>{RoomSection}</Section>
@@ -121,11 +124,13 @@ const Description = styled.div`
     -0.2rem -0.2rem 0.5rem var(--white);
   transition: 0.3s ease;
   padding: 2rem 1rem;
-
+  font-size: 1.2rem;
   width: 100%;
 
   .SubTitle {
     margin-bottom: 1rem;
+    font-family: SBagrroL;
+    color: var(--greyDark);
   }
 `;
 
@@ -158,13 +163,31 @@ const Layout = styled.div`
 
   &:last-child {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 11fr 5fr;
     gap: 1rem;
+    min-height: 500px;
+
+    ${Section} {
+      height: 100%;
+    }
   }
 `;
 
 const SectionHeader = styled.div`
-  padding-bottom: 10px;
+  width: fit-content;
+  color: var(--primary-light);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .SubTitle {
+    font-size: 1.2rem;
+    font-family: SBagrroL;
+  }
+
+  svg {
+    font-size: 2rem;
+  }
 `;
 
 const BlockList = styled.div`
@@ -182,7 +205,7 @@ const Card = styled.div`
   transition: 0.3s ease;
   padding: 1rem;
   width: 100%;
-  height: 23vh;
+  height: 26vh;
   display: grid;
   grid-template-rows: 1fr 5fr;
   align-items: center;
@@ -191,6 +214,8 @@ const Card = styled.div`
     position: relative;
     margin: 1rem 0 0 0;
     text-align: center;
+    font-family: SBagrroL;
+    color: var(--greyDark);
   }
 
   &:nth-child(3) div {
@@ -206,33 +231,47 @@ const Card = styled.div`
     align-items: center;
     flex-direction: row;
     gap: 0.5rem;
-    font-size: 2.5vw;
     margin-block: 0.5rem;
     color: var(--greyDark);
+
+    * {
+      font-size: 2.5vw;
+    }
   }
 `;
 
 const Intro = styled.div`
-  background-color: gray;
   width: 100%;
-  height: 300px;
-  margin: 10px 10px 5px 5px;
-  border-radius: 5px;
+  height: 100%;
+  min-height: 400px;
+  border-radius: 1rem;
   text-align: center;
+  background-color: var(--greyDark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--white);
 `;
 
 const PopUp = styled.div`
-  background-color: gray;
   width: 100%;
-  height: 300px;
-  margin: 10px 10px 5px 5px;
-  border-radius: 5px;
+  height: 100%;
+  min-height: 400px;
+  border-radius: 1rem;
   text-align: center;
+
+  background-color: var(--greyDark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--white);
 `;
 
 const MainPageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding-block: 3rem;
   width: 100%;
+  height: 100%;
+  padding-block: 10vh;
+  margin-top: 6vh;
 `;

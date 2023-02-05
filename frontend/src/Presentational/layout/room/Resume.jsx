@@ -196,26 +196,17 @@ const Member = styled.div`
   }
 `;
 
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  height: fit-content;
-`;
-
 const FileContainer = styled.div`
   display: flex;
   justify-content: center;
   width: inherit;
-  height: 100%;
+  height: inherit;
 `;
 
 const FileList = styled.div`
   display: flex;
   flex-direction: column;
   width: inherit;
-  height: 100%;
 `;
 
 const FileListTitle = styled.div`
@@ -228,7 +219,7 @@ const FileListTitle = styled.div`
 
 const FileListBody = styled.div`
   display: flex;
-  height: 200px;
+  height: inherit;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -244,10 +235,10 @@ const FileResultBody = styled.div`
   align-items: center;
   gap: 1rem;
   width: 100%;
-  height: 80%;
-  height: 200px;
+  height: 550px;
   border-radius: 1rem;
   background-color: var(--greyLight-1);
+  padding: 2rem;
 
   & .sign {
   }
@@ -275,7 +266,6 @@ const FileResultRow = styled.div`
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  padding-left: 10px;
 `;
 
 const Input = styled.input.attrs({ type: "file" })`
@@ -344,6 +334,7 @@ const PdfContainer = styled.div`
   border-radius: 1rem;
   background-color: var(--greyLight-2);
   padding: 0.5rem;
+  width: 100%;
 `;
 
 const ButtonContainer = styled.div`
@@ -377,4 +368,17 @@ const ButtonContainer = styled.div`
 
 const CloseButton = styled.button`
   width: 50px;
+`;
+
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  height: fit-content;
+  min-height: 550px;
+
+  & ${FileListBody} {
+    height: 550px;
+  }
 `;

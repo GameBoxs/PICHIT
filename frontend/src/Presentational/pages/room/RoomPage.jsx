@@ -10,6 +10,7 @@ import RoomMainLoading from "../room/RoomMainLoading";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import GoHome from "../../common/GoHome";
 
 function RoomPage() {
   // roomId 값을 RoomListItem에서 Link state에 받아와서
@@ -33,8 +34,6 @@ function RoomPage() {
   const [postData, isLoading] = useCallback(
     useAxios(`interviewrooms/${roomParamsId}`, "POST", token, valid)
   );
-
-
 
   //useEffect
   useEffect(() => {
@@ -85,7 +84,8 @@ function RoomPage() {
   return (
     <Container>
       <Room>
-        {((data && data.id) && !isLoading) ? (
+        <GoHome />
+        {data && data.id && !isLoading ? (
           <>
             <RoomHeader
               joinRoom={joinRoom}
@@ -115,18 +115,20 @@ function RoomPage() {
 export default RoomPage;
 
 const Room = styled.div`
-  margin-left: 10%;
-  margin-right: 10%;
-  width: 80vw;
+  width: 85vw;
+  height: fit-content;
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 1fr 4fr;
+  grid-gap: 2rem;
   align-items: flex-start;
+  z-index: 3;
 `;
 
 const Container = styled.div`
+  min-height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  padding-top: 10vh;
+  padding-block: 10vh;
   background-color: var(--white);
 `;
