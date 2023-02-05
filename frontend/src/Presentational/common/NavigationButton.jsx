@@ -43,11 +43,17 @@ function NavigationButton(props) {
       email: "",
     }))
     
-    window.location.reload()
+    navigate('/')
+    
+    window.location.reload();
   }
   
   const movePage = () => {
     navigate('/review')
+  }
+
+  const moveMain = () => {
+    navigate('/')
   }
 
   return (
@@ -62,6 +68,7 @@ function NavigationButton(props) {
       {
         (token !== null) ?
         <MenuList className="menuList">
+          <MenuItem onClick={moveMain}>홈으로</MenuItem>
           <MenuItem onClick={movePage}>피드백</MenuItem> 
           <MenuItem onClick={logout}>로그아웃</MenuItem> 
         </MenuList>
@@ -193,7 +200,7 @@ const NavStyle = styled.div`
       border-radius: 10%;
     }
     width: 300px;
-    height: ${props => props.token !== null ? "202px" : "130px"};
+    height: ${props => props.token !== null ? "274px" : "130px"};
     border-radius: 2%;
     transition: width 0.5s, height 0.5s;
     transition-delay: 0s, 0.75s;

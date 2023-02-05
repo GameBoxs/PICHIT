@@ -139,7 +139,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     }).then((result) => {
       if (result.isConfirmed) {
         setDeleteData(true);
-        console.log(deleteResult)
       }
     });
   };
