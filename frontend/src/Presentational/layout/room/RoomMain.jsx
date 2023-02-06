@@ -41,6 +41,7 @@ function RoomMain(props) {
         idx={pdf}
         participants={participants}
         setPdfHandler={setPdfHandler}
+        pdfhandler={pdfhandler}
       />
     ) : (
       <Intro>방에 참여하면 팀원들의 자소서를 볼 수 있어요</Intro>

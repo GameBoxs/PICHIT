@@ -5,28 +5,72 @@ import * as pdfjs from "pdfjs-dist";
 
 import { IoClose } from "react-icons/io5";
 
-import useAxios from "../../../action/hooks/useAxios";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import {PITCHIT_URL} from "../../../store/values"
+import { setDate } from "date-fns";
 
 // 근데 import * as 안하면 에러남 필수로 해줄 것!
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-function Resume({ idx, participants, setPdfHandler }) {
+function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
+  const { token, userinfo } = useSelector((state) => state);
   const [pdfFileList, setPdfFileList] = useState([]);
   const [pdfUrl, setPdfUrl] = useState();
   const [showPdf, setShowPdf] = useState(false);
+  const [uploadPdf , setUploadPdf] =useState(false);
+
+  // const [PostPdf, isLoading] = useAxios()
+  console.log(participants)
+  console.log("이건 pdfhandler",pdfhandler)
+  console.log("이건 user정보",userinfo)
+
+  // const [postData, isLoading] = useAxios(
+  //   `interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
+  //   "POST",
+  //   token,
+  //   pdfUrl,
+  //   uploadPdf
+  // )
+  // console.log(pdfUrl)
+  
+  // useEffect(()=> {
+  //   if (postData && postData.success){
+  //     setUploadPdf(false)
+  //   }
+  // },[postData])
+ 
 
   const getUrl = (file) => {
     const blob = new Blob([file]);
     const pdfUrl = URL.createObjectURL(blob);
     setPdfUrl(pdfUrl);
     console.log(pdfUrl);
+    const frm = new FormData()
+    frm.append("file",file,{ type:  
+      "application/pdf" });
+    axios({
+      method:"post",
+      url:`${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
+      headers:{
+        "Authorization": token,
+        "Content-Type": 'multipart/form-data',
+      },
+      data:
+        frm
+    }).then((res) => {
+      setDate(res.data)
+    })
+    .catch((err) => 
+      console.log(err))
   };
 
   const onPdfFileUpload = (e) => {
     const selectedList = Array.from(e.target.files);
     const getAddList = selectedList.map((item) => item);
     getUrl(getAddList[0]);
+    console.log(getAddList[0])
     setPdfFileList(selectedList);
   };
 
@@ -71,6 +115,7 @@ function Resume({ idx, participants, setPdfHandler }) {
 
   const getPdfOwner = (elem) => {
     setPdfHandler({...elem})
+
   }
 
   const interviewees = participants.map((elem, idx) => {
@@ -92,6 +137,8 @@ function Resume({ idx, participants, setPdfHandler }) {
     );
   });
 
+
+
   return (
     <MainContainer>
       <Member>
@@ -112,17 +159,20 @@ function Resume({ idx, participants, setPdfHandler }) {
           </ModalOverlay>
         ) : (
           <FileList>
-            {pdfFileList.length === 0 ? (
+            {pdfFileList.length === 0 ? (<>
+            {pdfhandler.id === userinfo.id ? (
               <FileListBody>
-                파일이 존재하지 않습니다
-                <Label htmlFor="uploadFile">파일 업로드하기</Label>
-                <Input
-                  id="uploadFile"
-                  accept="application/pdf"
-                  multiple={true}
-                  onChange={onPdfFileUpload}
-                />
+                파일이 존재하지 않습니다.
+                  <Label htmlFor="uploadFile">파일 업로드하기</Label>
+                  <Input
+                    id="uploadFile"
+                    accept="application/pdf"
+                    multiple={true}
+                    onChange={onPdfFileUpload}
+                  />
               </FileListBody>
+            ):(<FileListBody>파일이 존재하지 않습니다.</FileListBody>)}
+            </>
             ) : (
               <FileResultList />
             )}
