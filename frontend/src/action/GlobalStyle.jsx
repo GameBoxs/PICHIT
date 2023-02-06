@@ -28,7 +28,6 @@ export const GlobalStyle = createGlobalStyle`
 
     body {
         height: fit-content;
-        background: var(--greyLight-1);
     }
 
     body.dark {
