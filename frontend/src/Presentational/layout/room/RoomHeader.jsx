@@ -177,14 +177,17 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
 
   //화면 렌더링 함수
   const readyRoom = join ? (
-    <Button
-      text={"나가기"}
-      handler={() => {
-        quitHandler(false);
-      }}
-    >
-      나가기
-    </Button>
+    <>
+      <div>{StartBtn}</div>
+      <Button
+        text={"나가기"}
+        handler={() => {
+          quitHandler(false);
+        }}
+      >
+        나가기
+      </Button>
+    </>
   ) : (
     <Button
       isImportant={false}
