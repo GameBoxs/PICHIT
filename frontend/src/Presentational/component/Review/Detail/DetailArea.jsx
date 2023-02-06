@@ -37,9 +37,6 @@ const DetailArea = ({ selectedID }) => {
     setNowPage(1);
   }, [selectedID]);
 
-  // console.log(data);
-  // console.log(totalPage);
-
   return (
     <DetailWrap>
       <SubTitle title="면접 피드백" />

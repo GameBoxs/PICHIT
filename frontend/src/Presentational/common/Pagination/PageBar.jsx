@@ -6,16 +6,15 @@ function PageBar({
   postsPerPage,
   setCurrentPage,
   currentPage,
-  totalpages
+  totalpages,
 }) {
   // paginationBar에 총 몇페이지가 나올지 계산해서 렌더링해주기 위함
   let pages = [];
-  // for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
-    for (let i = 1; i <= totalpages; i++) {
+
+  for (let i = 1; i <= totalpages; i++) {
     pages.push(i);
   }
-  // console.log(totalpages)
-
+  
   return (
     <>
       <Bar className="paginationBar">

@@ -46,9 +46,9 @@ const ReviewPage = (props) => {
         {/* <FilterArea /> */}
         <HistoryList setSelectedID={setSelectedID} />
       </BoardBox>
-      <BoardBox>
+      <ReviewBox>
         <DetailArea selectedID={selectedID} />
-      </BoardBox>
+      </ReviewBox>
     </ReviewMainBody>
   );
 };
@@ -69,23 +69,28 @@ const ReviewTitle = styled.div`
   }
 `;
 
+const ReviewBox = styled.div``;
+
 const BoardBox = styled.div`
   margin-top: 7em;
   width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
 
-  > .SubTitle {
+  .SubTitle {
     font-size: 1.3rem;
     font-family: SBagrroM;
     color: var(--primary-light);
     padding: 1.4rem 1rem 1rem 1rem;
-    border-bottom: solid 2px var(--greyDark);
+    height: 100%;
+    /* border-bottom: solid 2px var(--greyDark); */
     /* background-color: var(--primary-light); */
     /* border-radius: 1rem  1rem  0 0; */
     /* border-bottom: solid 3px var(--primary-light); */
+  }
 
-    * {
-      padding: 0;
-    }
+  * {
+    padding: 0;
   }
 `;
 

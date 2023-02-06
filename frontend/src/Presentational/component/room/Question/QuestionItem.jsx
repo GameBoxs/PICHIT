@@ -25,6 +25,7 @@ const Name = styled.div`
 
 const Item = styled.div`
   padding: 1rem 0.5rem 2rem 0.5rem;
+  width: inherit;
   min-height: 5rem;
   position: relative;
   border-bottom: var(--greyLight-3) solid 1px;

@@ -11,42 +11,43 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
   const token = useSelector((state) => state.token);
 
   const [Questions, setQuestions] = useState([]);
-  const [questObj, setQuestObj] = useState({
-    page: 0,
-    size: 10,
-    sort: [],
-  });
-  const [getUser, setGetUser] = useState(false)
-  const [allQuestion, setAllQuestion] = useState(0);
+  const [nowPage, setNowPage] = useState(1);
+  const [getUser, setGetUser] = useState(false);
+  const [allQuestion, setAllQuestion] = useState(1);
 
   const [getQuestion] = useAxios(
-    `interviewjoins/${pdfhandler.interviewJoinId}/questions?page=${questObj.page}&size=${questObj.size}&sort=${questObj.sort}`,
+    `interviewjoins/${pdfhandler.interviewJoinId}/questions?page=${nowPage-1}&size=10`,
     "GET",
     token,
     {},
     getUser
   );
 
-  useEffect(()=>{
+  useEffect(() => {
     if (pdfhandler !== undefined) {
-      setGetUser(true)
+      setGetUser(true);
+      setNowPage(1);
     }
-  }, [pdfhandler])
+  }, [pdfhandler]);
 
-  useEffect(()=>{
+  useEffect(()=> {
+    setGetUser(true)
+  }, [nowPage])
+
+  useEffect(() => {
     if (getQuestion !== null && getQuestion.success) {
-      setQuestions([...getQuestion?.data.content])
-      setGetUser(false)
-
-      setAllQuestion(getQuestion?.data.totalElements)
+      setQuestions([...getQuestion?.data.content]);
+      setAllQuestion(Math.floor(getQuestion?.data.totalElements / 10)+1);
+      
+      setGetUser(false);
     }
-  }, [getQuestion])
+  }, [getQuestion]);
 
-  // QuestionList: 해당 참가자에게 달려있는 질문 list 목록 
-  // QuestionInsert: 질문 입력 칸 
+  // QuestionList: 해당 참가자에게 달려있는 질문 list 목록
+  // QuestionInsert: 질문 입력 칸
 
   return (
-    <Question> 
+    <Question>
       <QuestionBoxTitle>
         <div>질문</div>
         <div>{allQuestion}</div>
@@ -60,11 +61,9 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
           commentHandler={setGetUser}
         />
         <PageBar
-          totalPosts={15} //전체 데이터 길이
-          postsPerPage={5} //페이지당 게시물 수
-          setCurrentPage={1} //현재 페이지를 계산하는 함수
-          currentPage={1} //현재페이지
-          totalpages={5} //페이지 길이
+          totalpages={allQuestion} //전체 데이터 길이
+          setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
+          currentPage={nowPage} //현재페이지
         />
       </Controler>
     </Question>
@@ -80,20 +79,25 @@ const QuestionBoxTitle = styled.div`
   gap: 1rem;
   font-family: SBagrroL;
   color: var(--greyDark);
+  width: 100%;
 `;
-
 
 const Controler = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
+  grid-template-columns: 1fr;
   grid-template-rows: 2fr 1fr;
   align-items: center;
+  justify-content: center;
 `;
 
 const Question = styled.div`
   position: relative;
   display: grid;
+  align-items: center;
+  justify-content: center;
+  grid-template-columns: 1fr;
   grid-template-rows: 1fr 16fr 4fr;
   height: 600px;
   padding: 5%;
@@ -102,6 +106,9 @@ const Question = styled.div`
   border-radius: 1rem;
 
   .paginationBar {
+    width: 90%;
+    margin-inline: 5%;
+
     button {
       width: 0.8rem;
       height: 0.8rem;
