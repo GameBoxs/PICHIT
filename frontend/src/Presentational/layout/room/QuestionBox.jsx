@@ -16,7 +16,9 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
   const [allQuestion, setAllQuestion] = useState(1);
 
   const [getQuestion] = useAxios(
-    `interviewjoins/${pdfhandler.interviewJoinId}/questions?page=${nowPage-1}&size=10`,
+    `interviewjoins/${pdfhandler.interviewJoinId}/questions?page=${
+      nowPage - 1
+    }&size=10`,
     "GET",
     token,
     {},
@@ -30,15 +32,15 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
     }
   }, [pdfhandler]);
 
-  useEffect(()=> {
-    setGetUser(true)
-  }, [nowPage])
+  useEffect(() => {
+    setGetUser(true);
+  }, [nowPage]);
 
   useEffect(() => {
     if (getQuestion !== null && getQuestion.success) {
       setQuestions([...getQuestion?.data.content]);
-      setAllQuestion(Math.floor(getQuestion?.data.totalElements / 10)+1);
-      
+      setAllQuestion(Math.floor(getQuestion?.data.totalElements / 10) + 1);
+
       setGetUser(false);
     }
   }, [getQuestion]);
@@ -52,7 +54,13 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
         <div>질문</div>
         <div>{allQuestion}</div>
       </QuestionBoxTitle>
-      <QuestionList idx={idx} Questions={Questions} setGetUser={setGetUser} />
+      <QuestionList
+        idx={idx}
+        Questions={Questions}
+        setGetUser={setGetUser}
+        userinfo={userinfo}
+        pdfhandler={pdfhandler}
+      />
       <Controler>
         <QuestionInsert
           userinfo={userinfo}
