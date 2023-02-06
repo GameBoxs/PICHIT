@@ -202,7 +202,7 @@ const NavCompo = styled.div`
 
   .logOutBtn {
     cursor: pointer;
-    
+
     &:hover * {
       color: var(--primary);
     }
@@ -228,6 +228,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background: var(--greyLight-1);
 
   & .SubTitle {
     font-size: 1em;

@@ -2,70 +2,113 @@ import styled from "styled-components";
 import Title from "../../../common/Title";
 import SubTitle from "../../../common/SubTitle";
 
+import { AiFillRightCircle } from "react-icons/ai";
+import AggroL from "../../../common/Font/AggroL";
+
 const ListItem = (props) => {
   // console.log('ListItem');
-  // console.log(props);
-  const tempDate = props.item.startDate !== undefined ? new Date((props.item.startDate).toString()) : null;
-  const date = tempDate !== null ? tempDate.getFullYear().toString().slice(2,4) + '.' +  (tempDate.getMonth()+1).toString() + '.' + tempDate.getDate().toString() : null;
+  // console.log(props.item);
+  const tempDate =
+    props.item.startDate !== undefined
+      ? new Date(props.item.startDate.toString())
+      : null;
+
+  const date =
+    tempDate !== null
+      ? tempDate.getFullYear().toString().slice(2, 4) +
+        "년\t" +
+        (tempDate.getMonth() + 1).toString() +
+        "월\t" +
+        tempDate.getDate().toString()+
+        '일\t'
+      : null;
+
   const changeID = () => {
-    if(props.item.startDate !== undefined){
+    if (props.item.startDate !== undefined) {
       props.setSelectedID(props.myID);
     }
-  }
-    return(
-      <>
-        <ItemWrap onClick={changeID} cursor={props.cursor}>
-          {
-            props.item && props.item.title ?
-            <>
-              <Title title={props.item.title} />
-            </>
-            : 
-            <Title title="" />
-          }
-          {
-            props.item && props.item.title ?
-            <SubTitle title={date}></SubTitle>
-            : <SubTitle title=""></SubTitle>
-          }
-          {props.item.title !=="" && props.item.title !== null && props.item.title !== undefined ? <SubTitle title=">"></SubTitle> : null }
-        </ItemWrap>
-        <Line></Line>
-      </>
-    )
-  }
+  };
 
-  const ItemWrap = styled.div`
-    display: flex;
+  return (
+    <>
+      <AggroL />
+      <ItemWrap onClick={changeID} cursor={props.cursor}>
+        <div>{props.index + 1}</div>
+
+        {props.item && props.item.title ? (
+          <Title title={props.item.title} />
+        ) : (
+          <Title title="" />
+        )}
+
+        {props.item && props.item.title ? (
+          <SubTitle title={date}></SubTitle>
+        ) : (
+          <SubTitle title=""></SubTitle>
+        )}
+
+        {props.item.title !== "" &&
+        props.item.title !== null &&
+        props.item.title !== undefined ? (
+          <AiFillRightCircle />
+        ) : null}
+      </ItemWrap>
+    </>
+  );
+};
+
+const ItemWrap = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 8fr 2fr 1fr;
+  width: 100%;
+  min-height: 2rem;
+  padding: 1rem 1.5rem !important;
+  align-items: center;
+  border-bottom: var(--greyLight-1) solid 2px;
+
+  * {
     width: 100%;
-    height: 50px;
-    * {
-        line-height: 50px;
-        height: 50px;
-    }
-    & > div:nth-child(1), div:nth-child(4) {
-        font-weight: bolder;
-    }
-    & div:nth-child(1) {
-      /* cursor: pointer; */
-      cursor: ${props => props.cursor};
-      width: 85%;
-    }
-    & div:nth-child(2) {
-      width: 10%;
-    }
-    & div:nth-child(3) {
-      /* cursor: pointer; */
-      cursor: ${props => props.cursor};
-      width: 5%;
-      font-size: 30px;
-    }
-    &:hover {
-      background-color: #5555551e;
-    }
-  `
+  }
 
-    const Line = styled.hr`
-        margin: 15px 0 15px 0;
-    `;
-    export default ListItem;
+  .Title {
+    font-size: 1.2rem;
+  }
+
+  & div:nth-child(1),
+  & div:nth-child(3) {
+    /* cursor: pointer; */
+    cursor: ${(props) => props.cursor};
+    width: 100%;
+    color: var(--greyDark);
+  }
+
+  & div:nth-child(1) {
+    font-size: 1rem;
+    font-family: SBagrroL;
+  }
+
+  & div:nth-child(3) {
+    text-align: right;
+    font-size: 0.9rem;
+  }
+
+  &:hover {
+    background-color: var(--greyLight-1);
+    color: var(--primary);
+
+    svg {
+      color: var(--primary-dark);
+    }
+
+    & div:nth-child(1) {
+      color: var(--grey-dark);
+    }
+  }
+
+  svg {
+    font-size: 2rem !important;
+    margin: 0 !important;
+  }
+`;
+
+export default ListItem;

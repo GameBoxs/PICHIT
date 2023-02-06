@@ -13,7 +13,6 @@ import ChatArea from "../../layout/Chat/ChatArea";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-
 import UserVideoComponent from "../../component/Chat/OpenVidu/UserVideoComponent";
 import { leaveSession } from "../../../action/modules/chatModule";
 import { useNavigate } from "react-router-dom";
@@ -74,7 +73,7 @@ const dummy = [
   },
 ];
 
-const testPlayer = ["김민지"]
+const testPlayer = ["김민지"];
 
 const dummyPlayer = ["이희수", "임수민", "김민지"];
 
@@ -86,7 +85,11 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   function makeBlank() {
     let result = [];
     for (let i = 0; i < cnt; i++) {
-      result.push(<CamCompo className="in" key={i}>aa</CamCompo>);
+      result.push(
+        <CamCompo className="in" key={i}>
+          aa
+        </CamCompo>
+      );
     }
     return result;
   }
@@ -139,20 +142,13 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   };
 
   const interviewees = dummyPlayer.map((elem, idx) => {
-      return (
-        <React.Fragment
-          key={idx}
-        >
-          <input
-            type="radio"
-            name={`radio`}
-            value={elem}
-            id={`tab-${idx + 1}`}
-          />
-          <label htmlFor={`tab-${idx + 1}`}>
-            <p>{elem}</p>
-          </label>
-        </React.Fragment>
+    return (
+      <React.Fragment key={idx}>
+        <input type="radio" name={`radio`} value={elem} id={`tab-${idx + 1}`} />
+        <label htmlFor={`tab-${idx + 1}`}>
+          <p>{elem}</p>
+        </label>
+      </React.Fragment>
     );
   });
 
@@ -182,7 +178,8 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
               <UserVideoComponent streamManager={info.publisher} />
             </CamCompo>
             {info.subscribers.map((sub, i) =>
-              sub.stream.connection.connectionId === info.interviewee ? null : (
+              // sub.stream.connection.connectionId === info.interviewee ? null : (
+              JSON.parse(sub.stream.connection.data).clientId.toString() === info.interviewee.toString() ? null : (
                 <CamCompo className="in" key={i}>
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>
@@ -193,7 +190,8 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
           <CamCompo>
             <InterviewerTag>면접자</InterviewerTag>
             {info.subscribers.map((sub, i) =>
-              sub.stream.connection.connectionId === info.interviewee ? (
+              // sub.stream.connection.connectionId === info.interviewee ? (
+              JSON.parse(sub.stream.connection.data).clientId.toString() === info.interviewee.toString() ? (
                 <CamCompo key={i}>
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>
@@ -316,7 +314,8 @@ const Member = styled.div`
     height: 2rem;
     width: 5rem;
     border-radius: 0.8rem !important;
-    box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2), inset -0.2rem -0.2rem 0.5rem var(--white);
+    box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
+      inset -0.2rem -0.2rem 0.5rem var(--white);
     pointer-events: none;
   }
 
@@ -389,7 +388,8 @@ const SubBtn = styled.div`
   background-color: var(--primary);
   box-shadow: inset 0.1rem 0.1rem 0.5rem var(--primary-light),
     inset -0.1rem -0.1rem 0.5rem var(--primary-dark),
-    0.15rem 0.15rem 0.3rem var(--greyLight-2), -0.1rem -0.1rem 0.25rem var(--white);
+    0.15rem 0.15rem 0.3rem var(--greyLight-2),
+    -0.1rem -0.1rem 0.25rem var(--white);
 
   color: var(--greyLight-1);
   &:hover {
@@ -548,10 +548,10 @@ const NavCompo = styled.div`
       color: var(--greyDark);
     }
   }
-  
+
   .logOutBtn {
     cursor: pointer;
-    
+
     &:hover * {
       color: var(--primary);
     }
@@ -595,6 +595,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background: var(--greyLight-1);
 
   & .SubTitle {
     font-size: 1em;
