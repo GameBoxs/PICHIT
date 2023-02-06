@@ -75,7 +75,7 @@ const Container = styled.div`
   background-color: var(--greyLight-1);
   border-radius: 3rem;
   margin-top: 1rem;
-  padding : 1rem;
+  padding : 2rem;
 `;
 
 const NullCompo = styled.div`
@@ -84,24 +84,22 @@ const NullCompo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 1.2rem;
 `;
 
 const DetailWrap = styled.div`
   width: 100%;
   margin-bottom: 50px;
+
   & > div:first-child {
     font-size: 1.3rem;
     font-family: SBagrroM;
     color: var(--primary-light);
     padding: 1.4rem 1rem 1rem 1rem;
-    border-bottom: solid 2px var(--greyDark);
+    /* border-bottom: solid 2px var(--greyDark); */
   }
 
   & > div:nth-child(4) {
     margin-top: 50px;
   }
-`;
-
-const Line = styled.hr`
-  margin: 15px 0 15px 0;
 `;

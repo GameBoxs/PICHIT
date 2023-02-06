@@ -54,8 +54,6 @@ const SelectIntervieweePage = ({
     setRoomNum(roomID)
   }, [info])
 
-  console.log(roomNum)
-
   const handler = () => {
     // let myID = info.publisher.stream.connection.connectionId;
     // let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData

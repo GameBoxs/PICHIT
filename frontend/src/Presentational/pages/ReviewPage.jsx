@@ -12,6 +12,7 @@ import DetailArea from "../component/Review/Detail/DetailArea";
 import AggroL from "../common/Font/AggroL";
 import AggroM from "../common/Font/AggroM";
 import { TiStarburst } from "react-icons/ti";
+import { memo } from "react";
 
 //#endregion
 
@@ -53,7 +54,7 @@ const ReviewPage = (props) => {
   );
 };
 
-export default ReviewPage;
+export default memo(ReviewPage);
 
 const ReviewTitle = styled.div`
   font-family: SBagrroL;
@@ -72,7 +73,7 @@ const ReviewTitle = styled.div`
 const ReviewBox = styled.div``;
 
 const BoardBox = styled.div`
-  margin-top: 7em;
+  margin-block: 7em;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 3fr;
@@ -87,10 +88,14 @@ const BoardBox = styled.div`
     /* background-color: var(--primary-light); */
     /* border-radius: 1rem  1rem  0 0; */
     /* border-bottom: solid 3px var(--primary-light); */
-  }
 
-  * {
-    padding: 0;
+    * {
+      padding: 0;
+    }
+
+    &:first-child {
+      padding: 0 0 0 0;
+    }
   }
 `;
 

@@ -81,7 +81,6 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   let navigate = useNavigate();
 
   let cnt = 3 - info.subscribers.length;
-  console.log(cnt);
   function makeBlank() {
     let result = [];
     for (let i = 0; i < cnt; i++) {
@@ -145,19 +144,21 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
   let MemberList = [];
 
-  MemberList.push({myID: myNickName})
+  MemberList.push({id:myID, name:myNickName})
   for (let i = 0; i < info.subscribers.length; i++) {
+    
     let targetID = JSON.parse(
       info.subscribers[i].stream.connection.data
     ).clientId;
+
     let targetNickName = JSON.parse(
       info.subscribers[i].stream.connection.data
     ).clientData;
 
-    MemberList.push({targetID:targetNickName})
+    MemberList.push({id:targetID, name:targetNickName})
   }
 
-  console.log(MemberList)
+  console.log(MemberList.filter(person => person.id))
 
   const interviewees = dummyPlayer.map((elem, idx) => {
     return (
@@ -541,8 +542,7 @@ const BodyCompo = styled.div`
     }
   }
 
-  &:nth-child(2) ${QuestionBody}:nth-child(2),
-  &:nth-child(3) ${QuestionBody}:nth-child(1) {
+  &:nth-child(2) ${QuestionBody}:nth-child(2), &:nth-child(3) ${QuestionBody}:nth-child(1) {
     display: flex;
     justify-content: space-between;
     align-items: center;

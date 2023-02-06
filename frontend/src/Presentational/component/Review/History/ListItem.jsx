@@ -4,6 +4,7 @@ import SubTitle from "../../../common/SubTitle";
 
 import { AiFillRightCircle } from "react-icons/ai";
 import AggroL from "../../../common/Font/AggroL";
+import AggroB from "../../../common/Font/AggroB";
 
 const ListItem = (props) => {
   // console.log('ListItem');
@@ -29,11 +30,14 @@ const ListItem = (props) => {
     }
   };
 
+  const idx =
+    props.index < 10 ? "0" + (props.index + 1).toString() : props.index;
+
   return (
     <>
-      <AggroL />
+      <AggroB />
       <ItemWrap onClick={changeID} cursor={props.cursor}>
-        <div>{props.index + 1}</div>
+        <div>{idx}</div>
 
         {props.item && props.item.title ? (
           <Title title={props.item.title} />
@@ -71,7 +75,7 @@ const ItemWrap = styled.div`
   }
 
   .Title {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
 
   &:nth-child(1) {
@@ -87,8 +91,13 @@ const ItemWrap = styled.div`
   }
 
   & div:nth-child(1) {
-    font-size: 1rem;
+    font-size: 2.2rem;
     font-family: SBagrroL;
+    width: 100%;
+  }
+
+  & div:nth-child(2) {
+    margin-left: 1rem;
   }
 
   & div:nth-child(3) {
