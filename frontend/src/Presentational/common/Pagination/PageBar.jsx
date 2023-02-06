@@ -52,13 +52,16 @@ const Button = styled.button`
   background-color: var(--primary);
   cursor: pointer;
   transition: 0.3s ease width;
+
   &:last-child {
     margin-right: 0;
   }
+
   &:hover {
     background: var(--primary-dark);
     cursor: pointer;
   }
+  
   ${(props) =>
     props.active &&
     css`

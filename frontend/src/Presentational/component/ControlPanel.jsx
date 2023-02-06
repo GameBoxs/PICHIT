@@ -1,6 +1,9 @@
 import React, { memo } from "react";
+
 import styled from "styled-components";
 import SoundBtn from "./SoundBtn";
+
+import AggroM from "../common/Font/AggroM";
 
 const ControlPanel = ({ play, isPlaying, duration, currentTime }) => {
   //시간 설정 함수
@@ -29,16 +32,17 @@ const ControlPanel = ({ play, isPlaying, duration, currentTime }) => {
     }
 
     if (parseInt(hours, 10) > 0) {
-      return `${parseInt(hours, 10)}h ${min}m ${sec}s`;
+      return `${parseInt(hours, 10)}:${min}:${sec}`;
     } else if (min == 0) {
-      return `00m ${sec}s`;
+      return `00:${sec}`;
     } else {
-      return `${min}m ${sec}s`;
+      return `${min}:${sec}`;
     }
   };
 
   return (
     <ControlPanelDiv>
+      <AggroM />
       <Timer>{secondsToHms(currentTime)}</Timer>
       <div>
         <SoundBtn play={play} isPlaying={isPlaying} />
@@ -50,12 +54,15 @@ const ControlPanel = ({ play, isPlaying, duration, currentTime }) => {
 
 export default memo(ControlPanel);
 
-const Timer = styled.div``;
+const Timer = styled.div`
+  font-family: SBagrroM;
+  color: var(--greyDark);
+`;
 
 const ControlPanelDiv = styled.div`
+  height: fit-content;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-
-  height: 8rem;
+  align-items: flex-start;
+  margin-top: 1rem;
 `;

@@ -79,8 +79,8 @@ export default memo(Soundbar);
 const TimeStampBox = styled.div`
   position: absolute;
   height: 0.5rem;
-  width: 2.5px;
-  background-color: var(--greyLight-1);
+  width: 3px;
+  background-color: var(--primary-light);
   margin-left: ${(props) => props.timeStampMargin}px;
   display: inline-block;
 `;
@@ -138,6 +138,7 @@ const SliderContainer = styled.div`
   --progress-bar-height: 5px;
   --thumb-width: 20px;
   --thumb-height: 20px;
+  
   position: relative;
   width: 100%;
 

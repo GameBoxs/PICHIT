@@ -92,20 +92,20 @@ const SoundArea = () => {
 
   return (
     <SoundWrap>
-      {/* 시간표시/재생 on off 버튼 */}
-      <ControlPanel
-        play={play}
-        isPlaying={isPlaying}
-        duration={duration}
-        currentTime={currentTime}
-      />
-
       {/* 보이는 사운드 바 */}
       <Soundbar
         onChange={onChange}
         percentage={percentage}
         duration={duration}
         timeline={timeline}
+      />
+      
+      {/* 시간표시/재생 on off 버튼 */}
+      <ControlPanel
+        play={play}
+        isPlaying={isPlaying}
+        duration={duration}
+        currentTime={currentTime}
       />
 
       {/* 소리 재생하게 해주는 태그 */}
@@ -116,7 +116,7 @@ const SoundArea = () => {
         onTimeUpdate={getCurrentDuration}
       ></audio>
 
-      {timeline.map((el, idx) => {
+      {/* {timeline.map((el, idx) => {
         return (
           <button
             onClick={() => {
@@ -127,7 +127,7 @@ const SoundArea = () => {
             HIHIHI
           </button>
         );
-      })}
+      })} */}
 
       {/* <SoundPagenationArea>
                 <span>&lt; 1 2 3 4 ... 10 &gt;</span>
@@ -138,7 +138,16 @@ const SoundArea = () => {
 
 const SoundWrap = styled.div`
   width: 100%;
-  margin-top: 50px;
+  margin-block: 2rem;
+  border-radius: 2rem;
+  padding: 2rem;
+  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
+    -0.2rem -0.2rem 0.5rem var(--white);
+  cursor: pointer;
+  transition: 0.3s ease;
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  background-color: var(--greyLight-1);
 `;
 
 const SoundPagenationArea = styled.div`
