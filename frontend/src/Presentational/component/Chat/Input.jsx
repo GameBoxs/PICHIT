@@ -2,12 +2,29 @@ import styled from "styled-components";
 import { memo, useEffect, useState } from "react";
 import { BiSend } from "react-icons/bi";
 
-const Input = ({ SetIncomMessage, session }) => {
+const Input = ({ SetIncomMessage, session, info }) => {
   const [textValue, SetTextValue] = useState("");
-
+  const [inputFlag, setInputFlag] = useState(false);
+  let flag = false;
   useEffect(() => {
     if (textValue === "\n") SetTextValue("");
+    if(textValue && inputFlag===false){
+      setInputFlag(true);
+    }
+    else if(textValue=='' && inputFlag===true){
+      setInputFlag(false);
+    }
   }, [textValue]);
+
+  useEffect(() => {
+    if(inputFlag === true){
+      session.signal({
+        data: textValue,
+        to: [],
+        type: "who-typing",
+      });
+    }
+  },[inputFlag])
 
   function setText(e) {
     SetTextValue(e.target.value);
@@ -40,7 +57,7 @@ const Input = ({ SetIncomMessage, session }) => {
       return;
     }
     let time = getTime();
-    const data = { Name: "김지훈", Time: time, Message: textValue };
+    const data = { Name: JSON.parse(info.publisher.stream.connection.data).clientData.toString(), Time: time, Message: textValue };
     // SetIncomMessage(data);
     session.signal({
       data: JSON.stringify(data),
@@ -48,6 +65,7 @@ const Input = ({ SetIncomMessage, session }) => {
       type: "all-chat",
     });
     SetTextValue("");
+    setInputFlag(false);
   }
 
   return (

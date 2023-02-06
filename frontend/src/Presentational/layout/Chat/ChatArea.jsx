@@ -14,17 +14,24 @@ const ChatArea = ({session,info}) => {
     const [incomM, SetIncomM] = useState([]);
     const [tD, setT] = useState();
     const [flag,setFlag] = useState(false);
+    let bounceFlag = false;
 
     useEffect(() => {
         let mySession = session;
         if (mySession !== null){
             mySession.on('signal:all-chat',(e) => {
                 setT(JSON.parse(e.data));
-                // SetIncomMessage(JSON.parse(e.data));
-                // let data = JSON.parse(e.data);
-                // let temp = [...IncomM];
-                // temp.push(data);
-                // SetIncomM(temp);
+                bounceFlag = false;
+            })
+            mySession.on('signal:who-typing',(e) => {
+                console.log(e);
+                console.log(session);
+                if(e.data !== '' && session.connection.connectionId !== e.from){
+                    bounceFlag = true;
+                }
+                setTimeout(() => {
+                    bounceFlag = false;
+                },60000)
             })
         }
     },[session])
@@ -48,11 +55,15 @@ const ChatArea = ({session,info}) => {
             <ChatBody>
                 <MessageArea Message={incomM}/>
                 {/* <MessageArea session={session}/> */}
-                <BounceText />
+                {
+                    bounceFlag ?
+                    <BounceText />
+                    :null
+                }
             </ChatBody>
             <InputBody>
                 {/* <InputArea SetIncomMessage={SetIncomMessage} session={session}/> */}
-                <InputArea session={session}/>
+                <InputArea session={session} info={info}/>
             </InputBody>
         </ChatWrap>
     )
