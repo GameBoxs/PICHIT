@@ -49,11 +49,12 @@ const DayTitle = styled.div`
   font-family: SBagrroL;
   position: relative;
   top:10px;
+  opacity: 0.8;
 `;
 
 const Text = styled.div`
-  width: 1.5em;
-  height: 1.5em;
+  width: 1em;
+  height: 1em;
   font-weight: bolder;
   font-size: 2rem;
   padding: 1.1em 1em 1em 1em;
@@ -68,8 +69,6 @@ const Text = styled.div`
   box-shadow: inset 0.2rem 0.2rem 1rem var(--primary-light),
     inset -0.2rem -0.2rem 1rem var(--primary-dark),
     0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--white);
-  color: var(--greyLight-1);
-
   font-family: SBagrroM;
 `;
 

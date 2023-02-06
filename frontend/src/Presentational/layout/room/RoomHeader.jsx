@@ -12,11 +12,15 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import AggroL from "../../common/Font/AggroL";
 import { createSession } from "../../../action/modules/chatModule";
+import { TiStarburst } from "react-icons/ti";
+import SubTitle from "../../common/SubTitle";
 
 const MySwal = withReactContent(Swal);
 
 function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
-  const { id, title, participants, sessionOpened } = data;
+  const { id, title, participants, sessionOpened, manager } = data;
+
+  console.log(sessionOpened);
 
   const navigate = useNavigate();
 
@@ -137,7 +141,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     }).then((result) => {
       if (result.isConfirmed) {
         setDeleteData(true);
-        console.log(deleteResult)
       }
     });
   };
@@ -157,38 +160,34 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   };
 
   const createRoom = () => {
-    
     createSession(id, token).then((res) => {
       if (res.success) {
         window.location.reload();
       }
     });
-    
   };
 
   //JSX 변수
   const ReadyBtn = (
-    <Button text={"방 만들기"} handler={createRoom} isImportant={true} />
+    <Button text={"스터디 준비하기"} handler={createRoom} isImportant={true} />
   );
 
   const StartBtn = (
-    <Button text={"방 입장하기"} handler={moveToRoom} isImportant={true} />
+    <Button text={"스터디 시작하기"} handler={moveToRoom} isImportant={true} />
   );
 
-  //화면 렌더링 함수
-  const readyRoom = join ? (
-    <>
-      <div>{StartBtn}</div>
-      <Button
-        text={"나가기"}
-        handler={() => {
-          quitHandler(false);
-        }}
-      >
-        나가기
-      </Button>
-    </>
-  ) : (
+  const QuitBtn = (
+    <Button
+      text={"나가기"}
+      handler={() => {
+        quitHandler(false);
+      }}
+    >
+      나가기
+    </Button>
+  );
+
+  const EnterBtn = (
     <Button
       isImportant={false}
       text={"참여하기"}
@@ -198,23 +197,51 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     </Button>
   );
 
+  const StudyStartBtn = (
+    <Button
+      isImportant={true}
+      text={"스터디 시작하기"}
+      handler={() => moveToRoom()}
+    >
+      방 입장하기
+    </Button>
+  );
+
+  //화면 렌더링 함수
+  const readyRoom = join ? (
+    <>
+      {sessionOpened ? StudyStartBtn : <p>스터디룸을 준비중입니다</p>}
+      {QuitBtn}
+    </>
+  ) : (
+    <>{EnterBtn}</>
+  );
+
   const RoomHost = host ? (
     <BtnContainer>
       {participants.length >= 2 ? (sessionOpened ? StartBtn : ReadyBtn) : null}
       <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
         삭제하기
       </Button>
-          <Button text={"수정하기"} handler={showModal}>수정하기</Button>
+      <Button text={"수정하기"} handler={showModal}>
+        수정하기
+      </Button>
       {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
     </BtnContainer>
   ) : (
-    <div>{readyRoom}</div>
+    <BtnContainer>{readyRoom}</BtnContainer>
   );
 
   return (
     <Layout>
       <AggroL />
+      <TiStarburst />
       <Title title={title} />
+
+      <ManagerLayout>
+        <SubTitle title={"방장"} />
+        <SubTitle title={manager.name} />
+      </ManagerLayout>
       {RoomHost}
     </Layout>
   );
@@ -222,10 +249,29 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
 
 export default RoomHeader;
 
+const ManagerLayout = styled.div`
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  font-family: "SBagrroL";
+  color: var(--greyDark);
+
+  & .SubTitle:first-child {
+    color: var(--greyLight-3);
+  }
+
+  margin-bottom: 3rem;
+`;
+
 const BtnContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+
+  > p {
+    margin-left: 0.3rem;
+    color: var(--primary-dark);
+  }
 `;
 
 const LayoutButton = styled.div`
@@ -235,11 +281,16 @@ const LayoutButton = styled.div`
 
 const Layout = styled.div`
   margin-bottom: 3rem;
+  height: inherit;
+  padding: 1rem;
+  border-radius: 1rem;
+  color: var(--primary);
+  margin-top: 6vh;
 
   & .Title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     text-align: left;
-    margin-block: 3rem;
+    margin-block: 1rem;
     font-family: "SBagrroL";
   }
 
@@ -250,5 +301,10 @@ const Layout = styled.div`
     & * {
       font-size: 1rem;
     }
+  }
+
+  svg {
+    margin-top: 0rem;
+    font-size: 2rem;
   }
 `;

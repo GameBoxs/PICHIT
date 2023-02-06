@@ -14,7 +14,14 @@ import { useSelector } from "react-redux";
 
 const MySwal = withReactContent(Swal);
 
-const SelectIntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
+const SelectIntervieweePage = ({
+  session,
+  setSession,
+  OV,
+  setOV,
+  info,
+  setInfo,
+}) => {
   let navigate = useNavigate();
   const myToken = useSelector((state) => state.token);
 
@@ -22,17 +29,12 @@ const SelectIntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
   const sentance = true ? "대기 중입니다" : "방장이 면접자를 선택하고 있습니다";
 
   // 면접자 선택을 위한 dummy data
-    const dummy = [
-    '연예인 희수',
-    'Kim jh 남자의',
-    '수민',
-    '킹갓 어쩌고 효진 '
-  ]
+  const dummy = ["연예인 희수", "Kim jh 남자의", "수민", "킹갓 어쩌고 효진 "];
 
   // const MemberList = dummy.map((person,idx) => {
   //   return <option key={idx}>{person}</option>
   // })
-  // // 방장이 시작 버튼 눌렀을 때, 면접자 선택 모달 
+  // // 방장이 시작 버튼 눌렀을 때, 면접자 선택 모달
   // const handler = () => {
   //   MySwal.fire({
   //     title:"면접자를 선택해주세요",
@@ -46,7 +48,7 @@ const SelectIntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
   //     )
   //   })
   // }
-  
+
   const handler = () => {
     // let myID = info.publisher.stream.connection.connectionId;
     // let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData
@@ -71,11 +73,11 @@ const SelectIntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
     }
 
     MySwal.fire({
-      title:"면접자를 선택해주세요",
-      icon:'question',
-      input: 'select',
+      title: "면접자를 선택해주세요",
+      icon: "question",
+      input: "select",
       inputOptions: MemberList,
-      inputPlaceholder: '면접자 선택',
+      inputPlaceholder: "면접자 선택",
       showCancelButton: true,
     }).then((result) => {
       if(result.isConfirmed){
@@ -100,11 +102,18 @@ const SelectIntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
       <Screen number={info.subscribers.length} info={info} />
       <BottomPanel>
         <Button handler={handler} text="시작" isImportant={true} />
-        <Button text="종료" handler={() => {leaveSession(session, setOV); navigate("/room")}} isImportant={false} />
+        <Button
+          text="종료"
+          handler={() => {
+            leaveSession(session, setOV);
+            navigate("/room");
+          }}
+          isImportant={false}
+        />
       </BottomPanel>
     </Container>
   );
-}
+};
 
 export default SelectIntervieweePage;
 
@@ -138,4 +147,5 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: var(--greyLight-1);
 `;
