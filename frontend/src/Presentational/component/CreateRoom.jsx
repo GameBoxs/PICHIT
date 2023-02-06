@@ -30,7 +30,7 @@ function CreateRoom({ setModalOpen }) {
     title: "",
     description: "",
     contactWay:"",
-    maxPersonCount: 0,
+    maxPersonCount: 2,
     password: "",
     finished: 0,
     startDate: "",
@@ -97,8 +97,14 @@ function CreateRoom({ setModalOpen }) {
     else if(room.description === ''){
       alert ("설명을 입력해주세요")
     }
-    else if (room.maxPersonCount === '') {
+    else if (room.maxPersonCount === '' ) {
       alert("모집인원을 입력해주세요")
+    }
+    else if (room.maxPersonCount > 4 ) {
+      alert("최대 모집인원을 초과하였습니다")
+    }
+    else if (room.maxPersonCount < 1 ) {
+      alert("최소 2명 이상의 모집인원을 입력 해 주세요")
     }
     else if(room.startDate === ''){
       alert ("시작 날짜를 설정해주세요")
