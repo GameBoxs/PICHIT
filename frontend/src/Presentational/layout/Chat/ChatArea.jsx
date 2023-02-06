@@ -14,23 +14,25 @@ const ChatArea = ({session,info}) => {
     const [incomM, SetIncomM] = useState([]);
     const [tD, setT] = useState();
     const [flag,setFlag] = useState(false);
-    let bounceFlag = false;
+    const [bounceFlag, setBounceFlag] = useState(false); // 입력 신호 올대 ... 띄우는 Flag
 
     useEffect(() => {
         let mySession = session;
         if (mySession !== null){
             mySession.on('signal:all-chat',(e) => {
                 setT(JSON.parse(e.data));
-                bounceFlag = false;
+                setBounceFlag(false);
             })
-            mySession.on('signal:who-typing',(e) => {
-                console.log(e);
-                console.log(session);
+            mySession.on('signal:who-typing',(e) => { // 누군가 타이핑 입력중이라는것 신호 받기
+                // console.log(e);
+                // console.log(session);
+                // 내가 입력중일때 뜨면 안되므로 다른 사람이 입력중일때를 검사
                 if(e.data !== '' && session.connection.connectionId !== e.from){
-                    bounceFlag = true;
+                    setBounceFlag(true);
                 }
+                // 혹시나 입력 해놓고 오랫동안 보내지 않으면 2분 뒤에 ...없앰
                 setTimeout(() => {
-                    bounceFlag = false;
+                    setBounceFlag(false);
                 },60000)
             })
         }

@@ -17,6 +17,7 @@ const Input = ({ SetIncomMessage, session, info }) => {
   }, [textValue]);
 
   useEffect(() => {
+    // 타이핑 할때, flag가 true일때 신호 보내기.
     if(inputFlag === true){
       session.signal({
         data: textValue,
