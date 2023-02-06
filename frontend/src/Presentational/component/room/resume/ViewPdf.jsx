@@ -13,6 +13,15 @@ const ViewPDF = ({ fileUrl }) => {
       <Document file={fileUrl} onLoadSuccess={onDocumentLoadSuccess}>
         <Page pageNumber={pageNumber} />
       </Document>
+      <PageNext>
+        <Next onClick={()=> pageNumber > 1 ? setPageNumber(pageNumber-1):null}>
+        &lt;
+        </Next>
+        <Next>Page {pageNumber} of {numPages}</Next>
+        <Next onClick={()=> pageNumber < numPages ? setPageNumber(pageNumber+1):null}>
+        &gt;
+        </Next>
+      </PageNext>
     </Layout>
   );
 };
@@ -41,3 +50,11 @@ const Layout = styled.div`
     height: auto !important;
   }
 `;
+
+const PageNext = styled.p`
+  
+`
+
+const Next = styled.span`
+  
+`
