@@ -19,8 +19,8 @@ const ListItem = (props) => {
         "년\t" +
         (tempDate.getMonth() + 1).toString() +
         "월\t" +
-        tempDate.getDate().toString()+
-        '일\t'
+        tempDate.getDate().toString() +
+        "일\t"
       : null;
 
   const changeID = () => {
@@ -59,10 +59,10 @@ const ListItem = (props) => {
 
 const ItemWrap = styled.div`
   display: grid;
-  grid-template-columns: 1fr 8fr 2fr 1fr;
+  grid-template-columns: 1fr 7fr 2fr 1fr;
   width: 100%;
   min-height: 2rem;
-  padding: 1rem 1.5rem !important;
+  padding: 0.6rem 1.5rem !important;
   align-items: center;
   border-bottom: var(--greyLight-1) solid 2px;
 
@@ -72,6 +72,10 @@ const ItemWrap = styled.div`
 
   .Title {
     font-size: 1.2rem;
+  }
+
+  &:nth-child(1) {
+    border-top: var(--greyLight-1) solid 2px;
   }
 
   & div:nth-child(1),

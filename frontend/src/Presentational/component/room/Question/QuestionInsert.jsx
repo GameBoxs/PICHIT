@@ -123,6 +123,7 @@ const QuestionInputBox = styled.div`
   z-index: 3;
 
   form {
+    width: inherit;
     display: grid;
     grid-template-columns: 15fr 2fr;
     grid-gap: 0.5rem;

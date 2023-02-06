@@ -19,6 +19,7 @@ export default QuestionList;
 
 const List = styled.div`
   height: 100%;
+  width: inherit;
   overflow-y: scroll;
   overflow-x: hidden;
   
