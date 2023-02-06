@@ -1,75 +1,99 @@
 import { useRef } from "react";
 import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
-
-import Swal from "sweetalert2"
-import withReactContent from 'sweetalert2-react-content'
-import LogInModal from "../component/LogInModal";
 import { useDispatch, useSelector } from "react-redux";
 import { slicer } from "../../reducer/tokenSlicer";
 import { setUserInfo } from "../../reducer/userStore";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import LogInModal from "../component/LogInModal";
 
 const MySwal = withReactContent(Swal);
 
 function NavigationButton(props) {
-  const navigate = useNavigate()
-  const token = useSelector(state => state.token)
-  const info = useSelector(state => state.userinfo)
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const token = useSelector((state) => state.token);
+  const info = useSelector((state) => state.userinfo);
+  const dispatch = useDispatch();
   const menuToggle = useRef();
-  
+
   const toggleClick = () => {
-    menuToggle.current.classList.toggle('active');
-  }
+    menuToggle.current.classList.toggle("active");
+  };
 
   const showSwalWithLink = () => {
     MySwal.fire({
-      showConfirmButton:false,
-      html:(
-      <div>
-       <LogInModal handleOpenPop={props.handleOpenPop}/>
-      </div>
-      )
-    })
-  }
+      showConfirmButton: false,
+      html: (
+        <div>
+          <LogInModal handleOpenPop={props.handleOpenPop} />
+        </div>
+      ),
+    });
+  };
 
   const logout = () => {
-    localStorage.removeItem('token')
-    dispatch(slicer(''))
-    dispatch(setUserInfo({
-      id: 0,
-      name: "",
-      email: "",
-    }))
-    
-    window.location.reload()
-  }
-  
+    localStorage.removeItem("token");
+    dispatch(slicer(""));
+    dispatch(
+      setUserInfo({
+        id: 0,
+        name: "",
+        email: "",
+      })
+    );
+
+    navigate("/");
+
+    window.location.reload();
+  };
+
   const movePage = () => {
-    navigate('/review')
-  }
+    navigate("/review");
+  };
+
+  const moveMain = () => {
+    navigate("/");
+  };
+
+  const NavHeight =
+    token !== null
+      ? location.pathname === "/"
+        ? 202
+        : location.pathname === "/review"
+        ? 202
+        : 274
+      : 130;
 
   return (
-    <NavStyle className="navigation" ref={menuToggle} token={token}>
-      <GlobalStyle/>
+    <NavStyle className="navigation" ref={menuToggle} NavHeight={NavHeight}>
+      <GlobalStyle />
       <NavUser className="userArea">
         <UserName>
-          {(token !== null)  ? `${info.name}님 반갑습니다.` : '로그인이 필요합니다.'}
+          {token !== null
+            ? `${info.name}님 반갑습니다.`
+            : "로그인이 필요합니다."}
         </UserName>
       </NavUser>
       <MenuToggle className="menuToggle" onClick={toggleClick}></MenuToggle>
-      {
-        (token !== null) ?
+      {token !== null ? (
         <MenuList className="menuList">
-          <MenuItem onClick={movePage}>피드백</MenuItem> 
-          <MenuItem onClick={logout}>로그아웃</MenuItem> 
+          {location.pathname === "/" ? null : (
+            <MenuItem onClick={moveMain}>홈으로</MenuItem>
+          )}
+          {location.pathname === "/review" ? null : (
+            <MenuItem onClick={movePage}>피드백</MenuItem>
+          )}
+          <MenuItem onClick={logout}>로그아웃</MenuItem>
         </MenuList>
-        :
+      ) : (
         <MenuList className="menuList">
           <MenuItem onClick={showSwalWithLink}>Log In</MenuItem>
         </MenuList>
-      }
+      )}
     </NavStyle>
   );
 }
@@ -86,7 +110,7 @@ const MenuItem = styled.li`
   &:hover {
     background: var(--primary-dark);
   }
-`
+`;
 
 const MenuList = styled.ul`
   padding: 0;
@@ -95,14 +119,14 @@ const MenuList = styled.ul`
   width: 100%;
   height: calc(100% - 60px);
   margin-top: 60px;
-  ${MenuItem}{
+  ${MenuItem} {
     &:first-child {
-      border-top: 1px solid rgba(0,0,0,0.1);
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
     }
-    border-top: 1px solid rgba(0,0,0,0.1);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
   }
   /* border-top: 1px solid rgba(0,0,0,0.1); */
-`
+`;
 
 const NavUser = styled.div`
   position: relative;
@@ -114,7 +138,7 @@ const NavUser = styled.div`
   border-radius: 10%;
   transition: 0.5s;
   transition-delay: 0.75s;
-  `
+`;
 
 const UserName = styled.span`
   border-radius: 20%;
@@ -126,7 +150,7 @@ const UserName = styled.span`
   line-height: 60px;
   width: 240px;
   text-align: center;
-`
+`;
 
 const MenuToggle = styled.div`
   position: relative;
@@ -140,7 +164,7 @@ const MenuToggle = styled.div`
   border-radius: 10%;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     width: 32px;
     height: 2px;
@@ -150,7 +174,7 @@ const MenuToggle = styled.div`
     transition: 0.5s;
   }
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     width: 32px;
     height: 2px;
@@ -158,7 +182,7 @@ const MenuToggle = styled.div`
     transform: translateY(10px);
     transition: 0.5s;
   }
-`
+`;
 
 const NavStyle = styled.div`
   z-index: 105;
@@ -169,7 +193,7 @@ const NavStyle = styled.div`
   width: 60px;
   height: 60px;
   background: var(--primary);
-  box-shadow: 0 25px 35px rgba(0,0,0,0.1);
+  box-shadow: 0 25px 35px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   transition: height 0.5s, width 0.5s;
@@ -177,7 +201,7 @@ const NavStyle = styled.div`
   overflow: hidden;
   color: var(--white);
   border: var(--white) solid 1px;
-  
+
   &.active {
     ${MenuToggle} {
       &::before {
@@ -193,9 +217,9 @@ const NavStyle = styled.div`
       border-radius: 10%;
     }
     width: 300px;
-    height: ${props => props.token !== null ? "202px" : "130px"};
+    height: ${(props) => props.NavHeight}px;
     border-radius: 2%;
     transition: width 0.5s, height 0.5s;
     transition-delay: 0s, 0.75s;
   }
-`
+`;
