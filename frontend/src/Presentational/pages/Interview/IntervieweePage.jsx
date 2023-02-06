@@ -178,7 +178,8 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
               <UserVideoComponent streamManager={info.publisher} />
             </CamCompo>
             {info.subscribers.map((sub, i) =>
-              sub.stream.connection.connectionId === info.interviewee ? null : (
+              // sub.stream.connection.connectionId === info.interviewee ? null : (
+              JSON.parse(sub.stream.connection.data).clientId.toString() === info.interviewee.toString() ? null : (
                 <CamCompo className="in" key={i}>
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>
@@ -189,7 +190,8 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
           <CamCompo>
             <InterviewerTag>면접자</InterviewerTag>
             {info.subscribers.map((sub, i) =>
-              sub.stream.connection.connectionId === info.interviewee ? (
+              // sub.stream.connection.connectionId === info.interviewee ? (
+              JSON.parse(sub.stream.connection.data).clientId.toString() === info.interviewee.toString() ? (
                 <CamCompo key={i}>
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>
