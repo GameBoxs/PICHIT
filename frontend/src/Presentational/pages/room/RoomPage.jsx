@@ -21,8 +21,7 @@ function RoomPage() {
   const roomParamsId = params.id;
   const password = location.state?.password;
   const { token, userinfo } = useSelector((state) => state);
-  const editHost = location.state?.host 
-  console.log(editHost)
+  const editHost = location.state?.host
 
   const [join, setJoin] = useState(false);
   const [host, setHost] = useState(false);
