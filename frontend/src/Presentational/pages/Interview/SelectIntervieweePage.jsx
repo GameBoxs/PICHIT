@@ -10,6 +10,7 @@ import withReactContent from "sweetalert2-react-content";
 
 import { leaveSession } from "../../../action/modules/chatModule";
 import { selectInterviwee } from "../../../action/modules/chatModule";
+import { useSelector } from "react-redux";
 
 const MySwal = withReactContent(Swal);
 
@@ -22,6 +23,7 @@ const SelectIntervieweePage = ({
   setInfo,
 }) => {
   let navigate = useNavigate();
+  const myToken = useSelector((state) => state.token);
 
   //방장이 면접자를 고를 때/고르지 않을 때 뜰 문구
   const sentance = true ? "대기 중입니다" : "방장이 면접자를 선택하고 있습니다";
@@ -48,18 +50,25 @@ const SelectIntervieweePage = ({
   // }
 
   const handler = () => {
-    let myID = info.publisher.stream.connection.connectionId;
-    let myNickName = JSON.parse(
-      info.publisher.stream.connection.data
-    ).clientData;
+    // let myID = info.publisher.stream.connection.connectionId;
+    // let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData
+    // let MemberList = new Object();
+
+    // MemberList[myID] = myNickName;
+    // for(let i=0; i< info.subscribers.length; i++){
+    //   let targetID = info.subscribers[i].stream.connection.connectionId
+    //   let targetNickName = JSON.parse(info.subscribers[i].stream.connection.data).clientData
+    //   MemberList[targetID] = targetNickName;
+    // }
+    let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
+    let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData
+    let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
     let MemberList = new Object();
 
     MemberList[myID] = myNickName;
-    for (let i = 0; i < info.subscribers.length; i++) {
-      let targetID = info.subscribers[i].stream.connection.connectionId;
-      let targetNickName = JSON.parse(
-        info.subscribers[i].stream.connection.data
-      ).clientData;
+    for(let i=0; i< info.subscribers.length; i++){
+      let targetID = JSON.parse(info.subscribers[i].stream.connection.data).clientId;
+      let targetNickName = JSON.parse(info.subscribers[i].stream.connection.data).clientData;
       MemberList[targetID] = targetNickName;
     }
 
@@ -71,16 +80,20 @@ const SelectIntervieweePage = ({
       inputPlaceholder: "면접자 선택",
       showCancelButton: true,
     }).then((result) => {
-      if (result.value) {
-        selectInterviwee(result.value.toString(), session.sessionId);
-        session.signal({
-          data: result.value.toString(),
-          to: [],
-          type: "stage",
-        });
-      } else selectInterviwee("미지정", session.sessionId);
-    });
-  };
+      if(result.isConfirmed){
+        if(result.value){
+          selectInterviwee(result.value.toString(), roomID, myToken);
+          session.signal({
+            data:result.value.toString(),
+            to:[],
+            type: 'stage'
+          })
+        }
+        else
+          selectInterviwee('미지정', session.sessionId);
+      }
+    })
+  }
 
   return (
     <Container>
