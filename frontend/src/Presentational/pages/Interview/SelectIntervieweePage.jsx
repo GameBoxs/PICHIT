@@ -13,24 +13,26 @@ import { selectInterviwee } from "../../../action/modules/chatModule";
 
 const MySwal = withReactContent(Swal);
 
-const SelectIntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
+const SelectIntervieweePage = ({
+  session,
+  setSession,
+  OV,
+  setOV,
+  info,
+  setInfo,
+}) => {
   let navigate = useNavigate();
 
   //방장이 면접자를 고를 때/고르지 않을 때 뜰 문구
   const sentance = true ? "대기 중입니다" : "방장이 면접자를 선택하고 있습니다";
 
   // 면접자 선택을 위한 dummy data
-    const dummy = [
-    '연예인 희수',
-    'Kim jh 남자의',
-    '수민',
-    '킹갓 어쩌고 효진 '
-  ]
+  const dummy = ["연예인 희수", "Kim jh 남자의", "수민", "킹갓 어쩌고 효진 "];
 
   // const MemberList = dummy.map((person,idx) => {
   //   return <option key={idx}>{person}</option>
   // })
-  // // 방장이 시작 버튼 눌렀을 때, 면접자 선택 모달 
+  // // 방장이 시작 버튼 눌렀을 때, 면접자 선택 모달
   // const handler = () => {
   //   MySwal.fire({
   //     title:"면접자를 선택해주세요",
@@ -44,39 +46,41 @@ const SelectIntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
   //     )
   //   })
   // }
-  
+
   const handler = () => {
     let myID = info.publisher.stream.connection.connectionId;
-    let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData
+    let myNickName = JSON.parse(
+      info.publisher.stream.connection.data
+    ).clientData;
     let MemberList = new Object();
 
     MemberList[myID] = myNickName;
-    for(let i=0; i< info.subscribers.length; i++){
-      let targetID = info.subscribers[i].stream.connection.connectionId
-      let targetNickName = JSON.parse(info.subscribers[i].stream.connection.data).clientData
+    for (let i = 0; i < info.subscribers.length; i++) {
+      let targetID = info.subscribers[i].stream.connection.connectionId;
+      let targetNickName = JSON.parse(
+        info.subscribers[i].stream.connection.data
+      ).clientData;
       MemberList[targetID] = targetNickName;
     }
 
     MySwal.fire({
-      title:"면접자를 선택해주세요",
-      icon:'question',
-      input: 'select',
+      title: "면접자를 선택해주세요",
+      icon: "question",
+      input: "select",
       inputOptions: MemberList,
-      inputPlaceholder: '면접자 선택',
+      inputPlaceholder: "면접자 선택",
       showCancelButton: true,
     }).then((result) => {
-      if(result.value){
+      if (result.value) {
         selectInterviwee(result.value.toString(), session.sessionId);
         session.signal({
-          data:result.value.toString(),
-          to:[],
-          type: 'stage'
-        })
-      }
-      else
-        selectInterviwee('미지정', session.sessionId);
-    })
-  }
+          data: result.value.toString(),
+          to: [],
+          type: "stage",
+        });
+      } else selectInterviwee("미지정", session.sessionId);
+    });
+  };
 
   return (
     <Container>
@@ -85,11 +89,18 @@ const SelectIntervieweePage = ({session,setSession,OV,setOV,info,setInfo}) => {
       <Screen number={info.subscribers.length} info={info} />
       <BottomPanel>
         <Button handler={handler} text="시작" isImportant={true} />
-        <Button text="종료" handler={() => {leaveSession(session, setOV); navigate("/room")}} isImportant={false} />
+        <Button
+          text="종료"
+          handler={() => {
+            leaveSession(session, setOV);
+            navigate("/room");
+          }}
+          isImportant={false}
+        />
       </BottomPanel>
     </Container>
   );
-}
+};
 
 export default SelectIntervieweePage;
 
@@ -123,4 +134,5 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: var(--greyLight-1);
 `;
