@@ -20,6 +20,8 @@ const MySwal = withReactContent(Swal);
 function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   const { id, title, participants, sessionOpened, manager } = data;
 
+  console.log(sessionOpened);
+
   const navigate = useNavigate();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -167,15 +169,14 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
 
   //JSX 변수
   const ReadyBtn = (
-    <Button text={"방 만들기"} handler={createRoom} isImportant={true} />
+    <Button text={"스터디 준비하기"} handler={createRoom} isImportant={true} />
   );
 
   const StartBtn = (
-    <Button text={"방 입장하기"} handler={moveToRoom} isImportant={true} />
+    <Button text={"스터디 시작하기"} handler={moveToRoom} isImportant={true} />
   );
 
-  //화면 렌더링 함수
-  const readyRoom = join ? (
+  const QuitBtn = (
     <Button
       text={"나가기"}
       handler={() => {
@@ -184,7 +185,9 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     >
       나가기
     </Button>
-  ) : (
+  );
+
+  const EnterBtn = (
     <Button
       isImportant={false}
       text={"참여하기"}
@@ -194,17 +197,39 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     </Button>
   );
 
+  const StudyStartBtn = (
+    <Button
+      isImportant={true}
+      text={"스터디 시작하기"}
+      handler={() => moveToRoom()}
+    >
+      방 입장하기
+    </Button>
+  );
+
+  //화면 렌더링 함수
+  const readyRoom = join ? (
+    <>
+      {sessionOpened ? StudyStartBtn : <p>스터디룸을 준비중입니다</p>}
+      {QuitBtn}
+    </>
+  ) : (
+    <>{EnterBtn}</>
+  );
+
   const RoomHost = host ? (
     <BtnContainer>
       {participants.length >= 2 ? (sessionOpened ? StartBtn : ReadyBtn) : null}
       <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
         삭제하기
       </Button>
-          <Button text={"수정하기"} handler={showModal}>수정하기</Button>
+      <Button text={"수정하기"} handler={showModal}>
+        수정하기
+      </Button>
       {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
     </BtnContainer>
   ) : (
-    <div>{readyRoom}</div>
+    <BtnContainer>{readyRoom}</BtnContainer>
   );
 
   return (
@@ -242,6 +267,11 @@ const BtnContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+
+  > p {
+    margin-left: 0.3rem;
+    color: var(--primary-dark);
+  }
 `;
 
 const LayoutButton = styled.div`
