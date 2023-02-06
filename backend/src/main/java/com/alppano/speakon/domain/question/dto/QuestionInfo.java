@@ -20,6 +20,6 @@ public class QuestionInfo {
         this.content = question.getContent();
         this.interviewJoinId = question.getInterviewJoin().getId();
         this.writer = new UserInfoDto(question.getWriter());
-        this.permission = this.writer.getId() == userId ? true : false;
+        this.permission = this.writer.getId().equals(userId) ? true : false;
     }
 }
