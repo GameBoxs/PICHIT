@@ -3,8 +3,6 @@ import Title from "../../../common/Title";
 import SubTitle from "../../../common/SubTitle";
 
 import { AiFillRightCircle } from "react-icons/ai";
-import AggroL from "../../../common/Font/AggroL";
-import AggroB from "../../../common/Font/AggroB";
 
 const ListItem = (props) => {
   // console.log('ListItem');
@@ -35,7 +33,6 @@ const ListItem = (props) => {
 
   return (
     <>
-      <AggroB />
       <ItemWrap onClick={changeID} cursor={props.cursor}>
         <div>{idx}</div>
 
@@ -65,7 +62,7 @@ const ItemWrap = styled.div`
   display: grid;
   grid-template-columns: 1fr 7fr 2fr 1fr;
   width: 100%;
-  min-height: 2rem;
+  min-height: 4rem;
   padding: 0.6rem 1.5rem !important;
   align-items: center;
   border-bottom: var(--greyLight-1) solid 2px;

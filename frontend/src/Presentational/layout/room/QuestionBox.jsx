@@ -52,7 +52,7 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
         <div>질문</div>
         <div>{allQuestion}</div>
       </QuestionBoxTitle>
-      <QuestionList idx={idx} Questions={Questions} />
+      <QuestionList idx={idx} Questions={Questions} setGetUser={setGetUser} />
       <Controler>
         <QuestionInsert
           userinfo={userinfo}

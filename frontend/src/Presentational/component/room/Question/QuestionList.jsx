@@ -4,12 +4,12 @@ import QuestionItem from "./QuestionItem";
 import SubTitle from "../../../common/SubTitle";
 import AggroL from "../../../common/Font/AggroL";
 
-const QuestionList = ({ Questions }) => {
+const QuestionList = ({ Questions, setGetUser }) => {
   return (
     <List>
       <AggroL />
       {Questions.map((Question) => (
-        <QuestionItem Question={Question} key={Question.id} />
+        <QuestionItem Question={Question} key={Question.id} setGetUser={setGetUser}/>
       ))}
     </List>
   );
