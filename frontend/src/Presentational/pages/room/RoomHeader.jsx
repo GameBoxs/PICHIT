@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState, useLayoutEffect, memo } from "react";
 
 import styled from "styled-components";
 import Title from "../../common/Title";
@@ -66,8 +66,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   // )
 
   // console.log(getSession, '-------------')
-
-  console.log("--------------------------");
 
   useEffect(() => {
     const tempArr = participants.filter(
@@ -224,7 +222,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   );
 }
 
-export default RoomHeader;
+export default memo(RoomHeader);
 
 const BtnContainer = styled.div`
   display: flex;

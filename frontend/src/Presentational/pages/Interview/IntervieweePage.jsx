@@ -81,7 +81,6 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   let navigate = useNavigate();
 
   let cnt = 3 - info.subscribers.length;
-  console.log(cnt);
   function makeBlank() {
     let result = [];
     for (let i = 0; i < cnt; i++) {
@@ -113,7 +112,6 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
 
   //질문 관리
   const QuestionHandler = (Questions) => {
-    console.log(Questions.target);
     MySwal.fire({
       title: "질문을 시작하시겠습니까?",
       icon: "warning",
@@ -140,6 +138,27 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   const getInterviewee = (person) => {
     console.log(person);
   };
+
+  let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
+  let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData;
+  let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
+  let MemberList = [];
+
+  MemberList.push({id:myID, name:myNickName})
+  for (let i = 0; i < info.subscribers.length; i++) {
+    
+    let targetID = JSON.parse(
+      info.subscribers[i].stream.connection.data
+    ).clientId;
+
+    let targetNickName = JSON.parse(
+      info.subscribers[i].stream.connection.data
+    ).clientData;
+
+    MemberList.push({id:targetID, name:targetNickName})
+  }
+
+  console.log(MemberList.filter(person => person.id))
 
   const interviewees = dummyPlayer.map((elem, idx) => {
     return (
@@ -179,7 +198,8 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
             </CamCompo>
             {info.subscribers.map((sub, i) =>
               // sub.stream.connection.connectionId === info.interviewee ? null : (
-              JSON.parse(sub.stream.connection.data).clientId.toString() === info.interviewee.toString() ? null : (
+              JSON.parse(sub.stream.connection.data).clientId.toString() ===
+              info.interviewee.toString() ? null : (
                 <CamCompo className="in" key={i}>
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>
@@ -191,7 +211,8 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
             <InterviewerTag>면접자</InterviewerTag>
             {info.subscribers.map((sub, i) =>
               // sub.stream.connection.connectionId === info.interviewee ? (
-              JSON.parse(sub.stream.connection.data).clientId.toString() === info.interviewee.toString() ? (
+              JSON.parse(sub.stream.connection.data).clientId.toString() ===
+              info.interviewee.toString() ? (
                 <CamCompo key={i}>
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>

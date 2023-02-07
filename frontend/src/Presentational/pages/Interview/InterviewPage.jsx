@@ -25,9 +25,6 @@ const InterviewPage = () => {
   const mySession = roomId;
   const myToken = useSelector((state) => state.token);
 
-  console.log('------',myToken);
-  console.log('------',userinfo,roomId);
-
   const [info, setInfo] = useState({
     interviewee: "미지정",
     mySessionId: mySession,

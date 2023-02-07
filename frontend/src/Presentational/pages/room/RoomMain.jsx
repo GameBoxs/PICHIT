@@ -7,6 +7,7 @@ import PlanTime from "../../component/PlanTime";
 import Person from "../../component/Person";
 
 import { BsFillPersonFill } from "react-icons/bs";
+import { memo } from "react";
 
 function RoomMain({ join, host, data, userinfo }) {
   const {
@@ -106,7 +107,7 @@ function RoomMain({ join, host, data, userinfo }) {
   );
 }
 
-export default RoomMain;
+export default memo(RoomMain);
 
 const Description = styled.div`
   border-radius: 1rem;

@@ -13,8 +13,8 @@ const QuestionInsert = (props) => {
  // 질문 입력을 위한 body 값
   const [question, setQuestion] = useState({
     content: "",
-    interviewJoinId: pdfhandler.interviewJoinId,
-    writerId: userinfo.id,
+    interviewJoinId: 0,
+    writerId: 0,
   });
 
   const [postData] = useAxios("questions", "POST", token, question, click);
@@ -26,7 +26,6 @@ const QuestionInsert = (props) => {
       writerId: userinfo.id,
     });
   }, [props]);
-
 
   useEffect(() => {
     if (postData !== null && postData.success) {

@@ -1,28 +1,34 @@
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
 import QuestionItem from "./QuestionItem";
 import SubTitle from "../../../common/SubTitle";
 import AggroL from "../../../common/Font/AggroL";
 
-const QuestionList = ({ Questions }) => {
+const QuestionList = ({ Questions, setGetUser, userinfo, pdfhandler }) => {
   return (
     <List>
       <AggroL />
       {Questions.map((Question) => (
-        <QuestionItem Question={Question} key={Question.id} />
+        <QuestionItem
+          Question={Question}
+          key={Question.id}
+          setGetUser={setGetUser}
+          userinfo={userinfo}
+          pdfhandler={pdfhandler}
+        />
       ))}
     </List>
   );
 };
 
-export default QuestionList;
+export default memo(QuestionList);
 
 const List = styled.div`
   height: 100%;
   width: inherit;
   overflow-y: scroll;
   overflow-x: hidden;
-  
+
   &::-webkit-scrollbar {
     width: 7px;
     border-radius: 1rem;
