@@ -19,15 +19,17 @@ function PageBar({
   return (
     <>
       <Bar>
-        {pages.map((page, index) => {
-          return (
-            <Button
-              key={index}
-              onClick={() => setCurrentPage(page)}
-              active={page === currentPage ? true : false}
-            ></Button>
-          );
-        })}
+        
+          {pages.map((page, index) => {
+            return (
+              <Button
+                key={index}
+                onClick={() => setCurrentPage(page)}
+                active={page === currentPage ? true : false}
+              >{page}</Button>
+            );
+          })}
+        
       </Bar>
     </>
   );
@@ -37,7 +39,8 @@ export default PageBar;
 
 const Bar = styled.div`
   /* border: solid 2px skyblue; //pagination영역을 위한 border: ; */
-  width: 100%;
+  /* width: 100%; */
+  width: 500px;
   height: 23px;
   display: flex;
   justify-content: center

@@ -4,20 +4,22 @@ import styled from "styled-components";
 import RoomList from "../../component/RoomList";
 import TotalCategory from "../../component/TotalCategory";
 import MyCategory from "../../component/MyCategory";
-import PageBar from "../../common/Pagination/PageBar";
 import EmptyRoomList from "../../component/EmptyRoomList";
+import PageBar from "../../common/Pagination/PageBar";
 import CreateRoom from "../../component/CreateRoom";
+import Button from "../../common/Button";
 //sweetalert2
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 //통신
 import useAxios from '../../../action/hooks/useAxios';
 import {testToken} from "../../../store/values"
-//카테고리
+//페이지네이션
+import {GrFormNext,GrFormPrevious} from "react-icons/gr";
+
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
   // const token = useSelector(state => state.token)
-  // const info = useSelector(state => state.userinfo)
   // https://i8d107.p.ssafy.io/api
 
 // const MySwal = withReactContent(Swal);
@@ -31,13 +33,16 @@ function MainBottom() {
   const [totalElements, setTotalElements] = useState(0); //전체 데이터 길이
   const [totalpages, setTotalPages] = useState(0); //전체 데이터 길이
   
+  //통신(카테고리)
   const [APIurl,serAPIurl] = useState()
-  const myCategory = `my-interviewjoins?size=9&page=${currentPage-1}&finished=0`
+  const myCategory = `my-interviewrooms?page=${currentPage-1}`
   const totalCategory = `interviewrooms?page=${currentPage-1}`
+  // http://i8d107.p.ssafy.io/api/my-interviewrooms?page=0&size=1
   
   //로그인에 따른 카테고리 기본값
   const [isLogined, setIsLogined] = useState(false) //false : 비로그인, true : 로그인
   const token = useSelector(state => state.token)//으로 원래는 사용자 토큰을 받아야하는데 지금은 테스트라서 testToken으로 수민꺼 들고올거다.
+  
   useEffect(()=>{
     if(token){
       setIsLogined(true)
@@ -68,24 +73,16 @@ function MainBottom() {
   // roomlist통신
   const [data, setData] = useState([]) //total데이터 저장
   const [getData, isLoading] = useAxios(
-    // APIurl,'GET',testToken,
     APIurl,'GET',token,
     );
     useEffect(() => {
-      if(APIurl===myCategory){
-        console.log(getData.data)
-      }
       if(getData && getData.data){
         console.log(getData.data)
         setData(getData)
         setTotalElements(getData.data.totalElements) //데이터 전체 수
         setTotalPages(getData.data.totalPages) //페이지 전체 수
-        console.log('데이터 불러오는중')
       }
-      console.log('페이지가변하면서 얘도 바뀜')
     }, [getData]);
-    console.log(isLogined+'사용자'+APIurl+'일 때'+roomPosition+'이고, 엑시오스 상태'+getData)/////////////////////////////////
-
     useEffect(()=>{
       if(roomPosition){
         serAPIurl(myCategory)
@@ -93,7 +90,7 @@ function MainBottom() {
       else{
         serAPIurl(totalCategory)
       }
-    },[totalCategory, myCategory])
+    },[currentPage])
 
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -135,7 +132,8 @@ function MainBottom() {
           isLoading===true? <div>loading...</div> :
       <section>
         <Main>
-          {/* {roomPosition ? <MyCategory /> : <TotalCategory />} */}
+          {roomPosition ? <MyCategory /> : <TotalCategory />}
+          {/* {roomPosition ? null : <TotalCategory />} */}
           <RoomListdiv>
             {data.length === 0 ? (
               <EmptyRoomList />
@@ -144,6 +142,8 @@ function MainBottom() {
               <RoomList rooms={data.data.content} />
             )}
           </RoomListdiv>
+          <PaginationBox>
+          <GrFormPrevious size={50}/>
           <PageBar
             totalPosts={totalElements} //전체 데이터 길이
             postsPerPage={postsPerPage} //페이지당 게시물 수
@@ -151,6 +151,8 @@ function MainBottom() {
             currentPage={currentPage} //현재페이지
             totalpages={totalpages} //페이지 길이
           />
+          <GrFormNext size={50}/>
+          </PaginationBox>
         </Main>
         <Footer>
           <button onClick={showModal}>방만들기</button>
@@ -195,9 +197,16 @@ const Main = styled.div`
 
 const RoomListdiv = styled.div`
   margin-block: 1rem 3rem;
+  height: 30rem;
 `;
 
 const Footer = styled.div`
   display: flex;
   flex-direction: row-reverse;
 `;
+
+const PaginationBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`

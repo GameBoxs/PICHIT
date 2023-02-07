@@ -48,7 +48,6 @@ function RoomListItem(props) {
     });
   }
   return (
-    
     <RoomItem onClick={clickRoomItem} >
       <div className="rommtitle">
         <h3>({props.index}){props.id}{props.title}</h3>
