@@ -67,7 +67,7 @@ public class FeedbackService {
                 ()-> new ResourceNotFoundException("존재하지 않는 피드백입니다.")
         );
 
-        if(feedback.getWriter().getId() != userId) {
+        if(feedback.getWriter().getId().equals(userId)) {
             throw new ResourceForbiddenException("자신이 작성한 피드백만 삭제할 수 있습니다.");
         }
 
