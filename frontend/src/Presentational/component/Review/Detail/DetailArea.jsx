@@ -1,63 +1,112 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { memo, useEffect, useState } from "react";
+import useAxios from "../../../../action/hooks/useAxios";
+import { useSelector } from "react-redux";
 
 import SubTitle from "../../../common/SubTitle";
 import FeedBackArea from "./FeedBack/FeedBackArea";
 import SoundArea from "./SoundArea";
 import PageBar from "../../../common/Pagination/PageBar";
 
+const DetailArea = ({ selectedID }) => {
+  const token = useSelector((state) => state.token);
 
-const DetailArea = ({data}) => {
-    //pagination 데이터
-//   // 전체데이터, 현재페이지, 페이지당 포스트갯수
-//   // const [dumyData, setDumyData] = useState(DUMMY_DATA);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(1);
+  const [data, setData] = useState();
+  const [nowPage, setNowPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const [getData, isLoading] = useAxios(
+    `interviewjoins/${selectedID}/questions-with-feedbacks?size=2000`,
+    "GET",
+    token,
+    null,
+    selectedID ? true : false
+  );
 
-//   //현재 페이지에 렌더할 데이터를 추출하기위한 값들
-  const lastPostIndex = currentPage * postsPerPage; //렌더할 페이지에 해당하는 마지막 인덱스값
-  const firstPostIndex = lastPostIndex - postsPerPage; //렌더할 페이지에 해당하는 첫번째 인덱스값
-  const currentPosts = data.slice(firstPostIndex, lastPostIndex); //현재 페이지에서 렌더할 데이터항목
-  const currentPost = data[currentPage-1]
-    return (
-        <DetailWrap>
-            <SubTitle title="면접 피드백" />
-            <Line/>
-            {/* {
-                data.title !== null && data.title !== "" & data.title !== undefined ? <SoundArea/> : null
-            }
-            {
-                data.title !== null && data.title !== "" & data.title !== undefined ? <FeedBackArea title={data.title} data={data.item}/> : null
-            } */}
-            {
-                data !== null && data !== "" & data !== undefined ? <SoundArea/> : null
-            }
-            <PageBar
-              totalPosts={data.length} //전체 데이터 길이(상황에 맞게변경)
-              postsPerPage={postsPerPage}  //페이지당 게시물 수
-              setCurrentPage={setCurrentPage} //현재 페이지를 계산하는 함수
-              currentPage={currentPage} //현재페이지
-            />
-            <FeedBackArea title={currentPost.question} data={currentPost.reviews}/>
-        </DetailWrap>
-    )
-}
+  useEffect(() => {
+    if (getData && getData.success && getData.data) {
+      setData(getData.data.content);
+      setTotalPage(getData.data.totalElements);
+    }
+  }, [getData]);
 
-export default DetailArea;
+  useEffect(() => {
+    setNowPage(1);
+  }, [selectedID]);
+
+  return (
+    <DetailWrap>
+      <SubTitle title="면접 피드백" />
+      <Container>
+        {selectedID && data ? (
+          isLoading === true ? (
+            <div>loading...</div>
+          ) : (
+            <>
+              <SoundArea />
+              <PageBar
+                setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
+                currentPage={nowPage} //현재페이지
+                totalpages={totalPage}
+              />
+              <FeedBackArea
+                title={data[nowPage - 1].content}
+                data={data[nowPage - 1].feedbacks}
+              />
+            </>
+          )
+        ) : (
+          /* <FeedBackArea title={currentPost.question} data={currentPost.reviews}/> */
+          <NullCompo>기록을 선택해주세요</NullCompo>
+        )}
+      </Container>
+    </DetailWrap>
+  );
+};
+
+export default memo(DetailArea);
+
+const Container = styled.div`
+  min-height: 400px;
+  height: fit-content;
+  background-color: var(--greyLight-1);
+  border-radius: 3rem;
+  margin-top: 1rem;
+  padding : 2rem 4rem;
+
+  .paginationBar {
+    height: 1em;
+
+    * {
+      height: 0.6em;
+      width: 0.6em;
+      margin-right: 0.6em;
+      background-color: var(--primary-light);
+    }
+  }
+`;
+
+const NullCompo = styled.div`
+  width: inherit;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+`;
 
 const DetailWrap = styled.div`
-    width: 100%;
-    margin-bottom: 50px;
-    & > div:first-child {
-    font-weight: bolder;
-    font-size: 25px;
-    }
+  width: 100%;
+  margin-bottom: 50px;
 
-    & > div:nth-child(4) {
-        margin-top: 50px;
-    }
-`
+  & > div:first-child {
+    font-size: 1.3rem;
+    font-family: SBagrroM;
+    color: var(--primary-light);
+    padding: 1.4rem 1rem 1rem 1rem;
+    /* border-bottom: solid 2px var(--greyDark); */
+  }
 
-const Line = styled.hr`
-  margin: 15px 0 15px 0;
+  & > div:nth-child(4) {
+    margin-top: 50px;
+  }
 `;

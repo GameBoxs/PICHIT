@@ -77,7 +77,7 @@ function MainBottom() {
     );
     useEffect(() => {
       if(getData && getData.data){
-        console.log(getData.data)
+        // console.log(getData.data)
         setData(getData)
         setTotalElements(getData.data.totalElements) //데이터 전체 수
         setTotalPages(getData.data.totalPages) //페이지 전체 수
@@ -101,7 +101,7 @@ function MainBottom() {
   return (
     <Layout>
       <Header>
-        <h1> LOOM LIST</h1>
+        <h1> ROOM LIST</h1>
         <Titlesection>
           <p>{roomPosition ? '내가 참여한 목록입니다(예정만 보여줌)' : '모든방 목록입니다'}</p>
           <div>
@@ -118,7 +118,7 @@ function MainBottom() {
                   roomSwitch("toMy");
                 }
                 else{
-                  console.log('못넘어간다')//여기에 스윗알럿 하면 될듯
+                  // console.log('못넘어간다')//여기에 스윗알럿 하면 될듯
                 }
               }}
             >

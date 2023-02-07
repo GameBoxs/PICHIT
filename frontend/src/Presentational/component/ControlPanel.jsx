@@ -1,56 +1,68 @@
-import React from "react";
+import React, { memo } from "react";
+
 import styled from "styled-components";
-import SoundBtn from "./SoundBtn"
+import SoundBtn from "./SoundBtn";
 
-const ControlPanel = ({play, isPlaying, duration, currentTime}) => {
-    //시간 설정 함수
-    const secondsToHms = (seconds) => {
-        if (!seconds) return '00m 00s'
+import AggroM from "../common/Font/AggroM";
 
-        let duration = seconds
-        
-        //시간 계산
-        let hours = duration/3600;
-        duration = duration%3600;
+const ControlPanel = ({ play, isPlaying, duration, currentTime }) => {
+  //시간 설정 함수
+  const secondsToHms = (seconds) => {
+    if (!seconds) return "00m 00s";
 
-        //분 계산
-        let min = parseInt(duration/60)
-        duration = duration % 60
+    let duration = seconds;
 
-        //초 계산
-        let sec = parseInt(duration)
+    //시간 계산
+    let hours = duration / 3600;
+    duration = duration % 3600;
 
-        if (sec<10) {
-            sec = `0${sec}`
-        }
+    //분 계산
+    let min = parseInt(duration / 60);
+    duration = duration % 60;
 
-        if (min<10) {
-            min = `0${min}`
-        }
+    //초 계산
+    let sec = parseInt(duration);
 
-        if (parseInt(hours, 10)>0) {
-            return `${parseInt(hours, 10)}h ${min}m ${sec}s`
-        } else if (min == 0) {
-            return `00m ${sec}s`
-        } else {
-            return `${min}m ${sec}s`
-        }
+    if (sec < 10) {
+      sec = `0${sec}`;
     }
 
-    return (
-        <ControlPanelDiv>
-            <Timer>{secondsToHms(currentTime)}</Timer>
-            <SoundBtn play={play} isPlaying={isPlaying} />
-            <Timer>{secondsToHms(duration)}</Timer>
-        </ControlPanelDiv>
-    )
-}
+    if (min < 10) {
+      min = `0${min}`;
+    }
 
-export default ControlPanel
+    if (parseInt(hours, 10) > 0) {
+      return `${parseInt(hours, 10)}:${min}:${sec}`;
+    } else if (min == 0) {
+      return `00:${sec}`;
+    } else {
+      return `${min}:${sec}`;
+    }
+  };
 
-const Timer = styled.div``
+  return (
+    <ControlPanelDiv>
+      <AggroM />
+      <Timer>{secondsToHms(currentTime)}</Timer>
+      <div>
+        <SoundBtn play={play} isPlaying={isPlaying} />
+      </div>
+      <Timer>{secondsToHms(duration)}</Timer>
+    </ControlPanelDiv>
+  );
+};
+
+export default memo(ControlPanel);
+
+const Timer = styled.div`
+  font-family: SBagrroM;
+  color: var(--greyDark);
+`;
 
 const ControlPanelDiv = styled.div`
-    display: flex;
-    justify-content: space-between;
-`
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 1rem;
+`;

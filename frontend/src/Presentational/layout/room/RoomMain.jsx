@@ -1,3 +1,4 @@
+import { memo } from "react";
 import styled from "styled-components";
 import SubTitle from "../../common/SubTitle";
 import React, { useState, useEffect } from "react";
@@ -6,165 +7,273 @@ import Resume from "./Resume";
 import PlanTime from "../../component/PlanTime";
 import Person from "../../component/Person";
 
-const dummy = [
-  { isHost: true, name: "연예인 희수" },
-  { isHost: false, name: "희수" },
-  { isHost: false, name: "연예인 희수" },
-  { isHost: false, name: "연예인 희수" },
-];
+import { BsFillPersonFill } from "react-icons/bs";
+import AggroL from "../../common/Font/AggroL";
 
-function RoomMain({ join, host, data }) {
-  const [isJoin, setIsJoin] = useState(true);
-  const [pdf, setPdf] = useState(0);
-  // 참여하기
- const description = data.description
-
-
+function RoomMain(props) {
+  const { join, host, data, userinfo } = props;
+  const {
+    createdDate,
+    currentPersonCount,
+    description,
+    finished,
+    id,
+    manager,
+    maxPersonCount,
+    participants,
+    startDate,
+    title,
+  } = data;
   
+  const [isJoin, setIsJoin] = useState(false);
+  const [pdf, setPdf] = useState(0);
+  const [pdfhandler, setPdfHandler] = useState({});
+
   useEffect(() => {
     setIsJoin(join);
-    console.log("isJoin", isJoin);
-  }, [join]);
+    setPdfHandler({ ...participants[0] });
+  }, [props]);
 
   // roompage에 있는 join 값이 바뀔 때 마다 setIsJoin 실행 함
 
   const RoomSection =
     isJoin || host ? (
-      <Resume idx={pdf} />
+      <Resume
+        idx={pdf}
+        participants={participants}
+        setPdfHandler={setPdfHandler}
+        pdfhandler={pdfhandler}
+      />
     ) : (
       <Intro>방에 참여하면 팀원들의 자소서를 볼 수 있어요</Intro>
     );
 
   const RoomQuestion =
     isJoin || host ? (
-      <QuestionBox idx={pdf} />
+      <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} />
     ) : (
       <PopUp>질문을 볼 수 없습니다.</PopUp>
     );
 
   // isJoin값에 따라서 볼 수 있는 컴포넌트가 변경됨
 
-  const pdfHandler = (person, idx) => {
-    console.log(person);
-    setPdf(idx);
-  };
+  // const pdfHandler = (person, idx) => {
+  //   console.log(person);
+  //   setPdf(idx);
+  // };
 
-  const MemberList = dummy.map((person, idx) => {
-    return (
-      <Block key={idx} onClick={() => pdfHandler(person, idx)}>
-        {person.name}
-      </Block>
-    );
+  const Recuritment = maxPersonCount - currentPersonCount;
+
+  const PersonList = participants.map((elem, idx) => {
+    if (elem.name === manager.name) {
+      return <Person name={elem.name} isHost={true} key={idx} />;
+    } else {
+      return <Person name={elem.name} isHost={false} key={idx} />;
+    }
   });
 
-  const PersonList = dummy.map((elem, idx) => {
-    return <Person name={elem.name} isHost={elem.isHost} key={idx} />;
+  const RecuritmentList = new Array(Recuritment).fill().map((_, idx) => {
+    return <BsFillPersonFill key={idx} />;
   });
 
   return (
-    <>
-      <Layout>
-        <Section width="50%">
-          <SubTitle title={"현재인원"} />
-          {!isJoin ? (
-            <BlockList>{PersonList}</BlockList>
-          ) : (
-            <BlockList>{MemberList}</BlockList>
-          )}
-        </Section>
-
-        <Section width="50%">
-          <SubTitle title={"스터디 시작일"} />
-          {/* <PlanTime date={date} /> */}
-          <SubTitle title={"우리는 이런 스터디에요"} />
-          {description}
-        </Section>
-      </Layout>
+    <MainPageContainer>
+      <AggroL />
       <SectionHeader>
-        <SubTitle title={"자기소개서"} />
+        <SubTitle title={"상세 정보"} />
       </SectionHeader>
       <Layout>
-        <Section width="70%">{RoomSection}</Section>
-        <Section width="30%">{RoomQuestion}</Section>
+        <Section>
+          <Card>
+            <SubTitle title={"시작 일자"} />
+            <PlanTime startDate={startDate} />
+          </Card>
+          <Card>
+            <SubTitle title={"참가 멤버"} />
+            <BlockList>{PersonList}</BlockList>
+          </Card>
+          <Card>
+            <SubTitle title={"남은 인원 수"} />
+            <div>
+              <BlockList>{RecuritmentList}</BlockList>
+              {Recuritment}명
+            </div>
+          </Card>
+        </Section>
+
+        <Description>
+          <SubTitle title={"Introduce"} />
+          {description}
+        </Description>
       </Layout>
-    </>
+
+      <SectionHeader>
+        <SubTitle title={"자기소개서 보기"} />
+      </SectionHeader>
+      <Layout>
+        <Section>{RoomSection}</Section>
+        <Section>{RoomQuestion}</Section>
+      </Layout>
+    </MainPageContainer>
   );
 }
 
 export default RoomMain;
 
-const Layout = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1em;
+const Description = styled.div`
+  border-radius: 1rem;
+  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
+    -0.2rem -0.2rem 0.5rem var(--white);
+  transition: 0.3s ease;
+  padding: 2rem 1rem;
+  font-size: 1.2rem;
   width: 100%;
-  margin-bottom: 1em;
-  margin-top: 1em;
+
+  .SubTitle {
+    margin-bottom: 1rem;
+    font-family: SBagrroL;
+    color: var(--greyDark);
+  }
 `;
 
 const Section = styled.div`
-  width: ${(props) => props.width};
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  width: 100%;
+`;
 
-  &:nth-child(1) {
-    .SubTitle {
-      margin-bottom: 2rem !important;
+const Layout = styled.div`
+  width: 100%;
+  margin-bottom: 1em;
+  margin-top: 1em;
+
+  &:nth-child(2) {
+    background-color: var(--greyLight-1);
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1em;
+    margin-bottom: 5rem;
+
+    ${Section} {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
     }
   }
 
-  &:nth-child(1),
-  &:nth-child(2) {
-    height: 50vh;
+  &:last-child {
+    display: grid;
+    grid-template-columns: 11fr 5fr;
+    gap: 1rem;
+    min-height: 500px;
 
-    .SubTitle {
-      margin-bottom: 1rem;
-      font-weight: bold;
-      color: var(--textColor);
+    ${Section} {
+      height: 100%;
     }
   }
 `;
 
 const SectionHeader = styled.div`
-  border-bottom: 2px solid gray;
-  padding-bottom: 10px;
+  width: fit-content;
+  color: var(--primary-light);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .SubTitle {
+    font-size: 1.2rem;
+    font-family: SBagrroL;
+  }
+
+  svg {
+    font-size: 2rem;
+  }
 `;
 
 const BlockList = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
-  width: 20vw;
+  align-items: flex-start;
+  width: 100%;
 `;
 
-const Block = styled.div`
-  background-color: gray;
-  width: 40%;
-  height: 150px;
-  margin: 10px;
-  border-radius: 5px;
-  text-align: center;
+const Card = styled.div`
+  border-radius: 1rem;
+  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
+    -0.2rem -0.2rem 0.5rem var(--white);
+  transition: 0.3s ease;
+  padding: 1rem;
+  width: 100%;
+  height: 26vh;
+  display: grid;
+  grid-template-rows: 1fr 5fr;
+  align-items: center;
+
+  .SubTitle {
+    position: relative;
+    margin: 1rem 0 0 0;
+    text-align: center;
+    font-family: SBagrroL;
+    color: var(--greyDark);
+  }
+
+  &:nth-child(3) div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &:nth-child(3) ${BlockList} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 0.5rem;
+    margin-block: 0.5rem;
+    color: var(--greyDark);
+
+    * {
+      font-size: 2.5vw;
+    }
+  }
 `;
 
 const Intro = styled.div`
-  background-color: gray;
   width: 100%;
-  height: 300px;
-  margin: 10px 10px 5px 5px;
-  border-radius: 5px;
+  height: 100%;
+  min-height: 400px;
+  border-radius: 1rem;
   text-align: center;
+  background-color: var(--greyDark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--white);
 `;
 
 const PopUp = styled.div`
-  background-color: gray;
   width: 100%;
-  height: 300px;
-  margin: 10px 10px 5px 5px;
-  border-radius: 5px;
+  height: 100%;
+  min-height: 400px;
+  border-radius: 1rem;
   text-align: center;
+
+  background-color: var(--greyDark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--white);
+`;
+
+const MainPageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding-block: 10vh;
+  margin-top: 6vh;
 `;

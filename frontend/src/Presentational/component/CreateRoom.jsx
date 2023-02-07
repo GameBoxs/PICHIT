@@ -23,14 +23,14 @@ function CreateRoom({ setModalOpen }) {
 
   const Togglehandler = (toggle) => {
     setToggle(toggle);
-    console.log(toggle);
   };
 
   // 방 생성 정보 들어감
   const [room, setRoom] = useState({
     title: "",
     description: "",
-    maxPersonCount: 0,
+    contactWay:"",
+    maxPersonCount: 2,
     password: "",
     finished: 0,
     startDate: "",
@@ -90,14 +90,39 @@ function CreateRoom({ setModalOpen }) {
     console.log(date);
   };
 
-  const roomCreate = () => {
-    setCreateData(true);
+  const roomCreate = (e) => {
+    if (room.title === '') {
+      alert("제목을 입력해주세요")
+    }
+    else if(room.description === ''){
+      alert ("설명을 입력해주세요")
+    }
+    else if (room.maxPersonCount === '' ) {
+      alert("모집인원을 입력해주세요")
+    }
+    else if (room.maxPersonCount > 4 ) {
+      alert("최대 모집인원을 초과하였습니다")
+    }
+    else if (room.maxPersonCount < 1 ) {
+      alert("최소 2명 이상의 모집인원을 입력 해 주세요")
+    }
+    else if(room.startDate === ''){
+      alert ("시작 날짜를 설정해주세요")
+    }
+    else if (toggle===true && room.password ===''){
+      alert ("비밀번호를 설정해주세요")
+    }
+    else if (toggle === true && room.password.length > 10){
+      alert("유효 할 수 없는 비밀번호 입니다. 다시 설정해주세요")
+    }
+    else{
+      console.log(room)
+      setCreateData(true);
+    }
   }
 
   // 면접방 생성에 성공했을 때 감지하는 useEffect 
   useEffect(() => {
-    return () => {
-      setCreateData();
       if (
         createResult &&
         createResult.success === true &&
@@ -120,16 +145,16 @@ function CreateRoom({ setModalOpen }) {
         }).then((result) => {
           if (result.isConfirmed) {
             console.log(createResult.data.id);
-            navigate("/room", {
+            navigate(`/room/${createResult.data.id}`, {
               state: {
                 id: createResult.data.id,
+                password:room.password
               },
             });
           }
         });
       }
-    }
-  }, [createData]);
+  }, [createResult]);
 
   // 생성하기 버튼 눌렀을 때 활성화 되는 함수
   return (
@@ -172,7 +197,11 @@ function CreateRoom({ setModalOpen }) {
               </Info>
               <Info>
                 <InfoText>연락 방법</InfoText>
-                <InfoInput />
+                <InfoInput
+                  name="contactWay"
+                  value={room.contactWay}
+                  onChange={InputHandler}
+                />
               </Info>
               <Info>
                 <InfoText>비밀방 여부</InfoText>

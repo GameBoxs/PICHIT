@@ -1,37 +1,40 @@
 import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
+import AggroL from "../common/Font/AggroL";
 
-function PlanTime(props) {
-  const month = props.date.toLocaleString("en-US", { month: "2-digit" });
-  const day = props.date.toLocaleString("en-US", { day: "2-digit" });
-  const year = props.date.getFullYear().toString().slice(2);
+import AggroM from "../common/Font/AggroM";
+
+function PlanTime({startDate}) {
+  const Date = startDate.slice(0,10).split("-")
 
   const date = [
     {
       type: "YEAR",
-      value: year,
+      value: Date[0].slice(0,2),
     },
     {
       type: "MONTH",
-      value: month,
+      value: Date[1],
     },
     {
       type: "DAY",
-      value: day,
+      value: Date[2],
     },
   ];
 
   const dday = date.map((elem, idx) => {
     return (
       <Layout key={idx}>
-        <DayTitle>{elem.type}</DayTitle>
         <Text>{elem.value}</Text>
+        <DayTitle>{elem.type}</DayTitle>
       </Layout>
     );
   });
 
   return (
     <TimeLayout>
+      <AggroM />
+      <AggroL />
       <GlobalStyle />
       {dday}
     </TimeLayout>
@@ -42,14 +45,18 @@ export default PlanTime;
 
 const DayTitle = styled.div`
   font-weight: 600;
+  color: var(--greyLight-2);
+  font-family: SBagrroL;
+  position: relative;
+  opacity: 0.8;
 `;
 
 const Text = styled.div`
-  width: 1.5em;
-  height: 1.5em;
+  width: 1em;
+  height: 1em;
   font-weight: bolder;
   font-size: 2rem;
-  padding: 1em;
+  padding: 1.1em 1em 1em 1em;
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -61,12 +68,13 @@ const Text = styled.div`
   box-shadow: inset 0.2rem 0.2rem 1rem var(--primary-light),
     inset -0.2rem -0.2rem 1rem var(--primary-dark),
     0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--white);
-  color: var(--greyLight-1);
+  font-family: SBagrroM;
 `;
 
 const Layout = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 0.5rem;
 `;
@@ -76,5 +84,4 @@ const TimeLayout = styled.div`
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 4rem;
 `;

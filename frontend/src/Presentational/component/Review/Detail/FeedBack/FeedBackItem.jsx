@@ -5,10 +5,10 @@ const FeedBackItem = ({data}) => {
     return (
         <FeedBack>
             <FeedBackTitle>
-              <SubTitle title={data.name}></SubTitle>
+              <SubTitle title={data.writer.name}></SubTitle>
               <SubTitle title={data.score}></SubTitle>
             </FeedBackTitle>
-            <SubTitle title={data.feedback}></SubTitle>
+            <SubTitle title={data.content}></SubTitle>
         </FeedBack>
     )
 }

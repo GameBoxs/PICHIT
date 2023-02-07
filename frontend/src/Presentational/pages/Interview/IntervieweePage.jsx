@@ -13,7 +13,6 @@ import ChatArea from "../../layout/Chat/ChatArea";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-
 import UserVideoComponent from "../../component/Chat/OpenVidu/UserVideoComponent";
 import { leaveSession } from "../../../action/modules/chatModule";
 import { useNavigate } from "react-router-dom";
@@ -74,7 +73,7 @@ const dummy = [
   },
 ];
 
-const testPlayer = ["김민지"]
+const testPlayer = ["김민지"];
 
 const dummyPlayer = ["이희수", "임수민", "김민지"];
 
@@ -82,11 +81,14 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   let navigate = useNavigate();
 
   let cnt = 3 - info.subscribers.length;
-  console.log(cnt);
   function makeBlank() {
     let result = [];
     for (let i = 0; i < cnt; i++) {
-      result.push(<CamCompo className="in">aa</CamCompo>);
+      result.push(
+        <CamCompo className="in" key={i}>
+          aa
+        </CamCompo>
+      );
     }
     return result;
   }
@@ -99,8 +101,8 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   };
 
   //질문 렌더링
-  const Questions = dummy.map((el) => {
-    return <QuestionCompo key={el.id} questionInfo={el} />;
+  const Questions = dummy.map((el, id) => {
+    return <QuestionCompo key={id} questionInfo={el} />;
   });
 
   //별점 값 받아오는 함수
@@ -110,7 +112,6 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
 
   //질문 관리
   const QuestionHandler = (Questions) => {
-    console.log(Questions.target);
     MySwal.fire({
       title: "질문을 시작하시겠습니까?",
       icon: "warning",
@@ -134,23 +135,41 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
     });
   };
 
-  const getInterviewee = (person) => {
-    console.log(person);
-  };
+  // const getInterviewee = (person) => {
+  //   console.log(person);
+  // };
+
+  let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
+  let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData;
+  let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
+  let MemberList = [];
+
+  MemberList.push({id:myID, name:myNickName})
+  for (let i = 0; i < info.subscribers.length; i++) {
+    
+    let targetID = JSON.parse(
+      info.subscribers[i].stream.connection.data
+    ).clientId;
+
+    let targetNickName = JSON.parse(
+      info.subscribers[i].stream.connection.data
+    ).clientData;
+
+    MemberList.push({id:targetID, name:targetNickName})
+  }
+
+  const intervieweesMem = MemberList.filter(person => person.id != info.interviewee)
+
+  console.log(intervieweesMem)
 
   const interviewees = dummyPlayer.map((elem, idx) => {
-      return (
-        <>
-          <input
-            type="radio"
-            name={`radio`}
-            value={elem}
-            id={`tab-${idx + 1}`}
-          />
-          <label for={`tab-${idx + 1}`}>
-            <p>{elem}</p>
-          </label>
-        </>
+    return (
+      <React.Fragment key={idx}>
+        <input type="radio" name={`radio`} value={elem} id={`tab-${idx + 1}`} />
+        <label htmlFor={`tab-${idx + 1}`}>
+          <p>{elem}</p>
+        </label>
+      </React.Fragment>
     );
   });
 
@@ -180,8 +199,10 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
               <UserVideoComponent streamManager={info.publisher} />
             </CamCompo>
             {info.subscribers.map((sub, i) =>
-              sub.stream.connection.connectionId === info.interviewee ? null : (
-                <CamCompo className="in">
+              // sub.stream.connection.connectionId === info.interviewee ? null : (
+              JSON.parse(sub.stream.connection.data).clientId.toString() ===
+              info.interviewee.toString() ? null : (
+                <CamCompo className="in" key={i}>
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>
               )
@@ -191,8 +212,10 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
           <CamCompo>
             <InterviewerTag>면접자</InterviewerTag>
             {info.subscribers.map((sub, i) =>
-              sub.stream.connection.connectionId === info.interviewee ? (
-                <CamCompo>
+              // sub.stream.connection.connectionId === info.interviewee ? (
+              JSON.parse(sub.stream.connection.data).clientId.toString() ===
+              info.interviewee.toString() ? (
+                <CamCompo key={i}>
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>
               ) : null
@@ -249,7 +272,6 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
             </SubNav>
             <Member>
               {interviewees}
-      
               <MemberColor></MemberColor>
             </Member>
             <AllQuestions onClick={QuestionHandler} chatOn={chatOn}>
@@ -315,7 +337,8 @@ const Member = styled.div`
     height: 2rem;
     width: 5rem;
     border-radius: 0.8rem !important;
-    box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2), inset -0.2rem -0.2rem 0.5rem var(--white);
+    box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
+      inset -0.2rem -0.2rem 0.5rem var(--white);
     pointer-events: none;
   }
 
@@ -388,7 +411,8 @@ const SubBtn = styled.div`
   background-color: var(--primary);
   box-shadow: inset 0.1rem 0.1rem 0.5rem var(--primary-light),
     inset -0.1rem -0.1rem 0.5rem var(--primary-dark),
-    0.15rem 0.15rem 0.3rem var(--greyLight-2), -0.1rem -0.1rem 0.25rem var(--white);
+    0.15rem 0.15rem 0.3rem var(--greyLight-2),
+    -0.1rem -0.1rem 0.25rem var(--white);
 
   color: var(--greyLight-1);
   &:hover {
@@ -547,10 +571,10 @@ const NavCompo = styled.div`
       color: var(--greyDark);
     }
   }
-  
+
   .logOutBtn {
     cursor: pointer;
-    
+
     &:hover * {
       color: var(--primary);
     }
@@ -594,6 +618,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background: var(--greyLight-1);
 
   & .SubTitle {
     font-size: 1em;

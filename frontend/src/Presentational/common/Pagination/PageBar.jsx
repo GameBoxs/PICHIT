@@ -6,30 +6,27 @@ function PageBar({
   postsPerPage,
   setCurrentPage,
   currentPage,
-  totalpages
+  totalpages,
 }) {
   // paginationBar에 총 몇페이지가 나올지 계산해서 렌더링해주기 위함
   let pages = [];
-  // for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
-    for (let i = 1; i <= totalpages; i++) {
+
+  for (let i = 1; i <= totalpages; i++) {
     pages.push(i);
   }
-  // console.log(totalpages)
-
+  
   return (
     <>
-      <Bar>
-        
-          {pages.map((page, index) => {
-            return (
-              <Button
-                key={index}
-                onClick={() => setCurrentPage(page)}
-                active={page === currentPage ? true : false}
-              >{page}</Button>
-            );
-          })}
-        
+      <Bar className="paginationBar">
+        {pages.map((page, index) => {
+          return (
+            <Button
+              key={index}
+              onClick={() => setCurrentPage(page)}
+              active={page === currentPage ? true : false}
+            ></Button>
+          );
+        })}
       </Bar>
     </>
   );
@@ -43,29 +40,33 @@ const Bar = styled.div`
   width: 500px;
   height: 23px;
   display: flex;
-  justify-content: center
+  justify-content: center;
+  align-items: center;
 `;
 
 const Button = styled.button`
   width: 20px;
   height: 20px;
-  border-radius: 20px;
+  border-radius: 1em;
   margin-right: 20px;
   border: none;
-  background-color: #aeaeae;
+  background-color: var(--primary);
   cursor: pointer;
   transition: 0.3s ease width;
+
   &:last-child {
     margin-right: 0;
   }
+
   &:hover {
-    background: #676767;
+    background: var(--primary-dark);
     cursor: pointer;
   }
+  
   ${(props) =>
     props.active &&
     css`
-      width: 50px;
+      width: 50px !important;
       cursor: auto;
     `};
 `;

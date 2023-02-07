@@ -4,23 +4,13 @@ import { useSelector } from "react-redux";
 
 import MainBottom from "../layout/mainpage/MainBottom";
 import MainTop from "../layout/mainpage/MainTop";
+import TapeCompo from "../component/TapeCompo";
 
 import { TiStarburst, TiStarburstOutline } from "react-icons/ti";
+import AggroL from "../common/Font/AggroL";
 
 const MainPage = () => {
   const MainDiv = useRef([]);
-  const test = {
-    userId: 1,
-    id: 1,
-    title: "테스트 되고 있나용",
-    body: "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto",
-  };
-  // const data = useAxios('https://jsonplaceholder.typicode.com/comments', "GET")
-  // const data = useAxios('https://jsonplaceholder.typicode.com/posts/1', "PUT", test)
-
-  const testRedux = useSelector(state => state)
-
-  console.log(testRedux)
 
   const scrollWithUseRef = (idx) => {
     if (idx === 0)
@@ -35,12 +25,13 @@ const MainPage = () => {
       });
   };
 
-  const TapeContent = new Array(10).fill().map((_, idx) => {
+  const TapeContent = new Array(12).fill().map((_, idx) => {
     return <TapeCompo key={idx} num={idx}/>;
   });
 
   return (
     <MainPageLayout>
+      <AggroL />
       <First ref={(el) => (MainDiv.current[0] = el)}>
         <MoveBtn onClick={() => scrollWithUseRef(0)}>게시판 바로가기</MoveBtn>
         <MainTop />
@@ -58,25 +49,6 @@ const MainPage = () => {
 
 export default MainPage;
 
-function TapeCompo({ num }) {
-  return (
-    <Tape>
-      {num % 2 === 0 ? <TiStarburst /> : <TiStarburstOutline />}
-      PICHIT
-    </Tape>
-  );
-}
-
-const Tape = styled.div`
-  color:var(--white);
-  display:flex;
-  align-items: center;
-  margin-inline: 1rem;
-
-  * {
-    margin-inline: 1rem;
-  }
-`;
 
 const FrontTape = styled.div`
   width: 120vw;
@@ -92,7 +64,6 @@ const FrontTape = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 2.5rem;
-  font-weight: 600;
 `;
 
 const BackgroundTape = styled.div`
@@ -153,4 +124,6 @@ const MainPageLayout = styled.div`
   height: 250vh;
   margin: 0 auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 `;

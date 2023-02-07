@@ -1,54 +1,89 @@
+import React, { useEffect, useState, useLayoutEffect, memo } from "react";
+
 import styled from "styled-components";
 import Title from "../../common/Title";
-import PlanTime from "../../component/PlanTime";
-
-import React, { useEffect, useState } from "react";
+import Button from "../../common/Button";
 import EditRoom from "../../component/EditRoom";
-import { useSelector } from "react-redux";
-import { testToken } from "../../../store/values";
-import useAxios from "../../../action/hooks/useAxios";
+
 import { useNavigate } from "react-router-dom";
+import useAxios from "../../../action/hooks/useAxios";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import AggroL from "../../common/Font/AggroL";
+import { createSession } from "../../../action/modules/chatModule";
+import { TiStarburst } from "react-icons/ti";
+import SubTitle from "../../common/SubTitle";
 
 const MySwal = withReactContent(Swal);
 
-function RoomHeader({ join, joinRoom, data, host }) {
-  let navigate = useNavigate();
+function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
+  const { id, title, participants, sessionOpened, manager } = data;
 
-  console.log(data);
-  // console.log(roomData)
-
-  // roompage에서 받아온 data 값 가공
-  const title = data.title;
-  const startDate = data.startDate;
-
-  const joinHandler = () => {
-    joinRoom(!join);
-  };
+  const navigate = useNavigate();
 
   const [modalOpen, setModalOpen] = useState(false);
-  const showModal = () => {
-    setModalOpen(true);
+  const [userJoin, setUserJoin] = useState({
+    enter: false,
+    quit: false,
+  });
+  const [deleteData, setDeleteData] = useState(false);
+  const [joinId, setJoinId] = useState(0);
+
+  // axios 통신 시 보낼 정보들
+  const enterObj = {
+    interviewRoomId: id,
+    password: password,
   };
 
-  // axios delete
-  const roomId = data.id;
-  const token = useSelector((state) => state.token);
+  const quitObj = { id: joinId };
 
-  const [deleteData, setDeleteData] = useState(false);
+  //useAxios
+  const [enterRes] = useAxios(
+    //방 참가하기
+    `interviewjoins`,
+    "POST",
+    token,
+    enterObj,
+    userJoin.enter
+  );
+
   const deleteResult = useAxios(
-    `interviewrooms/${roomId}`,
+    //방 삭제하기
+    `interviewrooms/${id}`,
     "DELETE",
     token,
     null,
     deleteData
   );
-  console.log(deleteResult);
+
+  const [quitRes] = useAxios(
+    //방 나가기
+    `interviewjoins/${id}`,
+    "DELETE",
+    token,
+    quitObj,
+    userJoin.quit
+  );
+
+  //useEffect
+  useEffect(() => {
+    setJoinId(userinfo.interviewJoinId);
+  }, [userinfo]);
+
+  useLayoutEffect(() => {
+    //방 참여하기 성공 후 새로고침
+    if (enterRes !== null) {
+      if (enterRes.success) {
+        window.location.reload();
+      } else {
+        alert("이미 참가한 방입니다");
+      }
+    }
+  }, [enterRes]);
 
   useEffect(() => {
-    setDeleteData();
+    //방 삭제하기
     if (
       deleteResult[0] &&
       deleteResult[0].success &&
@@ -62,7 +97,37 @@ function RoomHeader({ join, joinRoom, data, host }) {
       });
       navigate("/");
     }
-  }, [deleteData]);
+  }, [deleteResult]);
+
+  useLayoutEffect(() => {
+    //방 탈퇴하기 성공 후 새로고침
+    if (quitRes !== null && quitRes.success) {
+      window.location.reload();
+    }
+  }, [quitRes]);
+
+  //Event Function
+  const joinHandler = (isJoin) => {
+    //방 참여하기
+    joinRoom(isJoin);
+    setUserJoin({
+      enter: true,
+      quit: false,
+    });
+  };
+
+  const quitHandler = (isJoin) => {
+    //방 탈퇴하기
+    joinRoom(isJoin);
+    setUserJoin({
+      enter: false,
+      quit: true,
+    });
+  };
+
+  const showModal = () => {
+    setModalOpen(true);
+  };
 
   const deleteRoom = () => {
     MySwal.fire({
@@ -77,97 +142,166 @@ function RoomHeader({ join, joinRoom, data, host }) {
       }
     });
   };
-  // const [data, setData] = useState([]);
+  
+  const moveToRoom = () => {
+    // setGoSession(true)
+    navigate("/interview", {
+      state: {
+        userinfo: userinfo,
+        roomId: id,
+        isHost: host
+      },
+    });
 
-  // useEffect(() => {
-  //   if (deleteData && deleteData.data) {
-  //     setData(deleteData.data);
-  //     console.log(deleteData.data)
-  //   }
-  // },[deleteData])
+    
+  };
 
-  const readyRoom = join ? (
-    <LayoutButton text={"나가기"}>나가기</LayoutButton>
-  ) : (
-    <LayoutButton isImportant={false} text={"참여하기"} onClick={joinHandler}>
+  const createRoom = () => {
+    createSession(id, token).then((res) => {
+      if (res.success) {
+        window.location.reload();
+      }
+    });
+  };
+
+  //JSX 변수
+  const ReadyBtn = (
+    <Button text={"스터디 준비하기"} handler={createRoom} isImportant={true} />
+  );
+
+  const StartBtn = (
+    <Button text={"스터디 시작하기"} handler={moveToRoom} isImportant={true} />
+  );
+
+  const QuitBtn = (
+    <Button
+      text={"나가기"}
+      handler={() => {
+        quitHandler(false);
+      }}
+    >
+      나가기
+    </Button>
+  );
+
+  const EnterBtn = (
+    <Button
+      isImportant={false}
+      text={"참여하기"}
+      handler={() => joinHandler(true)}
+    >
       참여하기
-    </LayoutButton>
+    </Button>
+  );
+
+  const StudyStartBtn = (
+    <Button
+      isImportant={true}
+      text={"스터디 시작하기"}
+      handler={() => moveToRoom()}
+    >
+      화상채팅 시작하기
+    </Button>
+  );
+
+  //화면 렌더링 함수
+  const readyRoom = join ? (
+    <>
+      {sessionOpened ? StudyStartBtn : <p>스터디룸을 준비중입니다</p>}
+      {QuitBtn}
+    </>
+  ) : (
+    <>{EnterBtn}</>
   );
 
   const RoomHost = host ? (
-    <div>
-      {/* <LayoutButton text={"수정하기"} onClick={showModal}>수정하기</LayoutButton>
-      <button onClick={showModal} >수정하기</button>
-      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />} */}
-      <LayoutButton text={"삭제하기"} onClick={deleteRoom}>
+    <BtnContainer>
+      {participants.length >= 2 ? (sessionOpened ? StartBtn : ReadyBtn) : null}
+      <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
         삭제하기
-      </LayoutButton>
-    </div>
+      </Button>
+      <Button text={"수정하기"} handler={showModal}>
+        수정하기
+      </Button>
+      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
+    </BtnContainer>
   ) : (
-    { readyRoom }
+    <BtnContainer>{readyRoom}</BtnContainer>
   );
 
   return (
     <Layout>
+      <AggroL />
+      <TiStarburst />
       <Title title={title} />
+
+      <ManagerLayout>
+        <SubTitle title={"방장"} />
+        <SubTitle title={manager.name} />
+      </ManagerLayout>
       {RoomHost}
     </Layout>
   );
 }
 
-export default RoomHeader;
+export default memo(RoomHeader);
+
+const ManagerLayout = styled.div`
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  font-family: "SBagrroL";
+  color: var(--greyDark);
+
+  & .SubTitle:first-child {
+    color: var(--greyLight-3);
+  }
+
+  margin-bottom: 3rem;
+`;
+
+const BtnContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  > p {
+    margin-left: 0.3rem;
+    color: var(--primary-dark);
+  }
+`;
 
 const LayoutButton = styled.div`
   width: 10vw;
   height: 8vh;
-  border-radius: 1rem;
-  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
-    -0.2rem -0.2rem 0.5rem var(--white);
-  justify-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.3s ease;
-  font-weight: 600;
-  grid-column: 1 / 2;
-  grid-row: 1 / 2;
-  background-color: var(--primary-light);
-
-  & {
-    color: var(--white);
-  }
-
-  &:hover {
-    color: var(--primary);
-  }
-
-  &:active {
-    box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
-      inset -0.2rem -0.2rem 0.5rem var(--white);
-  }
 `;
 
 const Layout = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
   margin-bottom: 3rem;
+  height: inherit;
+  padding: 1rem;
+  border-radius: 1rem;
+  color: var(--primary);
+  margin-top: 6vh;
 
   & .Title {
-    font-weight: 600;
-    font-size: 3rem;
+    font-size: 2rem;
+    text-align: left;
+    margin-block: 1rem;
+    font-family: "SBagrroL";
   }
 
-  & div:nth-child(2) {
-    width: 7rem;
-    height: 3rem;
+  .Btn {
+    width: 10rem;
+    height: 3.5rem;
 
     & * {
       font-size: 1rem;
     }
   }
-`;
-const ButtonSection = styled.div`
-  display: flex;
+
+  svg {
+    margin-top: 0rem;
+    font-size: 2rem;
+  }
 `;

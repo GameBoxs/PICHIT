@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 import IntervieweePage from "./IntervieweePage"
 import InterviewerPage from "./InterviewerPage";
@@ -14,12 +14,23 @@ import { useSelector } from "react-redux";
 import {getToken, leaveSession,} from '../../../action/modules/chatModule';
 
 const InterviewPage = () => {
-  let navigate = useNavigate();
-  const mySession = useSelector((state) => state.chatSession);
+  const navigate = useNavigate();
+  /* 
+    roomPage에서 받아온 값
+    id : 해당 유저 아이디
+    rommId : 방 아이디
+  */
+  const {userinfo, roomId, isHost} = useLocation().state;
+
+  // const mySession = useSelector((state) => state.chatSession);
+  const mySession = roomId;
+  const myToken = useSelector((state) => state.token);
+
   const [info, setInfo] = useState({
     interviewee: "미지정",
     mySessionId: mySession,
-    myUserName: "Participant" + Math.floor(Math.random() * 100),
+    // myUserName: "Participant" + Math.floor(Math.random() * 100),
+    myUserName: userinfo.name,
     session: undefined,
     mainStreamManager: undefined,
     publisher: undefined,
@@ -52,7 +63,8 @@ const InterviewPage = () => {
         session: undefined,
         subscribers: [],
         mySessionId: mySession,
-        myUserName: "Participant" + Math.floor(Math.random() * 100),
+        // myUserName: "Participant" + Math.floor(Math.random() * 100),
+        myUserName: userinfo.name,
         mainStreamManager: undefined,
         publisher: undefined,
       };
@@ -63,8 +75,8 @@ const InterviewPage = () => {
   const joinSession = () => {
     // OpenVidu 초기화
     setSession(OV.initSession());
-    OpenViduLogger.getInstance().enableProdMode(); // 건들지 말것
-    OpenViduLogger.getInstance().disableLogger(); // << 내가 작성한 console.log() 가 안나올때 해당 67번째 줄 주석 처리 하면 작동함.
+    // OpenViduLogger.getInstance().enableProdMode(); // 건들지 말것
+    // OpenViduLogger.getInstance().disableLogger(); // << 내가 작성한 console.log() 가 안나올때 해당 67번째 줄 주석 처리 하면 작동함.
   };
 
   // 컴포넌트 마운트 될 때 세션 참여 함수 실행
@@ -122,23 +134,36 @@ const InterviewPage = () => {
 
       // 시작 신호 받았을 때
       mySession.on("signal:stage", (event) => {
+        console.log('---스터디시작 서버에 저장한 아이디 : ', event.data , ' / 내 아이디 :', userinfo.id, ' / 같은가?', event.data.toString() === userinfo.id.toString());
         // 면접자 미지정이 아니라면
         if(event.data !== '미지정'){
           // 내가 면접자 일때 면접자 페이지로 이동
-          if(event.data === mySession.connection.connectionId){
-            navigate("/interview/interviewer");
+          if(event.data.toString() === userinfo.id.toString()){
+            navigate("/interview/interviewer", {
+              state: {
+                userinfo: userinfo,
+                roomId: roomId,
+                isHost: isHost,
+              },
+            });
           } 
           // 면접자가 아니라면 면접관 페이지로 이동
           else{
-            navigate("/interview/interviewee");
+            navigate("/interview/interviewee", {
+              state: {
+                userinfo: userinfo,
+                roomId: roomId,
+                isHost: isHost,
+              },
+            });
           }
         }
       })
 
       // 내 세션에 토큰으로 인증
-      getToken(info.mySessionId).then((token) => {
+      getToken(roomId,myToken).then((token) => {
         mySession
-          .connect(token, { clientData: info.myUserName })
+          .connect(token.data, { clientData: info.myUserName, clientId: userinfo.id, clientRoomJoinId: userinfo.interviewJoinId, clientRoomId: roomId })
           .then(async () => {
             let publisher = await OV.initPublisherAsync(undefined, {
               audioSource: undefined,
@@ -174,6 +199,14 @@ const InterviewPage = () => {
                 mainStreamManager: publisher,
                 publisher: publisher,
               };
+            });
+
+            navigate("/interview/selectinterviewee", {
+              state: {
+                userinfo: userinfo,
+                roomId: roomId,
+                isHost: isHost,
+              },
             });
           })
           .catch((error) => {

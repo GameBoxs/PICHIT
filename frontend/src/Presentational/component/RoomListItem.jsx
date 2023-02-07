@@ -1,66 +1,73 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import useAxios from "../../action/hooks/useAxios";
+import { useSelector } from "react-redux";
+import LogInModal from "./LogInModal";
 
 const MySwal = withReactContent(Swal);
 
-// {
-//     "id": 80,
-//     "title": "멋진 면접",
-//     "currentPersonCount": 1,
-//     "maxPersonCount": 4,
-//     "secretRoom": true,
-//     "finished": false,
-//     "startDate": "2023-01-24T08:40:10.495"
-// }
 function RoomListItem(props) {
-    // 비밀방 클릭시, 비밀번호 입력 모달 띄우도록 설정,
+  // 비밀방 클릭시, 비밀번호 입력 모달 띄우도록 설정,
+  const token = useSelector(state => state.token)
   let navigate = useNavigate();
-  const showSwalWithLink = () => {
-    MySwal.fire({
-      title: "비밀번호 입력",
-      input:'text',
-      inputAttributes: {
-        autocapitalize: 'off'
-      },
-      showCancelButton:true,
-      confirmButtonText:"입장하기",
-      cancelButtonText:"취소하기"
-    });
-  };
-
-  // const [roomId, setRoomId] =useState([])
-  // const clickHandler = () => {
-  //   setRoomId(props.id)
-  //   console.log(props.id)
-
-  // }
+  const roomId = props.id
 
   const clickRoomItem = () => {
-    console.log(props.id)
-    navigate('/room', {
-      state: {
-        id:props.id
+    if (token === null ){
+      MySwal.fire({
+        text: "로그인이 필요한 서비스 입니다.",
+        showConfirmButton:false,
+        icon:'warning',
+        timer: 1500
+      })
+    }
+    else{
+      if (props.secretRoom === true) {
+        MySwal.fire({
+          title: "비밀번호 입력",
+          html: `<input type="text" id="password" class="swal2-input" placeholder="password">`,
+          confirmButtonText: "입장하기",
+          preConfirm: () => {
+            const password = Swal.getPopup().querySelector("#password").value;
+            if (!password) {
+              Swal.showValidationMessage(`Please enter login and password`);
+            }
+            return { password: password };
+          },
+        }).then((result) => {
+          console.log(result.value.password)
+          navigate(`/room/${roomId}`, {
+            state: {
+              id: props.id,
+              password: result.value.password,
+            },
+          });
+        });
+      } else {
+        navigate(`/room/${roomId}`, {
+          state: {
+            id: props.id,
+          },
+        });
       }
-    });
-  }
+    }
+  };
   return (
-    <RoomItem onClick={clickRoomItem} >
+    <RoomItem onClick={clickRoomItem}>
       <div className="rommtitle">
-        <h3>({props.index}){props.id}{props.title}</h3>
+        <h3>
+          ({props.index}){props.id}
+          {props.title}
+        </h3>
         <p>
           {props.currentPersonCount}/{props.maxPersonCount}
         </p>
       </div>
       <p>{props.startDate}</p>
-
-      {props.secret ? (
-        <button onClick={showSwalWithLink}>비밀번호</button>
-      ) : null}
-      {/* secret:true 일 때 일단 임시로 비밀번호 버튼 뜨도록 설정 */}
     </RoomItem>
   );
 }
@@ -77,7 +84,7 @@ const RoomItem = styled.li`
   height: 140px;
   padding: 2% 4%;
   margin-bottom: 2%;
-	box-shadow: 4px 4px 12px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 4px 4px 12px 1px rgba(0, 0, 0, 0.2);
   div {
     display: flex;
     justify-content: space-between;
