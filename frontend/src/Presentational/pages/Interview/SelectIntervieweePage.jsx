@@ -111,7 +111,7 @@ const SelectIntervieweePage = ({
           isHost ? 
           <Button handler={handler} text="시작" isImportant={true} />
           :
-          <Title title="방장이 시작하기 전까지 대기해 주세요." />
+          null
         }
         <Button
           text="종료"

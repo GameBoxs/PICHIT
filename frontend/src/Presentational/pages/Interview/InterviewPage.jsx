@@ -20,7 +20,7 @@ const InterviewPage = () => {
     id : 해당 유저 아이디
     rommId : 방 아이디
   */
-  const {userinfo, roomId} = useLocation().state;
+  const {userinfo, roomId, isHost} = useLocation().state;
 
   // const mySession = useSelector((state) => state.chatSession);
   const mySession = roomId;
