@@ -142,18 +142,17 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       }
     });
   };
-
+  
   const moveToRoom = () => {
     // setGoSession(true)
     navigate("/interview", {
       state: {
-        userinfo: {
-          userinfo:userinfo,
-          interviewJoinId: userinfo.interviewJoinId,
-        },
+        userinfo: userinfo,
         roomId: id,
       },
     });
+
+    
   };
 
   const createRoom = () => {
