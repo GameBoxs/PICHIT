@@ -45,7 +45,7 @@ public class RecordingService {
                 () -> new ResourceNotFoundException("당신은 존재하지 않는 면접 참여자입니다.")
         );
 
-        if (interviewJoin.getUser().getId() != userId) {
+        if (interviewJoin.getUser().getId().equals(userId)) {
             throw new ResourceForbiddenException("다른 참여자의 면접 녹음은 등록할 수 없습니다.");
         }
 

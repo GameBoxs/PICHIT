@@ -33,6 +33,9 @@ public class Question extends BaseTimeEntity {
     @JoinColumn(name = "writer_id")
     private User writer;
 
+    @Column(columnDefinition = "TINYINT(1)", nullable = false)
+    private int finished;
+
     @Builder.Default
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feedback> feedbacks = new ArrayList<>();
