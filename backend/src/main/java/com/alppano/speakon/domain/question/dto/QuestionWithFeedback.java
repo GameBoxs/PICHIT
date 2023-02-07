@@ -17,7 +17,6 @@ public class QuestionWithFeedback {
     private String content;
     private Long interviewJoinId;
     private UserInfoDto writer;
-
     private List<FeedbackInfo> feedbacks;
 
     public QuestionWithFeedback(Question question) {
