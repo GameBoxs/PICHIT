@@ -1,5 +1,6 @@
 package com.alppano.speakon.domain.resume.entity;
 
+import com.alppano.speakon.common.entity.BaseTimeEntity;
 import com.alppano.speakon.domain.datafile.entity.DataFile;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
 import lombok.*;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Resume {
+public class Resume extends BaseTimeEntity {
     @Id
     @GeneratedValue
     private Long id;
