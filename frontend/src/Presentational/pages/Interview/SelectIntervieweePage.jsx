@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Button from "../../common/Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Screen from "../../layout/Interview/Screen";
 
@@ -24,6 +24,7 @@ const SelectIntervieweePage = ({
   info,
   setInfo,
 }) => {
+  const isHost = useLocation().state.isHost;
   let navigate = useNavigate();
   const myToken = useSelector((state) => state.token);
   const [roomNum, setRoomNum] = useState(0)
@@ -106,7 +107,12 @@ const SelectIntervieweePage = ({
       <ConditionSentance>{sentance}</ConditionSentance>
       <Screen number={info.subscribers.length} info={info} />
       <BottomPanel>
-        <Button handler={handler} text="시작" isImportant={true} />
+        {
+          isHost ? 
+          <Button handler={handler} text="시작" isImportant={true} />
+          :
+          null
+        }
         <Button
           text="종료"
           handler={() => {
