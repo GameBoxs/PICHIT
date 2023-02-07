@@ -50,7 +50,9 @@ function RoomMain(props) {
 
   const RoomQuestion =
     isJoin || host ? (
-      <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} />
+      (pdfhandler.interviewJoinId !== userinfo.interviewJoinId)?
+      <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} />:
+      <PopUp>스터디 전에<br /> 볼 수 없습니다.</PopUp>
     ) : (
       <PopUp>질문을 볼 수 없습니다.</PopUp>
     );
