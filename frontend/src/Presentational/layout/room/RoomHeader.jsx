@@ -5,35 +5,42 @@ import Title from "../../common/Title";
 import Button from "../../common/Button";
 import EditRoom from "../../component/EditRoom";
 
-import { useSelector } from "react-redux";
-import { testToken } from "../../../store/values";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAxios from "../../../action/hooks/useAxios";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import AggroL from "../../common/Font/AggroL";
+import { createSession } from "../../../action/modules/chatModule";
+import { TiStarburst } from "react-icons/ti";
+import SubTitle from "../../common/SubTitle";
 
 const MySwal = withReactContent(Swal);
 
 function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
-  const { id, title, participants } = data;
+  const { id, title, participants, sessionOpened, manager } = data;
+
   const navigate = useNavigate();
+
   const [modalOpen, setModalOpen] = useState(false);
   const [userJoin, setUserJoin] = useState({
     enter: false,
     quit: false,
   });
-  // axios delete
   const [deleteData, setDeleteData] = useState(false);
-  const [joinId, setJoinId] = useState({ id: 0 });
+  const [joinId, setJoinId] = useState(0);
+
+  // axios 통신 시 보낼 정보들
   const enterObj = {
     interviewRoomId: id,
     password: password,
   };
-  // const [goSession, setGoSession] = useState(false);
 
+  const quitObj = { id: joinId };
+
+  //useAxios
   const [enterRes] = useAxios(
+    //방 참가하기
     `interviewjoins`,
     "POST",
     token,
@@ -42,6 +49,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   );
 
   const deleteResult = useAxios(
+    //방 삭제하기
     `interviewrooms/${id}`,
     "DELETE",
     token,
@@ -50,34 +58,21 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   );
 
   const [quitRes] = useAxios(
-    `interviewjoins/${joinId.id}`,
+    //방 나가기
+    `interviewjoins/${id}`,
     "DELETE",
     token,
-    joinId,
+    quitObj,
     userJoin.quit
   );
 
-  // const [getSession] = useAxios(
-  //   `conference/sessions/${id}`,
-  //   "POST",
-  //   token,
-  //   {interviewRoomId:id},
-  //   goSession
-  // )
-
-  // console.log(getSession, '-------------')
-
+  //useEffect
   useEffect(() => {
-    const tempArr = participants.filter(
-      (person) => person.name === userinfo.name
-    );
-
-    if (tempArr.length !== 0) {
-      setJoinId({ id: tempArr[0].interviewJoinId });
-    }
+    setJoinId(userinfo.interviewJoinId);
   }, [userinfo]);
 
   useLayoutEffect(() => {
+    //방 참여하기 성공 후 새로고침
     if (enterRes !== null) {
       if (enterRes.success) {
         window.location.reload();
@@ -88,7 +83,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   }, [enterRes]);
 
   useEffect(() => {
-    // setDeleteData();
+    //방 삭제하기
     if (
       deleteResult[0] &&
       deleteResult[0].success &&
@@ -105,13 +100,15 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   }, [deleteResult]);
 
   useLayoutEffect(() => {
+    //방 탈퇴하기 성공 후 새로고침
     if (quitRes !== null && quitRes.success) {
       window.location.reload();
     }
   }, [quitRes]);
 
-  // roompage에서 받아온 data 값 가공
+  //Event Function
   const joinHandler = (isJoin) => {
+    //방 참여하기
     joinRoom(isJoin);
     setUserJoin({
       enter: true,
@@ -120,6 +117,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   };
 
   const quitHandler = (isJoin) => {
+    //방 탈퇴하기
     joinRoom(isJoin);
     setUserJoin({
       enter: false,
@@ -130,9 +128,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   const showModal = () => {
     setModalOpen(true);
   };
-
-  // const myId = useSelector((state) => state)
-  // console.log(myId)
 
   const deleteRoom = () => {
     MySwal.fire({
@@ -147,20 +142,37 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       }
     });
   };
+  
+  const moveToRoom = () => {
+    // setGoSession(true)
+    navigate("/interview", {
+      state: {
+        userinfo: userinfo,
+        roomId: id,
+      },
+    });
 
-  // function deleteRoom() {
-  //   setDeleteData(true);
-  // }
-  // const [data, setData] = useState([]);
+    
+  };
 
-  // useEffect(() => {
-  //   if (deleteData && deleteData.data) {
-  //     setData(deleteData.data);
-  //     console.log(deleteData.data)
-  //   }
-  // },[deleteData])
+  const createRoom = () => {
+    createSession(id, token).then((res) => {
+      if (res.success) {
+        window.location.reload();
+      }
+    });
+  };
 
-  const readyRoom = join ? (
+  //JSX 변수
+  const ReadyBtn = (
+    <Button text={"스터디 준비하기"} handler={createRoom} isImportant={true} />
+  );
+
+  const StartBtn = (
+    <Button text={"스터디 시작하기"} handler={moveToRoom} isImportant={true} />
+  );
+
+  const QuitBtn = (
     <Button
       text={"나가기"}
       handler={() => {
@@ -169,7 +181,9 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     >
       나가기
     </Button>
-  ) : (
+  );
+
+  const EnterBtn = (
     <Button
       isImportant={false}
       text={"참여하기"}
@@ -179,46 +193,51 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     </Button>
   );
 
-  const moveSession = () => {
-    console.log('userinfo roomheader ---',userinfo);
-    // setGoSession(true)
-    navigate("/interview", {
-      state: {
-        id: userinfo,
-        roomId: id,
-        isHost: host,
-      },
-    });
-  };
+  const StudyStartBtn = (
+    <Button
+      isImportant={true}
+      text={"스터디 시작하기"}
+      handler={() => moveToRoom()}
+    >
+      화상채팅 시작하기
+    </Button>
+  );
+
+  //화면 렌더링 함수
+  const readyRoom = join ? (
+    <>
+      {sessionOpened ? StudyStartBtn : <p>스터디룸을 준비중입니다</p>}
+      {QuitBtn}
+    </>
+  ) : (
+    <>{EnterBtn}</>
+  );
 
   const RoomHost = host ? (
     <BtnContainer>
-      {/* <LayoutButton text={"수정하기"} onClick={showModal}>수정하기</LayoutButton>
-      <button onClick={showModal} >수정하기</button>
-      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />} */}
-      {/* <LayoutButton text={"삭제하기"} onClick={deleteRoom}> */}
-      {participants.length >= 2 ? (
-        <Button
-          text={"스터디 시작하기"}
-          handler={moveSession}
-          isImportant={true}
-        >
-          화상채팅 시작하기
-        </Button>
-      ) : null}
+      {participants.length >= 2 ? (sessionOpened ? StartBtn : ReadyBtn) : null}
       <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
         삭제하기
       </Button>
-      {/* </LayoutButton> */}
+      <Button text={"수정하기"} handler={showModal}>
+        수정하기
+      </Button>
+      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
     </BtnContainer>
   ) : (
-    <div>{readyRoom}</div>
+    <BtnContainer>{readyRoom}</BtnContainer>
   );
 
   return (
     <Layout>
       <AggroL />
+      <TiStarburst />
       <Title title={title} />
+
+      <ManagerLayout>
+        <SubTitle title={"방장"} />
+        <SubTitle title={manager.name} />
+      </ManagerLayout>
       {RoomHost}
     </Layout>
   );
@@ -226,10 +245,29 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
 
 export default memo(RoomHeader);
 
+const ManagerLayout = styled.div`
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  font-family: "SBagrroL";
+  color: var(--greyDark);
+
+  & .SubTitle:first-child {
+    color: var(--greyLight-3);
+  }
+
+  margin-bottom: 3rem;
+`;
+
 const BtnContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+
+  > p {
+    margin-left: 0.3rem;
+    color: var(--primary-dark);
+  }
 `;
 
 const LayoutButton = styled.div`
@@ -239,11 +277,16 @@ const LayoutButton = styled.div`
 
 const Layout = styled.div`
   margin-bottom: 3rem;
+  height: inherit;
+  padding: 1rem;
+  border-radius: 1rem;
+  color: var(--primary);
+  margin-top: 6vh;
 
   & .Title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     text-align: left;
-    margin-block: 3rem;
+    margin-block: 1rem;
     font-family: "SBagrroL";
   }
 
@@ -254,5 +297,10 @@ const Layout = styled.div`
     & * {
       font-size: 1rem;
     }
+  }
+
+  svg {
+    margin-top: 0rem;
+    font-size: 2rem;
   }
 `;
