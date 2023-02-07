@@ -65,6 +65,8 @@ jwt:
 
 openvidu:
   OPENVIDU_URL: https://i8d107.p.ssafy.io:443/
+  OPENVIDU_RECORDING_PATH: /opt/openvidu/recordings/
+#  OPENVIDU_RECORDING_PATH:  C:\test\recording\
   OPENVIDU_SECRET: MY_SECRET
 
 logging:
