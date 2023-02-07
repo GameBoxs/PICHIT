@@ -1,5 +1,6 @@
 package com.alppano.speakon.domain.resume.service;
 
+import com.alppano.speakon.common.exception.BadRequestException;
 import com.alppano.speakon.common.exception.ResourceAlreadyExistsException;
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
@@ -31,15 +32,19 @@ public class ResumeService {
 
     @Transactional
     public void registerResume(Long userId, Long interviewJoinId, MultipartFile multipartFile) throws IOException {
+        if (multipartFile.isEmpty()) {
+            throw new BadRequestException("요청에 자기소개서 파일이 존재하지 않습니다.");
+        }
+
         InterviewJoin interviewJoin = interviewJoinRepository.findById(interviewJoinId).orElseThrow(
-                ()-> new ResourceNotFoundException("당신은 존재하지 않는 면접 참여자입니다.")
+                () -> new ResourceNotFoundException("당신은 존재하지 않는 면접 참여자입니다.")
         );
 
-        if(interviewJoin.getUser().getId() != userId) {
+        if (interviewJoin.getUser().getId() != userId) {
             throw new ResourceForbiddenException("다른 참여자의 자기소개서는 등록할 수 없습니다.");
         }
 
-        if(resumeRepository.findByInterviewJoinId(interviewJoinId).isPresent()) {
+        if (resumeRepository.findByInterviewJoinId(interviewJoinId).isPresent()) {
             throw new ResourceAlreadyExistsException("자기소개서는 하나만 등록할 수 있습니다.");
         }
 
@@ -57,15 +62,15 @@ public class ResumeService {
 
     public ResumeInfo getResume(Long userId, Long interviewJoinId) {
         InterviewJoin interviewJoin = interviewJoinRepository.findById(interviewJoinId).orElseThrow(
-                ()-> new ResourceNotFoundException("당신은 존재하지 않는 면접 참여자입니다.")
+                () -> new ResourceNotFoundException("당신은 존재하지 않는 면접 참여자입니다.")
         );
 
-        interviewJoinRepository.findByUserIdAndInterviewRoomId(userId,interviewJoin.getInterviewRoom().getId()).orElseThrow(
-                ()-> new ResourceForbiddenException("해당 면접방에 참여 중이 아닙니다.")
+        interviewJoinRepository.findByUserIdAndInterviewRoomId(userId, interviewJoin.getInterviewRoom().getId()).orElseThrow(
+                () -> new ResourceForbiddenException("해당 면접방에 참여 중이 아닙니다.")
         );
 
         Resume resume = resumeRepository.findByInterviewJoinId(interviewJoinId).orElseThrow(
-                ()-> new ResourceNotFoundException("등록된 자기소개서가 없습니다.")
+                () -> new ResourceNotFoundException("등록된 자기소개서가 없습니다.")
         );
 
         String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -73,18 +78,18 @@ public class ResumeService {
                 .path(Long.toString(resume.getDataFile().getId()))
                 .toUriString();
 
-        return new ResumeInfo(resume.getId(),uri);
+        return new ResumeInfo(resume.getId(), uri);
     }
 
     @Transactional
     public void deleteResume(Long userId, Long resumeId) {
         Resume resume = resumeRepository.findById(resumeId).orElseThrow(
-                ()-> new ResourceNotFoundException("등록된 자기소개서가 없습니다.")
+                () -> new ResourceNotFoundException("등록된 자기소개서가 없습니다.")
         );
 
         InterviewJoin interviewJoin = resume.getInterviewJoin();
 
-        if(interviewJoin.getUser().getId() != userId) {
+        if (interviewJoin.getUser().getId() != userId) {
             throw new ResourceForbiddenException("자신의 자기소개서만 삭제할 수 있습니다.");
         }
 
@@ -96,11 +101,15 @@ public class ResumeService {
 
     @Transactional
     public void updateResume(Long userId, Long resumeId, MultipartFile multipartFile) throws IOException {
+        if (multipartFile.isEmpty()) {
+            throw new BadRequestException("요청에 자기소개서 파일이 존재하지 않습니다.");
+        }
+
         Resume resume = resumeRepository.findById(resumeId).orElseThrow(
-                ()-> new ResourceNotFoundException("등록된 자기소개서가 없습니다.")
+                () -> new ResourceNotFoundException("등록된 자기소개서가 없습니다.")
         );
 
-        if(resume.getInterviewJoin().getUser().getId() != userId) {
+        if (resume.getInterviewJoin().getUser().getId() != userId) {
             throw new ResourceForbiddenException("자신의 자기소개서만 수정할 수 있습니다.");
         }
 
