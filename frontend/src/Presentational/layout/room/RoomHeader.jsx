@@ -1,48 +1,39 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState, useLayoutEffect, memo } from "react";
 
 import styled from "styled-components";
 import Title from "../../common/Title";
 import Button from "../../common/Button";
 import EditRoom from "../../component/EditRoom";
 
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { testToken } from "../../../store/values";
+import { useLocation, useNavigate } from "react-router-dom";
 import useAxios from "../../../action/hooks/useAxios";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import AggroL from "../../common/Font/AggroL";
-import { createSession } from "../../../action/modules/chatModule";
-import { TiStarburst } from "react-icons/ti";
-import SubTitle from "../../common/SubTitle";
 
 const MySwal = withReactContent(Swal);
 
 function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
-  const { id, title, participants, sessionOpened, manager } = data;
-
-  console.log(sessionOpened);
-
+  const { id, title, participants } = data;
   const navigate = useNavigate();
-
   const [modalOpen, setModalOpen] = useState(false);
   const [userJoin, setUserJoin] = useState({
     enter: false,
     quit: false,
   });
+  // axios delete
   const [deleteData, setDeleteData] = useState(false);
-  const [joinId, setJoinId] = useState(0);
-
-  // axios 통신 시 보낼 정보들
+  const [joinId, setJoinId] = useState({ id: 0 });
   const enterObj = {
     interviewRoomId: id,
     password: password,
   };
+  // const [goSession, setGoSession] = useState(false);
 
-  const quitObj = { id: joinId };
-
-  //useAxios
   const [enterRes] = useAxios(
-    //방 참가하기
     `interviewjoins`,
     "POST",
     token,
@@ -51,7 +42,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   );
 
   const deleteResult = useAxios(
-    //방 삭제하기
     `interviewrooms/${id}`,
     "DELETE",
     token,
@@ -60,21 +50,34 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   );
 
   const [quitRes] = useAxios(
-    //방 나가기
-    `interviewjoins/${id}`,
+    `interviewjoins/${joinId.id}`,
     "DELETE",
     token,
-    quitObj,
+    joinId,
     userJoin.quit
   );
 
-  //useEffect
+  // const [getSession] = useAxios(
+  //   `conference/sessions/${id}`,
+  //   "POST",
+  //   token,
+  //   {interviewRoomId:id},
+  //   goSession
+  // )
+
+  // console.log(getSession, '-------------')
+
   useEffect(() => {
-    setJoinId(userinfo.interviewJoinId);
+    const tempArr = participants.filter(
+      (person) => person.name === userinfo.name
+    );
+
+    if (tempArr.length !== 0) {
+      setJoinId({ id: tempArr[0].interviewJoinId });
+    }
   }, [userinfo]);
 
   useLayoutEffect(() => {
-    //방 참여하기 성공 후 새로고침
     if (enterRes !== null) {
       if (enterRes.success) {
         window.location.reload();
@@ -85,7 +88,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   }, [enterRes]);
 
   useEffect(() => {
-    //방 삭제하기
+    // setDeleteData();
     if (
       deleteResult[0] &&
       deleteResult[0].success &&
@@ -102,15 +105,13 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   }, [deleteResult]);
 
   useLayoutEffect(() => {
-    //방 탈퇴하기 성공 후 새로고침
     if (quitRes !== null && quitRes.success) {
       window.location.reload();
     }
   }, [quitRes]);
 
-  //Event Function
+  // roompage에서 받아온 data 값 가공
   const joinHandler = (isJoin) => {
-    //방 참여하기
     joinRoom(isJoin);
     setUserJoin({
       enter: true,
@@ -119,7 +120,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   };
 
   const quitHandler = (isJoin) => {
-    //방 탈퇴하기
     joinRoom(isJoin);
     setUserJoin({
       enter: false,
@@ -130,6 +130,9 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   const showModal = () => {
     setModalOpen(true);
   };
+
+  // const myId = useSelector((state) => state)
+  // console.log(myId)
 
   const deleteRoom = () => {
     MySwal.fire({
@@ -145,38 +148,19 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     });
   };
 
-  const moveToRoom = () => {
-    // setGoSession(true)
-    navigate("/interview", {
-      state: {
-        userinfo: {
-          id: userinfo.id,
-          name: userinfo.name,
-          interviewJoinId: userinfo.interviewJoinId,
-        },
-        roomId: id,
-      },
-    });
-  };
+  // function deleteRoom() {
+  //   setDeleteData(true);
+  // }
+  // const [data, setData] = useState([]);
 
-  const createRoom = () => {
-    createSession(id, token).then((res) => {
-      if (res.success) {
-        window.location.reload();
-      }
-    });
-  };
+  // useEffect(() => {
+  //   if (deleteData && deleteData.data) {
+  //     setData(deleteData.data);
+  //     console.log(deleteData.data)
+  //   }
+  // },[deleteData])
 
-  //JSX 변수
-  const ReadyBtn = (
-    <Button text={"스터디 준비하기"} handler={createRoom} isImportant={true} />
-  );
-
-  const StartBtn = (
-    <Button text={"스터디 시작하기"} handler={moveToRoom} isImportant={true} />
-  );
-
-  const QuitBtn = (
+  const readyRoom = join ? (
     <Button
       text={"나가기"}
       handler={() => {
@@ -185,9 +169,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     >
       나가기
     </Button>
-  );
-
-  const EnterBtn = (
+  ) : (
     <Button
       isImportant={false}
       text={"참여하기"}
@@ -197,81 +179,55 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     </Button>
   );
 
-  const StudyStartBtn = (
-    <Button
-      isImportant={true}
-      text={"스터디 시작하기"}
-      handler={() => moveToRoom()}
-    >
-      방 입장하기
-    </Button>
-  );
-
-  //화면 렌더링 함수
-  const readyRoom = join ? (
-    <>
-      {sessionOpened ? StudyStartBtn : <p>스터디룸을 준비중입니다</p>}
-      {QuitBtn}
-    </>
-  ) : (
-    <>{EnterBtn}</>
-  );
+  const moveSession = () => {
+    // setGoSession(true)
+    navigate("/interview", {
+      state: {
+        id: userinfo.id,
+        roomId: id,
+      },
+    });
+  };
 
   const RoomHost = host ? (
     <BtnContainer>
-      {participants.length >= 2 ? (sessionOpened ? StartBtn : ReadyBtn) : null}
+      {/* <LayoutButton text={"수정하기"} onClick={showModal}>수정하기</LayoutButton>
+      <button onClick={showModal} >수정하기</button>
+      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />} */}
+      {/* <LayoutButton text={"삭제하기"} onClick={deleteRoom}> */}
+      {participants.length >= 2 ? (
+        <Button
+          text={"스터디 시작하기"}
+          handler={moveSession}
+          isImportant={true}
+        >
+          화상채팅 시작하기
+        </Button>
+      ) : null}
       <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
         삭제하기
       </Button>
-      <Button text={"수정하기"} handler={showModal}>
-        수정하기
-      </Button>
-      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
+      {/* </LayoutButton> */}
     </BtnContainer>
   ) : (
-    <BtnContainer>{readyRoom}</BtnContainer>
+    <div>{readyRoom}</div>
   );
 
   return (
     <Layout>
       <AggroL />
-      <TiStarburst />
       <Title title={title} />
-
-      <ManagerLayout>
-        <SubTitle title={"방장"} />
-        <SubTitle title={manager.name} />
-      </ManagerLayout>
       {RoomHost}
     </Layout>
   );
 }
 
-export default RoomHeader;
-
-const ManagerLayout = styled.div`
-  display: flex;
-  width: 100%;
-  gap: 1rem;
-  font-family: "SBagrroL";
-  color: var(--greyDark);
-
-  & .SubTitle:first-child {
-    color: var(--greyLight-3);
-  }
-
-  margin-bottom: 3rem;
-`;
+export default memo(RoomHeader);
 
 const BtnContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-
-  > p {
-    margin-left: 0.3rem;
-    color: var(--primary-dark);
-  }
 `;
 
 const LayoutButton = styled.div`
@@ -281,16 +237,11 @@ const LayoutButton = styled.div`
 
 const Layout = styled.div`
   margin-bottom: 3rem;
-  height: inherit;
-  padding: 1rem;
-  border-radius: 1rem;
-  color: var(--primary);
-  margin-top: 6vh;
 
   & .Title {
-    font-size: 2rem;
+    font-size: 2.5rem;
     text-align: left;
-    margin-block: 1rem;
+    margin-block: 3rem;
     font-family: "SBagrroL";
   }
 
@@ -301,10 +252,5 @@ const Layout = styled.div`
     & * {
       font-size: 1rem;
     }
-  }
-
-  svg {
-    margin-top: 0rem;
-    font-size: 2rem;
   }
 `;

@@ -22,9 +22,6 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   const [uploadPdf , setUploadPdf] =useState(false);
 
   // const [PostPdf, isLoading] = useAxios()
-  console.log(participants)
-  console.log("이건 pdfhandler",pdfhandler)
-  console.log("이건 user정보",userinfo)
 
   // const [postData, isLoading] = useAxios(
   //   `interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
@@ -46,7 +43,6 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
     const blob = new Blob([file]);
     const pdfUrl = URL.createObjectURL(blob);
     setPdfUrl(pdfUrl);
-    console.log(pdfUrl);
     const frm = new FormData()
     frm.append("file",file,{ type:  
       "application/pdf" });
@@ -70,7 +66,6 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
     const selectedList = Array.from(e.target.files);
     const getAddList = selectedList.map((item) => item);
     getUrl(getAddList[0]);
-    console.log(getAddList[0])
     setPdfFileList(selectedList);
   };
 

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, memo } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import useAxios from "../../../../action/hooks/useAxios";
@@ -53,7 +53,7 @@ const QuestionItem = ({ Question, setGetUser, pdfhandler, userinfo }) => {
 
   useEffect(() => {
     if(putData !== null && putData.success) {
-      console.log(putData)
+      setGetUser(true);
     }
   }, [putData]);
 
@@ -115,7 +115,7 @@ const QuestionItem = ({ Question, setGetUser, pdfhandler, userinfo }) => {
   );
 };
 
-export default QuestionItem;
+export default memo(QuestionItem);
 
 const Input = styled.input.attrs({ type: "text" })`
   width: 100%;

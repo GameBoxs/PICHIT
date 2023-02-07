@@ -135,9 +135,9 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
     });
   };
 
-  const getInterviewee = (person) => {
-    console.log(person);
-  };
+  // const getInterviewee = (person) => {
+  //   console.log(person);
+  // };
 
   let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
   let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData;
@@ -158,7 +158,9 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
     MemberList.push({id:targetID, name:targetNickName})
   }
 
-  console.log(MemberList.filter(person => person.id))
+  const intervieweesMem = MemberList.filter(person => person.id != info.interviewee)
+
+  console.log(intervieweesMem)
 
   const interviewees = dummyPlayer.map((elem, idx) => {
     return (

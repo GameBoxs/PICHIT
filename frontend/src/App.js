@@ -7,7 +7,7 @@ import Navigation from "./Presentational/common/Navigation";
 import InterviewPage from "./Presentational/pages/Interview/InterviewPage";
 import MainPage from "./Presentational/pages/MainPage";
 import ReviewPage from "./Presentational/pages/ReviewPage";
-import RoomPage from "./Presentational/pages/room/RoomPage";
+import RoomPage from "./Presentational/pages/RoomPage";
 import Pagination from "./Presentational/common/Pagination/Pagination"
 import { GlobalStyle } from "./action/GlobalStyle";
 
