@@ -16,6 +16,9 @@ import withReactContent from "sweetalert2-react-content";
 import UserVideoComponent from "../../component/Chat/OpenVidu/UserVideoComponent";
 import { leaveSession } from "../../../action/modules/chatModule";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import useAxios from "../../../action/hooks/useAxios";
+import { useSelector } from "react-redux";
 
 const MySwal = withReactContent(Swal);
 
@@ -73,14 +76,32 @@ const dummy = [
   },
 ];
 
-const testPlayer = ["김민지"];
+const IntervieweePage = (props) => {
+  const { session, setSession, OV, setOV, info, setInfo } = props;
+  const token = useSelector((state) => state.token);
 
-const dummyPlayer = ["이희수", "임수민", "김민지"];
+  const [reqBody, setReqBody] = useState({    //요청 보낼 때 쓰는 값들
+    writerId: 0,
+    intervieweeId: 0,
+    interviewRoomId: 0,
+  });
+  const [intervieweeMem, setIntervieweeMem] = useState([]);   //면접관 명단들
+  const [isQuestion, setIsQuestion] = useState(false);        //useAxios에서 excute로 쓰이는 애들
+  const [questionData, setQuestionData] = useState([])        //질문 목록들
 
-const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
+  //질문 받아오는 Axios
+  const [getQuest] = useAxios(
+    `questions?writerId=${reqBody.writerId}&intervieweeId=${reqBody.intervieweeId}&interviewRoomId=${reqBody.interviewRoomId}`,
+    "GET",
+    token,
+    {},
+    isQuestion
+  );
+
   let navigate = useNavigate();
 
   let cnt = 3 - info.subscribers.length;
+
   function makeBlank() {
     let result = [];
     for (let i = 0; i < cnt; i++) {
@@ -93,6 +114,73 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
     return result;
   }
 
+  useEffect(() => {
+    let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
+    let myNickName = JSON.parse(
+      info.publisher.stream.connection.data
+    ).clientData;
+    let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
+    let MemberList = [];
+
+    MemberList.push({ id: myID, name: myNickName });
+    for (let i = 0; i < info.subscribers.length; i++) {
+      let targetID = JSON.parse(
+        info.subscribers[i].stream.connection.data
+      ).clientId;
+
+      let targetNickName = JSON.parse(
+        info.subscribers[i].stream.connection.data
+      ).clientData;
+
+      MemberList.push({ id: targetID, name: targetNickName });
+    }
+
+    //면접관들 리스트
+    const Members = MemberList.filter(
+      (person) => person.id != info.interviewee
+    );
+
+    setIntervieweeMem([...Members]);
+
+    /*
+    --------------면접자 지정 제대로 되면 사용할 코드---------------
+    */
+    // setReqBody(() => {
+    //   return {
+    //     writerId: Members[0].id,
+    //     intervieweeId: info.interviewee,
+    //     interviewRoomId: roomID,
+    //   };
+    // });
+
+    setReqBody(() => {  //테스트용 코드
+      return {
+        writerId: Members[0].id,
+        intervieweeId: 3212,
+        interviewRoomId: roomID,
+      };
+    });
+  }, [props]);
+
+  useEffect(() => {
+    //질문자를 선택할 때마다 getQuest가 실행되도록 하기
+    if (
+      reqBody.writerId !== 0 &&
+      reqBody.interviewRoomId !== 0 &&
+      reqBody.intervieweeId !== 0
+    ) {
+      setIsQuestion(true);
+    }
+  }, [reqBody]);
+
+  useEffect(() => {
+    //질문 목록을 가져오는데 성공하면 QuestionData에 값을 저장
+    if (getQuest !== null && getQuest.success) {
+      setIsQuestion(false);
+      setQuestionData(getQuest.data)
+    }
+  }, [getQuest]);
+
   const [chatOn, setChatOn] = useState(false);
 
   //채팅 활성화/비활성화
@@ -101,7 +189,7 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   };
 
   //질문 렌더링
-  const Questions = dummy.map((el, id) => {
+  const Questions = questionData.map((el, id) => {
     return <QuestionCompo key={id} questionInfo={el} />;
   });
 
@@ -135,39 +223,28 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
     });
   };
 
-  // const getInterviewee = (person) => {
-  //   console.log(person);
-  // };
+  //질문자 선택 함수
+  const setQuestioner = (elem) => {
+    setReqBody((prev) => {
+      return { ...prev, writerId: elem.id };
+    });
+  };
 
-  let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
-  let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData;
-  let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
-  let MemberList = [];
-
-  MemberList.push({id:myID, name:myNickName})
-  for (let i = 0; i < info.subscribers.length; i++) {
-    
-    let targetID = JSON.parse(
-      info.subscribers[i].stream.connection.data
-    ).clientId;
-
-    let targetNickName = JSON.parse(
-      info.subscribers[i].stream.connection.data
-    ).clientData;
-
-    MemberList.push({id:targetID, name:targetNickName})
-  }
-
-  const intervieweesMem = MemberList.filter(person => person.id != info.interviewee)
-
-  console.log(intervieweesMem)
-
-  const interviewees = dummyPlayer.map((elem, idx) => {
+  //질문 컴포넌트 상단 면접관들 목록 보여주는 함수
+  const interviewees = intervieweeMem.map((elem, idx) => {
     return (
       <React.Fragment key={idx}>
-        <input type="radio" name={`radio`} value={elem} id={`tab-${idx + 1}`} />
+        <input
+          type="radio"
+          name={`radio`}
+          value={elem.id}
+          id={`tab-${idx + 1}`}
+          onClick={() => {
+            setQuestioner(elem);
+          }}
+        />
         <label htmlFor={`tab-${idx + 1}`}>
-          <p>{elem}</p>
+          <p>{elem.name}</p>
         </label>
       </React.Fragment>
     );
