@@ -58,8 +58,7 @@ public class InterviewRoomService {
                 .manager(user)
                 .maxPersonCount(dto.getMaxPersonCount())
                 .password(password)
-                .startDate(LocalDateTime.now())
-//                .startDate(dto.getStartDate())
+                .startDate(dto.getStartDate())
                 .finished(0)
                 .build();
 
