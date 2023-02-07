@@ -1,20 +1,21 @@
 import React from "react";
+import { memo } from "react";
 import styled from "styled-components";
 import SubTitle from "../common/SubTitle";
 
 const QuestionCompo = ({ questionInfo }) => {
-  const { id, question, user } = questionInfo;
+  const { id, content, writer } = questionInfo;
 
   return (
     <QuestionBody>
       <SubTitle title={`질문 ${id}`} />
-      <MainQuestion>{question}</MainQuestion>
-      <UserInfo>{user}</UserInfo>
+      <MainQuestion>{content}</MainQuestion>
+      <UserInfo>{writer.name}</UserInfo>
     </QuestionBody>
   );
 };
 
-export default QuestionCompo;
+export default memo(QuestionCompo);
 
 const UserInfo = styled.div`
     width: 100%;
