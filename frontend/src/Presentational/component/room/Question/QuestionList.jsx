@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
 import QuestionItem from "./QuestionItem";
 import SubTitle from "../../../common/SubTitle";
@@ -21,7 +21,7 @@ const QuestionList = ({ Questions, setGetUser, userinfo, pdfhandler }) => {
   );
 };
 
-export default QuestionList;
+export default memo(QuestionList);
 
 const List = styled.div`
   height: 100%;

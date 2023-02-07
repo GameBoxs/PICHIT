@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import SubTitle from "../../common/SubTitle";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 
 import { BsFillPersonFill } from "react-icons/bs";
 
@@ -39,7 +39,7 @@ function RoomMainLoading() {
   );
 }
 
-export default RoomMainLoading;
+export default memo(RoomMainLoading);
 
 const Description = styled.div`
   border-radius: 1rem;

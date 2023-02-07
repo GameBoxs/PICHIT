@@ -68,7 +68,8 @@ const QuestionItem = ({ Question, setGetUser, pdfhandler, userinfo }) => {
     });
   };
 
-  const putHandler = () => {
+  const putHandler = (e) => {
+    e.preventDefault()
     setRetouchQuestion(true);
   };
 

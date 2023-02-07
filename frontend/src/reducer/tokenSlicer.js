@@ -3,8 +3,8 @@ import { testToken } from "../store/values";
 
 export const tokenSlice = createSlice({
     name: 'token',
-    // initialState : localStorage.getItem('token'),
-    initialState : testToken,
+    initialState : localStorage.getItem('token'),
+    // initialState : testToken,
     reducers: {
         slicer(state, action) {         //action 값을 받아서
             state = action.payload      //state에 저장 후

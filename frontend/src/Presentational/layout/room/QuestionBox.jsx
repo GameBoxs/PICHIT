@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import QuestionList from "../../component/room/Question/QuestionList";
 import QuestionInsert from "../../component/room/Question/QuestionInsert";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import useAxios from "../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 import PageBar from "../../common/Pagination/PageBar";
@@ -78,7 +78,7 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
   );
 };
 
-export default QuestionBox;
+export default memo(QuestionBox);
 
 const QuestionBoxTitle = styled.div`
   display: flex;

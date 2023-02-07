@@ -15,7 +15,7 @@ const DetailArea = ({ selectedID }) => {
   const [nowPage, setNowPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [getData, isLoading] = useAxios(
-    `interviewjoins/${selectedID}/questions?size=2000`,
+    `interviewjoins/${selectedID}/questions-with-feedbacks?size=2000`,
     "GET",
     token,
     null,
