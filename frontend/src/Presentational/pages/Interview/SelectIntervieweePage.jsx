@@ -30,42 +30,30 @@ const SelectIntervieweePage = ({
   const [roomNum, setRoomNum] = useState(0);
 
   //방장이 면접자를 고를 때/고르지 않을 때 뜰 문구
-  const sentance = true ? "대기 중입니다" : "방장이 면접자를 선택하고 있습니다";
-
-  // const MemberList = dummy.map((person,idx) => {
-  //   return <option key={idx}>{person}</option>
-  // })
-  // // 방장이 시작 버튼 눌렀을 때, 면접자 선택 모달
-  // const handler = () => {
-  //   MySwal.fire({
-  //     title:"면접자를 선택해주세요",
-  //     icon:'question',
-  //     html:(
-  //       <div>
-  //         <select>
-  //           {MemberList}
-  //         </select>
-  //       </div>
-  //     )
-  //   })
-  // }
+  const [isSelect, setIsSelect] = useState(true);
+  const sentance = isSelect ? "방장이 면접자를 선택하고 있습니다" : "대기 중입니다";
 
   useEffect(() => {
     let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
-    setRoomNum(roomID);
-  }, [info]);
+    setRoomNum(roomID)
+  }, [info])
+
+  useEffect(()=> {
+    session.on("signal:startSelectInterviewer", (e) => {
+      setIsSelect(true);
+    });
+    session.on("signal:stopSelectInterviewer", (e) => {
+      setIsSelect(false);
+    });
+  },[session])
 
   const handler = () => {
-    // let myID = info.publisher.stream.connection.connectionId;
-    // let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData
-    // let MemberList = new Object();
+    session.signal({
+      data:'',
+      to:[],
+      type: 'startSelectInterviewer'
+    })
 
-    // MemberList[myID] = myNickName;
-    // for(let i=0; i< info.subscribers.length; i++){
-    //   let targetID = info.subscribers[i].stream.connection.connectionId
-    //   let targetNickName = JSON.parse(info.subscribers[i].stream.connection.data).clientData
-    //   MemberList[targetID] = targetNickName;
-    // }
     let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
     let myNickName = JSON.parse(
       info.publisher.stream.connection.data
@@ -105,8 +93,8 @@ const SelectIntervieweePage = ({
           // selectInterviwee("미지정", session.sessionId);
         }
       }
-    });
-  };
+    })
+  }
 
   return (
     <Container>
