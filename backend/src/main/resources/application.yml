@@ -52,8 +52,8 @@ spring:
     broker-url:
 
 file:
-  dir: C:\test\
-#  dir: /usr/app/speakon-dev/
+#  dir: C:\test\
+  dir: /usr/app/speakon-dev/
 
 app:
   oauth2:
