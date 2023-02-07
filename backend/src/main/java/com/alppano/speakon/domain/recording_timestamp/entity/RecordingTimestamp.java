@@ -1,5 +1,6 @@
 package com.alppano.speakon.domain.recording_timestamp.entity;
 
+import com.alppano.speakon.common.entity.BaseTimeEntity;
 import com.alppano.speakon.domain.question.entity.Question;
 import com.alppano.speakon.domain.recording.entity.Recording;
 import lombok.*;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RecordingTimestamp {
+public class RecordingTimestamp extends BaseTimeEntity {
     @Id
     @GeneratedValue
     private Long id;

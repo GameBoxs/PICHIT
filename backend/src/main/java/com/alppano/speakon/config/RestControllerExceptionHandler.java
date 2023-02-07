@@ -1,10 +1,7 @@
 package com.alppano.speakon.config;
 
 import com.alppano.speakon.common.dto.ApiResponse;
-import com.alppano.speakon.common.exception.ResourceAlreadyExistsException;
-import com.alppano.speakon.common.exception.ResourceForbiddenException;
-import com.alppano.speakon.common.exception.ResourceNotFoundException;
-import com.alppano.speakon.common.exception.UnAuthorizedException;
+import com.alppano.speakon.common.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +11,15 @@ import java.io.FileNotFoundException;
 
 @RestControllerAdvice
 public class RestControllerExceptionHandler {
+
+    /**
+     * 요청이 잘못된 경우 예외 처리
+     */
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiResponse> resolveException(BadRequestException exception) {
+        ApiResponse apiResponse = exception.getApiResponse();
+        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+    }
 
     /**
      * 데이터가 존재하지 않는 경우 예외 처리

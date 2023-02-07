@@ -1,5 +1,6 @@
 package com.alppano.speakon.domain.question.entity;
 
+import com.alppano.speakon.common.entity.BaseTimeEntity;
 import com.alppano.speakon.domain.feedback.entity.Feedback;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
 import com.alppano.speakon.domain.recording_timestamp.entity.RecordingTimestamp;
@@ -16,7 +17,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Question {
+public class Question extends BaseTimeEntity {
     @Id
     @GeneratedValue
     private Long id;
