@@ -11,7 +11,6 @@ import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -74,9 +73,6 @@ public class InterviewService {
         Recording recording = openvidu.startRecording(conference.getSessionId(), properties);
         conference.setRecordingId(recording.getId());
 
-        StatusLine sl = response.getStatusLine();
-        System.out.print("STATUS CODE: ");
-        System.out.println(sl.getStatusCode());
         // Redis에 새로 진행할 면접자를 UPDATE
         conference.setCurrentInterviewee(req.getIntervieweeId());
         redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
@@ -100,9 +96,6 @@ public class InterviewService {
         openvidu.fetch();
         openvidu.stopRecording(conference.getRecordingId());
 
-        StatusLine sl = response.getStatusLine();
-        System.out.print("STATUS CODE: ");
-        System.out.println(sl.getStatusCode());
         // Redis에 진행 중이던 면접자 삭제
         conference.setCurrentInterviewee(null);
         redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
@@ -126,9 +119,6 @@ public class InterviewService {
         HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(),
                 "broadcast-question-start", String.valueOf(req.getQuestionId()));
 
-        StatusLine sl = response.getStatusLine();
-        System.out.print("STATUS CODE: ");
-        System.out.println(sl.getStatusCode());
         // Redis에 새로 진행할 질문을 UPDATE
         conference.setQuestionProceeding(req.getQuestionId());
         redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
@@ -154,9 +144,7 @@ public class InterviewService {
 
         HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(),
                 "broadcast-question-end", String.valueOf(req.getQuestionId()));
-        StatusLine sl = response.getStatusLine();
-        System.out.print("STATUS CODE: ");
-        System.out.println(sl.getStatusCode());
+
         // Redis에 질문이 끝났다고 UPDATE
         conference.setQuestionProceeding(null);
         redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
