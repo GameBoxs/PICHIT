@@ -93,6 +93,13 @@ const SelectIntervieweePage = ({
           // selectInterviwee("미지정", session.sessionId);
         }
       }
+      else {
+        session.signal({
+          data:'',
+          to:[],
+          type: 'stopSelectInterviewer'
+        })
+      }
     })
   }
 
