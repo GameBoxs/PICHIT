@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Document, Page } from "react-pdf";
 import styled from "styled-components";
+import {AiFillCaretLeft,AiFillCaretRight} from "react-icons/ai"
+
 
 const ViewPDF = ({ fileUrl }) => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
+  console.log(fileUrl)
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
@@ -15,11 +18,11 @@ const ViewPDF = ({ fileUrl }) => {
       </Document>
       <PageNext>
         <Next onClick={()=> pageNumber > 1 ? setPageNumber(pageNumber-1):null}>
-        &lt;
+        ◀
         </Next>
         <Next>Page {pageNumber} of {numPages}</Next>
         <Next onClick={()=> pageNumber < numPages ? setPageNumber(pageNumber+1):null}>
-        &gt;
+        ▶
         </Next>
       </PageNext>
     </Layout>

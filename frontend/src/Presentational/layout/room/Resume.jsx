@@ -8,7 +8,8 @@ import { IoClose } from "react-icons/io5";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import {PITCHIT_URL} from "../../../store/values"
-import { setDate } from "date-fns";
+import { set } from "lodash";
+
 
 // 근데 import * as 안하면 에러남 필수로 해줄 것!
 
@@ -20,11 +21,12 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   const [pdfUrl, setPdfUrl] = useState();
   const [showPdf, setShowPdf] = useState(false);
   const [uploadPdf , setUploadPdf] =useState(false);
+  const [data, setData] = useState(null)
 
   // const [PostPdf, isLoading] = useAxios()
-  console.log(participants)
-  console.log("이건 pdfhandler",pdfhandler)
-  console.log("이건 user정보",userinfo)
+  // console.log(participants)
+  // console.log("이건 pdfhandler",pdfhandler)
+  // console.log("이건 user정보",userinfo)
 
   // const [postData, isLoading] = useAxios(
   //   `interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
@@ -40,16 +42,17 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   //     setUploadPdf(false)
   //   }
   // },[postData])
- 
+  
+  
 
   const getUrl = (file) => {
+    console.log(file)
     const blob = new Blob([file]);
     const pdfUrl = URL.createObjectURL(blob);
     setPdfUrl(pdfUrl);
     console.log(pdfUrl);
     const frm = new FormData()
-    frm.append("file",file,{ type:  
-      "application/pdf" });
+    frm.append("file",file);
     axios({
       method:"post",
       url:`${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
@@ -60,7 +63,7 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
       data:
         frm
     }).then((res) => {
-      setDate(res.data)
+      console.log(res)
     })
     .catch((err) => 
       console.log(err))
@@ -73,7 +76,7 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
     console.log(getAddList[0])
     setPdfFileList(selectedList);
   };
-
+  // 등록된 pdf 삭제 
   const onDeleteTarget = () => {
     setPdfFileList([]);
   };
@@ -107,6 +110,19 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
 
   const onUrlClick = (e) => {
     setShowPdf(true);
+    axios({
+      method:"get",
+      url:`${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
+      headers:{
+        Authorization: token,
+      }
+    }).then((res) => {
+      setData(res.data)
+      console.log(res)
+    })
+    .catch((err) => 
+      console.log(err))
+    
   };
 
   const onPdfClose = (e) => {
@@ -118,7 +134,29 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
 
   }
 
+  const pdfInquire = () =>{
+  
+    axios({
+      method:"get",
+      url:`${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
+      headers:{
+        Authorization: token,
+      }
+    }).then((res) => {
+      setData(res.data.data.uri)
+      console.log(data)
+    })
+    .catch((err) => 
+      console.log(err))
+
+      window.open(`${data}`,'_blank')
+      
+    //   console.log(use.rPdfUrl)
+    // return <div><ViewPdf fileUrl={userPdfUrl} /></div>
+  }
+
   const interviewees = participants.map((elem, idx) => {
+
     return (
       <React.Fragment
       key={idx}
@@ -171,7 +209,9 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
                     onChange={onPdfFileUpload}
                   />
               </FileListBody>
-            ):(<FileListBody>파일이 존재하지 않습니다.</FileListBody>)}
+            ):(<FileListBody><Label 
+            onClick={pdfInquire}
+            >조회하기</Label></FileListBody>)}
             </>
             ) : (
               <FileResultList />
