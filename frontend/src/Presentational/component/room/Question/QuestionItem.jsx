@@ -52,7 +52,7 @@ const QuestionItem = ({ Question, setGetUser, pdfhandler, userinfo }) => {
   }, [delRes]);
 
   useEffect(() => {
-    if(putData !== null && putData.success) {
+    if (putData !== null && putData.success) {
       setGetUser(true);
     }
   }, [putData]);
@@ -69,7 +69,7 @@ const QuestionItem = ({ Question, setGetUser, pdfhandler, userinfo }) => {
   };
 
   const putHandler = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     setRetouchQuestion(true);
   };
 
@@ -106,9 +106,11 @@ const QuestionItem = ({ Question, setGetUser, pdfhandler, userinfo }) => {
       </Content>
 
       <Name>
-        <Buttons title="수정하기" onClick={setRetouch}>
-          {tryRetouch ? <FaRedoAlt /> : <FaPenNib />}
-        </Buttons>
+        {permission ? (
+          <Buttons title="수정하기" onClick={setRetouch}>
+            {tryRetouch ? <FaRedoAlt /> : <FaPenNib />}
+          </Buttons>
+        ) : null}
         {writer.name}
       </Name>
     </Item>
