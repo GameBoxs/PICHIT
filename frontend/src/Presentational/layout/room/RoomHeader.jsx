@@ -180,11 +180,13 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   );
 
   const moveSession = () => {
+    console.log('userinfo roomheader ---',userinfo);
     // setGoSession(true)
     navigate("/interview", {
       state: {
-        id: userinfo.id,
+        id: userinfo,
         roomId: id,
+        isHost: host,
       },
     });
   };
