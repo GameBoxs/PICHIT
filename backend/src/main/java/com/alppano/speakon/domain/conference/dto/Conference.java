@@ -14,4 +14,5 @@ public class Conference {
     private List<Participant> participants;
     private Long questionProceeding;
     private Long currentInterviewee;
+    private String recordingId;
 }
