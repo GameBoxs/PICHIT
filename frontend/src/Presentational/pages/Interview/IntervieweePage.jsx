@@ -89,6 +89,22 @@ const IntervieweePage = (props) => {
   const [isQuestion, setIsQuestion] = useState(false);        //useAxios에서 excute로 쓰이는 애들
   const [questionData, setQuestionData] = useState([])        //질문 목록들
 
+  // 질문 제출 신호 받는 useState
+  // 신호 받는건 했으니 질문 내용칸에는 수민이랑 이야기 해서 data 몸체에 JSON 문자열 형태로 질문 내용도 받아서 Object로 변환후
+  // 사용하기.
+  // 피드백 어떻게 할 지 생각하기.
+  const [highlight,setHilight] = useState('');
+
+  useEffect(() => {
+    session.on('broadcast-question-start', (data) => {
+      console.log('highlight -- ', data.data);
+      setHilight(data.data);
+    })
+    session.on('broadcast-question-end',(data)=> {
+      setHilight('질문 제출 바랍니다.');
+    })
+  },[session])
+
   //질문 받아오는 Axios
   const [getQuest] = useAxios(
     `questions?writerId=${reqBody.writerId}&intervieweeId=${reqBody.intervieweeId}&interviewRoomId=${reqBody.interviewRoomId}`,
@@ -145,21 +161,22 @@ const IntervieweePage = (props) => {
     /*
     --------------면접자 지정 제대로 되면 사용할 코드---------------
     */
-    // setReqBody(() => {
+    setReqBody(() => {
+      return {
+        writerId: Members[0].id,
+        intervieweeId: info.interviewee,
+        interviewRoomId: roomID,
+      };
+    });
+
+    // setReqBody(() => {  //테스트용 코드
     //   return {
     //     writerId: Members[0].id,
-    //     intervieweeId: info.interviewee,
+    //     intervieweeId: 3212,
     //     interviewRoomId: roomID,
     //   };
     // });
 
-    setReqBody(() => {  //테스트용 코드
-      return {
-        writerId: Members[0].id,
-        intervieweeId: 3212,
-        interviewRoomId: roomID,
-      };
-    });
   }, [props]);
 
   useEffect(() => {
@@ -188,40 +205,44 @@ const IntervieweePage = (props) => {
     setChatOn(!chatOn);
   };
 
-  //질문 렌더링
-  const Questions = questionData.map((el, id) => {
-    return <QuestionCompo key={id} questionInfo={el} />;
-  });
-
   //별점 값 받아오는 함수
   const RatingHandler = (e) => {
     console.log(e.target.value);
   };
 
   //질문 관리
-  const QuestionHandler = (Questions) => {
-    MySwal.fire({
-      title: "질문을 시작하시겠습니까?",
-      icon: "warning",
-      showCancelButton: true,
-      cancelButtonText: "취소",
-      showConfirmButton: true,
-      confirmButtonText: "승인",
-      html: (
-        <div>
-          <div></div>
-        </div>
-      ),
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "질문이 제출 되었습니다.",
-          text: "질문을 시작해주세요.",
-          icon: "success",
-        });
-      }
-    });
-  };
+  // const QuestionHandler = (Questions) => {
+  //   // console.log('---Questions : ', Questions.currentTarget.children[1].children[0]);
+  //   console.log('---Questions : ', Questions.target.parentElement.innerText);
+  //   MySwal.fire({
+  //     title: "질문을 시작하시겠습니까?",
+  //     text: Questions,
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     cancelButtonText: "취소",
+  //     showConfirmButton: true,
+  //     confirmButtonText: "승인",
+  //     html: (
+  //       <div>
+  //         <div></div>
+  //       </div>
+  //     ),
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       Swal.fire({
+  //         title: "질문이 제출 되었습니다.",
+  //         text: "질문을 시작해주세요.",
+  //         icon: "success",
+  //       });
+  //     }
+  //   });
+  // };
+
+  //질문 렌더링
+  
+  const Questions = questionData.map((el, id) => {
+    return <QuestionCompo key={id} questionInfo={el} roomID={reqBody.interviewRoomId} intervieweeID={reqBody.intervieweeId}/>;
+  });
 
   //질문자 선택 함수
   const setQuestioner = (elem) => {
@@ -305,14 +326,14 @@ const IntervieweePage = (props) => {
           {/* 질문 박스 */}
           <QuestionBody>
             <SubNav>
-              <SubTitle title={"질문 1"} />
+              <SubTitle title={"질문 "+highlight} />
               <TipMark>
                 <BsQuestionCircleFill />
               </TipMark>
             </SubNav>
 
             <Question>
-              질문질문질문질문질문질문질문질문질문질문질문질문질문질문질문질문
+              {highlight}
             </Question>
 
             <SubFooter>
@@ -351,7 +372,8 @@ const IntervieweePage = (props) => {
               {interviewees}
               <MemberColor></MemberColor>
             </Member>
-            <AllQuestions onClick={QuestionHandler} chatOn={chatOn}>
+            {/* <AllQuestions chatOn={chatOn} onClick={QuestionHandler}> */}
+            <AllQuestions chatOn={chatOn}>
               {Questions}
             </AllQuestions>
           </QuestionBody>

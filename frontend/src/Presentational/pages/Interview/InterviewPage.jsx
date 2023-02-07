@@ -165,49 +165,75 @@ const InterviewPage = () => {
         mySession
           .connect(token.data, { clientData: info.myUserName, clientId: userinfo.id, clientRoomJoinId: userinfo.interviewJoinId, clientRoomId: roomId })
           .then(async () => {
-            let publisher = await OV.initPublisherAsync(undefined, {
-              audioSource: undefined,
-              videoSource: undefined,
-              publishAudio: true,
-              publishVideo: true,
-              resolution: "640x480",
-              frameRate: 30,
-              insertMode: "APPEND",
-              mirror: false,
-            });
+            let publisher=null;
+            try{
+              publisher = await OV.initPublisherAsync(undefined, {
+                audioSource: undefined,
+                videoSource: undefined,
+                publishAudio: true,
+                publishVideo: true,
+                resolution: "640x480",
+                frameRate: 30,
+                insertMode: "APPEND",
+                mirror: false,
+              });
 
-            mySession.publish(publisher);
+              mySession.publish(publisher);
+  
+              let devices = await OV.getDevices();
+              let videoDevices = devices.filter(
+                (device) => device.kind === "videoinput"
+              );
+              
+              let currentVideoDeviceId = publisher.stream
+                .getMediaStream()
+                .getVideoTracks()[0]
+                .getSettings().deviceId;
+  
+              let currentVideoDevice = videoDevices.find(
+                (device) => device.deviceId === currentVideoDeviceId
+              );
+  
+              setInfo((prev) => {
+                return {
+                  ...prev,
+                  currentVideoDevice: currentVideoDevice,
+                  mainStreamManager: publisher,
+                  publisher: publisher,
+                };
+              });
+             } catch(e){
+              console.log(e);
+              publisher = await OV.initPublisherAsync(undefined, {
+                audioSource: undefined,
+                videoSource: false,
+                publishAudio: true,
+                publishVideo: false,
+                resolution: "640x480",
+                frameRate: 30,
+                insertMode: "APPEND",
+                mirror: false,
+              });
+              mySession.publish(publisher);
+              setInfo((prev) => {
+                return {
+                  ...prev,
+                  publisher: publisher,
+                };
+              });
+             }
+             finally{
+              
 
-            let devices = await OV.getDevices();
-            let videoDevices = devices.filter(
-              (device) => device.kind === "videoinput"
-            );
+               navigate("/interview/selectinterviewee", {
+                 state: {
+                   userinfo: userinfo,
+                   roomId: roomId,
+                   isHost: isHost,
+                 },
+               });
+             }
 
-            let currentVideoDeviceId = publisher.stream
-              .getMediaStream()
-              .getVideoTracks()[0]
-              .getSettings().deviceId;
-
-            let currentVideoDevice = videoDevices.find(
-              (device) => device.deviceId === currentVideoDeviceId
-            );
-
-            setInfo((prev) => {
-              return {
-                ...prev,
-                currentVideoDevice: currentVideoDevice,
-                mainStreamManager: publisher,
-                publisher: publisher,
-              };
-            });
-
-            navigate("/interview/selectinterviewee", {
-              state: {
-                userinfo: userinfo,
-                roomId: roomId,
-                isHost: isHost,
-              },
-            });
           })
           .catch((error) => {
             console.log(
