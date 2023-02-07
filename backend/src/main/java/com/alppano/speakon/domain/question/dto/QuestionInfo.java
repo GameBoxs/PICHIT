@@ -20,7 +20,7 @@ public class QuestionInfo {
         this.content = question.getContent();
         this.interviewJoinId = question.getInterviewJoin().getId();
         this.permission = question.getWriter().getId().equals(userId) ? true : false;
-        this.finished = question.getFinished() == 1 ? true : false;
+        this.finished = question.getStartedTime() != null ? true : false;
         this.writer = new UserInfoDto(question.getWriter());
     }
 }

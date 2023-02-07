@@ -8,6 +8,7 @@ import com.alppano.speakon.domain.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +34,7 @@ public class Question extends BaseTimeEntity {
     @JoinColumn(name = "writer_id")
     private User writer;
 
-    @Column(columnDefinition = "TINYINT(1)", nullable = false)
-    private int finished;
+    private LocalDateTime startedTime;
 
     @Builder.Default
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

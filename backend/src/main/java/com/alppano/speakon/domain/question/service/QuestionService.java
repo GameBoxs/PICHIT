@@ -47,7 +47,6 @@ public class QuestionService {
                 .content(dto.getContent())
                 .interviewJoin(interviewJoin)
                 .writer(user)
-                .finished(0)
                 .build();
 
         questionRepository.save(question);
