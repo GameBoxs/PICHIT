@@ -35,24 +35,24 @@ function MainBottom() {
   
   //통신(카테고리)
   const [APIurl,serAPIurl] = useState()
+  const [search, setSearch]=useState("");
   const myCategory = `my-interviewrooms?page=${currentPage-1}`
-  const totalCategory = `interviewrooms?page=${currentPage-1}`
+  const totalCategory = `interviewrooms?page=${currentPage-1}&title=${search}`
   // http://i8d107.p.ssafy.io/api/my-interviewrooms?page=0&size=1
   
   //로그인에 따른 카테고리 기본값
   const [isLogined, setIsLogined] = useState(false) //false : 비로그인, true : 로그인
   const token = useSelector(state => state.token)//으로 원래는 사용자 토큰을 받아야하는데 지금은 테스트라서 testToken으로 수민꺼 들고올거다.
-  
-  useEffect(()=>{
-    if(token){
-      setIsLogined(true)
-      serAPIurl(myCategory)
-    }
-    else{
-      setIsLogined(false)
-      serAPIurl(totalCategory)
-    }
-  },[isLogined])
+  // useEffect(()=>{
+  //   if(token){
+  //     setIsLogined(true)
+  //     serAPIurl(myCategory)
+  //   }
+  //   else{
+  //     setIsLogined(false)
+  //     serAPIurl(totalCategory)
+  //   }
+  // },[isLogined])
   
   // TOTAL/MY 카테고리
   const [roomPosition, setRoomPosition] = useState(false); // false : total, true ; my
@@ -69,7 +69,15 @@ function MainBottom() {
     serAPIurl(myCategory)
   }
   }
-  
+
+
+  //검색
+  // const [search, setSearch]=useState("");
+  function searchHandler(e){
+    console.log(e)
+    setSearch(e)
+  }
+
   // roomlist통신
   const [data, setData] = useState([]) //total데이터 저장
   const [getData, isLoading] = useAxios(
@@ -83,6 +91,7 @@ function MainBottom() {
         setTotalPages(getData.data.totalPages) //페이지 전체 수
       }
     }, [getData]);
+    
     useEffect(()=>{
       if(roomPosition){
         serAPIurl(myCategory)
@@ -90,10 +99,10 @@ function MainBottom() {
       else{
         serAPIurl(totalCategory)
       }
-    },[currentPage])
+    },[currentPage,search])      
 
+    //방생성하기
     const [modalOpen, setModalOpen] = useState(false);
-
     const showModal = () => {
       setModalOpen(true)
     }
@@ -132,7 +141,7 @@ function MainBottom() {
           isLoading===true? <div>loading...</div> :
       <section>
         <Main>
-          {roomPosition ? <MyCategory /> : <TotalCategory />}
+          {roomPosition ? <MyCategory /> : <TotalCategory searchHandler={searchHandler} />}
           {/* {roomPosition ? null : <TotalCategory />} */}
           <RoomListdiv>
             {data.length === 0 ? (
