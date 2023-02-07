@@ -40,7 +40,7 @@ public class ResumeService {
                 () -> new ResourceNotFoundException("당신은 존재하지 않는 면접 참여자입니다.")
         );
 
-        if (interviewJoin.getUser().getId().equals(userId)) {
+        if (!interviewJoin.getUser().getId().equals(userId)) {
             throw new ResourceForbiddenException("다른 참여자의 자기소개서는 등록할 수 없습니다.");
         }
 
@@ -109,7 +109,7 @@ public class ResumeService {
                 () -> new ResourceNotFoundException("등록된 자기소개서가 없습니다.")
         );
 
-        if (resume.getInterviewJoin().getUser().getId().equals(userId)) {
+        if (!resume.getInterviewJoin().getUser().getId().equals(userId)) {
             throw new ResourceForbiddenException("자신의 자기소개서만 수정할 수 있습니다.");
         }
 
