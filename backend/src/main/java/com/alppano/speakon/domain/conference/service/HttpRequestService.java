@@ -1,7 +1,12 @@
 package com.alppano.speakon.domain.conference.service;
 
+import com.alppano.speakon.common.exception.BadRequestException;
+import com.alppano.speakon.common.exception.ResourceNotFoundException;
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -27,6 +32,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class HttpRequestService{
 
     @Value("${openvidu.OPENVIDU_URL}")
@@ -72,6 +78,18 @@ public class HttpRequestService{
 
         HttpResponse response = httpClient.execute(request);
         request.releaseConnection();
+
+        int statusCode = response.getStatusLine().getStatusCode();
+
+        if(statusCode == HttpStatus.SC_BAD_REQUEST || statusCode == HttpStatus.SC_NOT_ACCEPTABLE) {
+            throw new BadRequestException("SIGNAL ERR:  파라미터 오류");
+        }
+        if(statusCode == HttpStatus.SC_NOT_ACCEPTABLE) {
+            throw new BadRequestException("SIGNAL ERR: 세션에 참가자가 없거나 잘못된 수신자를 지정하였습니다.");
+        }
+        if(statusCode == HttpStatus.SC_NOT_FOUND) {
+            throw new ResourceNotFoundException("SIGNAL ERR: 존재하지 않는 세션입니다.");
+        }
 
         return response;
     }
