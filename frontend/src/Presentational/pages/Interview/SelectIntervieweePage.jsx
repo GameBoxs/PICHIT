@@ -11,6 +11,8 @@ import withReactContent from "sweetalert2-react-content";
 import { leaveSession } from "../../../action/modules/chatModule";
 import { selectInterviwee } from "../../../action/modules/chatModule";
 import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const MySwal = withReactContent(Swal);
 
@@ -24,12 +26,10 @@ const SelectIntervieweePage = ({
 }) => {
   let navigate = useNavigate();
   const myToken = useSelector((state) => state.token);
+  const [roomNum, setRoomNum] = useState(0)
 
   //방장이 면접자를 고를 때/고르지 않을 때 뜰 문구
   const sentance = true ? "대기 중입니다" : "방장이 면접자를 선택하고 있습니다";
-
-  // 면접자 선택을 위한 dummy data
-  const dummy = ["연예인 희수", "Kim jh 남자의", "수민", "킹갓 어쩌고 효진 "];
 
   // const MemberList = dummy.map((person,idx) => {
   //   return <option key={idx}>{person}</option>
@@ -49,6 +49,11 @@ const SelectIntervieweePage = ({
   //   })
   // }
 
+  useEffect(()=>{
+    let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
+    setRoomNum(roomID)
+  }, [info])
+
   const handler = () => {
     // let myID = info.publisher.stream.connection.connectionId;
     // let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData
@@ -62,7 +67,7 @@ const SelectIntervieweePage = ({
     // }
     let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
     let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData
-    let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
+    
     let MemberList = new Object();
 
     MemberList[myID] = myNickName;
@@ -82,7 +87,7 @@ const SelectIntervieweePage = ({
     }).then((result) => {
       if(result.isConfirmed){
         if(result.value){
-          selectInterviwee(result.value.toString(), roomID, myToken);
+          selectInterviwee(result.value.toString(), roomNum, myToken);
           session.signal({
             data:result.value.toString(),
             to:[],
@@ -106,7 +111,7 @@ const SelectIntervieweePage = ({
           text="종료"
           handler={() => {
             leaveSession(session, setOV);
-            navigate("/room");
+            navigate(`/room/${roomNum}`);
           }}
           isImportant={false}
         />

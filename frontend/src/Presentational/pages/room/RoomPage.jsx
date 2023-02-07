@@ -33,7 +33,7 @@ function RoomPage() {
   const [postData, isLoading] = useCallback(
     useAxios(`interviewrooms/${roomParamsId}`, "POST", token, valid)
   );
-
+  
   //useEffect
   useEffect(() => {
     setAboutUser(userinfo);
