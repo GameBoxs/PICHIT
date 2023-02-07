@@ -9,6 +9,7 @@ import com.alppano.speakon.domain.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,8 @@ public class InterviewJoin extends BaseTimeEntity {
      */
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private int finished;
+
+    private LocalDateTime startedTime;
 
     @OneToOne(mappedBy = "interviewJoin", cascade = CascadeType.ALL, orphanRemoval = true)
     private Recording recording;
