@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import RoomList from "../../component/RoomList";
 import TotalCategory from "../../component/TotalCategory";
 import MyCategory from "../../component/MyCategory";
-import EmptyRoomList from "../../component/EmptyRoomList";
 import PageBar from "../../common/Pagination/PageBar";
 import CreateRoom from "../../component/CreateRoom";
 import Button from "../../common/Button";
@@ -76,14 +74,6 @@ function MainBottom() {
     setSearch(e);
   }
 
-
-  //검색
-  // const [search, setSearch]=useState("");
-  function searchHandler(e){
-    console.log(e)
-    setSearch(e)
-  }
-
   // roomlist통신
   const [data, setData] = useState([]) //total데이터 저장
   const [getData, isLoading] = useAxios(
@@ -105,14 +95,8 @@ function MainBottom() {
       else{
         serAPIurl(totalCategory)
       }
-    },[currentPage,search])      
+    },[currentPage, search])      
 
-    //방생성하기
-    const [modalOpen, setModalOpen] = useState(false);
-    const showModal = () => {
-      setModalOpen(true)
-    }
-  }, [currentPage, search]);
 
   //방생성하기
   const [modalOpen, setModalOpen] = useState(false);
@@ -159,12 +143,6 @@ function MainBottom() {
           {roomPosition ? <MyCategory /> : <TotalCategory searchHandler={searchHandler} />}
           {/* {roomPosition ? null : <TotalCategory />} */}
           <RoomListdiv>
-            {data.length === 0 ? (
-              <EmptyRoomList />
-            ) : (
-              <TotalCategory searchHandler={searchHandler} />
-            )}
-            <RoomListdiv>
               {data.data ?<RoomListBox search={search} roomsData={data.data} roomPosition={roomPosition}/> : <div>loading...</div>}
             </RoomListdiv>
             <PaginationBox>
@@ -184,7 +162,7 @@ function MainBottom() {
             {modalOpen && <CreateRoom setModalOpen={setModalOpen} />}
           </Footer>
         </section>
-      )}
+      }
     </Layout>
   );
 }
