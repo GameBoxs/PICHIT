@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     Page<Question> findAllByInterviewJoinId(Pageable pageable, Long interviewJoinId);
-
+    List<Question> findAllByInterviewJoinId(Long interviewJoinId);
     List<Question> findAllByWriterIdAndInterviewJoinId(Long writerId, Long interviewJoinId);
 }

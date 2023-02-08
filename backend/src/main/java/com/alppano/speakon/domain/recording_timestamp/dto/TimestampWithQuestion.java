@@ -9,6 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimestampWithQuestion {
-    private int secondTime;
+    private Long secondTime;
     private QuestionSimpleInfo question;
 }

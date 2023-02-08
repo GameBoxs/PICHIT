@@ -26,6 +26,6 @@ public class RecordingTimestamp extends BaseTimeEntity {
     @JoinColumn(name = "interview_recording_id")
     private InterviewRecording interviewRecording;
 
-    private int secondTime;
+    private Long secondTime;
 
 }
