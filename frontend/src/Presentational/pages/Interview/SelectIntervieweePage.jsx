@@ -24,7 +24,7 @@ const SelectIntervieweePage = ({
   info,
   setInfo,
 }) => {
-  const isHost = useLocation().state.isHost;
+  const {userinfo, roomId, isHost} = useLocation().state;
   let navigate = useNavigate();
   const myToken = useSelector((state) => state.token);
   const [roomNum, setRoomNum] = useState(0);
@@ -53,15 +53,14 @@ const SelectIntervieweePage = ({
       to:[],
       type: 'startSelectInterviewer'
     })
-
     let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
-    let myNickName = JSON.parse(
-      info.publisher.stream.connection.data
-    ).clientData;
-
+    let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData;
     let MemberList = new Object();
-
-    MemberList[myID] = myNickName;
+    
+    if(JSON.parse(info.publisher.stream.connection.data).isFinishedInterViewee === false){
+      MemberList[myID] = myNickName;
+    }
+    
     for (let i = 0; i < info.subscribers.length; i++) {
       let targetID = JSON.parse(
         info.subscribers[i].stream.connection.data
@@ -69,7 +68,9 @@ const SelectIntervieweePage = ({
       let targetNickName = JSON.parse(
         info.subscribers[i].stream.connection.data
       ).clientData;
-      MemberList[targetID] = targetNickName;
+      if(JSON.parse(info.subscribers[i].stream.connection.data).isFinishedInterViewee === false){
+        MemberList[targetID] = targetNickName;
+      }
     }
 
     MySwal.fire({
@@ -82,6 +83,20 @@ const SelectIntervieweePage = ({
     }).then((result) => {
       if (result.isConfirmed) {
         if (result.value) {
+          if(myID.toString() === result.value.toString()){
+            let convert = JSON.parse(info.publisher.stream.connection.data);
+            convert.isFinishedInterViewee = true;
+            info.publisher.stream.connection.data = JSON.stringify(convert);
+          } else {
+            for (let i = 0; i < info.subscribers.length; i++) {
+              if(JSON.parse(info.subscribers[i].stream.connection.data).clientId.toString() === result.value.toString()){
+                let convert = JSON.parse(info.subscribers[i].stream.connection.data);
+                convert.isFinishedInterViewee = true;
+                info.subscribers[i].stream.connection.data = JSON.stringify(convert);
+                break;
+              }
+            }
+          }
           selectInterviwee(result.value.toString(), roomNum, myToken);
           session.signal({
             data: result.value.toString(),
@@ -89,8 +104,8 @@ const SelectIntervieweePage = ({
             type: "stage",
           });
         } else {
-          selectInterviwee(3212, session.sessionId);
-          // selectInterviwee("미지정", session.sessionId);
+          // selectInterviwee(3212, session.sessionId);
+          selectInterviwee("미지정", session.sessionId);
         }
       }
       else {
