@@ -89,11 +89,27 @@ const IntervieweePage = (props) => {
   const [isQuestion, setIsQuestion] = useState(false);        //useAxios에서 excute로 쓰이는 애들
   const [questionData, setQuestionData] = useState([])        //질문 목록들
 
-  // 질문 제출 신호 받는 useState
-  // 신호 받는건 했으니 질문 내용칸에는 수민이랑 이야기 해서 data 몸체에 JSON 문자열 형태로 질문 내용도 받아서 Object로 변환후
-  // 사용하기.
-  // 피드백 어떻게 할 지 생각하기.
+  const [starScore, setStarScore] = useState(0); // 별점
+  const [feedBackContext, setFeedBackContext] = useState('');
   const [highlight,setHilight] = useState({questionId:'',questionContent:''});
+
+  const [finishExecute, setfinishExecute] = useState(false);
+  const [finishAxiosData,finishIsLoading,finishError] = useAxios(
+    'conference/interview/question/end',
+    "POST",
+    token,
+    {
+      interviewRoomId : reqBody.interviewRoomId,
+      intervieweeId : reqBody.intervieweeId,
+      questionId : highlight.questionId,
+      questionContent : highlight.questionContent
+    },
+    finishExecute
+  )
+
+  useEffect(() => {
+    if(finishExecute) setfinishExecute(false);
+  },[finishExecute])
 
   useEffect(() => {
     session.on('broadcast-question-start', (data) => {
@@ -101,7 +117,22 @@ const IntervieweePage = (props) => {
       setHilight(JSON.parse(data.data));
     })
     session.on('broadcast-question-end',(data)=> {
-      setHilight('질문 제출 바랍니다.');
+      /*
+      // 아래에 평가 별 0으로 초기화 하는 내용 넣어야 함.
+
+      */
+
+      setFeedBackContext('');
+
+      setHilight({questionId:'',questionContent:'질문을 제출해 주세요.'});
+      MySwal.fire({
+        text: "질문이 끝났습니다. 다음 질문을 선택해 주세요.",
+        showConfirmButton: false,
+        icon: "warning",
+        timer: 1500,
+      });
+
+      setIsQuestion(true);
     })
   },[session])
 
@@ -208,38 +239,9 @@ const IntervieweePage = (props) => {
   //별점 값 받아오는 함수
   const RatingHandler = (e) => {
     console.log(e.target.value);
+    setStarScore(e.target.value);
   };
 
-  //질문 관리
-  // const QuestionHandler = (Questions) => {
-  //   // console.log('---Questions : ', Questions.currentTarget.children[1].children[0]);
-  //   console.log('---Questions : ', Questions.target.parentElement.innerText);
-  //   MySwal.fire({
-  //     title: "질문을 시작하시겠습니까?",
-  //     text: Questions,
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     cancelButtonText: "취소",
-  //     showConfirmButton: true,
-  //     confirmButtonText: "승인",
-  //     html: (
-  //       <div>
-  //         <div></div>
-  //       </div>
-  //     ),
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       Swal.fire({
-  //         title: "질문이 제출 되었습니다.",
-  //         text: "질문을 시작해주세요.",
-  //         icon: "success",
-  //       });
-  //     }
-  //   });
-  // };
-
-  //질문 렌더링
-  
   const Questions = questionData.map((el, id) => {
     return <QuestionCompo key={id} questionInfo={el} roomID={reqBody.interviewRoomId} intervieweeID={reqBody.intervieweeId}/>;
   });
@@ -249,6 +251,40 @@ const IntervieweePage = (props) => {
     setReqBody((prev) => {
       return { ...prev, writerId: elem.id };
     });
+  };
+  const changeFeedBack = (e) => {
+    setFeedBackContext(e.target.value);
+  }
+
+  // 질문 끝내기 버튼 클릭시 발생할 함수.
+  const finishHandler = () => {
+    if(highlight.questionId){
+      MySwal.fire({
+        title: "질문 종료",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonText: "취소",
+        showConfirmButton: true,
+        confirmButtonText: "확인",
+        html: (
+          <div>
+            <p>
+              작성중인 피드백이 전부 서버로 전송됩니다.
+            </p>
+            <p>
+              질문을 종료하기 전 다른 면접관들이 피드백 작성이 끝났나요?
+            </p>
+            <p>
+              전부 작성이 끝났는것을 확인하셨다면 확인을 눌러주세요.
+            </p>
+          </div>
+        ),
+      }).then((result) => {
+        setfinishExecute(true);
+        console.log(starScore);
+        console.log(feedBackContext);
+      });
+    }
   };
 
   //질문 컴포넌트 상단 면접관들 목록 보여주는 함수
@@ -338,7 +374,7 @@ const IntervieweePage = (props) => {
 
             <SubFooter>
               <GrHistory />
-              <SubBtn>질문 끝내기</SubBtn>
+              <SubBtn onClick={finishHandler}>질문 끝내기</SubBtn>
             </SubFooter>
           </QuestionBody>
 
@@ -351,7 +387,7 @@ const IntervieweePage = (props) => {
           {/* 피드백 */}
           <QuestionBody>
             <SubTitle title={"피드백"} />
-            <Feedback placeholder="피드백을 입력하세요" />
+            <Feedback placeholder="피드백을 입력하세요" value={feedBackContext} onChange={changeFeedBack}/>
           </QuestionBody>
         </BodyCompo>
 

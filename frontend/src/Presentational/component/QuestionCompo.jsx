@@ -42,6 +42,13 @@ const QuestionCompo = ({ questionInfo, roomID, intervieweeID }) => {
           icon: "error",
           timer: 1500,
         });
+      } else {
+        MySwal.fire({
+          text: "질문이 제출 되었습니다. 질문을 시작해 주세요",
+          showConfirmButton: false,
+          icon: "success",
+          timer: 1500,
+        });
       }
       setExecute(false);
     } 
@@ -72,7 +79,7 @@ const QuestionCompo = ({ questionInfo, roomID, intervieweeID }) => {
   };
 
   return (
-    <QuestionBody onClick={QuestionHandler}>
+    <QuestionBody onClick={QuestionHandler} isFinished = {finished}>
       <SubTitle title={`질문 ${id}`} />
       <MainQuestion>{content}</MainQuestion>
       <UserInfo>{writer.name}</UserInfo>
@@ -95,7 +102,9 @@ const MainQuestion = styled.div`
 const QuestionBody = styled.div`
   padding: 3vh 1vh 2vh 1vh;
   border-bottom: solid 1px var(--greyLight-2);
-
+  ${({isFinished}) => {
+    return isFinished ? `background-color: var(--greyLight-1)` : null;
+  }}
   & .SubTitle {
     font-size: 0.85em;
     margin-bottom: 1vh;
