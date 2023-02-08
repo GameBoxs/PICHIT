@@ -121,9 +121,9 @@ const InterviewPage = () => {
 
       // 면접자가 정해졌다는 신호를 받았을 때
       mySession.on("broadcast-interviewee", (e) => {
-        console.log("면접자 : " + e.data);
+        console.log("면접자 : " + JSON.parse(e.data).intervieweeId);
         setInfo((prev) => {
-          return { ...prev, interviewee: e.data };
+          return { ...prev, interviewee: JSON.parse(e.data).intervieweeId };
         });
       });
 

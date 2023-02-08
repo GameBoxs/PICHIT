@@ -19,25 +19,36 @@ const QuestionCompo = ({ questionInfo, roomID, intervieweeID }) => {
   // permission이 false면 단순히 보기만 가능 클릭 기능 빼야함, true 여야 클릭하여 모달띄워서 제출 가능.
   // finished가 false면 클릭하여 제출 할 수 있음, true면 클릭 불가, 회색으로 활성화 됬다는거 표시 해야함.
 
-  const [res] = useAxios(
+  const [res,isLoading,error] = useAxios(
     'conference/interview/question/propose',
     "POST",
     token,
     {
       interviewRoomId : roomID,
       intervieweeId : intervieweeID,
-      questionId : id
+      questionId : id,
+      questionContent : content
     },
     execute
   )
 
   useEffect(()=> {
-    if(execute) setExecute(false);
+    if(execute){
+      if(error){
+        console.log(error.response.data);
+        MySwal.fire({
+          text: "다른 면접관의 질문이 진행 중 입니다.",
+          showConfirmButton: false,
+          icon: "error",
+          timer: 1500,
+        });
+      }
+      setExecute(false);
+    } 
   },[execute])
 
-  console.log(res);
   
-  const QuestionHandler = (QuestionsID) => {
+  const QuestionHandler = () => {
     if( permission && finished === false){
       MySwal.fire({
         title: "질문을 제출 하시겠습니까?",

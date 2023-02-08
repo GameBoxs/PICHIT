@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import styled from "styled-components";
 
 import SubTitle from "../../common/SubTitle";
@@ -93,12 +93,12 @@ const IntervieweePage = (props) => {
   // 신호 받는건 했으니 질문 내용칸에는 수민이랑 이야기 해서 data 몸체에 JSON 문자열 형태로 질문 내용도 받아서 Object로 변환후
   // 사용하기.
   // 피드백 어떻게 할 지 생각하기.
-  const [highlight,setHilight] = useState('');
+  const [highlight,setHilight] = useState({questionId:'',questionContent:''});
 
   useEffect(() => {
     session.on('broadcast-question-start', (data) => {
-      console.log('highlight -- ', data.data);
-      setHilight(data.data);
+      console.log('highlight -- ', JSON.parse(data.data));
+      setHilight(JSON.parse(data.data));
     })
     session.on('broadcast-question-end',(data)=> {
       setHilight('질문 제출 바랍니다.');
@@ -326,14 +326,14 @@ const IntervieweePage = (props) => {
           {/* 질문 박스 */}
           <QuestionBody>
             <SubNav>
-              <SubTitle title={"질문 "+highlight} />
+              <SubTitle title={"질문 "+highlight.questionId} />
               <TipMark>
                 <BsQuestionCircleFill />
               </TipMark>
             </SubNav>
 
             <Question>
-              {highlight}
+              {highlight.questionContent}
             </Question>
 
             <SubFooter>
@@ -391,7 +391,7 @@ const IntervieweePage = (props) => {
   );
 };
 
-export default IntervieweePage;
+export default memo(IntervieweePage);
 
 const MemberColor = styled.div``;
 
