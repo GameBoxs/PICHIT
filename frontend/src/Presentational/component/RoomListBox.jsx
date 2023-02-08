@@ -2,12 +2,13 @@ import RoomList from "./RoomList"
 import EmptyRoomList from "./EmptyRoomList"
 
 function RoomListBox(props) {
-    if (props.search !== "" && props.roomsData.content.length === 0){
+    if (props.search !== "" && props.roomsData.content.length === 0 && props.roomPosition ===false){
         return(<EmptyRoomList
             main={"찾으시는 방이 없습니다."}
             sub={"방생성을 통해 방을 생성해주세요"}
           />)
-    } else if (props.roomsData.content.length === 0 && props.roomPosition === false){
+    }
+    else if (props.roomsData.content.length === 0 && props.roomPosition === false){
         return(<EmptyRoomList
             main={"현재 방이 없습니다."}
             sub={"방생성을 통해 방을 생성해주세요"}
