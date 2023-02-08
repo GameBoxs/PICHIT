@@ -5,7 +5,10 @@ import com.alppano.speakon.common.exception.ResourceNotFoundException;
 import com.alppano.speakon.common.util.RedisUtil;
 import com.alppano.speakon.domain.conference.dto.Conference;
 import com.alppano.speakon.domain.conference.dto.InterviewRequest;
+import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
 import com.alppano.speakon.domain.interview_join.repository.InterviewJoinRepository;
+import com.alppano.speakon.domain.question.entity.Question;
+import com.alppano.speakon.domain.question.repository.QuestionRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.openvidu.java.client.*;
@@ -17,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 
 @Service
@@ -33,6 +37,7 @@ public class InterviewService {
     private final RedisUtil redisUtil;
     private final HttpRequestService httpRequestService;
     private final InterviewJoinRepository interviewJoinRepository;
+    private final QuestionRepository questionRepository;
 
     @PostConstruct
     public void init() { // OPENVIDU 초기화
@@ -55,6 +60,7 @@ public class InterviewService {
         redisUtil.setRedisValue(String.valueOf(interviewRoomId), conference);
     }
 
+    @Transactional
     public void selectInterviewee(Long requesterId, InterviewRequest req) throws IOException, OpenViduJavaClientException, OpenViduHttpException {
         Conference conference = retrieveConference(req.getInterviewRoomId());
 
@@ -64,7 +70,7 @@ public class InterviewService {
         if(conference.getCurrentInterviewee() != null) {
             throw new ResourceForbiddenException("이미 진행 중인 면접자가 있습니다.");
         }
-        interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
+        InterviewJoin interviewJoin = interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
                 .orElseThrow(() -> new ResourceForbiddenException("미참여자를 지정하였습니다."));
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -72,6 +78,8 @@ public class InterviewService {
 
         httpRequestService.broadCastSignal(conference.getSessionId(),
                 "broadcast-interviewee", signalData);
+
+        interviewJoin.setStartedTime(LocalDateTime.now());
 
         openvidu.fetch();
         String recordingFileName = req.getInterviewRoomId() + "_" + req.getIntervieweeId();
@@ -119,6 +127,9 @@ public class InterviewService {
 
         interviewJoinRepository.findByUserIdAndInterviewRoomId(requesterId, req.getInterviewRoomId())
                 .orElseThrow(() -> new ResourceForbiddenException("회의 참여자만 질문할 수 있습니다..."));
+        Question question = questionRepository.findById(req.getQuestionId()).orElseThrow(
+                () -> new ResourceNotFoundException("존재하지 않는 질문입니다...")
+        );
         if(conference.getQuestionProceeding() != null) {
             throw new ResourceForbiddenException("이미 질문이 진행 중입니다...");
         }
@@ -134,6 +145,8 @@ public class InterviewService {
 
         httpRequestService.broadCastSignal(conference.getSessionId(),
                 "broadcast-question-start", signalData);
+
+        question.setStartedTime(LocalDateTime.now());
 
         // Redis에 새로 진행할 질문을 UPDATE
 //        conference.setQuestionProceeding(req.getQuestionId());
