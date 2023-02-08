@@ -31,11 +31,13 @@ function MainBottom() {
   const [totalElements, setTotalElements] = useState(0); //전체 데이터 길이
   const [totalpages, setTotalPages] = useState(0); //전체 데이터 길이
 
-  //통신(카테고리)
+  //통신
   const [APIurl,serAPIurl] = useState()
   const [search, setSearch]=useState("");
-  const myCategory = `my-interviewrooms?page=${currentPage-1}`
-  const totalCategory = `interviewrooms?page=${currentPage-1}&title=${search}`
+  const [sort,setSort] = useState("")
+  const [finished, setFinished] = useState("")
+  const myCategory = `my-interviewrooms?page=${currentPage-1}&finished=${finished}`
+  const totalCategory = `interviewrooms?page=${currentPage-1}&title=${search}&sort=${sort}`
   // http://i8d107.p.ssafy.io/api/my-interviewrooms?page=0&size=1
 
   //로그인에 따른 카테고리 기본값
@@ -59,20 +61,33 @@ function MainBottom() {
   function roomSwitch(position) {
     if (position === "toTotal") {
       setRoomPosition(false);
-      setCurrentPage(1);
       serAPIurl(totalCategory);
+      setCurrentPage(1);
+      //카테고리 이동후 초기화
+      setFinished("")
     } else {
       setRoomPosition(true);
-      setCurrentPage(1);
       serAPIurl(myCategory);
+      setCurrentPage(1);
+      //카테고리 이동후 초기화
+      setSearch("")
+      setSort("")
     }
   }
 
   //검색
   function searchHandler(e) {
-    console.log(e);
     setSearch(e);
   }
+
+  //sort선택
+  function sortHandler(e){
+    setSort(e)
+  }
+  function finishedHandler(e){
+    setFinished(e)
+  }
+
 
   // roomlist통신
   const [data, setData] = useState([]) //total데이터 저장
@@ -95,9 +110,9 @@ function MainBottom() {
       else{
         serAPIurl(totalCategory)
       }
-    },[currentPage, search])      
+    },[currentPage, search,sort,finished])      
 
-
+    console.log('렌더링')
   //방생성하기
   const [modalOpen, setModalOpen] = useState(false);
   const showModal = () => {
@@ -140,7 +155,7 @@ function MainBottom() {
           isLoading===true? <div>loading...</div> :
       <section>
         <Main>
-          {roomPosition ? <MyCategory /> : <TotalCategory searchHandler={searchHandler} />}
+          {roomPosition ? <MyCategory finishedHandler={finishedHandler}/> : <TotalCategory searchHandler={searchHandler} sortHandler={sortHandler}/>}
           {/* {roomPosition ? null : <TotalCategory />} */}
           <RoomListdiv>
               {data.data ?<RoomListBox search={search} roomsData={data.data} roomPosition={roomPosition}/> : <div>loading...</div>}
