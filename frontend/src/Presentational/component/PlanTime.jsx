@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
-import AggroL from "../common/Font/AggroL";
+// import AggroL from "../common/Font/AggroL";
 
-import AggroM from "../common/Font/AggroM";
+// import AggroM from "../common/Font/AggroM";
 
 function PlanTime({startDate}) {
   const Date = startDate.slice(0,10).split("-")
@@ -33,8 +33,8 @@ function PlanTime({startDate}) {
 
   return (
     <TimeLayout>
-      <AggroM />
-      <AggroL />
+      {/* <AggroM /> */}
+      {/* <AggroL /> */}
       <GlobalStyle />
       {dday}
     </TimeLayout>
@@ -46,7 +46,7 @@ export default PlanTime;
 const DayTitle = styled.div`
   font-weight: 600;
   color: var(--greyLight-2);
-  font-family: SBagrroL;
+  font-family: 'SBAggroL';
   position: relative;
   opacity: 0.8;
 `;
@@ -68,7 +68,7 @@ const Text = styled.div`
   box-shadow: inset 0.2rem 0.2rem 1rem var(--primary-light),
     inset -0.2rem -0.2rem 1rem var(--primary-dark),
     0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--white);
-  font-family: SBagrroM;
+    font-family: 'SBAggroM';
 `;
 
 const Layout = styled.div`

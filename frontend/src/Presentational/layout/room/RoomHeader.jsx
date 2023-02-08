@@ -10,7 +10,6 @@ import useAxios from "../../../action/hooks/useAxios";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import AggroL from "../../common/Font/AggroL";
 import { createSession } from "../../../action/modules/chatModule";
 import { TiStarburst } from "react-icons/ti";
 import SubTitle from "../../common/SubTitle";
@@ -231,7 +230,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
 
   return (
     <Layout>
-      <AggroL />
       <TiStarburst />
       <Title title={title} />
 
@@ -250,7 +248,7 @@ const ManagerLayout = styled.div`
   display: flex;
   width: 100%;
   gap: 1rem;
-  font-family: "SBagrroL";
+  font-family: 'SBAggroL';
   color: var(--greyDark);
 
   & .SubTitle:first-child {
@@ -288,7 +286,7 @@ const Layout = styled.div`
     font-size: 2rem;
     text-align: left;
     margin-block: 1rem;
-    font-family: "SBagrroL";
+    font-family: 'SBAggroL';
   }
 
   .Btn {

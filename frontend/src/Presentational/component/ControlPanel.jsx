@@ -3,8 +3,6 @@ import React, { memo } from "react";
 import styled from "styled-components";
 import SoundBtn from "./SoundBtn";
 
-import AggroM from "../common/Font/AggroM";
-
 const ControlPanel = ({ play, isPlaying, duration, currentTime }) => {
   //시간 설정 함수
   const secondsToHms = (seconds) => {
@@ -42,7 +40,6 @@ const ControlPanel = ({ play, isPlaying, duration, currentTime }) => {
 
   return (
     <ControlPanelDiv>
-      <AggroM />
       <Timer>{secondsToHms(currentTime)}</Timer>
       <div>
         <SoundBtn play={play} isPlaying={isPlaying} />
@@ -55,7 +52,7 @@ const ControlPanel = ({ play, isPlaying, duration, currentTime }) => {
 export default memo(ControlPanel);
 
 const Timer = styled.div`
-  font-family: SBagrroM;
+  font-family: 'SBAggroM';
   color: var(--greyDark);
 `;
 

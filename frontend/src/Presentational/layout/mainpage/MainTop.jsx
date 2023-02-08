@@ -1,11 +1,8 @@
 import styled, { css, keyframes } from "styled-components";
 
-import SBagrroM from "../../common/Font/AggroM";
-
 function MainTop() {
   return (
     <>
-      <SBagrroM />
       <TopBody>
         <Header>
           <WcontainerContents>
@@ -74,7 +71,7 @@ const H1Tag = styled.h1`
   text-transform: uppercase;
   opacity: 0;
   animation: ${fadeInDown} 1s both;
-  font-family: SBagrroM;
+  font-family: 'SBAggroM';
   
 `;
 

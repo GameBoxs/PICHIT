@@ -48,12 +48,14 @@ const QuestionItem = ({ Question, setGetUser, pdfhandler, userinfo }) => {
   useEffect(() => {
     if (delRes !== null && delRes.success) {
       setGetUser(true);
+      setDelQuestion(false);
     }
   }, [delRes]);
 
   useEffect(() => {
     if (putData !== null && putData.success) {
       setGetUser(true);
+      setRetouchQuestion(false)
     }
   }, [putData]);
 
@@ -129,7 +131,6 @@ const Input = styled.input.attrs({ type: "text" })`
   box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
     inset -0.2rem -0.2rem 0.5rem var(--white);
   background: none;
-  font-family: inherit;
   color: var(--greyDark);
 
   &::placeholder {
@@ -202,7 +203,7 @@ const Name = styled.div`
   position: absolute;
   bottom: 1rem;
   right: 0.5rem;
-  font-family: SBagrroL;
+  font-family: 'SBAggroL';
   color: var(--greyDark);
   display: flex;
   align-items: center;

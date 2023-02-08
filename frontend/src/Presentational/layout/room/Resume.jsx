@@ -7,7 +7,7 @@ import { IoClose } from "react-icons/io5";
 
 import axios from "axios";
 import { useSelector } from "react-redux";
-import {PITCHIT_URL} from "../../../store/values"
+import { PITCHIT_URL } from "../../../store/values";
 import { setDate } from "date-fns";
 
 // 근데 import * as 안하면 에러남 필수로 해줄 것!
@@ -19,7 +19,7 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   const [pdfFileList, setPdfFileList] = useState([]);
   const [pdfUrl, setPdfUrl] = useState();
   const [showPdf, setShowPdf] = useState(false);
-  const [uploadPdf , setUploadPdf] =useState(false);
+  const [uploadPdf, setUploadPdf] = useState(false);
 
   // const [PostPdf, isLoading] = useAxios()
 
@@ -31,35 +31,32 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   //   uploadPdf
   // )
   // console.log(pdfUrl)
-  
+
   // useEffect(()=> {
   //   if (postData && postData.success){
   //     setUploadPdf(false)
   //   }
   // },[postData])
- 
 
   const getUrl = (file) => {
     const blob = new Blob([file]);
     const pdfUrl = URL.createObjectURL(blob);
     setPdfUrl(pdfUrl);
-    const frm = new FormData()
-    frm.append("file",file,{ type:  
-      "application/pdf" });
+    const frm = new FormData();
+    frm.append("file", file, { type: "application/pdf" });
     axios({
-      method:"post",
-      url:`${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
-      headers:{
-        "Authorization": token,
-        "Content-Type": 'multipart/form-data',
+      method: "post",
+      url: `${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
+      headers: {
+        Authorization: token,
+        "Content-Type": "multipart/form-data",
       },
-      data:
-        frm
-    }).then((res) => {
-      setDate(res.data)
+      data: frm,
     })
-    .catch((err) => 
-      console.log(err))
+      .then((res) => {
+        setDate(res.data);
+      })
+      .catch((err) => console.log(err));
   };
 
   const onPdfFileUpload = (e) => {
@@ -109,30 +106,24 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   };
 
   const getPdfOwner = (elem) => {
-    setPdfHandler({...elem})
-
-  }
+    setPdfHandler({ ...elem });
+  };
 
   const interviewees = participants.map((elem, idx) => {
     return (
-      <React.Fragment
-      key={idx}
-    >
+      <React.Fragment key={idx}>
         <input
           type="radio"
           name={`radio`}
           id={`tab-${idx + 1}`}
-          onClick={()=>getPdfOwner(elem)}
+          onClick={() => getPdfOwner(elem)}
         />
-        <label htmlFor={`tab-${idx + 1}`}
-        >
+        <label htmlFor={`tab-${idx + 1}`}>
           <p>{elem.name}</p>
         </label>
       </React.Fragment>
     );
   });
-
-
 
   return (
     <MainContainer>
@@ -154,20 +145,23 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
           </ModalOverlay>
         ) : (
           <FileList>
-            {pdfFileList.length === 0 ? (<>
-            {pdfhandler.id === userinfo.id ? (
-              <FileListBody>
-                파일이 존재하지 않습니다.
-                  <Label htmlFor="uploadFile">파일 업로드하기</Label>
-                  <Input
-                    id="uploadFile"
-                    accept="application/pdf"
-                    multiple={true}
-                    onChange={onPdfFileUpload}
-                  />
-              </FileListBody>
-            ):(<FileListBody>파일이 존재하지 않습니다.</FileListBody>)}
-            </>
+            {pdfFileList.length === 0 ? (
+              <>
+                {pdfhandler.id === userinfo.id ? (
+                  <FileListBody>
+                    파일이 존재하지 않습니다.
+                    <Label htmlFor="uploadFile">파일 업로드하기</Label>
+                    <Input
+                      id="uploadFile"
+                      accept="application/pdf"
+                      multiple={true}
+                      onChange={onPdfFileUpload}
+                    />
+                  </FileListBody>
+                ) : (
+                  <FileListBody>파일이 존재하지 않습니다.</FileListBody>
+                )}
+              </>
             ) : (
               <FileResultList />
             )}
@@ -197,7 +191,6 @@ const Member = styled.div`
   }
 
   & > input:checked + label {
-    transition: all 0.5s ease;
     color: var(--primary);
   }
 
@@ -210,7 +203,8 @@ const Member = styled.div`
     align-items: center;
     cursor: pointer;
     color: var(--greyDark);
-    transition: all 0.5s ease;
+    transition: all 0.1s ease;
+    font-family: "SBAggroL";
 
     &:hover {
       color: var(--primary);
@@ -229,15 +223,15 @@ const Member = styled.div`
 
   #tab-1:checked ~ ${MemberColor} {
     transform: translateX(0);
-    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   }
   #tab-2:checked ~ ${MemberColor} {
     transform: translateX(5rem);
-    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   }
   #tab-3:checked ~ ${MemberColor} {
     transform: translateX(10rem);
-    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   }
 `;
 

@@ -7,7 +7,6 @@ import MainTop from "../layout/mainpage/MainTop";
 import TapeCompo from "../component/TapeCompo";
 
 import { TiStarburst, TiStarburstOutline } from "react-icons/ti";
-import AggroL from "../common/Font/AggroL";
 
 const MainPage = () => {
   const MainDiv = useRef([]);
@@ -31,7 +30,6 @@ const MainPage = () => {
 
   return (
     <MainPageLayout>
-      <AggroL />
       <First ref={(el) => (MainDiv.current[0] = el)}>
         <MoveBtn onClick={() => scrollWithUseRef(0)}>게시판 바로가기</MoveBtn>
         <MainTop />

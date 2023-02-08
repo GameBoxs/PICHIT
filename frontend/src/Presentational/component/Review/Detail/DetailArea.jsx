@@ -14,13 +14,27 @@ const DetailArea = ({ selectedID }) => {
   const [data, setData] = useState();
   const [nowPage, setNowPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
-  const [getData, isLoading] = useAxios(
+  const [getData, isLoadingData] = useAxios(
     `interviewjoins/${selectedID}/questions-with-feedbacks?size=2000`,
     "GET",
     token,
     null,
     selectedID ? true : false
   );
+
+  // const [getSound, isLoadingSound] = useAxios(
+  //   // `interviewjoins/{selectedID}/recordings`,
+  //   `interviewjoins/4/recordings`,
+  //   "GET",
+  //   token,
+  //   null
+  // )
+
+  // useEffect(()=>{
+  //   if (getSound && getSound.success && getSound.data) {
+  //     console.log(getSound)
+  //   }
+  // }, [getSound])
 
   useEffect(() => {
     if (getData && getData.success && getData.data) {
@@ -38,7 +52,7 @@ const DetailArea = ({ selectedID }) => {
       <SubTitle title="면접 피드백" />
       <Container>
         {selectedID && data ? (
-          isLoading === true ? (
+          isLoadingData === true ? (
             <div>loading...</div>
           ) : (
             <>
@@ -100,7 +114,7 @@ const DetailWrap = styled.div`
 
   & > div:first-child {
     font-size: 1.3rem;
-    font-family: SBagrroM;
+    font-family: 'SBAggroB';
     color: var(--primary-light);
     padding: 1.4rem 1rem 1rem 1rem;
     /* border-bottom: solid 2px var(--greyDark); */
