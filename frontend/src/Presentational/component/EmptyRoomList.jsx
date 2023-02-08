@@ -2,15 +2,23 @@ import styled from "styled-components";
 import Title from "../common/Title"
 import SubTitle from "../common/SubTitle"
 
-function EmptyRoomList() {
-    const emptyTitle = '방이 없습니다.'
-    const emptySubTitle = '방생성을 통해 방을 생성해주세요'
+function EmptyRoomList(props) {
+    const emptyTitle = props.main
+    const emptySubTitle = props.sub
     return(
-        <div> 
+        <EmptyBox> 
             <Title title={emptyTitle}/>
             <SubTitle title={emptySubTitle}/>
-        </div>
+        </EmptyBox>
     )
 }
 
 export default EmptyRoomList;
+
+const EmptyBox = styled.div`
+    /* border: 1px solid red; */
+    padding-top: 11rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`
