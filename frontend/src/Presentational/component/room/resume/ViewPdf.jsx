@@ -1,19 +1,40 @@
 import React, { useState } from "react";
 import { Document, Page } from "react-pdf";
 import styled from "styled-components";
-import {AiFillCaretLeft,AiFillCaretRight} from "react-icons/ai"
+import axios from "axios";
+import { PITCHIT_URL } from "../../../../store/values";
+import { useSelector } from "react-redux";
 
 
-const ViewPDF = ({ fileUrl }) => {
+const ViewPDF = ({ fileUrl,pdfhandler }) => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-  console.log(fileUrl)
+  const {token} =useSelector(state=>state)
+  const [data,setData] = useState()
+
+  axios({
+    method:"get",
+    url:`${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
+    headers:{
+      Authorization: token,
+    }
+  }).then((res) => {
+    setData(res.data.data.uri)
+    console.log(data)
+
+  })
+  .catch((err) => 
+    console.log(err))
+
+
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
   return (
     <Layout>
-      <Document file={fileUrl} onLoadSuccess={onDocumentLoadSuccess}>
+      <Document   file={{
+      url:data
+    }} onLoadSuccess={onDocumentLoadSuccess}>
         <Page pageNumber={pageNumber} />
       </Document>
       <PageNext>
