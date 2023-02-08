@@ -3,18 +3,7 @@ import { useState} from "react";
 import {MdCancel} from 'react-icons/md';
 
 function TotalCategory(props) {
-        //////////////////  <<<  검색창  >>>>  ////////////////
-    //검색창
-    // function searchHandler(e){
-    //   e.preventDefault();
-    //   props.searchInput(e.target.value)
-    // }
-
-    // //제출
-    // function onSearch(e){
-      
-
-    // }
+    //검색
     const [search, setSearch]=useState("");
     function onChangeSearch(e){
       e.preventDefault();
@@ -27,6 +16,11 @@ function TotalCategory(props) {
     function clearSearch(){
       setSearch("")
       props.searchHandler("")
+    }
+
+    //sort선택
+    function sortSelect(e){
+      props.sortHandler(e)
     }
 
   return (
@@ -49,9 +43,9 @@ function TotalCategory(props) {
         
       </SearchWrapper>
       <SortCartegory>
-        <button>모든 방</button>
-        <button>입장가능</button>
-        <button >날짜 순</button>
+        <SortBtn onClick={()=>{sortSelect('')}}>등록 순</SortBtn>
+        <SortBtn onClick={()=>{sortSelect('title')}}>가나다 순</SortBtn>
+        <SortBtn onClick={()=>{sortSelect('startDate')}}>날짜 순</SortBtn>
       </SortCartegory>
       
     </div>
@@ -91,12 +85,16 @@ const SearchForm = styled.form`
   `
   const RemoveBtn = styled.div`
    display: flex;
-   margin: auto
+   margin: auto;
     
   `
   const SubmitBtm = styled.button`
     margin: 0% 1rem;
   `
   const SortCartegory = styled.div`
-      margin: 15px 0px;
+    margin: 15px 0px;
   `;
+
+  const SortBtn = styled.button`
+    
+  `
