@@ -34,17 +34,15 @@ function MainBottom() {
   const [totalpages, setTotalPages] = useState(0); //전체 데이터 길이
 
   //통신(카테고리)
-  const [APIurl, serAPIurl] = useState();
-  const [search, setSearch] = useState("");
-  const myCategory = `my-interviewrooms?page=${currentPage - 1}`;
-  const totalCategory = `interviewrooms?page=${
-    currentPage - 1
-  }&title=${search}`;
+  const [APIurl,serAPIurl] = useState()
+  const [search, setSearch]=useState("");
+  const myCategory = `my-interviewrooms?page=${currentPage-1}`
+  const totalCategory = `interviewrooms?page=${currentPage-1}&title=${search}`
   // http://i8d107.p.ssafy.io/api/my-interviewrooms?page=0&size=1
 
   //로그인에 따른 카테고리 기본값
-  const [isLogined, setIsLogined] = useState(false); //false : 비로그인, true : 로그인
-  const token = useSelector((state) => state.token); //으로 원래는 사용자 토큰을 받아야하는데 지금은 테스트라서 testToken으로 수민꺼 들고올거다.
+  const [isLogined, setIsLogined] = useState(false) //false : 비로그인, true : 로그인
+  const token = useSelector(state => state.token)//으로 원래는 사용자 토큰을 받아야하는데 지금은 테스트라서 testToken으로 수민꺼 들고올거다.
   // useEffect(()=>{
   //   if(token){
   //     setIsLogined(true)
@@ -55,7 +53,7 @@ function MainBottom() {
   //     serAPIurl(totalCategory)
   //   }
   // },[isLogined])
-
+  
   // TOTAL/MY 카테고리
   const [roomPosition, setRoomPosition] = useState(false); // false : total, true ; my
 
@@ -78,23 +76,41 @@ function MainBottom() {
     setSearch(e);
   }
 
-  // roomlist통신
-  const [data, setData] = useState([]); //total데이터 저장
-  const [getData, isLoading] = useAxios(APIurl, "GET", token);
-  useEffect(() => {
-    if (getData && getData.data) {
-      // console.log(getData.data)
-      setData(getData);
-      setTotalElements(getData.data.totalElements); //데이터 전체 수
-      setTotalPages(getData.data.totalPages); //페이지 전체 수
-    }
-  }, [getData]);
 
-  useEffect(() => {
-    if (roomPosition) {
-      serAPIurl(myCategory);
-    } else {
-      serAPIurl(totalCategory);
+  //검색
+  // const [search, setSearch]=useState("");
+  function searchHandler(e){
+    console.log(e)
+    setSearch(e)
+  }
+
+  // roomlist통신
+  const [data, setData] = useState([]) //total데이터 저장
+  const [getData, isLoading] = useAxios(
+    APIurl,'GET',token,
+    );
+    useEffect(() => {
+      if(getData && getData.data){
+        // console.log(getData.data)
+        setData(getData)
+        setTotalElements(getData.data.totalElements) //데이터 전체 수
+        setTotalPages(getData.data.totalPages) //페이지 전체 수
+      }
+    }, [getData]);
+    
+    useEffect(()=>{
+      if(roomPosition){
+        serAPIurl(myCategory)
+      }
+      else{
+        serAPIurl(totalCategory)
+      }
+    },[currentPage,search])      
+
+    //방생성하기
+    const [modalOpen, setModalOpen] = useState(false);
+    const showModal = () => {
+      setModalOpen(true)
     }
   }, [currentPage, search]);
 
@@ -136,13 +152,15 @@ function MainBottom() {
           </div>
         </Titlesection>
       </Header>
-      {isLoading === true ? (
-        <div>loading...</div>
-      ) : (
-        <section>
-          <Main>
-            {roomPosition ? (
-              <MyCategory />
+      {
+          isLoading===true? <div>loading...</div> :
+      <section>
+        <Main>
+          {roomPosition ? <MyCategory /> : <TotalCategory searchHandler={searchHandler} />}
+          {/* {roomPosition ? null : <TotalCategory />} */}
+          <RoomListdiv>
+            {data.length === 0 ? (
+              <EmptyRoomList />
             ) : (
               <TotalCategory searchHandler={searchHandler} />
             )}
