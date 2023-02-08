@@ -1,6 +1,6 @@
 package com.alppano.speakon.domain.interview_join.entity;
 
-import com.alppano.speakon.domain.recording.entity.Recording;
+import com.alppano.speakon.domain.interview_recording.entity.InterviewRecording;
 import com.alppano.speakon.common.entity.BaseTimeEntity;
 import com.alppano.speakon.domain.interview_room.entity.InterviewRoom;
 import com.alppano.speakon.domain.question.entity.Question;
@@ -46,7 +46,7 @@ public class InterviewJoin extends BaseTimeEntity {
     private LocalDateTime startedTime;
 
     @OneToOne(mappedBy = "interviewJoin", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Recording recording;
+    private InterviewRecording interviewRecording;
 
     @OneToOne(mappedBy = "interviewJoin", cascade = CascadeType.ALL, orphanRemoval = true)
     private Resume resume;

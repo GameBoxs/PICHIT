@@ -2,10 +2,10 @@ package com.alppano.speakon.domain.recording_timestamp.service;
 
 import com.alppano.speakon.common.exception.ResourceAlreadyExistsException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
+import com.alppano.speakon.domain.interview_recording.entity.InterviewRecording;
+import com.alppano.speakon.domain.interview_recording.repository.InterviewRecordingRepository;
 import com.alppano.speakon.domain.question.entity.Question;
 import com.alppano.speakon.domain.question.repository.QuestionRepository;
-import com.alppano.speakon.domain.recording.entity.Recording;
-import com.alppano.speakon.domain.recording.repository.RecordingRepository;
 import com.alppano.speakon.domain.recording_timestamp.dto.RecordingTimestampRequest;
 import com.alppano.speakon.domain.recording_timestamp.entity.RecordingTimestamp;
 import com.alppano.speakon.domain.recording_timestamp.repository.RecordingTimestampRepository;
@@ -20,7 +20,7 @@ public class RecordingTimestampService {
 
     private final RecordingTimestampRepository recordingTimestampRepository;
     private final QuestionRepository questionRepository;
-    private final RecordingRepository recordingRepository;
+    private final InterviewRecordingRepository interviewRecordingRepository;
 
     // TODO: 추후 수정 예정
     @Transactional
@@ -29,7 +29,7 @@ public class RecordingTimestampService {
                 () -> new ResourceNotFoundException("존재하지 않는 질문 입니다.")
         );
 
-        Recording recording = recordingRepository.findById(dto.getRecordingId()).orElseThrow(
+        InterviewRecording interviewRecording = interviewRecordingRepository.findById(dto.getRecordingId()).orElseThrow(
                 () -> new ResourceNotFoundException("면접 녹음파일이 존재하지 않습니다.")
         );
 
@@ -38,7 +38,7 @@ public class RecordingTimestampService {
         }
 
         RecordingTimestamp recordingTimestamp = RecordingTimestamp.builder()
-                .recording(recording)
+                .interviewRecording(interviewRecording)
                 .question(question)
                 .secondTime(dto.getSecondTime())
                 .build();

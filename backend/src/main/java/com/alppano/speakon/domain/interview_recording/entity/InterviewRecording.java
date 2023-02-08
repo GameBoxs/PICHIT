@@ -1,4 +1,4 @@
-package com.alppano.speakon.domain.recording.entity;
+package com.alppano.speakon.domain.interview_recording.entity;
 
 import com.alppano.speakon.common.entity.BaseTimeEntity;
 import com.alppano.speakon.domain.datafile.entity.DataFile;
@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Recording extends BaseTimeEntity {
+public class InterviewRecording extends BaseTimeEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -30,7 +30,7 @@ public class Recording extends BaseTimeEntity {
     private DataFile dataFile;
 
     @Builder.Default
-    @OneToMany(mappedBy = "recording", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "interviewRecording", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecordingTimestamp> recordingTimestamps = new ArrayList<>();
 
 }

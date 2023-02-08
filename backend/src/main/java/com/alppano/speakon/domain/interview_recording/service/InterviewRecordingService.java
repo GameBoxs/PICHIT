@@ -1,4 +1,4 @@
-package com.alppano.speakon.domain.recording.service;
+package com.alppano.speakon.domain.interview_recording.service;
 
 import com.alppano.speakon.common.exception.BadRequestException;
 import com.alppano.speakon.common.exception.ResourceAlreadyExistsException;
@@ -10,9 +10,9 @@ import com.alppano.speakon.domain.datafile.repository.DataFileRepository;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
 import com.alppano.speakon.domain.interview_join.repository.InterviewJoinRepository;
 import com.alppano.speakon.domain.question.dto.QuestionSimpleInfo;
-import com.alppano.speakon.domain.recording.dto.RecordingDetailInfo;
-import com.alppano.speakon.domain.recording.entity.Recording;
-import com.alppano.speakon.domain.recording.repository.RecordingRepository;
+import com.alppano.speakon.domain.interview_recording.dto.InterviewRecordingDetailInfo;
+import com.alppano.speakon.domain.interview_recording.entity.InterviewRecording;
+import com.alppano.speakon.domain.interview_recording.repository.InterviewRecordingRepository;
 import com.alppano.speakon.domain.recording_timestamp.dto.TimestampWithQuestion;
 import com.alppano.speakon.domain.recording_timestamp.entity.RecordingTimestamp;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +28,15 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class RecordingService {
+public class InterviewRecordingService {
 
-    private final RecordingRepository recordingRepository;
+    private final InterviewRecordingRepository recordingRepository;
     private final DataFileRepository dataFileRepository;
     private final InterviewJoinRepository interviewJoinRepository;
     private final DataFileUtil dataFileUtil;
 
     @Transactional
-    public void registerRecording(Long userId, Long interviewJoinId, MultipartFile multipartFile) throws IOException {
+    public void registerInterviewRecording(Long userId, Long interviewJoinId, MultipartFile multipartFile) throws IOException {
         if (multipartFile.isEmpty()) {
             throw new BadRequestException("요청에 녹음파일이 존재하지 않습니다.");
         }
@@ -57,7 +57,7 @@ public class RecordingService {
 
         dataFileRepository.save(dataFile);
 
-        Recording recording = Recording.builder()
+        InterviewRecording recording = InterviewRecording.builder()
                 .interviewJoin(interviewJoin)
                 .dataFile(dataFile)
                 .build();
@@ -66,8 +66,8 @@ public class RecordingService {
     }
 
     @Transactional
-    public void deleteRecording(Long userId, Long resumeId) {
-        Recording recording = recordingRepository.findById(resumeId).orElseThrow(
+    public void deleteInterviewRecording(Long userId, Long resumeId) {
+        InterviewRecording recording = recordingRepository.findById(resumeId).orElseThrow(
                 () -> new ResourceNotFoundException("등록된 면접 녹음이 없습니다.")
         );
 
@@ -78,13 +78,13 @@ public class RecordingService {
         }
 
         dataFileUtil.deleteFile(recording.getDataFile());
-        interviewJoin.setRecording(null);
+        interviewJoin.setInterviewRecording(null);
         recordingRepository.delete(recording);
         dataFileRepository.delete(recording.getDataFile());
     }
 
-    public RecordingDetailInfo getRecordingByInterviewJoin(Long interviewJoinId, Long userId) {
-        Recording recording = recordingRepository.findByInterviewJoinId(interviewJoinId).orElseThrow(
+    public InterviewRecordingDetailInfo getInterviewRecordingByInterviewJoin(Long interviewJoinId, Long userId) {
+        InterviewRecording recording = recordingRepository.findByInterviewJoinId(interviewJoinId).orElseThrow(
                 () -> new ResourceNotFoundException("등록된 면접 녹음이 없습니다.")
         );
 
@@ -109,7 +109,7 @@ public class RecordingService {
                 .path(Long.toString(recording.getDataFile().getId()))
                 .toUriString();
 
-        RecordingDetailInfo recordingDetailInfo = RecordingDetailInfo.builder()
+        InterviewRecordingDetailInfo recordingDetailInfo = InterviewRecordingDetailInfo.builder()
                 .recordingId(recording.getId())
                 .recordingUri(uri)
                 .timestamps(timestampWithQuestions)

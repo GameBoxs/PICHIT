@@ -1,8 +1,8 @@
 package com.alppano.speakon.domain.recording_timestamp.entity;
 
 import com.alppano.speakon.common.entity.BaseTimeEntity;
+import com.alppano.speakon.domain.interview_recording.entity.InterviewRecording;
 import com.alppano.speakon.domain.question.entity.Question;
-import com.alppano.speakon.domain.recording.entity.Recording;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,8 +23,8 @@ public class RecordingTimestamp extends BaseTimeEntity {
     private Question question;
 
     @ManyToOne
-    @JoinColumn(name = "recording_id")
-    private Recording recording;
+    @JoinColumn(name = "interview_recording_id")
+    private InterviewRecording interviewRecording;
 
     private int secondTime;
 
