@@ -8,5 +8,5 @@ public class RecordingTimestampRequest {
     private Long id;
     private Long questionId;
     private Long recordingId;
-    private int secondTime;
+    private Long secondTime;
 }
