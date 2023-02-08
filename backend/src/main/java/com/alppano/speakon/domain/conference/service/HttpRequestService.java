@@ -81,7 +81,7 @@ public class HttpRequestService{
 
         int statusCode = response.getStatusLine().getStatusCode();
 
-        if(statusCode == HttpStatus.SC_BAD_REQUEST || statusCode == HttpStatus.SC_NOT_ACCEPTABLE) {
+        if(statusCode == HttpStatus.SC_BAD_REQUEST) {
             throw new BadRequestException("SIGNAL ERR:  파라미터 오류");
         }
         if(statusCode == HttpStatus.SC_NOT_ACCEPTABLE) {
