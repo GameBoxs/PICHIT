@@ -132,6 +132,16 @@ const InterviewPage = () => {
         console.warn(exception);
       });
 
+      mySession.on("signal:moveToSelect", (event) => {
+        navigate("/interview/selectinterviewee", {
+          state: {
+            userinfo: userinfo,
+            roomId: roomId,
+            isHost: isHost,
+          },
+        });
+      })
+
       // 시작 신호 받았을 때
       mySession.on("signal:stage", (event) => {
         console.log('---스터디시작 서버에 저장한 아이디 : ', event.data , ' / 내 아이디 :', userinfo.id, ' / 같은가?', event.data.toString() === userinfo.id.toString());
@@ -163,7 +173,7 @@ const InterviewPage = () => {
       // 내 세션에 토큰으로 인증
       getToken(roomId,myToken).then((token) => {
         mySession
-          .connect(token.data, { clientData: info.myUserName, clientId: userinfo.id, clientRoomJoinId: userinfo.interviewJoinId, clientRoomId: roomId })
+          .connect(token.data, { clientData: info.myUserName, clientId: userinfo.id, clientRoomJoinId: userinfo.interviewJoinId, clientRoomId: roomId, isFinishedInterViewee: false })
           .then(async () => {
             let publisher=null;
             try{
@@ -223,8 +233,6 @@ const InterviewPage = () => {
               });
              }
              finally{
-              
-
                navigate("/interview/selectinterviewee", {
                  state: {
                    userinfo: userinfo,

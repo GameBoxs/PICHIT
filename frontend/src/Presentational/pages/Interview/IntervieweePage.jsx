@@ -91,7 +91,7 @@ const IntervieweePage = (props) => {
 
   const [starScore, setStarScore] = useState(0); // 별점
   const [feedBackContext, setFeedBackContext] = useState('');
-  const [highlight,setHilight] = useState({questionId:'',questionContent:''});
+  const [highlight,setHilight] = useState({questionId:'',questionContent:'질문을 선택해 주세요.'});
 
   const [finishExecute, setfinishExecute] = useState(false);
   const [finishAxiosData,finishIsLoading,finishError] = useAxios(
@@ -107,22 +107,24 @@ const IntervieweePage = (props) => {
     finishExecute
   )
 
-  useEffect(() => {
-    if(finishExecute) setfinishExecute(false);
-  },[finishExecute])
+  const [sendFeedBackData, sendFeedBackIsLoading, sendFeedBackError] = useAxios(
+    'feedbacks',
+    "POST",
+    token,
+    {
+      questionId: highlight.questionId,
+      score: starScore,
+      content: feedBackContext,
+    },
+    finishExecute
+  )
 
   useEffect(() => {
-    session.on('broadcast-question-start', (data) => {
-      console.log('highlight -- ', JSON.parse(data.data));
-      setHilight(JSON.parse(data.data));
-    })
-    session.on('broadcast-question-end',(data)=> {
+    if(finishExecute){
       /*
       // 아래에 평가 별 0으로 초기화 하는 내용 넣어야 함.
 
       */
-
-      setFeedBackContext('');
 
       setHilight({questionId:'',questionContent:'질문을 제출해 주세요.'});
       MySwal.fire({
@@ -133,6 +135,21 @@ const IntervieweePage = (props) => {
       });
 
       setIsQuestion(true);
+
+      setFeedBackContext('');
+
+      setfinishExecute(false);
+    }
+  },[finishExecute])
+
+  useEffect(() => {
+    session.on('broadcast-question-start', (data) => {
+      console.log('highlight -- ', JSON.parse(data.data));
+      setHilight(JSON.parse(data.data));
+      setIsQuestion(true);
+    })
+    session.on('broadcast-question-end',(data)=> {
+      // 아래에 피드백 전송 데이터 보내기
     })
   },[session])
 
@@ -280,9 +297,12 @@ const IntervieweePage = (props) => {
           </div>
         ),
       }).then((result) => {
-        setfinishExecute(true);
-        console.log(starScore);
-        console.log(feedBackContext);
+        if (result.isConfirmed){
+
+          setfinishExecute(true);
+          console.log(starScore);
+          console.log(feedBackContext);
+        }
       });
     }
   };
@@ -307,6 +327,35 @@ const IntervieweePage = (props) => {
     );
   });
 
+  const finishInterviewe = () => {
+    MySwal.fire({
+      title: "현재 면접을 종료하고 대기실로 돌아갑니다.",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "취소",
+      showConfirmButton: true,
+      confirmButtonText: "확인",
+      html: (
+        <div>
+          <p>
+            대기실로 가기 전에 모든 질문이 끝났는지 확인해 주세요.
+          </p>
+          <p>
+            정말 대기실로 가시려면 확인을 눌러 주세요.
+          </p>
+        </div>
+      ),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        session.signal({
+          data:'',
+          to:[],
+          type: 'moveToSelect'
+        })
+      }
+    });
+  }
+
   return (
     <Container>
       {/* interviewee Nav */}
@@ -318,8 +367,9 @@ const IntervieweePage = (props) => {
           <MdOutlineLogout
             className="logOutBtn"
             onClick={() => {
-              leaveSession(session, setOV);
-              navigate("/room");
+              // leaveSession(session, setOV);
+              // navigate("/room");
+              finishInterviewe();
             }}
           />
         </NavCompo>
