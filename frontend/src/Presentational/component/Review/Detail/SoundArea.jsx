@@ -4,7 +4,7 @@ import Soundbar from "../../Soundbar";
 import Sampling from "../../../../store/asset/HypeBoy.mp3";
 import ControlPanel from "../../ControlPanel";
 
-const SoundArea = () => {
+const SoundArea = ({sound}) => {
   //#region Hook
 
   //#region useState Hook
@@ -13,8 +13,6 @@ const SoundArea = () => {
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrectTime] = useState(0);
   //#endregion
-
-  console.log(percentage, isPlaying, duration, currentTime)
 
   //#region useRef Hook
   const audioRef = useRef();
@@ -48,14 +46,19 @@ const SoundArea = () => {
 
   //#region 진행 시간, 퍼센트 구하는 함수
   const getCurrentDuration = (e) => {
-    const currentTime = e.currentTarget.currentTime; //현재 재생되고 있는 위치 반환
-    const duration = e.currentTarget.duration; //현재 오디오바의 전체 길이를 초단위로 반환
-    //전체 길이 중 현재 시간이 얼만큼 차지하고 있는 지 백분율로 보여줌
-    const percent = ((currentTime / duration) * 100).toFixed(2);
-
-    setPercentage(+percent);
-    //toFixed:지정된 소수 자릿수로 반올림
-    setCurrectTime(currentTime.toFixed(2));
+    // e.currentTarget.load()
+    if (duration !== 0) {
+      const currentTime = e.currentTarget.currentTime; //현재 재생되고 있는 위치 반환
+      // const duration = audioRef.duration; //현재 오디오바의 전체 길이를 초단위로 반환
+      //전체 길이 중 현재 시간이 얼만큼 차지하고 있는 지 백분율로 보여줌
+      const percent = ((currentTime / duration) * 100).toFixed(2);
+  
+      console.log(duration)
+  
+      setPercentage(+percent);
+      //toFixed:지정된 소수 자릿수로 반올림
+      setCurrectTime(currentTime.toFixed(2));
+    }
   };
   //#endregion
 
@@ -86,9 +89,7 @@ const SoundArea = () => {
   };
   //#endregion
 
-  //#region Variable
-  const timeline = ["00:18", "1:09", "2:00"];
-  //#endregion
+console.log(duration)
 
   return (
     <SoundWrap>
@@ -97,7 +98,7 @@ const SoundArea = () => {
         onChange={onChange}
         percentage={percentage}
         duration={duration}
-        timeline={timeline}
+        timeline={Object.values(sound?.timestamp)}
       />
       
       {/* 시간표시/재생 on off 버튼 */}
@@ -111,9 +112,10 @@ const SoundArea = () => {
       {/* 소리 재생하게 해주는 태그 */}
       <audio
         ref={audioRef}
-        src={Sampling}
+        src={sound.url}
         onLoadedData={loadedData}
         onTimeUpdate={getCurrentDuration}
+        preload="metadata"
       ></audio>
 
       {/* {timeline.map((el, idx) => {

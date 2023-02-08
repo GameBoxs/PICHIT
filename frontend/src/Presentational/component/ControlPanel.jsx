@@ -5,6 +5,7 @@ import SoundBtn from "./SoundBtn";
 
 const ControlPanel = ({ play, isPlaying, duration, currentTime }) => {
   //시간 설정 함수
+
   const secondsToHms = (seconds) => {
     if (!seconds) return "00m 00s";
 

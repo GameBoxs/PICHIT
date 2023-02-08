@@ -65,8 +65,6 @@ function App() {
       //Redux state 저장
       dispatch(slicer(token));
 
-      console.log(e.data);
-
       //로컬스토리지에 token이란 이름으로 값 저장
       localStorage.setItem("token", token);
 
