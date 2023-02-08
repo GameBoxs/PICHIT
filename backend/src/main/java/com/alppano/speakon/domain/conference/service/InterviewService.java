@@ -7,12 +7,13 @@ import com.alppano.speakon.domain.conference.dto.Conference;
 import com.alppano.speakon.domain.conference.dto.InterviewRequest;
 import com.alppano.speakon.domain.interview_join.repository.InterviewJoinRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -48,7 +49,12 @@ public class InterviewService {
         return conference;
     }
 
-    //TODO: response 처리 200-성공, 404-존재하지 않는 세션, 400-파라미터 오류, 406-수신자 오류(참여자 없음or유효하지 않은 커넥션ID)
+    // Redis는 Transactional을 사용할 때 get과 set 로직을 분리해야함
+    public void setQuestionProceeding(Long interviewRoomId, Conference conference, Long questionId) throws JsonProcessingException {
+        conference.setQuestionProceeding(questionId);
+        redisUtil.setRedisValue(String.valueOf(interviewRoomId), conference);
+    }
+
     public void selectInterviewee(Long requesterId, InterviewRequest req) throws IOException, OpenViduJavaClientException, OpenViduHttpException {
         Conference conference = retrieveConference(req.getInterviewRoomId());
 
@@ -61,8 +67,11 @@ public class InterviewService {
         interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
                 .orElseThrow(() -> new ResourceForbiddenException("미참여자를 지정하였습니다."));
 
-        HttpResponse response =	httpRequestService.broadCastSignal(conference.getSessionId(),
-                "broadcast-interviewee", String.valueOf(req.getIntervieweeId()));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String signalData = objectMapper.writeValueAsString(req);
+
+        httpRequestService.broadCastSignal(conference.getSessionId(),
+                "broadcast-interviewee", signalData);
 
         openvidu.fetch();
         String recordingFileName = req.getInterviewRoomId() + "_" + req.getIntervieweeId();
@@ -90,8 +99,11 @@ public class InterviewService {
         interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
                 .orElseThrow(() -> new ResourceForbiddenException("미참여자를 지정하였습니다."));
 
-        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(),
-                "broadcast-interview-end", String.valueOf(req.getIntervieweeId()));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String signalData = objectMapper.writeValueAsString(req);
+
+        httpRequestService.broadCastSignal(conference.getSessionId(),
+                "broadcast-interview-end", signalData);
 
         openvidu.fetch();
         openvidu.stopRecording(conference.getRecordingId());
@@ -101,6 +113,7 @@ public class InterviewService {
         redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
     }
 
+    @Transactional
     public void proposeQuestion(Long requesterId, InterviewRequest req) throws IOException {
         Conference conference = retrieveConference(req.getInterviewRoomId());
 
@@ -116,12 +129,16 @@ public class InterviewService {
             throw new ResourceForbiddenException("잘못된 면접자를 지정하였습니다...");
         }
 
-        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(),
-                "broadcast-question-start", String.valueOf(req.getQuestionId()));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String signalData = objectMapper.writeValueAsString(req);
+
+        httpRequestService.broadCastSignal(conference.getSessionId(),
+                "broadcast-question-start", signalData);
 
         // Redis에 새로 진행할 질문을 UPDATE
-        conference.setQuestionProceeding(req.getQuestionId());
-        redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
+//        conference.setQuestionProceeding(req.getQuestionId());
+//        redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
+        setQuestionProceeding(req.getInterviewRoomId(), conference, req.getQuestionId());
     }
 
     public void endQuestion(Long requesterId, InterviewRequest req) throws IOException {
@@ -142,12 +159,16 @@ public class InterviewService {
             throw new ResourceForbiddenException("잘못된 질문을 지정하였습니다...");
         }
 
-        HttpResponse response = httpRequestService.broadCastSignal(conference.getSessionId(),
-                "broadcast-question-end", String.valueOf(req.getQuestionId()));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String signalData= objectMapper.writeValueAsString(req);
+
+        httpRequestService.broadCastSignal(conference.getSessionId(),
+                "broadcast-question-end", signalData);
 
         // Redis에 질문이 끝났다고 UPDATE
-        conference.setQuestionProceeding(null);
-        redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
+//        conference.setQuestionProceeding(null);
+//        redisUtil.setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
+        setQuestionProceeding(req.getInterviewRoomId(), conference, null);
     }
 
 }

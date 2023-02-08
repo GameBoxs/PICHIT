@@ -103,7 +103,7 @@ public class ConferenceController {
         interviewService.proposeQuestion(loginUser.getId(), requestDto);
 
         ApiResponse<String> result = new ApiResponse(Boolean.TRUE, "질문 제안 성공");
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Operation(summary = "질문 종료")
@@ -113,7 +113,7 @@ public class ConferenceController {
         interviewService.endQuestion(loginUser.getId(), requestDto);
 
         ApiResponse<String> result = new ApiResponse(Boolean.TRUE, "질문 종료 성공");
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }
