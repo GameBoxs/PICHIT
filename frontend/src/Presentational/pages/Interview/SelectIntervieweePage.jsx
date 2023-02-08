@@ -27,54 +27,48 @@ const SelectIntervieweePage = ({
   const isHost = useLocation().state.isHost;
   let navigate = useNavigate();
   const myToken = useSelector((state) => state.token);
-  const [roomNum, setRoomNum] = useState(0)
+  const [roomNum, setRoomNum] = useState(0);
 
   //방장이 면접자를 고를 때/고르지 않을 때 뜰 문구
-  const sentance = true ? "대기 중입니다" : "방장이 면접자를 선택하고 있습니다";
+  const [isSelect, setIsSelect] = useState(true);
+  const sentance = isSelect ? "방장이 면접자를 선택하고 있습니다" : "대기 중입니다";
 
-  // const MemberList = dummy.map((person,idx) => {
-  //   return <option key={idx}>{person}</option>
-  // })
-  // // 방장이 시작 버튼 눌렀을 때, 면접자 선택 모달
-  // const handler = () => {
-  //   MySwal.fire({
-  //     title:"면접자를 선택해주세요",
-  //     icon:'question',
-  //     html:(
-  //       <div>
-  //         <select>
-  //           {MemberList}
-  //         </select>
-  //       </div>
-  //     )
-  //   })
-  // }
-
-  useEffect(()=>{
+  useEffect(() => {
     let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
     setRoomNum(roomID)
   }, [info])
 
-  const handler = () => {
-    // let myID = info.publisher.stream.connection.connectionId;
-    // let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData
-    // let MemberList = new Object();
+  useEffect(()=> {
+    session.on("signal:startSelectInterviewer", (e) => {
+      setIsSelect(true);
+    });
+    session.on("signal:stopSelectInterviewer", (e) => {
+      setIsSelect(false);
+    });
+  },[session])
 
-    // MemberList[myID] = myNickName;
-    // for(let i=0; i< info.subscribers.length; i++){
-    //   let targetID = info.subscribers[i].stream.connection.connectionId
-    //   let targetNickName = JSON.parse(info.subscribers[i].stream.connection.data).clientData
-    //   MemberList[targetID] = targetNickName;
-    // }
+  const handler = () => {
+    session.signal({
+      data:'',
+      to:[],
+      type: 'startSelectInterviewer'
+    })
+
     let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
-    let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData
-    
+    let myNickName = JSON.parse(
+      info.publisher.stream.connection.data
+    ).clientData;
+
     let MemberList = new Object();
 
     MemberList[myID] = myNickName;
-    for(let i=0; i< info.subscribers.length; i++){
-      let targetID = JSON.parse(info.subscribers[i].stream.connection.data).clientId;
-      let targetNickName = JSON.parse(info.subscribers[i].stream.connection.data).clientData;
+    for (let i = 0; i < info.subscribers.length; i++) {
+      let targetID = JSON.parse(
+        info.subscribers[i].stream.connection.data
+      ).clientId;
+      let targetNickName = JSON.parse(
+        info.subscribers[i].stream.connection.data
+      ).clientData;
       MemberList[targetID] = targetNickName;
     }
 
@@ -86,17 +80,25 @@ const SelectIntervieweePage = ({
       inputPlaceholder: "면접자 선택",
       showCancelButton: true,
     }).then((result) => {
-      if(result.isConfirmed){
-        if(result.value){
+      if (result.isConfirmed) {
+        if (result.value) {
           selectInterviwee(result.value.toString(), roomNum, myToken);
           session.signal({
-            data:result.value.toString(),
-            to:[],
-            type: 'stage'
-          })
+            data: result.value.toString(),
+            to: [],
+            type: "stage",
+          });
+        } else {
+          selectInterviwee(3212, session.sessionId);
+          // selectInterviwee("미지정", session.sessionId);
         }
-        else
-          selectInterviwee('미지정', session.sessionId);
+      }
+      else {
+        session.signal({
+          data:'',
+          to:[],
+          type: 'stopSelectInterviewer'
+        })
       }
     })
   }
@@ -107,12 +109,9 @@ const SelectIntervieweePage = ({
       <ConditionSentance>{sentance}</ConditionSentance>
       <Screen number={info.subscribers.length} info={info} />
       <BottomPanel>
-        {
-          isHost ? 
+        {isHost ? (
           <Button handler={handler} text="시작" isImportant={true} />
-          :
-          null
-        }
+        ) : null}
         <Button
           text="종료"
           handler={() => {
