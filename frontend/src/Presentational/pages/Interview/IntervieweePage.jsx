@@ -15,7 +15,7 @@ import withReactContent from "sweetalert2-react-content";
 
 import UserVideoComponent from "../../component/Chat/OpenVidu/UserVideoComponent";
 import { leaveSession } from "../../../action/modules/chatModule";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import useAxios from "../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
@@ -79,6 +79,7 @@ const dummy = [
 const IntervieweePage = (props) => {
   const { session, setSession, OV, setOV, info, setInfo } = props;
   const token = useSelector((state) => state.token);
+  const {userinfo, roomId, isHost} = useLocation().state;
 
   const [reqBody, setReqBody] = useState({    //요청 보낼 때 쓰는 값들
     writerId: 0,
@@ -118,6 +119,24 @@ const IntervieweePage = (props) => {
     },
     finishExecute
   )
+
+  const [closeExecute, setCloseExecute] = useState(false);
+  const [closeData, closeIsLoading, closeError] = useAxios(
+    'conference/interview/end',
+    "POST",
+    token,
+    {
+      interviewRoomId : reqBody.interviewRoomId,
+      intervieweeId : reqBody.intervieweeId,
+      questionId : "",
+      questionContent : ""
+    },
+    closeExecute
+  )
+
+  useEffect(() => {
+    if(closeExecute) setCloseExecute(false);
+  },[closeExecute])
 
   useEffect(() => {
     if(finishExecute){
@@ -347,11 +366,12 @@ const IntervieweePage = (props) => {
       ),
     }).then((result) => {
       if (result.isConfirmed) {
-        session.signal({
-          data:'',
-          to:[],
-          type: 'moveToSelect'
-        })
+        setCloseExecute(true);
+        // session.signal({
+        //   data:'',
+        //   to:[],
+        //   type: 'moveToSelect'
+        // })
       }
     });
   }
@@ -364,14 +384,18 @@ const IntervieweePage = (props) => {
         <NavCompo>Pitchit</NavCompo>
         <NavCompo>
           <div>총 시간&nbsp;00:00:00</div>
-          <MdOutlineLogout
-            className="logOutBtn"
-            onClick={() => {
-              // leaveSession(session, setOV);
-              // navigate("/room");
-              finishInterviewe();
-            }}
-          />
+          {
+            isHost ?
+            <MdOutlineLogout
+              className="logOutBtn"
+              onClick={() => {
+                // leaveSession(session, setOV);
+                // navigate("/room");
+                finishInterviewe();
+              }}
+            />
+            : null
+          }
         </NavCompo>
       </InterviewNav>
 

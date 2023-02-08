@@ -132,7 +132,7 @@ const InterviewPage = () => {
         console.warn(exception);
       });
 
-      mySession.on("signal:moveToSelect", (event) => {
+      mySession.on("broadcast-interview-end", (event) => {
         navigate("/interview/selectinterviewee", {
           state: {
             userinfo: userinfo,
