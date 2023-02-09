@@ -144,6 +144,8 @@ public class InterviewService {
         conference.setCurrentInterviewee(null);
         setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
 
+        interviewJoin.setFinished(1);
+
         // 파일 이동
         String fileName = req.getInterviewRoomId() + "_" + req.getIntervieweeId() + ".webm";
         DataFile dataFile = dataFileUtil.storeOpenViduRecordingFile(conference.getSessionId(), fileName);

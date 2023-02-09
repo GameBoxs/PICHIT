@@ -130,6 +130,8 @@ public class ConferenceService {
         deleteData(String.valueOf(interviewRoomId));
         httpRequestService.broadCastSignal(conference.getSessionId(), "session-closed", "goodbye");
 
+        interviewRoom.setFinished(1);
+
         openvidu.fetch();
         Session session = openvidu.getActiveSession(conference.getSessionId());
         if(session != null) {
