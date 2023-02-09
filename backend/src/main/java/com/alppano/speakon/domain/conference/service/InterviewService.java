@@ -1,5 +1,6 @@
 package com.alppano.speakon.domain.conference.service;
 
+import com.alppano.speakon.common.exception.ResourceAlreadyExistsException;
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
 import com.alppano.speakon.common.util.DataFileUtil;
@@ -95,6 +96,9 @@ public class InterviewService {
         }
         InterviewJoin interviewJoin = interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
                 .orElseThrow(() -> new ResourceForbiddenException("미참여자를 지정하였습니다."));
+        if(interviewJoin.getFinished() == 1) {
+            throw new ResourceAlreadyExistsException("이미 면접을 완료한 참여자 입니다.");
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
         String signalData = objectMapper.writeValueAsString(req);
