@@ -8,7 +8,6 @@ import InterviewPage from "./Presentational/pages/Interview/InterviewPage";
 import MainPage from "./Presentational/pages/MainPage";
 import ReviewPage from "./Presentational/pages/ReviewPage";
 import RoomPage from "./Presentational/pages/RoomPage";
-import Pagination from "./Presentational/common/Pagination/Pagination"
 import { GlobalStyle } from "./action/GlobalStyle";
 
 
@@ -25,7 +24,6 @@ function App() {
         <Route path="/review" element={<ReviewPage />} />
         <Route path="/room/:id" element={<RoomPage />} />
         <Route path="/interview/*" element={<InterviewPage />} />
-        <Route path="/pagination" element={<Pagination />} />
       </Routes>
 
       {/* {(pathname.includes("interview")) ? null:<Footer /> } */}

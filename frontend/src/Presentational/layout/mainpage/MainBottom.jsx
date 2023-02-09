@@ -13,8 +13,6 @@ import withReactContent from "sweetalert2-react-content";
 //통신
 import useAxios from "../../../action/hooks/useAxios";
 import { testToken } from "../../../store/values";
-//페이지네이션
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
@@ -112,7 +110,6 @@ function MainBottom() {
       }
     },[currentPage, search,sort,finished])      
 
-    console.log('렌더링')
   //방생성하기
   const [modalOpen, setModalOpen] = useState(false);
   const showModal = () => {
@@ -161,15 +158,13 @@ function MainBottom() {
               {data.data ?<RoomListBox search={search} roomsData={data.data} roomPosition={roomPosition}/> : <div>loading...</div>}
             </RoomListdiv>
             <PaginationBox>
-              <GrFormPrevious size={50} />
               <PageBar
-                totalPosts={totalElements} //전체 데이터 길이
-                postsPerPage={postsPerPage} //페이지당 게시물 수
+                // totalPosts={totalElements} //전체 데이터 길이
+                // postsPerPage={postsPerPage} //페이지당 게시물 수
                 setCurrentPage={setCurrentPage} //현재 페이지를 계산하는 함수
                 currentPage={currentPage} //현재페이지
                 totalpages={totalpages} //페이지 길이
               />
-              <GrFormNext size={50} />
             </PaginationBox>
           </Main>
           <Footer>
