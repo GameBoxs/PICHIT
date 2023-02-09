@@ -62,8 +62,7 @@ const DetailArea = ({ selectedID }) => {
     <DetailWrap>
       <SubTitle title="면접 피드백" />
       <Container>
-      <SoundArea sound={sound}/>
-        {/* {selectedID && data ? (
+        {selectedID && data ? (
           isLoadingData === true ? (
             <div>loading...</div>
           ) : (
@@ -83,7 +82,7 @@ const DetailArea = ({ selectedID }) => {
         ) : (
           //<FeedBackArea title={currentPost.question} data={currentPost.reviews}/>
           <NullCompo>기록을 선택해주세요</NullCompo>
-        )} */}
+        )}
       </Container>
     </DetailWrap>
   );

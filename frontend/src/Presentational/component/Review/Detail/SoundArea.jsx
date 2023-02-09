@@ -88,9 +88,7 @@ const SoundArea = ({sound}) => {
     audioRef.current.play();
   };
   //#endregion
-
-console.log(duration)
-
+  
   return (
     <SoundWrap>
       {/* 보이는 사운드 바 */}

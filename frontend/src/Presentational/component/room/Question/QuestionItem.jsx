@@ -9,6 +9,7 @@ import { FaPenNib, FaRedoAlt } from "react-icons/fa";
 const QuestionItem = ({ Question, setGetUser, pdfhandler, userinfo }) => {
   const { content, writer, permission, id } = Question;
 
+  //usestate 줄일 수 있으면 줄이기
   const insertRef = useRef();
   const token = useSelector((state) => state.token);
   const [delQuestion, setDelQuestion] = useState(false);
