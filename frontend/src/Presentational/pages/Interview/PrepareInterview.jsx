@@ -60,7 +60,7 @@ const PrepareInterview = () => {
         {/* 무한 스크롤 해주는 곳 */}
         <InfiniteLoopSlider>
           {sentence.map((sen) => {
-            return <InnerBox>{sen}</InnerBox>;
+            return <InnerBox key={sen}>{sen}</InnerBox>;
           })}
         </InfiniteLoopSlider>
         {/* 가장자리 투명하게 */}

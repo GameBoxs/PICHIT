@@ -1,3 +1,4 @@
+import { memo } from "react";
 import styled from "styled-components";
 import SubTitle from "../../common/SubTitle";
 import React, { useState, useEffect } from "react";
@@ -8,7 +9,6 @@ import Person from "../../component/Person";
 
 import { BsFillPersonFill } from "react-icons/bs";
 import AggroL from "../../common/Font/AggroL";
-import { TiStarburstOutline } from "react-icons/ti";
 
 function RoomMain(props) {
   const { join, host, data, userinfo } = props;
@@ -24,6 +24,7 @@ function RoomMain(props) {
     startDate,
     title,
   } = data;
+  
   const [isJoin, setIsJoin] = useState(false);
   const [pdf, setPdf] = useState(0);
   const [pdfhandler, setPdfHandler] = useState({});
@@ -49,7 +50,9 @@ function RoomMain(props) {
 
   const RoomQuestion =
     isJoin || host ? (
-      <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} />
+      (pdfhandler.interviewJoinId !== userinfo.interviewJoinId)?
+      <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} />:
+      <PopUp>스터디 전에<br /> 볼 수 없습니다.</PopUp>
     ) : (
       <PopUp>질문을 볼 수 없습니다.</PopUp>
     );

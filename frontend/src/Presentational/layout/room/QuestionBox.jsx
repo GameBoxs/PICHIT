@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import QuestionList from "../../component/room/Question/QuestionList";
 import QuestionInsert from "../../component/room/Question/QuestionInsert";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import useAxios from "../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 import PageBar from "../../common/Pagination/PageBar";
@@ -14,31 +14,40 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
   const [nowPage, setNowPage] = useState(1);
   const [getUser, setGetUser] = useState(false);
   const [allQuestion, setAllQuestion] = useState(1);
+  const [questionLength, setQuestionLength] = useState(0);
 
   const [getQuestion] = useAxios(
-    `interviewjoins/${pdfhandler.interviewJoinId}/questions?page=${nowPage-1}&size=10`,
+    `interviewjoins/${pdfhandler.interviewJoinId}/questions?page=${
+      nowPage - 1
+    }&size=10`,
     "GET",
     token,
     {},
     getUser
   );
+  
+  console.log("Component")
 
   useEffect(() => {
+    console.log("pdfhandler useEffect")
     if (pdfhandler !== undefined) {
       setGetUser(true);
       setNowPage(1);
     }
   }, [pdfhandler]);
 
-  useEffect(()=> {
-    setGetUser(true)
-  }, [nowPage])
+  useEffect(() => {
+    console.log("nowPage useEffect")
+    setGetUser(true);
+  }, [nowPage]);
 
   useEffect(() => {
+    console.log("getQuestion useEffect")
     if (getQuestion !== null && getQuestion.success) {
       setQuestions([...getQuestion?.data.content]);
-      setAllQuestion(Math.floor(getQuestion?.data.totalElements / 10)+1);
-      
+      setAllQuestion(Math.floor(getQuestion?.data.totalElements / 10) + 1);
+      setQuestionLength(getQuestion?.data.totalElements)
+
       setGetUser(false);
     }
   }, [getQuestion]);
@@ -50,9 +59,15 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
     <Question>
       <QuestionBoxTitle>
         <div>질문</div>
-        <div>{allQuestion}</div>
+        <div>{questionLength}</div>
       </QuestionBoxTitle>
-      <QuestionList idx={idx} Questions={Questions} />
+      <QuestionList
+        idx={idx}
+        Questions={Questions}
+        setGetUser={setGetUser}
+        userinfo={userinfo}
+        pdfhandler={pdfhandler}
+      />
       <Controler>
         <QuestionInsert
           userinfo={userinfo}
@@ -70,7 +85,7 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
   );
 };
 
-export default QuestionBox;
+export default memo(QuestionBox);
 
 const QuestionBoxTitle = styled.div`
   display: flex;

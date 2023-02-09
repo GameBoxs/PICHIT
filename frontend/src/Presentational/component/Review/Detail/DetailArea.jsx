@@ -1,25 +1,21 @@
 import styled from "styled-components";
 import { memo, useEffect, useState } from "react";
+import useAxios from "../../../../action/hooks/useAxios";
+import { useSelector } from "react-redux";
 
 import SubTitle from "../../../common/SubTitle";
 import FeedBackArea from "./FeedBack/FeedBackArea";
 import SoundArea from "./SoundArea";
 import PageBar from "../../../common/Pagination/PageBar";
-import useAxios from "../../../../action/hooks/useAxios";
-import { useSelector } from "react-redux";
 
 const DetailArea = ({ selectedID }) => {
-  // const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcGVha29uIiwibmFtZSI6IuydtO2drOyImCIsImlkIjoxLCJleHAiOjE2NzY1NTY2ODcsImlhdCI6MTY3NDc0MjI4NywidXNlcklkIjoia2FrYW9fMjYyOTgzOTQ2MiJ9.TxhacA4jIPlIJLQt8Dlz5Xl-loXmfhtnnUOofpBAUnO8IT2e3t5vi_KY-yQ194QMcI4l7bLHKL5EIUqsnVCWAg'
   const token = useSelector((state) => state.token);
-
-  // console.log('Detaile selectedID');
-  // console.log(selectedID);
 
   const [data, setData] = useState();
   const [nowPage, setNowPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [getData, isLoading] = useAxios(
-    `interviewjoins/${selectedID}/questions?size=2000`,
+    `interviewjoins/${selectedID}/questions-with-feedbacks?size=2000`,
     "GET",
     token,
     null,
@@ -75,7 +71,18 @@ const Container = styled.div`
   background-color: var(--greyLight-1);
   border-radius: 3rem;
   margin-top: 1rem;
-  padding : 1rem;
+  padding : 2rem 4rem;
+
+  .paginationBar {
+    height: 1em;
+
+    * {
+      height: 0.6em;
+      width: 0.6em;
+      margin-right: 0.6em;
+      background-color: var(--primary-light);
+    }
+  }
 `;
 
 const NullCompo = styled.div`
@@ -84,24 +91,22 @@ const NullCompo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 1.2rem;
 `;
 
 const DetailWrap = styled.div`
   width: 100%;
   margin-bottom: 50px;
+
   & > div:first-child {
     font-size: 1.3rem;
     font-family: SBagrroM;
     color: var(--primary-light);
     padding: 1.4rem 1rem 1rem 1rem;
-    border-bottom: solid 2px var(--greyDark);
+    /* border-bottom: solid 2px var(--greyDark); */
   }
 
   & > div:nth-child(4) {
     margin-top: 50px;
   }
-`;
-
-const Line = styled.hr`
-  margin: 15px 0 15px 0;
 `;

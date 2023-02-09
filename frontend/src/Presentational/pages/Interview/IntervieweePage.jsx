@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import styled from "styled-components";
 
 import SubTitle from "../../common/SubTitle";
@@ -15,7 +15,10 @@ import withReactContent from "sweetalert2-react-content";
 
 import UserVideoComponent from "../../component/Chat/OpenVidu/UserVideoComponent";
 import { leaveSession } from "../../../action/modules/chatModule";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import useAxios from "../../../action/hooks/useAxios";
+import { useSelector } from "react-redux";
 
 const MySwal = withReactContent(Swal);
 
@@ -73,15 +76,115 @@ const dummy = [
   },
 ];
 
-const testPlayer = ["김민지"];
+const IntervieweePage = (props) => {
+  const { session, setSession, OV, setOV, info, setInfo } = props;
+  const token = useSelector((state) => state.token);
+  const {userinfo, roomId, isHost} = useLocation().state;
 
-const dummyPlayer = ["이희수", "임수민", "김민지"];
+  const [reqBody, setReqBody] = useState({    //요청 보낼 때 쓰는 값들
+    writerId: 0,
+    intervieweeId: 0,
+    interviewRoomId: 0,
+  });
+  const [intervieweeMem, setIntervieweeMem] = useState([]);   //면접관 명단들
+  const [isQuestion, setIsQuestion] = useState(false);        //useAxios에서 excute로 쓰이는 애들
+  const [questionData, setQuestionData] = useState([])        //질문 목록들
 
-const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
+  const [starScore, setStarScore] = useState(0); // 별점
+  const [feedBackContext, setFeedBackContext] = useState('');
+  const [highlight,setHilight] = useState({questionId:'',questionContent:'질문을 선택해 주세요.'});
+
+  const [finishExecute, setfinishExecute] = useState(false);
+  const [finishAxiosData,finishIsLoading,finishError] = useAxios(
+    'conference/interview/question/end',
+    "POST",
+    token,
+    {
+      interviewRoomId : reqBody.interviewRoomId,
+      intervieweeId : reqBody.intervieweeId,
+      questionId : highlight.questionId,
+      questionContent : highlight.questionContent
+    },
+    finishExecute
+  )
+
+  const [sendFeedBackData, sendFeedBackIsLoading, sendFeedBackError] = useAxios(
+    'feedbacks',
+    "POST",
+    token,
+    {
+      questionId: highlight.questionId,
+      score: starScore,
+      content: feedBackContext,
+    },
+    finishExecute
+  )
+
+  const [closeExecute, setCloseExecute] = useState(false);
+  const [closeData, closeIsLoading, closeError] = useAxios(
+    'conference/interview/end',
+    "POST",
+    token,
+    {
+      interviewRoomId : reqBody.interviewRoomId,
+      intervieweeId : reqBody.intervieweeId,
+      questionId : "",
+      questionContent : ""
+    },
+    closeExecute
+  )
+
+  useEffect(() => {
+    if(closeExecute) setCloseExecute(false);
+  },[closeExecute])
+
+  useEffect(() => {
+    if(finishExecute){
+      /*
+      // 아래에 평가 별 0으로 초기화 하는 내용 넣어야 함.
+
+      */
+
+      setHilight({questionId:'',questionContent:'질문을 제출해 주세요.'});
+      MySwal.fire({
+        text: "질문이 끝났습니다. 다음 질문을 선택해 주세요.",
+        showConfirmButton: false,
+        icon: "warning",
+        timer: 1500,
+      });
+
+      setIsQuestion(true);
+
+      setFeedBackContext('');
+
+      setfinishExecute(false);
+    }
+  },[finishExecute])
+
+  useEffect(() => {
+    session.on('broadcast-question-start', (data) => {
+      console.log('highlight -- ', JSON.parse(data.data));
+      setHilight(JSON.parse(data.data));
+      setIsQuestion(true);
+    })
+    session.on('broadcast-question-end',(data)=> {
+      // 아래에 피드백 전송 데이터 보내기
+    })
+  },[session])
+
+  //질문 받아오는 Axios
+  const [getQuest] = useAxios(
+    `questions?writerId=${reqBody.writerId}&intervieweeId=${reqBody.intervieweeId}&interviewRoomId=${reqBody.interviewRoomId}`,
+    "GET",
+    token,
+    {},
+    isQuestion
+  );
+
   let navigate = useNavigate();
 
   let cnt = 3 - info.subscribers.length;
-  console.log(cnt);
+
   function makeBlank() {
     let result = [];
     for (let i = 0; i < cnt; i++) {
@@ -94,6 +197,74 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
     return result;
   }
 
+  useEffect(() => {
+    let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
+    let myNickName = JSON.parse(
+      info.publisher.stream.connection.data
+    ).clientData;
+    let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
+    let MemberList = [];
+
+    MemberList.push({ id: myID, name: myNickName });
+    for (let i = 0; i < info.subscribers.length; i++) {
+      let targetID = JSON.parse(
+        info.subscribers[i].stream.connection.data
+      ).clientId;
+
+      let targetNickName = JSON.parse(
+        info.subscribers[i].stream.connection.data
+      ).clientData;
+
+      MemberList.push({ id: targetID, name: targetNickName });
+    }
+
+    //면접관들 리스트
+    const Members = MemberList.filter(
+      (person) => person.id != info.interviewee
+    );
+
+    setIntervieweeMem([...Members]);
+
+    /*
+    --------------면접자 지정 제대로 되면 사용할 코드---------------
+    */
+    setReqBody(() => {
+      return {
+        writerId: Members[0].id,
+        intervieweeId: info.interviewee,
+        interviewRoomId: roomID,
+      };
+    });
+
+    // setReqBody(() => {  //테스트용 코드
+    //   return {
+    //     writerId: Members[0].id,
+    //     intervieweeId: 3212,
+    //     interviewRoomId: roomID,
+    //   };
+    // });
+
+  }, [props]);
+
+  useEffect(() => {
+    //질문자를 선택할 때마다 getQuest가 실행되도록 하기
+    if (
+      reqBody.writerId !== 0 &&
+      reqBody.interviewRoomId !== 0 &&
+      reqBody.intervieweeId !== 0
+    ) {
+      setIsQuestion(true);
+    }
+  }, [reqBody]);
+
+  useEffect(() => {
+    //질문 목록을 가져오는데 성공하면 QuestionData에 값을 저장
+    if (getQuest !== null && getQuest.success) {
+      setIsQuestion(false);
+      setQuestionData(getQuest.data)
+    }
+  }, [getQuest]);
+
   const [chatOn, setChatOn] = useState(false);
 
   //채팅 활성화/비활성화
@@ -101,56 +272,109 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
     setChatOn(!chatOn);
   };
 
-  //질문 렌더링
-  const Questions = dummy.map((el, id) => {
-    return <QuestionCompo key={id} questionInfo={el} />;
-  });
-
   //별점 값 받아오는 함수
   const RatingHandler = (e) => {
     console.log(e.target.value);
+    setStarScore(e.target.value);
   };
 
-  //질문 관리
-  const QuestionHandler = (Questions) => {
-    console.log(Questions.target);
-    MySwal.fire({
-      title: "질문을 시작하시겠습니까?",
-      icon: "warning",
-      showCancelButton: true,
-      cancelButtonText: "취소",
-      showConfirmButton: true,
-      confirmButtonText: "승인",
-      html: (
-        <div>
-          <div></div>
-        </div>
-      ),
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "질문이 제출 되었습니다.",
-          text: "질문을 시작해주세요.",
-          icon: "success",
-        });
-      }
+  const Questions = questionData.map((el, id) => {
+    return <QuestionCompo key={id} questionInfo={el} roomID={reqBody.interviewRoomId} intervieweeID={reqBody.intervieweeId}/>;
+  });
+
+  //질문자 선택 함수
+  const setQuestioner = (elem) => {
+    setReqBody((prev) => {
+      return { ...prev, writerId: elem.id };
     });
   };
+  const changeFeedBack = (e) => {
+    setFeedBackContext(e.target.value);
+  }
 
-  const getInterviewee = (person) => {
-    console.log(person);
+  // 질문 끝내기 버튼 클릭시 발생할 함수.
+  const finishHandler = () => {
+    if(highlight.questionId){
+      MySwal.fire({
+        title: "질문 종료",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonText: "취소",
+        showConfirmButton: true,
+        confirmButtonText: "확인",
+        html: (
+          <div>
+            <p>
+              작성중인 피드백이 전부 서버로 전송됩니다.
+            </p>
+            <p>
+              질문을 종료하기 전 다른 면접관들이 피드백 작성이 끝났나요?
+            </p>
+            <p>
+              전부 작성이 끝났는것을 확인하셨다면 확인을 눌러주세요.
+            </p>
+          </div>
+        ),
+      }).then((result) => {
+        if (result.isConfirmed){
+
+          setfinishExecute(true);
+          console.log(starScore);
+          console.log(feedBackContext);
+        }
+      });
+    }
   };
 
-  const interviewees = dummyPlayer.map((elem, idx) => {
+  //질문 컴포넌트 상단 면접관들 목록 보여주는 함수
+  const interviewees = intervieweeMem.map((elem, idx) => {
     return (
       <React.Fragment key={idx}>
-        <input type="radio" name={`radio`} value={elem} id={`tab-${idx + 1}`} />
+        <input
+          type="radio"
+          name={`radio`}
+          value={elem.id}
+          id={`tab-${idx + 1}`}
+          onClick={() => {
+            setQuestioner(elem);
+          }}
+        />
         <label htmlFor={`tab-${idx + 1}`}>
-          <p>{elem}</p>
+          <p>{elem.name}</p>
         </label>
       </React.Fragment>
     );
   });
+
+  const finishInterviewe = () => {
+    MySwal.fire({
+      title: "현재 면접을 종료하고 대기실로 돌아갑니다.",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "취소",
+      showConfirmButton: true,
+      confirmButtonText: "확인",
+      html: (
+        <div>
+          <p>
+            대기실로 가기 전에 모든 질문이 끝났는지 확인해 주세요.
+          </p>
+          <p>
+            정말 대기실로 가시려면 확인을 눌러 주세요.
+          </p>
+        </div>
+      ),
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setCloseExecute(true);
+        // session.signal({
+        //   data:'',
+        //   to:[],
+        //   type: 'moveToSelect'
+        // })
+      }
+    });
+  }
 
   return (
     <Container>
@@ -160,13 +384,18 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
         <NavCompo>Pitchit</NavCompo>
         <NavCompo>
           <div>총 시간&nbsp;00:00:00</div>
-          <MdOutlineLogout
-            className="logOutBtn"
-            onClick={() => {
-              leaveSession(session, setOV);
-              navigate("/room");
-            }}
-          />
+          {
+            isHost ?
+            <MdOutlineLogout
+              className="logOutBtn"
+              onClick={() => {
+                // leaveSession(session, setOV);
+                // navigate("/room");
+                finishInterviewe();
+              }}
+            />
+            : null
+          }
         </NavCompo>
       </InterviewNav>
 
@@ -179,7 +408,8 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
             </CamCompo>
             {info.subscribers.map((sub, i) =>
               // sub.stream.connection.connectionId === info.interviewee ? null : (
-              JSON.parse(sub.stream.connection.data).clientId.toString() === info.interviewee.toString() ? null : (
+              JSON.parse(sub.stream.connection.data).clientId.toString() ===
+              info.interviewee.toString() ? null : (
                 <CamCompo className="in" key={i}>
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>
@@ -191,7 +421,8 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
             <InterviewerTag>면접자</InterviewerTag>
             {info.subscribers.map((sub, i) =>
               // sub.stream.connection.connectionId === info.interviewee ? (
-              JSON.parse(sub.stream.connection.data).clientId.toString() === info.interviewee.toString() ? (
+              JSON.parse(sub.stream.connection.data).clientId.toString() ===
+              info.interviewee.toString() ? (
                 <CamCompo key={i}>
                   <UserVideoComponent streamManager={sub} />
                 </CamCompo>
@@ -205,19 +436,19 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
           {/* 질문 박스 */}
           <QuestionBody>
             <SubNav>
-              <SubTitle title={"질문 1"} />
+              <SubTitle title={"질문 "+highlight.questionId} />
               <TipMark>
                 <BsQuestionCircleFill />
               </TipMark>
             </SubNav>
 
             <Question>
-              질문질문질문질문질문질문질문질문질문질문질문질문질문질문질문질문
+              {highlight.questionContent}
             </Question>
 
             <SubFooter>
               <GrHistory />
-              <SubBtn>질문 끝내기</SubBtn>
+              <SubBtn onClick={finishHandler}>질문 끝내기</SubBtn>
             </SubFooter>
           </QuestionBody>
 
@@ -230,7 +461,7 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
           {/* 피드백 */}
           <QuestionBody>
             <SubTitle title={"피드백"} />
-            <Feedback placeholder="피드백을 입력하세요" />
+            <Feedback placeholder="피드백을 입력하세요" value={feedBackContext} onChange={changeFeedBack}/>
           </QuestionBody>
         </BodyCompo>
 
@@ -251,7 +482,8 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
               {interviewees}
               <MemberColor></MemberColor>
             </Member>
-            <AllQuestions onClick={QuestionHandler} chatOn={chatOn}>
+            {/* <AllQuestions chatOn={chatOn} onClick={QuestionHandler}> */}
+            <AllQuestions chatOn={chatOn}>
               {Questions}
             </AllQuestions>
           </QuestionBody>
@@ -269,7 +501,7 @@ const IntervieweePage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   );
 };
 
-export default IntervieweePage;
+export default memo(IntervieweePage);
 
 const MemberColor = styled.div``;
 

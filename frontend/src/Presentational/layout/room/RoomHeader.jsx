@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState, useLayoutEffect, memo } from "react";
 
 import styled from "styled-components";
 import Title from "../../common/Title";
@@ -19,8 +19,6 @@ const MySwal = withReactContent(Swal);
 
 function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   const { id, title, participants, sessionOpened, manager } = data;
-
-  console.log(sessionOpened);
 
   const navigate = useNavigate();
 
@@ -144,19 +142,18 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       }
     });
   };
-
+  
   const moveToRoom = () => {
     // setGoSession(true)
     navigate("/interview", {
       state: {
-        userinfo: {
-          id: userinfo.id,
-          name: userinfo.name,
-          interviewJoinId: userinfo.interviewJoinId,
-        },
+        userinfo: userinfo,
         roomId: id,
+        isHost: host
       },
     });
+
+    
   };
 
   const createRoom = () => {
@@ -203,7 +200,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       text={"스터디 시작하기"}
       handler={() => moveToRoom()}
     >
-      방 입장하기
+      화상채팅 시작하기
     </Button>
   );
 
@@ -247,7 +244,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   );
 }
 
-export default RoomHeader;
+export default memo(RoomHeader);
 
 const ManagerLayout = styled.div`
   display: flex;

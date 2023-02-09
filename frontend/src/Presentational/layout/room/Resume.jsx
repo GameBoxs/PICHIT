@@ -8,8 +8,6 @@ import { IoClose } from "react-icons/io5";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { PITCHIT_URL } from "../../../store/values";
-import useAxios from "../../../action/hooks/useAxios";
-import { set } from "lodash";
 
 // 근데 import * as 안하면 에러남 필수로 해줄 것!
 
@@ -26,54 +24,48 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   const [showPdf, setShowPdf] = useState(false);
   // pdf 업로드 용인듯 ( 이것도 필요없을지도 )
   const [uploadPdf, setUploadPdf] = useState(false);
-  // 조회 할 때 useAxios 컨트롤 용도로 쓸려했는데,, 
-  const [inquire, setInquire] =useState(false)
+  // 조회 할 때 useAxios 컨트롤 용도로 쓸려했는데,,
+  const [inquire, setInquire] = useState(false);
+  // 자기소개서 조회 data
+  const [getData, setGetData] = useState(null);
+  // 자기소개서를 등록하지 않아서 에러발생시 사용 할 데이터
+  const [errorContext, setError] = useState(null);
 
-  // 자기소개서 axios 
-  const [getData, setGetData] = useState(null); //외부로 내보낼 데이터
-  const [errorContext, setError] = useState(null); // 에러 발생 시 사용할 데이터, 외부로 내보내서 사용
-  
-  console.log(inquire)
-  
+  // 자기소개서 axios
   useEffect(() => {
-    if(inquire) {
+    if (inquire) {
       axios({
         method: "GET",
         url: `${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
         headers: {
           Authorization: token,
         },
-        data:null,
+        data: null,
       })
         .then((res) => {
           setGetData(res.data);
-          console.log(res.data)
+          // console.log(res.data);
         })
         .catch((err) => {
-          console.log(err)
+          // console.log(err);
           setError(err);
-          setGetData(null)
-        })
+          setGetData(null);
+        });
     }
-
   }, [inquire]);
-
-
 
   // 파일 업로드 했을 때 새로고침 하는 용도의 useEffect
   useEffect(() => {
     if (uploadPdf === true) {
-      setInquire(true)
+      setInquire(true);
       window.location.reload();
     }
   }, [uploadPdf]);
 
+  //get 요청시 true로 바뀌는 inquire off 용
   useEffect(() => {
-      setInquire(false)
-      console.log("이거 됨?")
- 
-  },[getData])
-  
+    setInquire(false);
+  }, [getData]);
 
   // 업로드한 파일을 url로 바꾸는 함수
   const getUrl = (file) => {
@@ -121,45 +113,48 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
         window.location.reload();
       })
       .catch((err) => console.log(err));
-      window.location.reload();
+    window.location.reload();
   };
+
   // 본인이 아닌 다른사람의 이름을 눌렀을 때 (자기소개서 유무)
-  const userInquirePdf = getData === null && errorContext ?  (
-    <FileListBody>등록된 자소서가 없습니다</FileListBody>
-  ):(
-    <FileListBody>
-      <Label onClick={() => setShowPdf(true)}>조회하기</Label>
-    </FileListBody>
-  );
+  const userInquirePdf =
+    getData === null && errorContext ? (
+      <FileListBody>등록된 자소서가 없습니다</FileListBody>
+    ) : (
+      <FileListBody>
+        <Label onClick={() => setShowPdf(true)}>조회하기</Label>
+      </FileListBody>
+    );
 
-  // 본인 이름을 눌렀을 때 
+  // 본인 이름을 눌렀을 때
+  const myInquirePdf =
+    getData === null ? (
+      <FileListBody>
+        파일이 존재하지 않습니다.
+        <Label htmlFor="uploadFile">파일 업로드하기</Label>
+        <Input
+          id="uploadFile"
+          accept="application/pdf"
+          multiple={true}
+          onChange={onPdfFileUpload}
+        />
+      </FileListBody>
+    ) : (
+      <>
+        <FileResultBody>
+          <FileResultRow>
+            <div className="fileName" onClick={() => setShowPdf(true)}>
+              내 자소서 보기
+            </div>
+            <DeleteButton onClick={onDeleteTarget}>
+              <IoClose />
+            </DeleteButton>
+          </FileResultRow>
+        </FileResultBody>
+      </>
+    );
 
-  const myInquirePdf = getData === null   ? (
-    <FileListBody>
-      파일이 존재하지 않습니다.
-      <Label htmlFor="uploadFile">파일 업로드하기</Label>
-      <Input
-        id="uploadFile"
-        accept="application/pdf"
-        multiple={true}
-        onChange={onPdfFileUpload}
-      />
-    </FileListBody>
-  ):(
-    <><FileResultBody>
-      <FileResultRow>
-        <div className="fileName" onClick={() => setShowPdf(true)}>
-          내 자소서 보기 
-        </div>
-        <DeleteButton onClick={onDeleteTarget}>
-          <IoClose />
-        </DeleteButton>
-      </FileResultRow>
-    </FileResultBody>
-  </>   
-  ) ;
-
-  // pdf 창 닫기 
+  // pdf 창 닫기
   const onPdfClose = (e) => {
     setShowPdf(false);
   };
@@ -167,13 +162,8 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   // pdf 이름에 따른 함수
   const getPdfOwner = (elem) => {
     setPdfHandler({ ...elem });
-    setShowPdf(false)
-    setInquire(true)
-    // 내 이름일 경우 
-
-    // 내 이름이 아닐 경우 
-
-    // console.log(inquire)
+    setShowPdf(false);
+    setInquire(true);
   };
 
   // 면접방 참여자
@@ -200,7 +190,7 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
         <MemberColor></MemberColor>
       </Member>
       <FileContainer>
-      {showPdf ? (
+        {showPdf ? (
           <ModalOverlay visible={showPdf}>
             <PdfContainer>
               <ButtonContainer>
@@ -210,15 +200,16 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
               </ButtonContainer>
               <ViewPdf pdfhandler={pdfhandler} fileUrl={pdfUrl} />
             </PdfContainer>
-          </ModalOverlay>):(
-        <FileList>
-          {pdfhandler.id === userinfo.id ? (
-            <>{myInquirePdf}</>
-          ) : (
-            <>{userInquirePdf}</>
-          )}
-        </FileList>
-          )}
+          </ModalOverlay>
+        ) : (
+          <FileList>
+            {pdfhandler.id === userinfo.id ? (
+              <>{myInquirePdf}</>
+            ) : (
+              <>{userInquirePdf}</>
+            )}
+          </FileList>
+        )}
       </FileContainer>
     </MainContainer>
   );

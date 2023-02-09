@@ -4,11 +4,12 @@ import styled from "styled-components";
 import axios from "axios";
 import { PITCHIT_URL } from "../../../../store/values";
 import { useSelector } from "react-redux";
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
 
 const ViewPDF = ({ fileUrl,pdfhandler }) => {
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [numPages, setNumPages] = useState(null); // 총 페이지 수
+  const [pageNumber, setPageNumber] = useState(1); // 현재 페이지 
   const {token} =useSelector(state=>state)
   const [data,setData] = useState()
 
@@ -38,13 +39,9 @@ const ViewPDF = ({ fileUrl,pdfhandler }) => {
         <Page pageNumber={pageNumber} />
       </Document>
       <PageNext>
-        <Next onClick={()=> pageNumber > 1 ? setPageNumber(pageNumber-1):null}>
-        ◀
-        </Next>
-        <Next>Page {pageNumber} of {numPages}</Next>
-        <Next onClick={()=> pageNumber < numPages ? setPageNumber(pageNumber+1):null}>
-        ▶
-        </Next>
+        <Next onClick={()=> pageNumber > 1 ? setPageNumber(pageNumber-1):null}>◀</Next>
+        <NowPage> {pageNumber} of {numPages} </NowPage>
+        <Next onClick={()=> pageNumber < numPages ? setPageNumber(pageNumber+1):null}>▶</Next>
       </PageNext>
     </Layout>
   );
@@ -76,9 +73,36 @@ const Layout = styled.div`
 `;
 
 const PageNext = styled.p`
+  display: inline-flex;
+  align-items: center
   
 `
+const NowPage = styled.div`
+  display: flex;
+  justify-content: center;
+  background: var(--primary);
+  color: white;
+  padding:5px;
+`
 
-const Next = styled.span`
-  
+const Next = styled.button`
+  margin: 5px;
+  text-align: center;
+  width: 45px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--primary);
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  &:hover{
+    background-color: white;
+    color: var(--primary)
+  }
+
 `

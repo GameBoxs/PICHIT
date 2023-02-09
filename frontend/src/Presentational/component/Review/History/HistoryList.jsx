@@ -99,7 +99,7 @@ const ListBody = styled.div`
 const HistoryContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 3rem;
 `;
 
 export default memo(HistoryList);

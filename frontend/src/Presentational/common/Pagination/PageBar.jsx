@@ -36,7 +36,8 @@ export default PageBar;
 
 const Bar = styled.div`
   /* border: solid 2px skyblue; //pagination영역을 위한 border: ; */
-  width: 100%;
+  /* width: 100%; */
+  width: 500px;
   height: 23px;
   display: flex;
   justify-content: center;
@@ -52,13 +53,16 @@ const Button = styled.button`
   background-color: var(--primary);
   cursor: pointer;
   transition: 0.3s ease width;
+
   &:last-child {
     margin-right: 0;
   }
+
   &:hover {
     background: var(--primary-dark);
     cursor: pointer;
   }
+  
   ${(props) =>
     props.active &&
     css`

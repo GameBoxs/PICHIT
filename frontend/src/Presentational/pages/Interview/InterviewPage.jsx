@@ -20,13 +20,11 @@ const InterviewPage = () => {
     id : 해당 유저 아이디
     rommId : 방 아이디
   */
-  const {userinfo, roomId} = useLocation().state;
+  const {userinfo, roomId, isHost} = useLocation().state;
+
   // const mySession = useSelector((state) => state.chatSession);
   const mySession = roomId;
   const myToken = useSelector((state) => state.token);
-
-  console.log('------',myToken);
-  console.log('------',userinfo,roomId);
 
   const [info, setInfo] = useState({
     interviewee: "미지정",
@@ -123,9 +121,9 @@ const InterviewPage = () => {
 
       // 면접자가 정해졌다는 신호를 받았을 때
       mySession.on("broadcast-interviewee", (e) => {
-        console.log("면접자 : " + e.data);
+        console.log("면접자 : " + JSON.parse(e.data).intervieweeId);
         setInfo((prev) => {
-          return { ...prev, interviewee: e.data };
+          return { ...prev, interviewee: JSON.parse(e.data).intervieweeId };
         });
       });
 
@@ -133,6 +131,16 @@ const InterviewPage = () => {
       mySession.on("exception", (exception) => {
         console.warn(exception);
       });
+
+      mySession.on("broadcast-interview-end", (event) => {
+        navigate("/interview/selectinterviewee", {
+          state: {
+            userinfo: userinfo,
+            roomId: roomId,
+            isHost: isHost,
+          },
+        });
+      })
 
       // 시작 신호 받았을 때
       mySession.on("signal:stage", (event) => {
@@ -145,6 +153,7 @@ const InterviewPage = () => {
               state: {
                 userinfo: userinfo,
                 roomId: roomId,
+                isHost: isHost,
               },
             });
           } 
@@ -154,6 +163,7 @@ const InterviewPage = () => {
               state: {
                 userinfo: userinfo,
                 roomId: roomId,
+                isHost: isHost,
               },
             });
           }
@@ -163,50 +173,75 @@ const InterviewPage = () => {
       // 내 세션에 토큰으로 인증
       getToken(roomId,myToken).then((token) => {
         mySession
-          .connect(token.data, { clientData: info.myUserName, clientId: userinfo.id, clientRoomJoinId: userinfo.interviewJoinId, clientRoomId: roomId })
+          .connect(token.data, { clientData: info.myUserName, clientId: userinfo.id, clientRoomJoinId: userinfo.interviewJoinId, clientRoomId: roomId, isFinishedInterViewee: false })
           .then(async () => {
-            let publisher = await OV.initPublisherAsync(undefined, {
-              audioSource: undefined,
-              videoSource: undefined,
-              publishAudio: true,
-              publishVideo: true,
-              resolution: "640x480",
-              frameRate: 30,
-              insertMode: "APPEND",
-              mirror: false,
-            });
+            let publisher=null;
+            try{
+              publisher = await OV.initPublisherAsync(undefined, {
+                audioSource: undefined,
+                videoSource: undefined,
+                publishAudio: true,
+                publishVideo: true,
+                resolution: "640x480",
+                frameRate: 30,
+                insertMode: "APPEND",
+                mirror: false,
+              });
 
-            mySession.publish(publisher);
+              mySession.publish(publisher);
+  
+              let devices = await OV.getDevices();
+              let videoDevices = devices.filter(
+                (device) => device.kind === "videoinput"
+              );
+              
+              let currentVideoDeviceId = publisher.stream
+                .getMediaStream()
+                .getVideoTracks()[0]
+                .getSettings().deviceId;
+  
+              let currentVideoDevice = videoDevices.find(
+                (device) => device.deviceId === currentVideoDeviceId
+              );
+  
+              setInfo((prev) => {
+                return {
+                  ...prev,
+                  currentVideoDevice: currentVideoDevice,
+                  mainStreamManager: publisher,
+                  publisher: publisher,
+                };
+              });
+             } catch(e){
+              console.log(e);
+              publisher = await OV.initPublisherAsync(undefined, {
+                audioSource: undefined,
+                videoSource: false,
+                publishAudio: true,
+                publishVideo: false,
+                resolution: "640x480",
+                frameRate: 30,
+                insertMode: "APPEND",
+                mirror: false,
+              });
+              mySession.publish(publisher);
+              setInfo((prev) => {
+                return {
+                  ...prev,
+                  publisher: publisher,
+                };
+              });
+             }
+             finally{
+               navigate("/interview/selectinterviewee", {
+                 state: {
+                   userinfo: userinfo,
+                   roomId: roomId,
+                   isHost: isHost,
+                 },
+               });
+             }
 
-            let devices = await OV.getDevices();
-            let videoDevices = devices.filter(
-              (device) => device.kind === "videoinput"
-            );
-
-            let currentVideoDeviceId = publisher.stream
-              .getMediaStream()
-              .getVideoTracks()[0]
-              .getSettings().deviceId;
-
-            let currentVideoDevice = videoDevices.find(
-              (device) => device.deviceId === currentVideoDeviceId
-            );
-
-            setInfo((prev) => {
-              return {
-                ...prev,
-                currentVideoDevice: currentVideoDevice,
-                mainStreamManager: publisher,
-                publisher: publisher,
-              };
-            });
-
-            navigate("/interview/selectinterviewee", {
-              state: {
-                userinfo: userinfo,
-                roomId: roomId,
-              },
-            });
           })
           .catch((error) => {
             console.log(

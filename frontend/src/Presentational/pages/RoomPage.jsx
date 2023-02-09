@@ -1,16 +1,16 @@
 import React, { useCallback, useState, useEffect } from "react";
 import styled from "styled-components";
-import useAxios from "../../../action/hooks/useAxios";
+import useAxios from "../../action/hooks/useAxios";
 
-import RoomHeader from "../../layout/room/RoomHeader";
-import RoomMain from "../../layout/room/RoomMain";
-import RoomHeaderLoading from "./RoomHeaderLoading";
-import RoomMainLoading from "../room/RoomMainLoading";
+import RoomHeader from "../layout/room/RoomHeader";
+import RoomMain from "../layout/room/RoomMain";
+import RoomHeaderLoading from "../layout/room/RoomHeaderLoading";
+import RoomMainLoading from "../layout/room/RoomMainLoading";
 
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import GoHome from "../../common/GoHome";
+import GoHome from "../common/GoHome";
 
 function RoomPage() {
   // roomId 값을 RoomListItem에서 Link state에 받아와서
@@ -33,7 +33,7 @@ function RoomPage() {
   const [postData, isLoading] = useCallback(
     useAxios(`interviewrooms/${roomParamsId}`, "POST", token, valid)
   );
-
+  
   //useEffect
   useEffect(() => {
     setAboutUser(userinfo);
