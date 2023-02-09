@@ -9,6 +9,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { PITCHIT_URL } from "../../../store/values";
 import useAxios from "../../../action/hooks/useAxios";
+import { set } from "lodash";
 
 // 근데 import * as 안하면 에러남 필수로 해줄 것!
 
@@ -26,19 +27,37 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   // pdf 업로드 용인듯 ( 이것도 필요없을지도 )
   const [uploadPdf, setUploadPdf] = useState(false);
   // 조회 할 때 useAxios 컨트롤 용도로 쓸려했는데,, 
-  const [inquire, setInquire] =useState(true)
-  // 자기소개서 조회 useAxios
-  const [getData, isLoading, errorContext] = useAxios(
-    `interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
-    "GET",
-    token,
-    null,
-    inquire
+  const [inquire, setInquire] =useState(false)
 
-  );
-  console.log("getData",getData);
-  console.log("isLoading",isLoading);
-  console.log("error",errorContext);
+  // 자기소개서 axios 
+  const [getData, setGetData] = useState(null); //외부로 내보낼 데이터
+  const [errorContext, setError] = useState(null); // 에러 발생 시 사용할 데이터, 외부로 내보내서 사용
+  
+  console.log(inquire)
+  
+  useEffect(() => {
+    if(inquire) {
+      axios({
+        method: "GET",
+        url: `${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
+        headers: {
+          Authorization: token,
+        },
+        data:null,
+      })
+        .then((res) => {
+          setGetData(res.data);
+          console.log(res.data)
+        })
+        .catch((err) => {
+          console.log(err)
+          setError(err);
+          setGetData(null)
+        })
+    }
+
+  }, [inquire]);
+
 
 
   // 파일 업로드 했을 때 새로고침 하는 용도의 useEffect
@@ -50,9 +69,9 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   }, [uploadPdf]);
 
   useEffect(() => {
-    if(getData && getData.success){
       setInquire(false)
-    }
+      console.log("이거 됨?")
+ 
   },[getData])
   
 
