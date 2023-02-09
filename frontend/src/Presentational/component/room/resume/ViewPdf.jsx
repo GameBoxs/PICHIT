@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
 
-const ViewPDF = ({ fileUrl,pdfhandler }) => {
+const ViewPDF = ({ pdfhandler }) => {
   const [numPages, setNumPages] = useState(null); // 총 페이지 수
   const [pageNumber, setPageNumber] = useState(1); // 현재 페이지 
   const {token} =useSelector(state=>state)
@@ -77,7 +77,7 @@ const PageNext = styled.p`
   align-items: center
   
 `
-const NowPage = styled.div`
+const NowPage = styled.span`
   display: flex;
   justify-content: center;
   background: var(--primary);

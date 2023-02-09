@@ -172,6 +172,8 @@ const IntervieweePage = (props) => {
     })
   },[session])
 
+  console.log(reqBody.intervieweeId)
+
   //질문 받아오는 Axios
   const [getQuest] = useAxios(
     `questions?writerId=${reqBody.writerId}&intervieweeId=${reqBody.intervieweeId}&interviewRoomId=${reqBody.interviewRoomId}`,
