@@ -60,7 +60,7 @@ public class QuestionService {
                 () -> new ResourceNotFoundException("존재하지 않는 질문입니다.")
         );
 
-        if (question.getWriter().getId().equals(userId)) {
+        if (!question.getWriter().getId().equals(userId)) {
             throw new ResourceForbiddenException("자신이 작성한 질문만 삭제할 수 있습니다.");
         }
 
@@ -73,7 +73,7 @@ public class QuestionService {
                 () -> new ResourceNotFoundException("존재하지 않는 질문입니다.")
         );
 
-        if (question.getWriter().getId().equals(userId)) {
+        if (!question.getWriter().getId().equals(userId)) {
             throw new ResourceForbiddenException("자신이 작성한 질문만 수정할 수 있습니다.");
         }
 

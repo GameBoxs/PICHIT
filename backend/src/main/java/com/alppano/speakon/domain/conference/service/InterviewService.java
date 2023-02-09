@@ -2,12 +2,19 @@ package com.alppano.speakon.domain.conference.service;
 
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
+import com.alppano.speakon.common.util.DataFileUtil;
 import com.alppano.speakon.domain.conference.dto.Conference;
 import com.alppano.speakon.domain.conference.dto.InterviewRequest;
+import com.alppano.speakon.domain.datafile.entity.DataFile;
+import com.alppano.speakon.domain.datafile.repository.DataFileRepository;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
 import com.alppano.speakon.domain.interview_join.repository.InterviewJoinRepository;
+import com.alppano.speakon.domain.interview_recording.entity.InterviewRecording;
+import com.alppano.speakon.domain.interview_recording.repository.InterviewRecordingRepository;
 import com.alppano.speakon.domain.question.entity.Question;
 import com.alppano.speakon.domain.question.repository.QuestionRepository;
+import com.alppano.speakon.domain.recording_timestamp.entity.RecordingTimestamp;
+import com.alppano.speakon.domain.recording_timestamp.repository.RecordingTimestampRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.openvidu.java.client.*;
@@ -24,9 +31,10 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -41,9 +49,13 @@ public class InterviewService {
     private OpenVidu openvidu;
     private final ObjectMapper objectMapper;
     private final QuestionRepository questionRepository;
+    private final DataFileUtil dataFileUtil;
     private final HttpRequestService httpRequestService;
     private final RedisTemplate<String, Object> redisTemplate;
     private final InterviewJoinRepository interviewJoinRepository;
+    private final InterviewRecordingRepository interviewRecordingRepository;
+    private final RecordingTimestampRepository recordingTimestampRepository;
+    private final DataFileRepository dataFileRepository;
 
     @PostConstruct
     public void init() { // OPENVIDU 초기화
@@ -75,10 +87,10 @@ public class InterviewService {
     public void selectInterviewee(Long requesterId, InterviewRequest req) throws IOException, OpenViduJavaClientException, OpenViduHttpException {
         Conference conference = retrieveConference(req.getInterviewRoomId());
 
-        if(!conference.getManagerId().equals(requesterId)) {
+        if (!conference.getManagerId().equals(requesterId)) {
             throw new ResourceForbiddenException("면접자를 지정할 권한이 없습니다.");
         }
-        if(conference.getCurrentInterviewee() != null) {
+        if (conference.getCurrentInterviewee() != null) {
             throw new ResourceForbiddenException("이미 진행 중인 면접자가 있습니다.");
         }
         InterviewJoin interviewJoin = interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
@@ -106,19 +118,17 @@ public class InterviewService {
         setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
     }
 
-    /*
-        현재 진행 중인 인터뷰를 종료
-     */
+    @Transactional
     public void endInterview(Long requesterId, InterviewRequest req) throws IOException, OpenViduJavaClientException, OpenViduHttpException {
         Conference conference = retrieveConference(req.getInterviewRoomId());
 
-        if(!conference.getManagerId().equals(requesterId)) {
+        if (!conference.getManagerId().equals(requesterId)) {
             throw new ResourceForbiddenException("면접을 끝낼 권한이 없습니다.");
         }
-        if(conference.getCurrentInterviewee() == null) {
+        if (conference.getCurrentInterviewee() == null) {
             throw new ResourceForbiddenException("진행 중인 면접자가 없습니다.");
         }
-        interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
+        InterviewJoin interviewJoin = interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
                 .orElseThrow(() -> new ResourceForbiddenException("미참여자를 지정하였습니다."));
 
         String signalData = objectMapper.writeValueAsString(req);
@@ -129,9 +139,43 @@ public class InterviewService {
         openvidu.fetch();
         openvidu.stopRecording(conference.getRecordingId());
 
+        // TODO: 리팩토링
         // Redis에 진행 중이던 면접자 삭제
         conference.setCurrentInterviewee(null);
         setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
+
+        // 파일 이동
+        String fileName = req.getInterviewRoomId() + "_" + req.getIntervieweeId() + ".webm";
+        DataFile dataFile = dataFileUtil.storeOpenViduRecordingFile(conference.getSessionId(), fileName);
+
+        dataFileRepository.save(dataFile);
+
+        // 면접 녹음 데이터 저장
+        InterviewRecording interviewRecording = InterviewRecording.builder()
+                .interviewJoin(interviewJoin)
+                .dataFile(dataFile)
+                .build();
+
+        interviewRecordingRepository.save(interviewRecording);
+
+        // 타임스탬프 일괄 처리
+        List<Question> questions = questionRepository.findAllByInterviewJoinId(interviewJoin.getId());
+
+        List<RecordingTimestamp> timestampList = new ArrayList<>();
+
+        for (Question question : questions) {
+            long secondTime = Duration.between(interviewJoin.getStartedTime(), question.getStartedTime()).getSeconds();
+
+            RecordingTimestamp recordingTimestamp = RecordingTimestamp.builder()
+                    .secondTime(secondTime)
+                    .interviewRecording(interviewRecording)
+                    .question(question)
+                    .build();
+
+            timestampList.add(recordingTimestamp);
+        }
+
+        recordingTimestampRepository.saveAll(timestampList);
     }
 
     /*
@@ -199,16 +243,16 @@ public class InterviewService {
 
         interviewJoinRepository.findByUserIdAndInterviewRoomId(requesterId, req.getInterviewRoomId())
                 .orElseThrow(() -> new ResourceForbiddenException("회의 참여자만 질문할 수 있습니다..."));
-        if(conference.getQuestionProceeding() == null) {
+        if (conference.getQuestionProceeding() == null) {
             throw new ResourceForbiddenException("질문이 진행 중이지 않습니다...");
         }
-        if(conference.getCurrentInterviewee() == null) {
+        if (conference.getCurrentInterviewee() == null) {
             throw new ResourceForbiddenException("진행 중인 면접자가 없습니다.");
         }
-        if(!conference.getCurrentInterviewee().equals(req.getIntervieweeId())) {
+        if (!conference.getCurrentInterviewee().equals(req.getIntervieweeId())) {
             throw new ResourceForbiddenException("잘못된 면접자를 지정하였습니다...");
         }
-        if(!conference.getQuestionProceeding().equals(req.getQuestionId())) {
+        if (!conference.getQuestionProceeding().equals(req.getQuestionId())) {
             throw new ResourceForbiddenException("잘못된 질문을 지정하였습니다...");
         }
 
