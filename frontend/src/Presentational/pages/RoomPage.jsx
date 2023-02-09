@@ -92,7 +92,7 @@ function RoomPage() {
       // }
       // newParticipant.push([...originParticipants])
       // tmpData.participants = newParticipant
-      console.log(tmpData)
+      console.log(token)
       // console.log(newParticipant)
 
 

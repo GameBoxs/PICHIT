@@ -1,12 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import { FaStar } from "react-icons/fa";
+import { useRef } from "react";
+import { useEffect } from "react";
 
-const Rating = ({ RatingHandler }) => {
+const Rating = ({ RatingHandler, starScore }) => {
+
   const gradle = Array(5)
     .fill(0)
     .map((_, idx) => {
-
       return (
         <React.Fragment
         key={idx}
@@ -16,7 +18,7 @@ const Rating = ({ RatingHandler }) => {
             aria-label={`${idx + 1} stars`}
             htmlFor={`rating2-${10 * (idx + 1)}`}
           >
-            <RatingIcon>
+            <RatingIcon starScore={starScore === 0 ? false:true}>
               <FaStar />
             </RatingIcon>
           </RatingLabel>
@@ -34,7 +36,7 @@ const Rating = ({ RatingHandler }) => {
   return (
     <RatingBox>
       <RatingGroup>
-        <RatingInput
+        {/* <RatingInput
           className="rating__input--none"
           defaultChecked
           name="rating2"
@@ -44,7 +46,7 @@ const Rating = ({ RatingHandler }) => {
         />
         <RatingLabel aria-label="0 stars" htmlFor="rating2-0">
           &nbsp;
-        </RatingLabel>
+        </RatingLabel> */}
 
         {gradle}
       </RatingGroup>
@@ -56,7 +58,7 @@ export default Rating;
 
 const RatingIcon = styled.div`
   pointer-events: none;
-  color: #f7e160;
+  color: ${props => props.starScore?'#f7e160' : '#ddd'};
 
   &.rating__icon--none {
     color: #eee;
