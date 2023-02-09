@@ -96,7 +96,7 @@ public class InterviewService {
         }
         InterviewJoin interviewJoin = interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
                 .orElseThrow(() -> new ResourceForbiddenException("미참여자를 지정하였습니다."));
-        if(interviewJoin.getFinished() == 1) {
+        if (interviewJoin.getFinished() == 1) {
             throw new ResourceAlreadyExistsException("이미 면접을 완료한 참여자 입니다.");
         }
 
@@ -149,6 +149,10 @@ public class InterviewService {
         setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
 
         interviewJoin.setFinished(1);
+
+        if (interviewRecordingRepository.findByInterviewJoinId(interviewJoin.getId()).isPresent()) {
+            throw new ResourceAlreadyExistsException("이미 해당 면접의 녹음 파일이 존재합니다.");
+        }
 
         // 파일 이동
         String fileName = req.getInterviewRoomId() + "_" + req.getIntervieweeId() + ".webm";
@@ -207,13 +211,13 @@ public class InterviewService {
                 questionRepository.findById(req.getQuestionId()).orElseThrow(
                         () -> new ResourceNotFoundException("존재하지 않는 질문입니다...")
                 );
-                if(conference.getQuestionProceeding() != null) {
+                if (conference.getQuestionProceeding() != null) {
                     throw new ResourceForbiddenException("이미 질문이 진행 중입니다...");
                 }
-                if(conference.getCurrentInterviewee() == null) {
+                if (conference.getCurrentInterviewee() == null) {
                     throw new ResourceForbiddenException("진행 중인 면접자가 없습니다.");
                 }
-                if(!conference.getCurrentInterviewee().equals(req.getIntervieweeId())) {
+                if (!conference.getCurrentInterviewee().equals(req.getIntervieweeId())) {
                     throw new ResourceForbiddenException("잘못된 면접자를 지정하였습니다...");
                 }
                 // 제안할 질문을 set한다. (거의 동시에 요청이 들어와도 늦게 들어왔다면 discard된다)
@@ -226,7 +230,7 @@ public class InterviewService {
         // 회의 정보를 redis로 부터 다시 불러옴
         Conference conference = retrieveConference(req.getInterviewRoomId());
         // 값이 변경 되지 않았다면? -> Redis Tx에서 set요청이 discard된 것
-        if(!conference.getQuestionProceeding().equals(req.getQuestionId())){
+        if (!conference.getQuestionProceeding().equals(req.getQuestionId())) {
             throw new ResourceForbiddenException("먼저 들어온 질문에 의해 요청이 거절되었습니다.");
         }
         Question question = questionRepository.findById(req.getQuestionId()).orElseThrow(
@@ -262,7 +266,7 @@ public class InterviewService {
             throw new ResourceForbiddenException("잘못된 질문을 지정하였습니다...");
         }
 
-        String signalData= objectMapper.writeValueAsString(req);
+        String signalData = objectMapper.writeValueAsString(req);
 
         httpRequestService.broadCastSignal(conference.getSessionId(),
                 "broadcast-question-end", signalData);
