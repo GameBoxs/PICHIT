@@ -3,7 +3,6 @@ package com.alppano.speakon.domain.conference.service;
 import com.alppano.speakon.common.exception.ResourceAlreadyExistsException;
 import com.alppano.speakon.common.exception.ResourceForbiddenException;
 import com.alppano.speakon.common.exception.ResourceNotFoundException;
-import com.alppano.speakon.common.util.RedisUtil;
 import com.alppano.speakon.domain.conference.dto.Conference;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
 import com.alppano.speakon.domain.interview_join.entity.Participant;
@@ -11,10 +10,13 @@ import com.alppano.speakon.domain.interview_join.repository.InterviewJoinReposit
 import com.alppano.speakon.domain.interview_room.entity.InterviewRoom;
 import com.alppano.speakon.domain.interview_room.repository.InterviewRoomRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -30,7 +32,8 @@ public class ConferenceService {
     private String OPENVIDU_SECRET;
 
     private OpenVidu openvidu;
-    private final RedisUtil redisUtil;
+    private final ObjectMapper objectMapper;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final InterviewRoomRepository interviewRoomRepository;
     private final InterviewJoinRepository interviewJoinRepository;
 
@@ -39,9 +42,22 @@ public class ConferenceService {
         this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
+    public <T> T getRedisValue(String key, Class<T> classType) throws JsonProcessingException {
+        String redisValue = (String) redisTemplate.opsForValue().get(key);
+        return ObjectUtils.isEmpty(redisValue) ? null : objectMapper.readValue(redisValue, classType);
+    }
+
+    public void setRedisValue(String key, Object classType) throws JsonProcessingException {
+        redisTemplate.opsForValue().set(key, objectMapper.writeValueAsString(classType));
+    }
+
+    public void deleteData(String key) {
+        redisTemplate.delete(key);
+    }
+
     public boolean isSessionOpened(Long interviewRoomId) throws JsonProcessingException, OpenViduJavaClientException, OpenViduHttpException {
         String key = String.valueOf(interviewRoomId);
-        Conference conference = redisUtil.getRedisValue(key, Conference.class);
+        Conference conference = getRedisValue(key, Conference.class);
         if(conference == null) {
             return false;
         }
@@ -65,14 +81,14 @@ public class ConferenceService {
             throw new ResourceForbiddenException("세션을 생성할 권한이 없습니다.");
         }
 
-        Conference conference = redisUtil.getRedisValue(String.valueOf(interviewRoomId), Conference.class);
+        Conference conference = getRedisValue(String.valueOf(interviewRoomId), Conference.class);
         if(conference != null) { // 이미 Redis에 회의 진행 정보가 존재함
             openvidu.fetch(); // OpenVidu로 부터 세션 목록 fetch & UPDATE
             if(openvidu.getActiveSession(conference.getSessionId()) == null) { // 근데 OpenVidu Session이 죽어있음
                 // 세션을 새로 만들고 Redis 값 갱신
                 Session session = openvidu.createSession(properties);
                 conference.setSessionId(session.getSessionId());
-                redisUtil.setRedisValue(String.valueOf(interviewRoomId), conference);
+                setRedisValue(String.valueOf(interviewRoomId), conference);
                 return;
             } else { // OpenVidu Session이 살아있다.
                 throw new ResourceAlreadyExistsException("이미 생성된 회의입니다.");
@@ -89,7 +105,7 @@ public class ConferenceService {
         conference.setSessionId(session.getSessionId());
         conference.setManagerId(requesterId);
         conference.setParticipants(participants);
-        redisUtil.setRedisValue(String.valueOf(interviewRoomId), conference);
+        setRedisValue(String.valueOf(interviewRoomId), conference);
     }
 
     /**
@@ -105,11 +121,11 @@ public class ConferenceService {
             throw new ResourceForbiddenException("세션을 종료할 권한이 없습니다.");
         }
 
-        Conference conference = redisUtil.getRedisValue(String.valueOf(interviewRoomId), Conference.class);
+        Conference conference = getRedisValue(String.valueOf(interviewRoomId), Conference.class);
         if (conference == null) {
             throw new ResourceNotFoundException("존재하지 않는 회의입니다.");
         }
-        redisUtil.deleteData(String.valueOf(interviewRoomId));
+        deleteData(String.valueOf(interviewRoomId));
 
         openvidu.fetch();
         Session session = openvidu.getActiveSession(conference.getSessionId());
@@ -129,7 +145,7 @@ public class ConferenceService {
         interviewJoinRepository.findByUserIdAndInterviewRoomId(requesterId, interviewRoomId)
                 .orElseThrow(() -> new ResourceForbiddenException("참여 중인 면접방만 접근할 수 있습니다."));
 
-        Conference conference = redisUtil.getRedisValue(String.valueOf(interviewRoomId), Conference.class);
+        Conference conference = getRedisValue(String.valueOf(interviewRoomId), Conference.class);
         if (conference == null) {
             throw new ResourceNotFoundException("존재하지 않는 회의입니다.");
         }
