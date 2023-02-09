@@ -88,12 +88,12 @@ const IntervieweePage = (props) => {
     if (closeExecute) setCloseExecute(false);
   }, [closeExecute]);
 
+  console.log(starScore)
+
   useEffect(() => {
     if (finishExecute) {
-      /*
       // 아래에 평가 별 0으로 초기화 하는 내용 넣어야 함.
-
-      */
+      setStarScore(0);
 
       setHilight({ questionId: "", questionContent: "질문을 제출해 주세요." });
       MySwal.fire({
@@ -131,17 +131,13 @@ const IntervieweePage = (props) => {
     isQuestion
   );
 
-  let navigate = useNavigate();
-
   let cnt = 3 - info.subscribers.length;
 
   function makeBlank() {
     let result = [];
     for (let i = 0; i < cnt; i++) {
       result.push(
-        <CamCompo className="in" key={i}>
-          
-        </CamCompo>
+        <CamCompo className="in" key={i} />
       );
     }
     return result;
@@ -398,7 +394,7 @@ const IntervieweePage = (props) => {
             <SubTitle title={"평가"} />
             <Rating
               RatingHandler={RatingHandler}
-              finishExecute={finishExecute}
+              starScore={starScore}
             />
           </QuestionBody>
 
@@ -656,7 +652,7 @@ const IntervieweeCompo = styled.div`
   object-fit: cover !important;
 
   .in {
-    background-color: var(--greyDark);
+    background-color: var(--greyLight-3);
 
     * {
       width: inherit;
