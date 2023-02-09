@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
 
+import java.io.IOException;
+
 @Tag(name = "화상회의 관리")
 @CrossOrigin(origins = "*")
 @RestController
@@ -51,7 +53,7 @@ public class ConferenceController {
     @DeleteMapping("/sessions/close/{interviewRoomId}")
     public ResponseEntity<ApiResponse> closeConference(@PathVariable("interviewRoomId") Long interviewRoomId,
                                                     @AuthenticationPrincipal LoginUser loginUser)
-            throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
+            throws OpenViduJavaClientException, OpenViduHttpException, IOException {
         Long requesterId = loginUser.getId();
         log.info("세션 종료 요청자 ID: {}", requesterId);
         log.info("면접방 ID: {}", interviewRoomId);
