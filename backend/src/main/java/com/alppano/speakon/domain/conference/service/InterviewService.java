@@ -154,16 +154,16 @@ public class InterviewService {
 
         List<RecordingTimestamp> timestampList = new ArrayList<>();
 
-        for(Question question : questions) {
-           long secondTime = Duration.between(question.getStartedTime(),interviewJoin.getStartedTime()).getSeconds();
+        for (Question question : questions) {
+            long secondTime = Duration.between(interviewJoin.getStartedTime(), question.getStartedTime()).getSeconds();
 
-           RecordingTimestamp recordingTimestamp = RecordingTimestamp.builder()
-                   .secondTime(secondTime)
-                   .interviewRecording(interviewRecording)
-                   .question(question)
-                   .build();
+            RecordingTimestamp recordingTimestamp = RecordingTimestamp.builder()
+                    .secondTime(secondTime)
+                    .interviewRecording(interviewRecording)
+                    .question(question)
+                    .build();
 
-           timestampList.add(recordingTimestamp);
+            timestampList.add(recordingTimestamp);
         }
 
         recordingTimestampRepository.saveAll(timestampList);
