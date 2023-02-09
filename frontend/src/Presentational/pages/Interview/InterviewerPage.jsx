@@ -34,6 +34,8 @@ const InterviewerPage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   //     );
   //   });
 
+  console.log(info)
+
   function People() {
     let cnt = 3 - info.subscribers.length;
     function makeBlank() {
@@ -146,6 +148,19 @@ const CamCompo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  object-fit: cover !important;
+
+ div {
+    height: 100%;
+    width: inherit;
+  }
+
+  & video {
+    object-fit: cover !important;
+    width: inherit;
+    height: 100%;
+  }
+
 `;
 
 const BodyCompo = styled.div`
