@@ -5,8 +5,6 @@ import React, { useState, useEffect, memo } from "react";
 import { BsFillPersonFill } from "react-icons/bs";
 
 function RoomMainLoading() {
-  
-
   return (
     <MainPageContainer>
       <SectionHeader>

@@ -92,7 +92,7 @@ const QuestionBoxTitle = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
-  font-family: SBagrroL;
+  font-family: 'SBAggroL';
   color: var(--greyDark);
   width: 100%;
 `;

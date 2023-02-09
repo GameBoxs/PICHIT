@@ -6,6 +6,7 @@ const Rating = ({ RatingHandler }) => {
   const gradle = Array(5)
     .fill(0)
     .map((_, idx) => {
+
       return (
         <React.Fragment
         key={idx}
