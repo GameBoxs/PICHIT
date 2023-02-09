@@ -31,7 +31,7 @@ public class RedisConfig {
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
-        redisTemplate.setEnableTransactionSupport(true);
+//        redisTemplate.setEnableTransactionSupport(true);
 
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
@@ -41,8 +41,8 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new JpaTransactionManager();
-    }
+//    @Bean
+//    public PlatformTransactionManager transactionManager() {
+//        return new JpaTransactionManager();
+//    }
 }
