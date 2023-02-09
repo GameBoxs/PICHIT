@@ -566,6 +566,7 @@ const SubBtn = styled.div`
     -0.1rem -0.1rem 0.25rem var(--white);
 
   color: var(--greyLight-1);
+  
   &:hover {
     color: var(--white);
   }
