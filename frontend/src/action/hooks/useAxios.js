@@ -25,12 +25,12 @@ import { useDispatch } from "react-redux";
 function useAxios(target, type, token, body, execute=true) {
   const [data, setData] = useState(null); //외부로 내보낼 데이터
   const [isLoading, setIsLoading] = useState(true); //로딩 중인지 아닌지 판단하는 부분
+  const [errorContext, setError] = useState(null); // 에러 발생 시 사용할 데이터, 외부로 내보내서 사용
   
   useEffect(() => {
     if(execute) {
       //props를 받고 실행되어야 하기 때문에/통신이기 때문에 useEffect로 감싸줌
       const sendType = type.toUpperCase(); //소문자/대문자 구별 없애기
-  
       axios({
         method: sendType,
         url: `${PITCHIT_URL}/${target}`,
@@ -42,7 +42,11 @@ function useAxios(target, type, token, body, execute=true) {
         .then((res) => {
           setData(res.data);
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+
+          console.log(err)
+          setError(err);
+        })
         .finally(() => {
           //then 또는 catch가 모두 작동한 이후에 로딩이 끝났다고 판단
           setIsLoading(false);
@@ -52,7 +56,7 @@ function useAxios(target, type, token, body, execute=true) {
 
   }, [type, target, body, execute]);
  
-  return [ data, isLoading ];
+  return [ data, isLoading, errorContext ];
 }
 
 export default useAxios;

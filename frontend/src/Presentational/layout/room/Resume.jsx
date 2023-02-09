@@ -8,42 +8,70 @@ import { IoClose } from "react-icons/io5";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { PITCHIT_URL } from "../../../store/values";
-import { setDate } from "date-fns";
 
 // 근데 import * as 안하면 에러남 필수로 해줄 것!
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
+  // 토큰, 유저 정보 가져옴
   const { token, userinfo } = useSelector((state) => state);
+  // pdf 파일 목록 가져옴 (내 자소서 보기 버튼 활성화) 필요없을지두
   const [pdfFileList, setPdfFileList] = useState([]);
+  // 원래 blob 담는 용이였는데 필요없을듯
   const [pdfUrl, setPdfUrl] = useState();
+  // pdf 모달 띄우는 용
   const [showPdf, setShowPdf] = useState(false);
+  // pdf 업로드 용인듯 ( 이것도 필요없을지도 )
   const [uploadPdf, setUploadPdf] = useState(false);
+  // 조회 할 때 useAxios 컨트롤 용도로 쓸려했는데,,
+  const [inquire, setInquire] = useState(false);
+  // 자기소개서 조회 data
+  const [getData, setGetData] = useState(null);
+  // 자기소개서를 등록하지 않아서 에러발생시 사용 할 데이터
+  const [errorContext, setError] = useState(null);
 
-  // const [PostPdf, isLoading] = useAxios()
+  // 자기소개서 axios
+  useEffect(() => {
+    if (inquire) {
+      axios({
+        method: "GET",
+        url: `${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
+        headers: {
+          Authorization: token,
+        },
+        data: null,
+      })
+        .then((res) => {
+          setGetData(res.data);
+          // console.log(res.data);
+        })
+        .catch((err) => {
+          // console.log(err);
+          setError(err);
+          setGetData(null);
+        });
+    }
+  }, [inquire]);
 
-  // const [postData, isLoading] = useAxios(
-  //   `interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
-  //   "POST",
-  //   token,
-  //   pdfUrl,
-  //   uploadPdf
-  // )
-  // console.log(pdfUrl)
+  // 파일 업로드 했을 때 새로고침 하는 용도의 useEffect
+  useEffect(() => {
+    if (uploadPdf === true) {
+      setInquire(true);
+      window.location.reload();
+    }
+  }, [uploadPdf]);
 
-  // useEffect(()=> {
-  //   if (postData && postData.success){
-  //     setUploadPdf(false)
-  //   }
-  // },[postData])
+  //get 요청시 true로 바뀌는 inquire off 용
+  useEffect(() => {
+    setInquire(false);
+  }, [getData]);
 
+  // 업로드한 파일을 url로 바꾸는 함수
   const getUrl = (file) => {
-    const blob = new Blob([file]);
-    const pdfUrl = URL.createObjectURL(blob);
-    setPdfUrl(pdfUrl);
+    console.log(file);
     const frm = new FormData();
-    frm.append("file", file, { type: "application/pdf" });
+    frm.append("file", file);
     axios({
       method: "post",
       url: `${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
@@ -54,61 +82,91 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
       data: frm,
     })
       .then((res) => {
-        setDate(res.data);
+        console.log(res);
+        setUploadPdf(true);
       })
       .catch((err) => console.log(err));
   };
 
+  // pdf 업로드용 함수
   const onPdfFileUpload = (e) => {
     const selectedList = Array.from(e.target.files);
     const getAddList = selectedList.map((item) => item);
     getUrl(getAddList[0]);
     setPdfFileList(selectedList);
+    console.log("pdf 파일 리스트에 들어간 것", pdfFileList);
   };
 
+  // 등록된 pdf 데이터 삭제
   const onDeleteTarget = () => {
-    setPdfFileList([]);
+    const fileId = getData.data.id;
+    console.log(fileId);
+    axios({
+      method: "DELETE",
+      url: `${PITCHIT_URL}/resumes/${fileId}`,
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
+    window.location.reload();
   };
 
-  const FileResultList = () => {
-    return React.createElement(
-      React.Fragment,
-      null,
-      pdfFileList.map((item, index) =>
-        React.createElement(
-          FileResultBody,
-          null,
-          React.createElement(
-            FileResultRow,
-            { key: index },
-            React.createElement(
-              "div",
-              { onClick: onUrlClick, className: "fileName" },
-              item.name
-            ),
-            React.createElement(
-              DeleteButton,
-              { onClick: onDeleteTarget },
-              <IoClose />
-            )
-          )
-        )
-      )
+  // 본인이 아닌 다른사람의 이름을 눌렀을 때 (자기소개서 유무)
+  const userInquirePdf =
+    getData === null && errorContext ? (
+      <FileListBody>등록된 자소서가 없습니다</FileListBody>
+    ) : (
+      <FileListBody>
+        <Label onClick={() => setShowPdf(true)}>조회하기</Label>
+      </FileListBody>
     );
-  };
 
-  const onUrlClick = (e) => {
-    setShowPdf(true);
-  };
+  // 본인 이름을 눌렀을 때
+  const myInquirePdf =
+    getData === null ? (
+      <FileListBody>
+        파일이 존재하지 않습니다.
+        <Label htmlFor="uploadFile">파일 업로드하기</Label>
+        <Input
+          id="uploadFile"
+          accept="application/pdf"
+          multiple={true}
+          onChange={onPdfFileUpload}
+        />
+      </FileListBody>
+    ) : (
+      <>
+        <FileResultBody>
+          <FileResultRow>
+            <div className="fileName" onClick={() => setShowPdf(true)}>
+              내 자소서 보기
+            </div>
+            <DeleteButton onClick={onDeleteTarget}>
+              <IoClose />
+            </DeleteButton>
+          </FileResultRow>
+        </FileResultBody>
+      </>
+    );
 
+  // pdf 창 닫기
   const onPdfClose = (e) => {
     setShowPdf(false);
   };
 
+  // pdf 이름에 따른 함수
   const getPdfOwner = (elem) => {
     setPdfHandler({ ...elem });
+    setShowPdf(false);
+    setInquire(true);
   };
 
+  // 면접방 참여자
   const interviewees = participants.map((elem, idx) => {
     return (
       <React.Fragment key={idx}>
@@ -140,30 +198,15 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
                   <IoClose />
                 </CloseButton>
               </ButtonContainer>
-              <ViewPdf fileUrl={pdfUrl} />
+              <ViewPdf pdfhandler={pdfhandler} fileUrl={pdfUrl} />
             </PdfContainer>
           </ModalOverlay>
         ) : (
           <FileList>
-            {pdfFileList.length === 0 ? (
-              <>
-                {pdfhandler.id === userinfo.id ? (
-                  <FileListBody>
-                    파일이 존재하지 않습니다.
-                    <Label htmlFor="uploadFile">파일 업로드하기</Label>
-                    <Input
-                      id="uploadFile"
-                      accept="application/pdf"
-                      multiple={true}
-                      onChange={onPdfFileUpload}
-                    />
-                  </FileListBody>
-                ) : (
-                  <FileListBody>파일이 존재하지 않습니다.</FileListBody>
-                )}
-              </>
+            {pdfhandler.id === userinfo.id ? (
+              <>{myInquirePdf}</>
             ) : (
-              <FileResultList />
+              <>{userInquirePdf}</>
             )}
           </FileList>
         )}
