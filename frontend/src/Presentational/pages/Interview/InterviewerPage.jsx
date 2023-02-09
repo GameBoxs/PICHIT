@@ -34,6 +34,8 @@ const InterviewerPage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   //     );
   //   });
 
+  console.log(info)
+
   function People() {
     let cnt = 3 - info.subscribers.length;
     function makeBlank() {

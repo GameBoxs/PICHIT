@@ -22,94 +22,44 @@ import { useSelector } from "react-redux";
 
 const MySwal = withReactContent(Swal);
 
-const dummy = [
-  {
-    id: 1,
-    question: "잠온다",
-    user: "이효진",
-  },
-  {
-    id: 2,
-    question: "너무 잠온다",
-    user: "김민지",
-  },
-  {
-    id: 3,
-    question: "대박 잠온다",
-    user: "이효진",
-  },
-  {
-    id: 4,
-    question: "상당히 잠온다",
-    user: "임수민",
-  },
-  {
-    id: 5,
-    question: "과하게 잠온다",
-    user: "이효진",
-  },
-  {
-    id: 6,
-    question: "생각보다 잠온다",
-    user: "이희수",
-  },
-  {
-    id: 7,
-    question: "그럼 자면 되지",
-    user: "김지훈",
-  },
-  {
-    id: 8,
-    question: "5만원 가치 하더라",
-    user: "김지훈",
-  },
-  {
-    id: 9,
-    question:
-      "테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문테스트용 긴 질문",
-    user: "이효진",
-  },
-  {
-    id: 10,
-    question: "끝났다",
-    user: "김지현",
-  },
-];
-
 const IntervieweePage = (props) => {
   const { session, setSession, OV, setOV, info, setInfo } = props;
   const token = useSelector((state) => state.token);
-  const {userinfo, roomId, isHost} = useLocation().state;
+  const { userinfo, roomId, isHost } = useLocation().state;
 
-  const [reqBody, setReqBody] = useState({    //요청 보낼 때 쓰는 값들
+  const [reqBody, setReqBody] = useState({
+    //요청 보낼 때 쓰는 값들
     writerId: 0,
     intervieweeId: 0,
     interviewRoomId: 0,
   });
-  const [intervieweeMem, setIntervieweeMem] = useState([]);   //면접관 명단들
-  const [isQuestion, setIsQuestion] = useState(false);        //useAxios에서 excute로 쓰이는 애들
-  const [questionData, setQuestionData] = useState([])        //질문 목록들
+  const [intervieweeMem, setIntervieweeMem] = useState([]); //면접관 명단들
+  const [isQuestion, setIsQuestion] = useState(false); //useAxios에서 excute로 쓰이는 애들
+  const [questionData, setQuestionData] = useState([]); //질문 목록들
 
   const [starScore, setStarScore] = useState(0); // 별점
-  const [feedBackContext, setFeedBackContext] = useState('');
-  const [highlight,setHilight] = useState({questionId:'',questionContent:'질문을 선택해 주세요.'});
+  const [feedBackContext, setFeedBackContext] = useState("");
+  const [highlight, setHilight] = useState({
+    questionId: "",
+    questionContent: "질문을 선택해 주세요.",
+  });
 
   const [finishExecute, setfinishExecute] = useState(false);
-  const [finishAxiosData,finishIsLoading,finishError] = useAxios(
-    'conference/interview/question/end',
+  const [finishAxiosData, finishIsLoading, finishError] = useAxios(
+    "conference/interview/question/end",
     "POST",
     token,
     {
-      interviewRoomId : reqBody.interviewRoomId,
-      intervieweeId : reqBody.intervieweeId,
-      questionId : highlight.questionId,
-      questionContent : highlight.questionContent
+      interviewRoomId: reqBody.interviewRoomId,
+      intervieweeId: reqBody.intervieweeId,
+      questionId: highlight.questionId,
+      questionContent: highlight.questionContent,
     },
     finishExecute
-  )
+  );
 
   const [sendFeedBackData, sendFeedBackIsLoading, sendFeedBackError] = useAxios(
-    'feedbacks',
+    "feedbacks",
     "POST",
     token,
     {
@@ -118,34 +68,34 @@ const IntervieweePage = (props) => {
       content: feedBackContext,
     },
     finishExecute
-  )
+  );
 
   const [closeExecute, setCloseExecute] = useState(false);
   const [closeData, closeIsLoading, closeError] = useAxios(
-    'conference/interview/end',
+    "conference/interview/end",
     "POST",
     token,
     {
-      interviewRoomId : reqBody.interviewRoomId,
-      intervieweeId : reqBody.intervieweeId,
-      questionId : "",
-      questionContent : ""
+      interviewRoomId: reqBody.interviewRoomId,
+      intervieweeId: reqBody.intervieweeId,
+      questionId: "",
+      questionContent: "",
     },
     closeExecute
-  )
+  );
 
   useEffect(() => {
-    if(closeExecute) setCloseExecute(false);
-  },[closeExecute])
+    if (closeExecute) setCloseExecute(false);
+  }, [closeExecute]);
 
   useEffect(() => {
-    if(finishExecute){
+    if (finishExecute) {
       /*
       // 아래에 평가 별 0으로 초기화 하는 내용 넣어야 함.
 
       */
 
-      setHilight({questionId:'',questionContent:'질문을 제출해 주세요.'});
+      setHilight({ questionId: "", questionContent: "질문을 제출해 주세요." });
       MySwal.fire({
         text: "질문이 끝났습니다. 다음 질문을 선택해 주세요.",
         showConfirmButton: false,
@@ -155,24 +105,24 @@ const IntervieweePage = (props) => {
 
       setIsQuestion(true);
 
-      setFeedBackContext('');
+      setFeedBackContext("");
 
       setfinishExecute(false);
     }
-  },[finishExecute])
+  }, [finishExecute]);
 
   useEffect(() => {
-    session.on('broadcast-question-start', (data) => {
-      console.log('highlight -- ', JSON.parse(data.data));
+    session.on("broadcast-question-start", (data) => {
+      console.log("highlight -- ", JSON.parse(data.data));
       setHilight(JSON.parse(data.data));
       setIsQuestion(true);
-    })
-    session.on('broadcast-question-end',(data)=> {
+    });
+    session.on("broadcast-question-end", (data) => {
       // 아래에 피드백 전송 데이터 보내기
-    })
-  },[session])
+    });
+  }, [session]);
 
-  //질문 받아오는 Axios
+  // 질문 받아오는 Axios
   const [getQuest] = useAxios(
     `questions?writerId=${reqBody.writerId}&intervieweeId=${reqBody.intervieweeId}&interviewRoomId=${reqBody.interviewRoomId}`,
     "GET",
@@ -190,7 +140,7 @@ const IntervieweePage = (props) => {
     for (let i = 0; i < cnt; i++) {
       result.push(
         <CamCompo className="in" key={i}>
-          aa
+          
         </CamCompo>
       );
     }
@@ -243,7 +193,6 @@ const IntervieweePage = (props) => {
     //     interviewRoomId: roomID,
     //   };
     // });
-
   }, [props]);
 
   useEffect(() => {
@@ -261,7 +210,7 @@ const IntervieweePage = (props) => {
     //질문 목록을 가져오는데 성공하면 QuestionData에 값을 저장
     if (getQuest !== null && getQuest.success) {
       setIsQuestion(false);
-      setQuestionData(getQuest.data)
+      setQuestionData(getQuest.data);
     }
   }, [getQuest]);
 
@@ -279,7 +228,14 @@ const IntervieweePage = (props) => {
   };
 
   const Questions = questionData.map((el, id) => {
-    return <QuestionCompo key={id} questionInfo={el} roomID={reqBody.interviewRoomId} intervieweeID={reqBody.intervieweeId}/>;
+    return (
+      <QuestionCompo
+        key={id}
+        questionInfo={el}
+        roomID={reqBody.interviewRoomId}
+        intervieweeID={reqBody.intervieweeId}
+      />
+    );
   });
 
   //질문자 선택 함수
@@ -290,11 +246,11 @@ const IntervieweePage = (props) => {
   };
   const changeFeedBack = (e) => {
     setFeedBackContext(e.target.value);
-  }
+  };
 
   // 질문 끝내기 버튼 클릭시 발생할 함수.
   const finishHandler = () => {
-    if(highlight.questionId){
+    if (highlight.questionId) {
       MySwal.fire({
         title: "질문 종료",
         icon: "warning",
@@ -304,20 +260,13 @@ const IntervieweePage = (props) => {
         confirmButtonText: "확인",
         html: (
           <div>
-            <p>
-              작성중인 피드백이 전부 서버로 전송됩니다.
-            </p>
-            <p>
-              질문을 종료하기 전 다른 면접관들이 피드백 작성이 끝났나요?
-            </p>
-            <p>
-              전부 작성이 끝났는것을 확인하셨다면 확인을 눌러주세요.
-            </p>
+            <p>작성중인 피드백이 전부 서버로 전송됩니다.</p>
+            <p>질문을 종료하기 전 다른 면접관들이 피드백 작성이 끝났나요?</p>
+            <p>전부 작성이 끝났는것을 확인하셨다면 확인을 눌러주세요.</p>
           </div>
         ),
       }).then((result) => {
-        if (result.isConfirmed){
-
+        if (result.isConfirmed) {
           setfinishExecute(true);
           console.log(starScore);
           console.log(feedBackContext);
@@ -356,12 +305,8 @@ const IntervieweePage = (props) => {
       confirmButtonText: "확인",
       html: (
         <div>
-          <p>
-            대기실로 가기 전에 모든 질문이 끝났는지 확인해 주세요.
-          </p>
-          <p>
-            정말 대기실로 가시려면 확인을 눌러 주세요.
-          </p>
+          <p>대기실로 가기 전에 모든 질문이 끝났는지 확인해 주세요.</p>
+          <p>정말 대기실로 가시려면 확인을 눌러 주세요.</p>
         </div>
       ),
     }).then((result) => {
@@ -374,7 +319,7 @@ const IntervieweePage = (props) => {
         // })
       }
     });
-  }
+  };
 
   return (
     <Container>
@@ -384,8 +329,7 @@ const IntervieweePage = (props) => {
         <NavCompo>Pitchit</NavCompo>
         <NavCompo>
           <div>총 시간&nbsp;00:00:00</div>
-          {
-            isHost ?
+          {isHost ? (
             <MdOutlineLogout
               className="logOutBtn"
               onClick={() => {
@@ -394,8 +338,7 @@ const IntervieweePage = (props) => {
                 finishInterviewe();
               }}
             />
-            : null
-          }
+          ) : null}
         </NavCompo>
       </InterviewNav>
 
@@ -436,15 +379,13 @@ const IntervieweePage = (props) => {
           {/* 질문 박스 */}
           <QuestionBody>
             <SubNav>
-              <SubTitle title={"질문 "+highlight.questionId} />
+              <SubTitle title={"질문 " + highlight.questionId} />
               <TipMark>
                 <BsQuestionCircleFill />
               </TipMark>
             </SubNav>
 
-            <Question>
-              {highlight.questionContent}
-            </Question>
+            <Question>{highlight.questionContent}</Question>
 
             <SubFooter>
               <GrHistory />
@@ -455,13 +396,20 @@ const IntervieweePage = (props) => {
           {/* 평가 */}
           <QuestionBody>
             <SubTitle title={"평가"} />
-            <Rating RatingHandler={RatingHandler} />
+            <Rating
+              RatingHandler={RatingHandler}
+              finishExecute={finishExecute}
+            />
           </QuestionBody>
 
           {/* 피드백 */}
           <QuestionBody>
             <SubTitle title={"피드백"} />
-            <Feedback placeholder="피드백을 입력하세요" value={feedBackContext} onChange={changeFeedBack}/>
+            <Feedback
+              placeholder="피드백을 입력하세요"
+              value={feedBackContext}
+              onChange={changeFeedBack}
+            />
           </QuestionBody>
         </BodyCompo>
 
@@ -483,9 +431,7 @@ const IntervieweePage = (props) => {
               <MemberColor></MemberColor>
             </Member>
             {/* <AllQuestions chatOn={chatOn} onClick={QuestionHandler}> */}
-            <AllQuestions chatOn={chatOn}>
-              {Questions}
-            </AllQuestions>
+            <AllQuestions chatOn={chatOn}>{Questions}</AllQuestions>
           </QuestionBody>
 
           {/* 채팅 */}
@@ -676,25 +622,56 @@ const InterviewerTag = styled.div`
   left: 1em;
   background: var(--greyLight-1);
   color: var(--primary);
+  z-index: 10;
 `;
 
 const CamCompo = styled.div`
   position: relative;
   background-color: white;
   width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  object-fit: cover !important;
+
+  div div {
+    height: 100%;
+    width: inherit;
+  }
+
+  & video {
+    object-fit: cover !important;
+    width: inherit;
+    height: 100%;
+  }
 `;
 
 const IntervieweeCompo = styled.div`
   display: flex;
   justify-content: center;
+  width: 100%;
+  height: 100%;
   gap: 0.5vw;
+  object-fit: cover !important;
+
   .in {
+    background-color: var(--greyDark);
+
     * {
-      width: 100%;
-      height: auto;
+      width: inherit;
+      height: 100%;
+    }
+
+    div div {
+      height: 100%;
+      width: inherit;
+    }
+
+    & video {
+      object-fit: cover !important;
+      width: inherit;
+      height: 100%;
     }
   }
 `;
@@ -709,10 +686,6 @@ const BodyCompo = styled.div`
     display: grid;
     grid-template-rows: 2fr 7fr;
     gap: 0.5vw;
-
-    div {
-      border-radius: 2vw;
-    }
   }
 
   &:nth-child(2) {

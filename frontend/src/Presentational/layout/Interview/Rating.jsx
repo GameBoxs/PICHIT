@@ -1,12 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import { FaStar } from "react-icons/fa";
+import { useRef } from "react";
 
-const Rating = ({ RatingHandler }) => {
+const Rating = ({ RatingHandler, finishExecute }) => {
+  const star = useRef()
+
   const gradle = Array(5)
     .fill(0)
     .map((_, idx) => {
-
       return (
         <React.Fragment
         key={idx}
