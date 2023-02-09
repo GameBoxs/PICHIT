@@ -2,19 +2,22 @@ import React, { memo, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
 
-const Soundbar = ({ onChange, percentage, timeline, duration }) => {
+const Soundbar = (props) => {
+  const { onChange, percentage, timeline, duration } = props
   const [style, setStyle] = useState({
     position: 0, //Thumb 위치 지정
     marginLeft: 0, //Thumb 좌측 margin 설정
     progressBarWidth: 0, //재생 시 바의 길이 조정
   });
+
   const [timeStamp, setTimeStamp] = useState([]);
 
   const rangeRef = useRef();
   const thumbRef = useRef();
   const prograssbarRef = useRef();
-
+  
   useEffect(() => {
+    if (duration !== 0) {
     const rangeWidth = rangeRef.current.getBoundingClientRect().width; //현재 너비를 가져옴
     const thumbWidth = 20;
     const centerThumb = (thumbWidth / 100) * percentage * -1;
@@ -31,45 +34,43 @@ const Soundbar = ({ onChange, percentage, timeline, duration }) => {
       };
     });
 
-    setTimeStamp(() => {
-      return timeline.map((el) => {
-        const thisTime = el.split(":").map((el) => parseFloat(el));
-        let start = 0;
-
-        if (thisTime.length === 2) {
-          start = thisTime[0] * 60 + thisTime[1];
-        } else {
-          start = thisTime[0] * 3600 + thisTime[1] * 60 + thisTime[2];
-        }
-
-        return (start / duration) * rangeWidth;
+      setTimeStamp(() => {
+        return timeline.map((el) => {
+          const thisTime = parseFloat(el.secondTime);
+          return (thisTime / duration) * rangeWidth;
+        });
       });
-    });
-  }, [percentage, timeline]);
+    }
+  }, [props]);
+
+  console.log(timeStamp);
 
   return (
     <SliderContainer>
       <GlobalStyle />
+      {timeStamp !== {} ? (
+        <>
+          <ProgressBar ref={prograssbarRef} width={style.progressBarWidth}>
+            {timeStamp.map((el, idx) => {
+              return <TimeStampBox key={idx} timeStampMargin={el} />;
+            })}
+          </ProgressBar>
 
-      <ProgressBar ref={prograssbarRef} width={style.progressBarWidth}>
-        {timeStamp.map((el, idx) => {
-          return <TimeStampBox key={idx} timeStampMargin={el} />;
-        })}
-      </ProgressBar>
+          <Thumb
+            position={style.position}
+            ref={thumbRef}
+            marginLeft={style.marginLeft}
+          />
 
-      <Thumb
-        position={style.position}
-        ref={thumbRef}
-        marginLeft={style.marginLeft}
-      />
-
-      <Range
-        type={"range"}
-        ref={rangeRef}
-        step={"0.01"}
-        onChange={onChange}
-        value={style.position}
-      />
+          <Range
+            type={"range"}
+            ref={rangeRef}
+            step={"0.01"}
+            onChange={onChange}
+            value={style.position}
+          />
+        </>
+      ) : null}
     </SliderContainer>
   );
 };
@@ -138,13 +139,14 @@ const SliderContainer = styled.div`
   --progress-bar-height: 5px;
   --thumb-width: 20px;
   --thumb-height: 20px;
-  
+
   position: relative;
   width: 100%;
 
   &::before {
     content: "";
-    box-shadow: inset .2rem .2rem .5rem var(--greyLight-2), inset -.2rem -.2rem .5rem var(--white);
+    box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
+      inset -0.2rem -0.2rem 0.5rem var(--white);
     background-color: var(--greyLight-2);
     width: 100%;
     height: 0.5rem;
