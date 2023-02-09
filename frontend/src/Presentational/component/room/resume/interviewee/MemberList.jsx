@@ -11,12 +11,14 @@ function MemberList({
   token,
   pdfhandler,
   setMemData,
-  memData
+  memData,
+  inquire,
+  setInquire
 }) {
     
-  const [inquire, setInquire] = useState(false);
   // 자기소개서를 등록하지 않아서 에러발생시 사용 할 데이터
   const [errorContext, setError] = useState(null);
+
 
   // 자기소개서 axios
   useEffect(() => {

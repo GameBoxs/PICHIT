@@ -2,9 +2,10 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { PITCHIT_URL } from "../../../../../store/values";
 import axios from "axios";
+import { set } from "lodash";
 
 
-function ResumeUpload({pdfhandler,token}) {
+function ResumeUpload({pdfhandler,token,setMemData}) {
 
     // pdf 업로드 용인듯 ( 이것도 필요없을지도 )
     const [uploadPdf, setUploadPdf] = useState(false);
@@ -35,6 +36,7 @@ function ResumeUpload({pdfhandler,token}) {
       .then((res) => {
         console.log(res);
         setUploadPdf(true)
+        setMemData(res)
 
       })
       .catch((err) => console.log(err));

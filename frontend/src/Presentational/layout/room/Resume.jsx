@@ -4,10 +4,7 @@ import ViewPdf from "../../component/room/resume/ViewPdf";
 import * as pdfjs from "pdfjs-dist";
 
 import { IoClose } from "react-icons/io5";
-
-import axios from "axios";
 import { useSelector } from "react-redux";
-import { PITCHIT_URL } from "../../../store/values";
 
 import MyResume from "../../component/room/resume/MyInquire/MyResume";
 import MemberList from "../../component/room/resume/interviewee/MemberList";
@@ -26,14 +23,12 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   const [showPdf, setShowPdf] = useState(false);
   // pdf 업로드 용인듯 ( 이것도 필요없을지도 )
   // 조회 할 때 useAxios 컨트롤 용도로 쓸려했는데,,
-  const [inquire, setInquire] = useState(false);
+
   // 이름 클릭시 상태 변화 
   const [memData , setMemData] =useState()
+  console.log(memData)
 
-  
-
-  console.log("이거 감지해?",memData)
-
+  const [inquire, setInquire] = useState(false);
 
   // 본인이 아닌 다른사람의 이름을 눌렀을 때 (자기소개서 유무)
   const userInquirePdf =
@@ -46,25 +41,28 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
     );
 
   // 본인 이름을 눌렀을 때
-  const myInquirePdf =
-    memData === null ? (
-      <ResumeUpload pdfhandler={pdfhandler} token={token}/> 
-    ) : (
-      <>
-        <MyResume setMemData={setMemData} pdfhandler={pdfhandler} setShowPdf={setShowPdf} token={token} />
-      </>
-    );
+  const myInquirePdf =<>
+    {memData === null ? (
+      <ResumeUpload setMemData={setMemData} pdfhandler={pdfhandler} token={token}/> 
+      ) : (<>
+    { memData === undefined? (<FileListBody>자신의 이름을 클릭해주세요</FileListBody> ) :(<MyResume setMemData={setMemData} pdfhandler={pdfhandler} setShowPdf={setShowPdf} token={token} />
+    )}
+    </>
+    ) }
+    </>
+
+
 
   // pdf 창 닫기
   const onPdfClose = (e) => {
     setShowPdf(false);
-    
   };
 
 
   return (
     <MainContainer>
-      <MemberList memData={memData} setMemData={setMemData}  token={token}pdfhandler={pdfhandler}  participants={participants} setPdfHandler={setPdfHandler} setShowPdf={setShowPdf} setInquire={setInquire}  />
+      <MemberList memData={memData} setMemData={setMemData}  token={token} pdfhandler={pdfhandler}  participants={participants} setPdfHandler={setPdfHandler} setShowPdf={setShowPdf} setInquire={setInquire}
+      inquire={inquire} />
       <FileContainer>
         {showPdf ? (
           <ModalOverlay visible={showPdf}>
