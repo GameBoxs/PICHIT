@@ -5,12 +5,12 @@ import { MdAddCircle } from "react-icons/md";
 import { useRef } from "react";
 
 const QuestionInsert = (props) => {
-  const insertRef = useRef()
+  const insertRef = useRef();
 
   const { userinfo, pdfhandler, token, commentHandler } = props;
   // useAxios 실행 조건 click = true 일 때 실행 됨
   const [click, setClick] = useState(false);
- // 질문 입력을 위한 body 값
+  // 질문 입력을 위한 body 값
   const [question, setQuestion] = useState({
     content: "",
     interviewJoinId: 0,
@@ -30,16 +30,16 @@ const QuestionInsert = (props) => {
   useEffect(() => {
     if (postData !== null && postData.success) {
       setClick(false);
-      insertRef.current.value = ''
+      insertRef.current.value = "";
       setQuestion({
         ...question,
-        content: '',
+        content: "",
       });
-      commentHandler(true)
+      commentHandler(true);
     }
   }, [postData]);
 
-  // content 입력값 감지 
+  // content 입력값 감지
   const inputHandler = (e) => {
     setQuestion({
       ...question,
@@ -47,8 +47,7 @@ const QuestionInsert = (props) => {
     });
   };
 
-
-  // 질문 작성 handler 작성 버튼 클릭시 click=true로 활성화 됨 
+  // 질문 작성 handler 작성 버튼 클릭시 click=true로 활성화 됨
   const QuestionHandler = (e) => {
     e.preventDefault();
     setClick(true);
@@ -80,9 +79,9 @@ const Input = styled.input.attrs({ type: "text" })`
   border-radius: 1rem;
   font-size: 1rem;
   padding-left: 1.4rem;
-  box-shadow: inset .2rem .2rem .5rem var(--greyLight-2), inset -.2rem -.2rem .5rem var(--white);
+  box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
+    inset -0.2rem -0.2rem 0.5rem var(--white);
   background: none;
-  font-family: inherit;
   color: var(--greyDark);
 
   &::placeholder {
@@ -108,7 +107,7 @@ const Button = styled.button.attrs({ type: "submit" })`
     color: var(--primary-dark);
   }
 
-  *{
+  * {
     font-size: 2rem;
   }
 `;

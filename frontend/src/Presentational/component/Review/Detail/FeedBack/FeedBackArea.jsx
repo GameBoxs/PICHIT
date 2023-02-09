@@ -5,7 +5,6 @@ import FeedBackItem from "./FeedBackItem";
 
 import { memo, useRef } from "react";
 import { useEffect } from "react";
-import AggroL from "../../../../common/Font/AggroL";
 
 const FeedBackArea = ({ title, data }) => {
   const targetElement = useRef(null);
@@ -16,7 +15,6 @@ const FeedBackArea = ({ title, data }) => {
 
   return (
     <FeedBackWrap>
-      <AggroL />
       <Title title={title}></Title>
       <SubTitle title="피드백"></SubTitle>
       <div ref={targetElement}>
@@ -49,7 +47,7 @@ const FeedBackWrap = styled.div`
 
   .SubTitle,
   .Title {
-    font-family: SBagrroL;
+    font-family: 'SBAggroL';
     color: var(--greyDark);
   }
 

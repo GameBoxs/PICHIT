@@ -4,142 +4,65 @@ import ViewPdf from "../../component/room/resume/ViewPdf";
 import * as pdfjs from "pdfjs-dist";
 
 import { IoClose } from "react-icons/io5";
-
-import axios from "axios";
 import { useSelector } from "react-redux";
-import {PITCHIT_URL} from "../../../store/values"
-import { setDate } from "date-fns";
 
+import MyResume from "../../component/room/resume/MyInquire/MyResume";
+import MemberList from "../../component/room/resume/interviewee/MemberList";
+import ResumeUpload from "../../component/room/resume/MyInquire/ResumeUpload";
 // 근데 import * as 안하면 에러남 필수로 해줄 것!
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
+  // 토큰, 유저 정보 가져옴
   const { token, userinfo } = useSelector((state) => state);
-  const [pdfFileList, setPdfFileList] = useState([]);
+  // pdf 파일 목록 가져옴 (내 자소서 보기 버튼 활성화) 필요없을지두
+  // 원래 blob 담는 용이였는데 필요없을듯
   const [pdfUrl, setPdfUrl] = useState();
+  // pdf 모달 띄우는 용
   const [showPdf, setShowPdf] = useState(false);
-  const [uploadPdf , setUploadPdf] =useState(false);
+  // pdf 업로드 용인듯 ( 이것도 필요없을지도 )
+  // 조회 할 때 useAxios 컨트롤 용도로 쓸려했는데,,
 
-  // const [PostPdf, isLoading] = useAxios()
+  // 이름 클릭시 상태 변화 
+  const [memData , setMemData] =useState()
+  console.log(memData)
 
-  // const [postData, isLoading] = useAxios(
-  //   `interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
-  //   "POST",
-  //   token,
-  //   pdfUrl,
-  //   uploadPdf
-  // )
-  // console.log(pdfUrl)
-  
-  // useEffect(()=> {
-  //   if (postData && postData.success){
-  //     setUploadPdf(false)
-  //   }
-  // },[postData])
- 
+  const [inquire, setInquire] = useState(false);
 
-  const getUrl = (file) => {
-    const blob = new Blob([file]);
-    const pdfUrl = URL.createObjectURL(blob);
-    setPdfUrl(pdfUrl);
-    const frm = new FormData()
-    frm.append("file",file,{ type:  
-      "application/pdf" });
-    axios({
-      method:"post",
-      url:`${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
-      headers:{
-        "Authorization": token,
-        "Content-Type": 'multipart/form-data',
-      },
-      data:
-        frm
-    }).then((res) => {
-      setDate(res.data)
-    })
-    .catch((err) => 
-      console.log(err))
-  };
-
-  const onPdfFileUpload = (e) => {
-    const selectedList = Array.from(e.target.files);
-    const getAddList = selectedList.map((item) => item);
-    getUrl(getAddList[0]);
-    setPdfFileList(selectedList);
-  };
-
-  const onDeleteTarget = () => {
-    setPdfFileList([]);
-  };
-
-  const FileResultList = () => {
-    return React.createElement(
-      React.Fragment,
-      null,
-      pdfFileList.map((item, index) =>
-        React.createElement(
-          FileResultBody,
-          null,
-          React.createElement(
-            FileResultRow,
-            { key: index },
-            React.createElement(
-              "div",
-              { onClick: onUrlClick, className: "fileName" },
-              item.name
-            ),
-            React.createElement(
-              DeleteButton,
-              { onClick: onDeleteTarget },
-              <IoClose />
-            )
-          )
-        )
-      )
+  // 본인이 아닌 다른사람의 이름을 눌렀을 때 (자기소개서 유무)
+  const userInquirePdf =
+     memData === null  ? (
+      <FileListBody>등록된 자소서가 없습니다</FileListBody>
+    ) : (
+      <FileListBody>
+        <Label onClick={() => setShowPdf(true)}>조회하기</Label>
+      </FileListBody>
     );
-  };
 
-  const onUrlClick = (e) => {
-    setShowPdf(true);
-  };
+  // 본인 이름을 눌렀을 때
+  const myInquirePdf =<>
+    {memData === null ? (
+      <ResumeUpload setMemData={setMemData} pdfhandler={pdfhandler} token={token}/> 
+      ) : (<>
+    { memData === undefined? (<FileListBody>보고 싶은 자기소개서를 선택해 주세요</FileListBody> ) :(<MyResume setMemData={setMemData} pdfhandler={pdfhandler} setShowPdf={setShowPdf} token={token} />
+    )}
+    </>
+    ) }
+    </>
 
+
+
+  // pdf 창 닫기
   const onPdfClose = (e) => {
     setShowPdf(false);
   };
 
-  const getPdfOwner = (elem) => {
-    setPdfHandler({...elem})
-
-  }
-
-  const interviewees = participants.map((elem, idx) => {
-    return (
-      <React.Fragment
-      key={idx}
-    >
-        <input
-          type="radio"
-          name={`radio`}
-          id={`tab-${idx + 1}`}
-          onClick={()=>getPdfOwner(elem)}
-        />
-        <label htmlFor={`tab-${idx + 1}`}
-        >
-          <p>{elem.name}</p>
-        </label>
-      </React.Fragment>
-    );
-  });
-
-
 
   return (
     <MainContainer>
-      <Member>
-        {interviewees}
-        <MemberColor></MemberColor>
-      </Member>
+      <MemberList memData={memData} setMemData={setMemData}  token={token} pdfhandler={pdfhandler}  participants={participants} setPdfHandler={setPdfHandler} setShowPdf={setShowPdf} setInquire={setInquire}
+      inquire={inquire} />
       <FileContainer>
         {showPdf ? (
           <ModalOverlay visible={showPdf}>
@@ -149,27 +72,15 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
                   <IoClose />
                 </CloseButton>
               </ButtonContainer>
-              <ViewPdf fileUrl={pdfUrl} />
+              <ViewPdf pdfhandler={pdfhandler} fileUrl={pdfUrl} />
             </PdfContainer>
           </ModalOverlay>
         ) : (
           <FileList>
-            {pdfFileList.length === 0 ? (<>
             {pdfhandler.id === userinfo.id ? (
-              <FileListBody>
-                파일이 존재하지 않습니다.
-                  <Label htmlFor="uploadFile">파일 업로드하기</Label>
-                  <Input
-                    id="uploadFile"
-                    accept="application/pdf"
-                    multiple={true}
-                    onChange={onPdfFileUpload}
-                  />
-              </FileListBody>
-            ):(<FileListBody>파일이 존재하지 않습니다.</FileListBody>)}
-            </>
+              <>{myInquirePdf}</>
             ) : (
-              <FileResultList />
+              <>{userInquirePdf}</>
             )}
           </FileList>
         )}
@@ -197,7 +108,6 @@ const Member = styled.div`
   }
 
   & > input:checked + label {
-    transition: all 0.5s ease;
     color: var(--primary);
   }
 
@@ -210,7 +120,8 @@ const Member = styled.div`
     align-items: center;
     cursor: pointer;
     color: var(--greyDark);
-    transition: all 0.5s ease;
+    transition: all 0.1s ease;
+    font-family: "SBAggroL";
 
     &:hover {
       color: var(--primary);
@@ -229,15 +140,15 @@ const Member = styled.div`
 
   #tab-1:checked ~ ${MemberColor} {
     transform: translateX(0);
-    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   }
   #tab-2:checked ~ ${MemberColor} {
     transform: translateX(5rem);
-    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   }
   #tab-3:checked ~ ${MemberColor} {
     transform: translateX(10rem);
-    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   }
 `;
 

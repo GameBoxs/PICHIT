@@ -2,13 +2,11 @@ import React, { useEffect, useState, useLayoutEffect } from "react";
 
 import styled from "styled-components";
 import Title from "../../common/Title";
-import AggroL from "../../common/Font/AggroL";
 
 function RoomHeaderLoading() {
   
   return (
     <Layout>
-      <AggroL />
       <Title title={""} />
     </Layout>
   );
@@ -34,7 +32,7 @@ const Layout = styled.div`
     font-size: 2.5rem;
     text-align: left;
     margin-block: 3rem;
-    font-family: "SBagrroL";
+    font-family: 'SBAggroL';
   }
 
   .Btn {

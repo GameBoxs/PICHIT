@@ -89,7 +89,7 @@ const ItemWrap = styled.div`
 
   & div:nth-child(1) {
     font-size: 2.2rem;
-    font-family: SBagrroL;
+    font-family: 'SBAggroL';
     width: 100%;
   }
 
