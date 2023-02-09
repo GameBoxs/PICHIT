@@ -33,7 +33,10 @@ const IntervieweePage = (props) => {
     intervieweeId: 0,
     interviewRoomId: 0,
   });
-  const [intervieweeMem, setIntervieweeMem] = useState([]); //면접관 명단들
+  const [members, setMembers] = useState({
+    interviewee: {},
+    interviewers: [],
+  });
   const [isQuestion, setIsQuestion] = useState(false); //useAxios에서 excute로 쓰이는 애들
   const [questionData, setQuestionData] = useState([]); //질문 목록들
 
@@ -88,8 +91,6 @@ const IntervieweePage = (props) => {
     if (closeExecute) setCloseExecute(false);
   }, [closeExecute]);
 
-  console.log(starScore)
-
   useEffect(() => {
     if (finishExecute) {
       // 아래에 평가 별 0으로 초기화 하는 내용 넣어야 함.
@@ -136,9 +137,7 @@ const IntervieweePage = (props) => {
   function makeBlank() {
     let result = [];
     for (let i = 0; i < cnt; i++) {
-      result.push(
-        <CamCompo className="in" key={i} />
-      );
+      result.push(<CamCompo className="in" key={i} />);
     }
     return result;
   }
@@ -164,12 +163,27 @@ const IntervieweePage = (props) => {
       MemberList.push({ id: targetID, name: targetNickName });
     }
 
-    //면접관들 리스트
-    const Members = MemberList.filter(
-      (person) => person.id != info.interviewee
-    );
+    console.log(info.interviewee);
 
-    setIntervieweeMem([...Members]);
+    //면접관들 리스트
+    const Members = MemberList.filter((person) => {
+      if (person.id == info.interviewee) {
+        setMembers((prev) => {
+          return {
+            ...prev,
+            interviewee: { ...person },
+          };
+        });
+      }
+      return person.id != info.interviewee;
+    });
+
+    setMembers((prev) => {
+      return {
+        ...prev,
+        interviewers: [...Members],
+      };
+    });
 
     /*
     --------------면접자 지정 제대로 되면 사용할 코드---------------
@@ -181,14 +195,6 @@ const IntervieweePage = (props) => {
         interviewRoomId: roomID,
       };
     });
-
-    // setReqBody(() => {  //테스트용 코드
-    //   return {
-    //     writerId: Members[0].id,
-    //     intervieweeId: 3212,
-    //     interviewRoomId: roomID,
-    //   };
-    // });
   }, [props]);
 
   useEffect(() => {
@@ -219,7 +225,6 @@ const IntervieweePage = (props) => {
 
   //별점 값 받아오는 함수
   const RatingHandler = (e) => {
-    console.log(e.target.value);
     setStarScore(e.target.value);
   };
 
@@ -270,26 +275,30 @@ const IntervieweePage = (props) => {
       });
     }
   };
+  console.log(members);
 
   //질문 컴포넌트 상단 면접관들 목록 보여주는 함수
-  const interviewees = intervieweeMem.map((elem, idx) => {
-    return (
-      <React.Fragment key={idx}>
-        <input
-          type="radio"
-          name={`radio`}
-          value={elem.id}
-          id={`tab-${idx + 1}`}
-          onClick={() => {
-            setQuestioner(elem);
-          }}
-        />
-        <label htmlFor={`tab-${idx + 1}`}>
-          <p>{elem.name}</p>
-        </label>
-      </React.Fragment>
-    );
-  });
+  const interviewees =
+    members.interviewers !== {}
+      ? members.interviewers.map((elem, idx) => {
+          return (
+            <React.Fragment key={idx}>
+              <input
+                type="radio"
+                name={`radio`}
+                value={elem.id}
+                id={`tab-${idx + 1}`}
+                onClick={() => {
+                  setQuestioner(elem);
+                }}
+              />
+              <label htmlFor={`tab-${idx + 1}`}>
+                <p>{elem.name}</p>
+              </label>
+            </React.Fragment>
+          );
+        })
+      : null;
 
   const finishInterviewe = () => {
     MySwal.fire({
@@ -392,10 +401,7 @@ const IntervieweePage = (props) => {
           {/* 평가 */}
           <QuestionBody>
             <SubTitle title={"평가"} />
-            <Rating
-              RatingHandler={RatingHandler}
-              starScore={starScore}
-            />
+            <Rating RatingHandler={RatingHandler} starScore={starScore} />
           </QuestionBody>
 
           {/* 피드백 */}
@@ -413,7 +419,7 @@ const IntervieweePage = (props) => {
         <BodyCompo chatOn={chatOn}>
           {/* 자소서 보기 버튼 */}
           <QuestionBody>
-            <SubTitle title={"이희수"} />
+            <SubTitle title={members.interviewee.name} />
             <SubBtn>자소서 보기</SubBtn>
           </QuestionBody>
 
@@ -566,7 +572,7 @@ const SubBtn = styled.div`
     -0.1rem -0.1rem 0.25rem var(--white);
 
   color: var(--greyLight-1);
-  
+
   &:hover {
     color: var(--white);
   }

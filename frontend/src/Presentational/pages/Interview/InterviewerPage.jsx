@@ -33,9 +33,7 @@ const InterviewerPage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   //       </CamCompo>
   //     );
   //   });
-
-  console.log(info)
-
+  
   function People() {
     let cnt = 3 - info.subscribers.length;
     function makeBlank() {
