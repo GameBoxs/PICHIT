@@ -2,12 +2,11 @@ import React, { memo } from "react";
 import styled from "styled-components";
 import QuestionItem from "./QuestionItem";
 import SubTitle from "../../../common/SubTitle";
-import AggroL from "../../../common/Font/AggroL";
 
 const QuestionList = ({ Questions, setGetUser, userinfo, pdfhandler }) => {
+  console.log("여기 렌더링 몇번?")
   return (
     <List>
-      <AggroL />
       {Questions.map((Question) => (
         <QuestionItem
           Question={Question}

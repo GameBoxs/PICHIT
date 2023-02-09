@@ -8,7 +8,7 @@ import PlanTime from "../../component/PlanTime";
 import Person from "../../component/Person";
 
 import { BsFillPersonFill } from "react-icons/bs";
-import AggroL from "../../common/Font/AggroL";
+// import AggroL from "../../common/Font/AggroL";
 
 function RoomMain(props) {
   const { join, host, data, userinfo } = props;
@@ -80,7 +80,6 @@ function RoomMain(props) {
 
   return (
     <MainPageContainer>
-      <AggroL />
       <SectionHeader>
         <SubTitle title={"상세 정보"} />
       </SectionHeader>
@@ -120,7 +119,7 @@ function RoomMain(props) {
   );
 }
 
-export default RoomMain;
+export default memo(RoomMain);
 
 const Description = styled.div`
   border-radius: 1rem;
@@ -133,7 +132,7 @@ const Description = styled.div`
 
   .SubTitle {
     margin-bottom: 1rem;
-    font-family: SBagrroL;
+    font-family: 'SBAggroL';
     color: var(--greyDark);
   }
 `;
@@ -186,7 +185,7 @@ const SectionHeader = styled.div`
 
   .SubTitle {
     font-size: 1.2rem;
-    font-family: SBagrroL;
+    font-family: 'SBAggroL';
   }
 
   svg {
@@ -218,7 +217,7 @@ const Card = styled.div`
     position: relative;
     margin: 1rem 0 0 0;
     text-align: center;
-    font-family: SBagrroL;
+    font-family: 'SBAggroL';
     color: var(--greyDark);
   }
 

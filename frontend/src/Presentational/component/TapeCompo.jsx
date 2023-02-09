@@ -16,7 +16,7 @@ const Tape = styled.div`
   display: flex;
   align-items: center;
   margin: 0.5rem 1rem 0 1rem;
-  font-family: SBagrroL;
+  font-family: 'SBAggroL';
   font-size: 3rem;
 
   * {

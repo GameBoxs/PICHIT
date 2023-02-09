@@ -9,10 +9,9 @@ import GoHome from "../common/GoHome";
 import FilterArea from "../component/Review/Filter/FilterArea";
 import HistoryList from "../component/Review/History/HistoryList";
 import DetailArea from "../component/Review/Detail/DetailArea";
-import AggroL from "../common/Font/AggroL";
-import AggroM from "../common/Font/AggroM";
 import { TiStarburst } from "react-icons/ti";
 import { memo } from "react";
+import SoundArea from "../component/Review/Detail/SoundArea";
 
 //#endregion
 
@@ -37,8 +36,6 @@ const ReviewPage = (props) => {
 
   return (
     <ReviewMainBody>
-      <AggroL />
-      <AggroM />
       <GoHome />
       <TiStarburst />
       <Title title={titleText}></Title>
@@ -57,14 +54,14 @@ const ReviewPage = (props) => {
 export default memo(ReviewPage);
 
 const ReviewTitle = styled.div`
-  font-family: SBagrroL;
+  font-family: 'SBAggroL';
   display: flex;
   font-size: 3rem;
   line-height: 4rem;
   color: var(--greyDark);
 
   div {
-    font-family: SBagrroM;
+    font-family: 'SBAggroM';
     font-size: 3rem;
     color: var(--primary);
   }
@@ -80,7 +77,7 @@ const BoardBox = styled.div`
 
   .SubTitle {
     font-size: 1.3rem;
-    font-family: SBagrroM;
+    font-family: 'SBAggroM';
     color: var(--primary-light);
     padding: 1.4rem 1rem 1rem 1rem;
     height: 100%;

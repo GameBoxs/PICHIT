@@ -14,13 +14,38 @@ const DetailArea = ({ selectedID }) => {
   const [data, setData] = useState();
   const [nowPage, setNowPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
-  const [getData, isLoading] = useAxios(
+  const [sound, setSound] = useState({
+    url: "",
+    timestamp: {},
+  });
+  const [getData, isLoadingData] = useAxios(
     `interviewjoins/${selectedID}/questions-with-feedbacks?size=2000`,
     "GET",
     token,
     null,
     selectedID ? true : false
   );
+
+  const [getSound, isLoadingSound] = useAxios(
+    // `interviewjoins/{selectedID}/recordings`,
+    `interviewjoins/3332/recordings`,
+    "GET",
+    token,
+    null
+  );
+
+  console.log("----------------------------------------")
+
+  useEffect(() => {
+    if (getSound && getSound.success && getSound.data) {
+      setSound(() => {
+        return {
+          url: getSound.data.recordingUri,
+          timestamp: {...getSound.data.timestamps},
+        }
+      });
+    }
+  }, [getSound]);
 
   useEffect(() => {
     if (getData && getData.success && getData.data) {
@@ -38,11 +63,11 @@ const DetailArea = ({ selectedID }) => {
       <SubTitle title="면접 피드백" />
       <Container>
         {selectedID && data ? (
-          isLoading === true ? (
+          isLoadingData === true ? (
             <div>loading...</div>
           ) : (
             <>
-              <SoundArea />
+              <SoundArea sound={sound}/>
               <PageBar
                 setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
                 currentPage={nowPage} //현재페이지
@@ -55,7 +80,7 @@ const DetailArea = ({ selectedID }) => {
             </>
           )
         ) : (
-          /* <FeedBackArea title={currentPost.question} data={currentPost.reviews}/> */
+          //<FeedBackArea title={currentPost.question} data={currentPost.reviews}/>
           <NullCompo>기록을 선택해주세요</NullCompo>
         )}
       </Container>
@@ -71,7 +96,7 @@ const Container = styled.div`
   background-color: var(--greyLight-1);
   border-radius: 3rem;
   margin-top: 1rem;
-  padding : 2rem 4rem;
+  padding: 2rem 4rem;
 
   .paginationBar {
     height: 1em;
@@ -100,7 +125,7 @@ const DetailWrap = styled.div`
 
   & > div:first-child {
     font-size: 1.3rem;
-    font-family: SBagrroM;
+    font-family: "SBAggroB";
     color: var(--primary-light);
     padding: 1.4rem 1rem 1rem 1rem;
     /* border-bottom: solid 2px var(--greyDark); */

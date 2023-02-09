@@ -234,7 +234,6 @@ const Member = styled.div`
   }
 
   & > input:checked + label {
-    transition: all 0.5s ease;
     color: var(--primary);
   }
 
@@ -247,7 +246,8 @@ const Member = styled.div`
     align-items: center;
     cursor: pointer;
     color: var(--greyDark);
-    transition: all 0.5s ease;
+    transition: all 0.1s ease;
+    font-family: "SBAggroL";
 
     &:hover {
       color: var(--primary);
@@ -266,15 +266,15 @@ const Member = styled.div`
 
   #tab-1:checked ~ ${MemberColor} {
     transform: translateX(0);
-    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   }
   #tab-2:checked ~ ${MemberColor} {
     transform: translateX(5rem);
-    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   }
   #tab-3:checked ~ ${MemberColor} {
     transform: translateX(10rem);
-    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   }
 `;
 
