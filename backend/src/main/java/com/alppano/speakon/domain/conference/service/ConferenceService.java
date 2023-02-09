@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class ConferenceService {
 
     private OpenVidu openvidu;
     private final ObjectMapper objectMapper;
+    private final HttpRequestService httpRequestService;
     private final RedisTemplate<String, Object> redisTemplate;
     private final InterviewRoomRepository interviewRoomRepository;
     private final InterviewJoinRepository interviewJoinRepository;
@@ -112,7 +114,7 @@ public class ConferenceService {
      * redis 회의 정보 제거 + openvidu 세션 제거 /
      * mariaDB로 회의 정보 이관 및 최종 종료
      */
-    public void closeConference(Long requesterId, Long interviewRoomId) throws JsonProcessingException, OpenViduJavaClientException, OpenViduHttpException {
+    public void closeConference(Long requesterId, Long interviewRoomId) throws IOException, OpenViduJavaClientException, OpenViduHttpException {
         //TODO: MariaDB에 자료 이관 작업
         InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
@@ -126,6 +128,7 @@ public class ConferenceService {
             throw new ResourceNotFoundException("존재하지 않는 회의입니다.");
         }
         deleteData(String.valueOf(interviewRoomId));
+        httpRequestService.broadCastSignal(conference.getSessionId(), "session-closed", "goodbye");
 
         openvidu.fetch();
         Session session = openvidu.getActiveSession(conference.getSessionId());
