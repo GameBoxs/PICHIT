@@ -34,6 +34,7 @@ function RoomPage() {
     useAxios(`interviewrooms/${roomParamsId}`, "POST", token, valid)
   ;
   console.log(postData)
+  console.log("roomPage",host)
   //useEffect
   useEffect(() => {
     setAboutUser(userinfo);
@@ -50,7 +51,6 @@ function RoomPage() {
 
   useEffect(() => {
     const tmpData = postData?.data;
-
     if (postData && tmpData) {
       let originParticipants = tmpData.participants;
       let userIsMe = {}
