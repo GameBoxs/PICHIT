@@ -158,7 +158,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
         userinfo: userinfo,
         roomId: id,
         isHost: host
-      },
+      }
     });
 
     

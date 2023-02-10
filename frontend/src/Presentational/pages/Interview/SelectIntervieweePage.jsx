@@ -131,7 +131,7 @@ const SelectIntervieweePage = ({
           text="종료"
           handler={() => {
             leaveSession(session, setOV);
-            navigate(`/room/${roomNum}`);
+            navigate(`/room/${roomNum}`,{state:{},replace:true});
           }}
           isImportant={false}
         />
