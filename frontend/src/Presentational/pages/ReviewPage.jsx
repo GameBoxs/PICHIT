@@ -54,14 +54,14 @@ const ReviewPage = (props) => {
 export default memo(ReviewPage);
 
 const ReviewTitle = styled.div`
-  font-family: 'SBAggroL';
+  font-family: "SBAggroL";
   display: flex;
   font-size: 3rem;
   line-height: 4rem;
   color: var(--greyDark);
 
   div {
-    font-family: 'SBAggroM';
+    font-family: "SBAggroM";
     font-size: 3rem;
     color: var(--primary);
   }
@@ -77,7 +77,7 @@ const BoardBox = styled.div`
 
   .SubTitle {
     font-size: 1.3rem;
-    font-family: 'SBAggroM';
+    font-family: "SBAggroM";
     color: var(--primary-light);
     padding: 1.4rem 1rem 1rem 1rem;
     height: 100%;
@@ -111,5 +111,9 @@ const ReviewMainBody = styled.div`
     font-size: 3rem;
     margin-bottom: 2rem;
     color: var(--primary);
+
+    path {
+      color: var(--primary);
+    }
   }
 `;

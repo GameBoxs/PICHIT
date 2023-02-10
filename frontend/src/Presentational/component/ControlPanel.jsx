@@ -41,26 +41,40 @@ const ControlPanel = ({ play, isPlaying, duration, currentTime }) => {
 
   return (
     <ControlPanelDiv>
-      <Timer>{secondsToHms(currentTime)}</Timer>
-      <div>
+      <Timers>
+        <Timer>{secondsToHms(currentTime)}</Timer>
+        <Timer>{secondsToHms(duration)}</Timer>
+      </Timers>
+      <Player>
         <SoundBtn play={play} isPlaying={isPlaying} />
-      </div>
-      <Timer>{secondsToHms(duration)}</Timer>
+      </Player>
     </ControlPanelDiv>
   );
 };
 
 export default memo(ControlPanel);
 
+const Player = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`
+
 const Timer = styled.div`
-  font-family: 'SBAggroM';
+  font-family: "SBAggroM";
   color: var(--greyDark);
+`;
+
+const Timers = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const ControlPanelDiv = styled.div`
   height: fit-content;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: flex-start;
   margin-top: 1rem;
 `;

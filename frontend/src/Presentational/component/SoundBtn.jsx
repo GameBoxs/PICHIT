@@ -70,6 +70,9 @@ const CircleBack = styled.div`
 const PlayBtn = styled.div`
   position: absolute;
   transition: all 0.2s linear;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const BtnContainer = styled.div`
@@ -106,5 +109,9 @@ const Circle = styled.div`
   svg {
     margin: 0 !important;
     font-size: 2rem;
+  }
+
+  path {
+    color: var(--primary);
   }
 `;

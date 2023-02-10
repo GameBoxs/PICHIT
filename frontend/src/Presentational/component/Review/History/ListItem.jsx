@@ -116,8 +116,12 @@ const ItemWrap = styled.div`
   }
 
   svg {
-    font-size: 2rem !important;
+    font-size: 2rem;
     margin: 0 !important;
+  }
+
+  path {
+    color: var(--primary);
   }
 `;
 

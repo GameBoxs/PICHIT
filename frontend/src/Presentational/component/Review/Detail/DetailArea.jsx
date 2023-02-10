@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useRef } from "react";
 import useAxios from "../../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 
@@ -10,6 +10,7 @@ import PageBar from "../../../common/Pagination/PageBar";
 
 const DetailArea = ({ selectedID }) => {
   const token = useSelector((state) => state.token);
+  const audioRef = useRef();
 
   const [data, setData] = useState();
   const [nowPage, setNowPage] = useState(1);
@@ -18,6 +19,8 @@ const DetailArea = ({ selectedID }) => {
     url: "",
     timestamp: {},
   });
+  const [isPlaying, setIsPlaying] = useState(false);
+
   const [getData, isLoadingData] = useAxios(
     `interviewjoins/${selectedID}/questions-with-feedbacks?size=2000`,
     "GET",
@@ -27,14 +30,13 @@ const DetailArea = ({ selectedID }) => {
   );
 
   const [getSound, isLoadingSound] = useAxios(
-    // `interviewjoins/{selectedID}/recordings`,
-    `interviewjoins/3332/recordings`,
+    `interviewjoins/${selectedID}/recordings`,
+    // `interviewjoins/3332/recordings`,
     "GET",
     token,
-    null
+    null,
+    selectedID ? true : false
   );
-
-  console.log("----------------------------------------")
 
   useEffect(() => {
     if (getSound && getSound.success && getSound.data) {
@@ -58,6 +60,16 @@ const DetailArea = ({ selectedID }) => {
     setNowPage(1);
   }, [selectedID]);
 
+  const playTime = (time) => {
+    //받아온 시간을 바탕으로 duration에 맞는 값으로 계산
+
+    //현재 재생 시간을 selectTime으로 맞춤
+    audioRef.current.currentTime = time;
+
+    setIsPlaying(true);
+    audioRef.current.play();
+  };
+
   return (
     <DetailWrap>
       <SubTitle title="면접 피드백" />
@@ -67,7 +79,7 @@ const DetailArea = ({ selectedID }) => {
             <div>loading...</div>
           ) : (
             <>
-              <SoundArea sound={sound}/>
+              <SoundArea sound={sound} audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
               <PageBar
                 setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
                 currentPage={nowPage} //현재페이지
@@ -76,6 +88,8 @@ const DetailArea = ({ selectedID }) => {
               <FeedBackArea
                 title={data[nowPage - 1].content}
                 data={data[nowPage - 1].feedbacks}
+                timeStamp={sound.timestamp[nowPage - 1]}
+                playTime={playTime}
               />
             </>
           )
@@ -99,6 +113,7 @@ const Container = styled.div`
   padding: 2rem 4rem;
 
   .paginationBar {
+    width: 100%;
     height: 1em;
 
     * {
