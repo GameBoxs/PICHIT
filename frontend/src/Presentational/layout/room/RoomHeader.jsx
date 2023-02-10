@@ -16,18 +16,22 @@ import SubTitle from "../../common/SubTitle";
 
 const MySwal = withReactContent(Swal);
 
-function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
+function RoomHeader({
+  setJoin,
+  data,
+  userJoinInfo,
+  password,
+  token,
+  userinfo,
+}) {
   const { id, title, participants, sessionOpened, manager } = data;
+  const { join, host } = userJoinInfo;
 
   const navigate = useNavigate();
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [userJoin, setUserJoin] = useState({
-    enter: false,
-    quit: false,
-  });
-  const [joinEnter, setJoinEnter] =useState(false)
-  const [joinQuit, setJoinQuit] =useState(false)
+  const [joinEnter, setJoinEnter] = useState(false);
+  const [joinQuit, setJoinQuit] = useState(false);
   const [deleteData, setDeleteData] = useState(false);
   const [joinId, setJoinId] = useState(0);
 
@@ -49,8 +53,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     joinEnter
   );
 
-  console.log("enterRes",enterRes)
-
   const deleteResult = useAxios(
     //방 삭제하기
     `interviewrooms/${id}`,
@@ -68,28 +70,25 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     quitObj,
     joinQuit
   );
-  console.log("이거 있는거 맞음 ??",userinfo.interviewJoinId)
 
-  console.log("quitRes",quitRes)
-  
   //useEffect
   useEffect(() => {
     setJoinId(userinfo.interviewJoinId);
   }, [userinfo]);
 
   useLayoutEffect(() => {
-      if (enterError) {
-        setJoinEnter(false)
-      }
+    if (enterError) {
+      setJoinEnter(false);
+    }
     //방 참여하기 성공 후 새로고침
     if (enterRes !== null) {
-      setJoinEnter(false)
+      setJoinEnter(false);
       if (enterRes.success) {
       } else {
         alert("이미 참가한 방입니다");
       }
     }
-  }, [enterRes,enterError]);
+  }, [enterRes, enterError]);
 
   useEffect(() => {
     //방 삭제하기
@@ -110,27 +109,26 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
 
   useLayoutEffect(() => {
     // 무한 렌더링 (404오류 뜰 때 useAxios false)
-    if (errorContext){
-      setJoinQuit(false)
+    if (errorContext) {
+      setJoinQuit(false);
     }
     //방 탈퇴하기 성공 후 새로고침
     if (quitRes !== null && quitRes.success) {
       window.location.reload();
     }
-  }, [quitRes,errorContext]);
+  }, [quitRes, errorContext]);
 
   //Event Function
   const joinHandler = (isJoin) => {
     //방 참여하기
-    joinRoom(isJoin);
-    setJoinEnter(true)
+    setJoin(isJoin)
+    setJoinEnter(true);
   };
 
   const quitHandler = (isJoin) => {
     //방 탈퇴하기
-    joinRoom(isJoin);
-
-    setJoinQuit(true)
+    setJoin(isJoin)
+    setJoinQuit(true);
   };
 
   const showModal = () => {
@@ -219,20 +217,25 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     <>{EnterBtn}</>
   );
 
-  const RoomHost = manager.id === userinfo.id ? (
-    <BtnContainer>
-      {participants.length >= 2 ? (sessionOpened ? StartBtn : ReadyBtn) : null}
-      <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
-        삭제하기
-      </Button>
-      <Button text={"수정하기"} handler={showModal}>
-        수정하기
-      </Button>
-      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
-    </BtnContainer>
-  ) : (
-    <BtnContainer>{readyRoom}</BtnContainer>
-  );
+  const RoomHost =
+    host ? (
+      <BtnContainer>
+        {participants.length >= 2
+          ? sessionOpened
+            ? StartBtn
+            : ReadyBtn
+          : null}
+        <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
+          삭제하기
+        </Button>
+        <Button text={"수정하기"} handler={showModal}>
+          수정하기
+        </Button>
+        {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
+      </BtnContainer>
+    ) : (
+      <BtnContainer>{readyRoom}</BtnContainer>
+    );
 
   return (
     <Layout>
@@ -260,7 +263,7 @@ const ManagerLayout = styled.div`
   & .SubTitle:first-child {
     color: var(--greyLight-3);
   }
-  
+
   & .SubTitle:last-child {
     color: var(--greyDark);
   }

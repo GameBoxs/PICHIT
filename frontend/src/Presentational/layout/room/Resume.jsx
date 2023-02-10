@@ -26,7 +26,6 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
 
   // 이름 클릭시 상태 변화 
   const [memData , setMemData] =useState()
-  console.log(memData)
 
   const [inquire, setInquire] = useState(false);
 

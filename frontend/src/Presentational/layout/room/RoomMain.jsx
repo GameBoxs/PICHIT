@@ -11,7 +11,8 @@ import { BsFillPersonFill } from "react-icons/bs";
 // import AggroL from "../../common/Font/AggroL";
 
 function RoomMain(props) {
-  const { join, host, data, userinfo } = props;
+  const { userJoinInfo, data, userinfo } = props;
+  const { join, host } = userJoinInfo;
   const {
     createdDate,
     currentPersonCount,
@@ -24,7 +25,7 @@ function RoomMain(props) {
     startDate,
     title,
   } = data;
-  
+
   const [isJoin, setIsJoin] = useState(false);
   const [pdf, setPdf] = useState(0);
   const [pdfhandler, setPdfHandler] = useState({});
@@ -50,9 +51,14 @@ function RoomMain(props) {
 
   const RoomQuestion =
     isJoin || host ? (
-      (pdfhandler.interviewJoinId !== userinfo.interviewJoinId)?
-      <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} />:
-      <PopUp>스터디 전에<br /> 볼 수 없습니다.</PopUp>
+      pdfhandler.interviewJoinId !== userinfo.interviewJoinId ? (
+        <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} />
+      ) : (
+        <PopUp>
+          스터디 전에
+          <br /> 볼 수 없습니다.
+        </PopUp>
+      )
     ) : (
       <PopUp>질문을 볼 수 없습니다.</PopUp>
     );
@@ -74,9 +80,12 @@ function RoomMain(props) {
     }
   });
 
-  const RecuritmentList = Recuritment === 0 ? "구하는 인원이 없습니다":new Array(Recuritment).fill().map((_, idx) => {
-    return <BsFillPersonFill key={idx} />;
-  });
+  const RecuritmentList =
+    Recuritment === 0
+      ? "구하는 인원이 없습니다"
+      : new Array(Recuritment).fill().map((_, idx) => {
+          return <BsFillPersonFill key={idx} />;
+        });
 
   return (
     <MainPageContainer>
@@ -97,7 +106,7 @@ function RoomMain(props) {
             <SubTitle title={"남은 인원 수"} />
             <div>
               <BlockList>{RecuritmentList}</BlockList>
-              {Recuritment? `${Recuritment}명`:null}
+              {Recuritment ? `${Recuritment}명` : null}
             </div>
           </Card>
         </Section>
@@ -132,7 +141,7 @@ const Description = styled.div`
 
   .SubTitle {
     margin-bottom: 1rem;
-    font-family: 'SBAggroL';
+    font-family: "SBAggroL";
     color: var(--greyDark);
   }
 `;
@@ -184,8 +193,8 @@ const SectionHeader = styled.div`
 
   .SubTitle {
     font-size: 1.2rem;
-    font-family: 'SBAggroL';
-  color: var(--primary-light);
+    font-family: "SBAggroL";
+    color: var(--primary-light);
   }
 
   svg {
@@ -221,7 +230,7 @@ const Card = styled.div`
     position: relative;
     margin: 1rem 0 0 0;
     text-align: center;
-    font-family: 'SBAggroL';
+    font-family: "SBAggroL";
     color: var(--greyDark);
   }
 

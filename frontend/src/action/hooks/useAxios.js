@@ -27,6 +27,7 @@ function useAxios(target, type, token, body, execute=true) {
   const [isLoading, setIsLoading] = useState(true); //로딩 중인지 아닌지 판단하는 부분
   const [errorContext, setError] = useState(null); // 에러 발생 시 사용할 데이터, 외부로 내보내서 사용
   
+  
   useEffect(() => {
     if(execute) {
       //props를 받고 실행되어야 하기 때문에/통신이기 때문에 useEffect로 감싸줌
@@ -39,7 +40,7 @@ function useAxios(target, type, token, body, execute=true) {
         },
         data: { ...body },
       })
-        .then((res) => {
+      .then((res) => {
           setData(res.data);
         })
         .catch((err) => {
