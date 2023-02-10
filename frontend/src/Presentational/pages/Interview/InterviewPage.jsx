@@ -12,6 +12,10 @@ import { OpenVidu } from "openvidu-browser";
 import {OpenViduLogger} from "openvidu-browser/lib/OpenViduInternal/Logger/OpenViduLogger"
 import { useSelector } from "react-redux";
 import {getToken, leaveSession,} from '../../../action/modules/chatModule';
+// import {useNavigate} from 'react-router-dom';
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const InterviewPage = () => {
   const navigate = useNavigate();
@@ -213,17 +217,66 @@ const InterviewPage = () => {
                 };
               });
              } catch(e){
-              console.log(e);
-              publisher = await OV.initPublisherAsync(undefined, {
-                audioSource: undefined,
-                videoSource: false,
-                publishAudio: true,
-                publishVideo: false,
-                resolution: "640x480",
-                frameRate: 30,
-                insertMode: "APPEND",
-                mirror: false,
-              });
+              let devices = await OV.getDevices();
+              console.log('디바이스 --- ', devices, devices.length);
+              console.log(e.name);
+              if(devices.length !== 0){
+                if(e.name === 'INPUT_VIDEO_DEVICE_NOT_FOUND') {
+                  Swal.fire({
+                    title: "카메라를 찾을 수 없음!",
+                    text:`카메라를 찾을 수 없습니다. 그래도 진행 하시겠습니까?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    showConfirmButton: true,
+                    confirmButtonText: "확인",
+                  }).then(res => {
+                    if(res.isDenied){
+                      navigate("/",{state:{}, replace:true});
+                      window.location.reload();
+                    }
+                  })
+                  publisher = await OV.initPublisherAsync(undefined, {
+                    audioSource: undefined,
+                    videoSource: false,
+                    publishAudio: true,
+                    publishVideo: false,
+                    resolution: "640x480",
+                    frameRate: 30,
+                    insertMode: "APPEND",
+                    mirror: false,
+                  });
+                }
+                else if(e.name === 'INPUT_AUDIO_DEVICE_NOT_FOUND') {
+                  Swal.fire({
+                    title: "마이크를 찾을 수 없습니다!",
+                    text:`본 서비스는 마이크는 필수 입니다.\n마이크 장치 연결 후 재접속 해주세요`,
+                    icon: "warning",
+                    showCancelButton: false,
+                    showConfirmButton: true,
+                    confirmButtonText: "확인",
+                  }).then(res => {
+                    if(res.isConfirmed) {
+                      navigate("/",{state:{}, replace:true});
+                      window.location.reload();
+                    }
+                  })
+                }
+              } 
+              // else {
+              //   Swal.fire({
+              //     title: "마이크를 찾을 수 없습니다!",
+              //     text:`본 서비스는 마이크는 필수 입니다.\n마이크 장치 연결 후 재접속 해주세요`,
+              //     icon: "warning",
+              //     showCancelButton: false,
+              //     showConfirmButton: true,
+              //     confirmButtonText: "확인",
+              //   }).then(res => {
+              //     if(res.isConfirmed) {
+              //       navigate("/",{state:{}, replace:true});
+              //       window.location.reload();
+              //     }
+              //   })
+              // }
               mySession.publish(publisher);
               setInfo((prev) => {
                 return {
@@ -245,10 +298,28 @@ const InterviewPage = () => {
           })
           .catch((error) => {
             console.log(
-              "세션 연결 에러 발생:",
+              "세션 연결 에러 발생: 코드",
               error.code,
+              ' 메세지 ',
               error.message
             );
+
+            if(error.message === 'NotAllowedError: Permission denied'){
+              Swal.fire({
+                title: "장비 권한 없음!",
+                text:`상단의 주소창에서 카메라를 클릭하여 허용해 주시거나, \n브라우저 설정에서 허용으로 변경해 주세요`,
+                icon: "warning",
+                showCancelButton: false,
+                showConfirmButton: true,
+                confirmButtonText: "확인",
+              }).then((result) => {
+                if (result.isConfirmed){
+                  navigate('/');
+                  window.location.reload();
+                }
+              });
+            }
+            
           });
       });
     }
