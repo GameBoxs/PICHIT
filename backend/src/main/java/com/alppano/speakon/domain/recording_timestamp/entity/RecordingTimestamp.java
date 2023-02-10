@@ -19,7 +19,7 @@ public class RecordingTimestamp extends BaseTimeEntity {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "question_id", nullable = false, unique = true)
+    @JoinColumn(name = "question_id", unique = true)
     private Question question;
 
     @ManyToOne
