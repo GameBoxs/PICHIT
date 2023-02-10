@@ -33,8 +33,8 @@ function RoomPage() {
   const [postData, isLoading] =
     useAxios(`interviewrooms/${roomParamsId}`, "POST", token, valid)
   ;
+  
   console.log(postData)
-  console.log("roomPage",host)
   //useEffect
   useEffect(() => {
     setAboutUser(userinfo);
@@ -51,6 +51,7 @@ function RoomPage() {
 
   useEffect(() => {
     const tmpData = postData?.data;
+    // 방장이 
     if (postData && tmpData) {
       let originParticipants = tmpData.participants;
       let userIsMe = {}
@@ -67,9 +68,7 @@ function RoomPage() {
           }
         }
       }
-      tmpData.participants = originParticipants
-
-
+      tmpData.participants = originParticipants 
       setData(tmpData); // 데이터 저장
 
       const MemberArr = tmpData.participants; // 참가자 명단
@@ -77,10 +76,12 @@ function RoomPage() {
 
       // Participants 안에 user 이름이 있으면 해당 정보(interviewjoinId 포함)를 aboutUser에 저장, 이후 자식 컴포넌트에 전달됨
       if (MemberArr?.length >= 2) {
+        console.log("if문")
         for (let i = 0; i < MemberArr.length; i++) {
+          console.log("for문")
           if (MemberArr[i].name === userinfo.name) {
             isIN = true;
-
+            console.log("isIN",isIN)
             setAboutUser({ ...MemberArr[i] });
           } else continue;
         }
@@ -89,6 +90,7 @@ function RoomPage() {
       //있으면 join 값 바꿔줌
       setJoin(isIN ? true : false);
     }
+    console.log("여기 안들어와?")
   }, [postData]);
 
   // true: 대가자

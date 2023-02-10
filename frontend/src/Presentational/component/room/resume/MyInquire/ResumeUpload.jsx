@@ -53,7 +53,7 @@ function ResumeUpload({pdfhandler,token,setMemData}) {
 
 
   return (
-    <div>
+    <Container>
       <FileListBody>
         파일이 존재하지 않습니다.
         <FileResultRow>
@@ -66,7 +66,7 @@ function ResumeUpload({pdfhandler,token,setMemData}) {
         />
         </FileResultRow>
       </FileListBody>
-    </div>
+    </Container>
   );
 }
 
@@ -74,13 +74,14 @@ export default ResumeUpload;
 
 const FileListBody = styled.div`
   display: flex;
-  height: inherit;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1rem;
   border-radius: 1rem;
   background-color: var(--greyLight-1);
+  height: inherit;
+  min-height: 600px;
 `;
 
 const FileResultRow = styled.div`
@@ -126,3 +127,7 @@ const Label = styled.label`
       inset -0.2rem -0.2rem 1rem var(--primary-light);
   }
 `;
+
+const Container = styled.div`
+  height: inherit;
+`

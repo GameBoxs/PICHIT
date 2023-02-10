@@ -27,7 +27,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     quit: false,
   });
   const [joinEnter, setJoinEnter] =useState(false)
-  const [joinQuit, setJoinQuit] =useState(false)
   const [deleteData, setDeleteData] = useState(false);
   const [joinId, setJoinId] = useState(0);
 
@@ -46,11 +45,10 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     "POST",
     token,
     enterObj,
-    joinEnter
+    userJoin.enter
   );
 
-  console.log("enterRes",enterRes)
-
+  console.log("userJoin.enter",userJoin)
   const deleteResult = useAxios(
     //방 삭제하기
     `interviewrooms/${id}`,
@@ -62,15 +60,12 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
 
   const [quitRes, isLoading, errorContext] = useAxios(
     //방 나가기
-    `interviewjoins/${userinfo.interviewJoinId}`,
+    `interviewjoins/${id}`,
     "DELETE",
     token,
     quitObj,
-    joinQuit
+    userJoin.quit
   );
-  console.log("이거 있는거 맞음 ??",userinfo.interviewJoinId)
-
-  console.log("quitRes",quitRes)
   
   //useEffect
   useEffect(() => {
@@ -79,12 +74,15 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
 
   useLayoutEffect(() => {
       if (enterError) {
-        setJoinEnter(false)
+        setUserJoin({
+          enter: false,
+          quit: false,
+        })
       }
     //방 참여하기 성공 후 새로고침
     if (enterRes !== null) {
-      setJoinEnter(false)
       if (enterRes.success) {
+        window.location.reload();
       } else {
         alert("이미 참가한 방입니다");
       }
@@ -111,8 +109,10 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   useLayoutEffect(() => {
     // 무한 렌더링 (404오류 뜰 때 useAxios false)
     if (errorContext){
-      setJoinQuit(false)
-    }
+      setUserJoin({
+        enter: false,
+        quit: false,})
+      }
     //방 탈퇴하기 성공 후 새로고침
     if (quitRes !== null && quitRes.success) {
       window.location.reload();
@@ -123,14 +123,19 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   const joinHandler = (isJoin) => {
     //방 참여하기
     joinRoom(isJoin);
-    setJoinEnter(true)
+    setUserJoin({
+      enter: true,
+      quit: false,
+    });
   };
 
   const quitHandler = (isJoin) => {
     //방 탈퇴하기
     joinRoom(isJoin);
-
-    setJoinQuit(true)
+    setUserJoin({
+      enter: false,
+      quit: true,
+    });
   };
 
   const showModal = () => {
