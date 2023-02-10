@@ -53,10 +53,12 @@ function NavigationButton(props) {
 
   const movePage = () => {
     navigate("/review");
+    menuToggle.current.classList.toggle("active");
   };
 
   const moveMain = () => {
     navigate("/");
+    menuToggle.current.classList.toggle("active");
   };
 
   const NavHeight =
