@@ -30,7 +30,7 @@ function MainBottom() {
   const [sort,setSort] = useState("")
   const [finished, setFinished] = useState("")
   //통신
-  const [APIurl,serAPIurl] = useState()
+  const [APIurl,serAPIurl] = useState('interviewrooms?')
   const myCategory = `my-interviewrooms?page=${currentPage-1}&finished=${finished}`
   const totalCategory = `interviewrooms?page=${currentPage-1}&title=${search}&sort=${sort}`
   
