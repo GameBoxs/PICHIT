@@ -142,7 +142,7 @@ const InterviewPage = () => {
             userinfo: userinfo,
             roomId: roomId,
             isHost: isHost,
-          },
+          },replace:true
         });
       })
 
@@ -158,7 +158,7 @@ const InterviewPage = () => {
                 userinfo: userinfo,
                 roomId: roomId,
                 isHost: isHost,
-              },
+              },replace:true
             });
           } 
           // 면접자가 아니라면 면접관 페이지로 이동
@@ -168,7 +168,7 @@ const InterviewPage = () => {
                 userinfo: userinfo,
                 roomId: roomId,
                 isHost: isHost,
-              },
+              },replace:true
             });
           }
         }
@@ -291,7 +291,7 @@ const InterviewPage = () => {
                    userinfo: userinfo,
                    roomId: roomId,
                    isHost: isHost,
-                 },
+                 },replace:true
                });
              }
 
@@ -314,7 +314,7 @@ const InterviewPage = () => {
                 confirmButtonText: "확인",
               }).then((result) => {
                 if (result.isConfirmed){
-                  navigate('/');
+                  navigate('/',{state:{},replace:true});
                   window.location.reload();
                 }
               });
