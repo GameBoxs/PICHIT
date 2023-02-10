@@ -33,7 +33,11 @@ const ListItem = (props) => {
 
   return (
     <>
-      <ItemWrap onClick={changeID} cursor={props.cursor}>
+      <ItemWrap
+        onClick={changeID}
+        cursor={props.cursor}
+        isBlank={idx === undefined ? true : false}
+      >
         <div>{idx}</div>
 
         {props.item && props.item.title ? (
@@ -89,7 +93,7 @@ const ItemWrap = styled.div`
 
   & div:nth-child(1) {
     font-size: 2.2rem;
-    font-family: 'SBAggroL';
+    font-family: "SBAggroL";
     width: 100%;
   }
 
@@ -103,7 +107,7 @@ const ItemWrap = styled.div`
   }
 
   &:hover {
-    background-color: var(--greyLight-1);
+    background-color: ${props => props.isBlank? null:'var(--greyLight-1)'};
     color: var(--primary);
 
     svg {

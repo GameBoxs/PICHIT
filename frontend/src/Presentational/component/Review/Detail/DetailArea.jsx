@@ -43,8 +43,8 @@ const DetailArea = ({ selectedID }) => {
       setSound(() => {
         return {
           url: getSound.data.recordingUri,
-          timestamp: {...getSound.data.timestamps},
-        }
+          timestamp: { ...getSound.data.timestamps },
+        };
       });
     }
   }, [getSound]);
@@ -70,34 +70,45 @@ const DetailArea = ({ selectedID }) => {
     audioRef.current.play();
   };
 
+  console.log(data);
+
   return (
     <DetailWrap>
-      <SubTitle title="면접 피드백" />
-      <Container>
-        {selectedID && data ? (
-          isLoadingData === true ? (
-            <div>loading...</div>
-          ) : (
-            <>
-              <SoundArea sound={sound} audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
-              <PageBar
-                setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
-                currentPage={nowPage} //현재페이지
-                totalpages={totalPage}
-              />
-              <FeedBackArea
-                title={data[nowPage - 1].content}
-                data={data[nowPage - 1].feedbacks}
-                timeStamp={sound.timestamp[nowPage - 1]}
-                playTime={playTime}
-              />
-            </>
-          )
-        ) : (
-          //<FeedBackArea title={currentPost.question} data={currentPost.reviews}/>
-          <NullCompo>기록을 선택해주세요</NullCompo>
-        )}
-      </Container>
+      {data !== undefined ? (
+        <>
+          <SubTitle title="면접 피드백" />
+          <Container>
+            {selectedID && data ? (
+              isLoadingData === true ? (
+                <div>loading...</div>
+              ) : (
+                <>
+                  <SoundArea
+                    sound={sound}
+                    audioRef={audioRef}
+                    isPlaying={isPlaying}
+                    setIsPlaying={setIsPlaying}
+                  />
+                  <PageBar
+                    setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
+                    currentPage={nowPage} //현재페이지
+                    totalpages={totalPage}
+                  />
+                  <FeedBackArea
+                    title={data[nowPage - 1].content}
+                    data={data[nowPage - 1].feedbacks}
+                    timeStamp={sound.timestamp[nowPage - 1]}
+                    playTime={playTime}
+                  />
+                </>
+              )
+            ) : (
+              //<FeedBackArea title={currentPost.question} data={currentPost.reviews}/>
+              <NullCompo>기록을 선택해주세요</NullCompo>
+            )}
+          </Container>
+        </>
+      ) : null}
     </DetailWrap>
   );
 };
