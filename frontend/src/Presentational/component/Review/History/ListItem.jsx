@@ -62,7 +62,7 @@ const ItemWrap = styled.div`
   display: grid;
   grid-template-columns: 1fr 7fr 2fr 1fr;
   width: 100%;
-  min-height: 4rem;
+  min-height: 5rem;
   padding: 0.6rem 1.5rem !important;
   align-items: center;
   border-bottom: var(--greyLight-1) solid 2px;
