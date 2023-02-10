@@ -60,7 +60,6 @@ function RoomListItem(props) {
     <RoomItem onClick={clickRoomItem}>
       <div className="rommtitle">
         <h3>
-          ({props.index}){props.id}
           {props.title}
         </h3>
         <p>
