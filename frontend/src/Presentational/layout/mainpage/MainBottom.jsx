@@ -188,6 +188,7 @@ const Header = styled.div`
   & h1 {
     font-size: 3.5rem;
     margin-bottom: 1rem;
+    font-family: 'SBAggroB';
   }
 `;
 
@@ -195,6 +196,7 @@ const Titlesection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: 'SBAggroL';
 `;
 
 const Main = styled.div`
