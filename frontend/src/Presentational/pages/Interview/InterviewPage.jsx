@@ -261,22 +261,7 @@ const InterviewPage = () => {
                     }
                   })
                 }
-              } 
-              // else {
-              //   Swal.fire({
-              //     title: "마이크를 찾을 수 없습니다!",
-              //     text:`본 서비스는 마이크는 필수 입니다.\n마이크 장치 연결 후 재접속 해주세요`,
-              //     icon: "warning",
-              //     showCancelButton: false,
-              //     showConfirmButton: true,
-              //     confirmButtonText: "확인",
-              //   }).then(res => {
-              //     if(res.isConfirmed) {
-              //       navigate("/",{state:{}, replace:true});
-              //       window.location.reload();
-              //     }
-              //   })
-              // }
+              }
               mySession.publish(publisher);
               setInfo((prev) => {
                 return {

@@ -14,12 +14,16 @@ import { createSession } from "../../../action/modules/chatModule";
 import { TiStarburst } from "react-icons/ti";
 import SubTitle from "../../common/SubTitle";
 
+import { useDispatch } from "react-redux";
+import { changeRoom } from "../../../reducer/roomStore";
+
 const MySwal = withReactContent(Swal);
 
 function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   const { id, title, participants, sessionOpened, manager } = data;
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [userJoin, setUserJoin] = useState({
@@ -157,14 +161,12 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   };
 
   const moveToRoom = () => {
-    // setGoSession(true)
-    navigate("/interview", {
-      state: {
-        userinfo: userinfo,
-        roomId: id,
-        isHost: host
-      }
-    });
+    dispatch(changeRoom({
+      userInfo : userinfo,
+      roomId : id,
+      isHost : host
+    }))
+    navigate("/interview");
   };
 
   const createRoom = () => {
