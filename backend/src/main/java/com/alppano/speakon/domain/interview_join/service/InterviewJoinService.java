@@ -66,7 +66,7 @@ public class InterviewJoinService {
                 .orElseThrow(() -> new ResourceNotFoundException("참여 중인 면접방이 아닙니다."));
 
         // 참여 취소하려는 면접참여 정보가 본인이 참여 중인 정보인지 확인
-        if (interviewJoin.getUser().getId() == userId) {
+        if (interviewJoin.getUser().getId().equals(userId)) {
             interviewJoinRepository.delete(interviewJoin);
         } else {
             throw new ResourceForbiddenException("본인이 참여 중인 면접방만 참여 취소를 할 수 있습니다.");
