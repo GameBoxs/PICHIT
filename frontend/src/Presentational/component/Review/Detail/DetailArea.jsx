@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useRef } from "react";
 import useAxios from "../../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 
@@ -10,6 +10,7 @@ import PageBar from "../../../common/Pagination/PageBar";
 
 const DetailArea = ({ selectedID }) => {
   const token = useSelector((state) => state.token);
+  const audioRef = useRef();
 
   const [data, setData] = useState();
   const [nowPage, setNowPage] = useState(1);
@@ -18,6 +19,8 @@ const DetailArea = ({ selectedID }) => {
     url: "",
     timestamp: {},
   });
+  const [isPlaying, setIsPlaying] = useState(false);
+
   const [getData, isLoadingData] = useAxios(
     `interviewjoins/${selectedID}/questions-with-feedbacks?size=2000`,
     "GET",
@@ -27,22 +30,21 @@ const DetailArea = ({ selectedID }) => {
   );
 
   const [getSound, isLoadingSound] = useAxios(
-    // `interviewjoins/{selectedID}/recordings`,
-    `interviewjoins/3332/recordings`,
+    `interviewjoins/${selectedID}/recordings`,
+    // `interviewjoins/3332/recordings`,
     "GET",
     token,
-    null
+    null,
+    selectedID ? true : false
   );
-
-  console.log("----------------------------------------")
 
   useEffect(() => {
     if (getSound && getSound.success && getSound.data) {
       setSound(() => {
         return {
           url: getSound.data.recordingUri,
-          timestamp: {...getSound.data.timestamps},
-        }
+          timestamp: { ...getSound.data.timestamps },
+        };
       });
     }
   }, [getSound]);
@@ -58,32 +60,51 @@ const DetailArea = ({ selectedID }) => {
     setNowPage(1);
   }, [selectedID]);
 
+  const playTime = (time) => {
+    //현재 재생 시간을 selectTime으로 맞춤
+    audioRef.current.currentTime = time;
+
+    setIsPlaying(true);
+    audioRef.current.play();
+  };
+
   return (
     <DetailWrap>
-      <SubTitle title="면접 피드백" />
-      <Container>
-        {selectedID && data ? (
-          isLoadingData === true ? (
-            <div>loading...</div>
-          ) : (
-            <>
-              <SoundArea sound={sound}/>
-              <PageBar
-                setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
-                currentPage={nowPage} //현재페이지
-                totalpages={totalPage}
-              />
-              <FeedBackArea
-                title={data[nowPage - 1].content}
-                data={data[nowPage - 1].feedbacks}
-              />
-            </>
-          )
-        ) : (
-          //<FeedBackArea title={currentPost.question} data={currentPost.reviews}/>
-          <NullCompo>기록을 선택해주세요</NullCompo>
-        )}
-      </Container>
+      {data !== undefined ? (
+        <>
+          <SubTitle title="면접 피드백" />
+          <Container>
+            {selectedID && data ? (
+              isLoadingData === true ? (
+                <div>loading...</div>
+              ) : (
+                <>
+                  <SoundArea
+                    sound={sound}
+                    audioRef={audioRef}
+                    isPlaying={isPlaying}
+                    setIsPlaying={setIsPlaying}
+                  />
+                  <PageBar
+                    setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
+                    currentPage={nowPage} //현재페이지
+                    totalpages={totalPage}
+                  />
+                  <FeedBackArea
+                    title={data[nowPage - 1].content}
+                    data={data[nowPage - 1].feedbacks}
+                    timeStamp={sound.timestamp[nowPage - 1]}
+                    playTime={playTime}
+                  />
+                </>
+              )
+            ) : (
+              //<FeedBackArea title={currentPost.question} data={currentPost.reviews}/>
+              <NullCompo>기록을 선택해주세요</NullCompo>
+            )}
+          </Container>
+        </>
+      ) : null}
     </DetailWrap>
   );
 };
@@ -99,6 +120,7 @@ const Container = styled.div`
   padding: 2rem 4rem;
 
   .paginationBar {
+    width: 100%;
     height: 1em;
 
     * {

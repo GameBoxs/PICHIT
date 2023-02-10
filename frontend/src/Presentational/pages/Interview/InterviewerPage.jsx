@@ -34,17 +34,19 @@ const InterviewerPage = ({ session, setSession, OV, setOV, info, setInfo }) => {
   //     );
   //   });
 
-  console.log(info)
-
   function People() {
-    let cnt = 3 - info.subscribers.length;
-    function makeBlank() {
-      let result = [];
-      for (let i = 0; i < cnt; i++) {
-        result.push(<CamCompo></CamCompo>);
-      }
-      return result;
-    }
+    // let cnt = 3 - info.subscribers.length;
+
+    // console.log(cnt)
+
+    // function makeBlank() {
+    //   let result = [];
+    //   for (let i = 0; i < cnt; i++) {
+    //     result.push(<CamCompo></CamCompo>);
+    //   }
+    //   return result;
+    // }
+    
     return (
       <>
         {info.publisher !== undefined ? (
@@ -53,11 +55,11 @@ const InterviewerPage = ({ session, setSession, OV, setOV, info, setInfo }) => {
           </CamCompo>
         ) : null}
         {info.subscribers.map((sub, i) => (
-          <CamCompo>
+          <CamCompo key={i}>
             <UserVideoComponent streamManager={sub} />
           </CamCompo>
         ))}
-        {makeBlank()}
+        {/* {makeBlank()} */}
       </>
     );
   }

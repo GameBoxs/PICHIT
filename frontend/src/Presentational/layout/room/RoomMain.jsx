@@ -74,7 +74,7 @@ function RoomMain(props) {
     }
   });
 
-  const RecuritmentList = new Array(Recuritment).fill().map((_, idx) => {
+  const RecuritmentList = Recuritment === 0 ? "구하는 인원이 없습니다":new Array(Recuritment).fill().map((_, idx) => {
     return <BsFillPersonFill key={idx} />;
   });
 
@@ -97,7 +97,7 @@ function RoomMain(props) {
             <SubTitle title={"남은 인원 수"} />
             <div>
               <BlockList>{RecuritmentList}</BlockList>
-              {Recuritment}명
+              {Recuritment? `${Recuritment}명`:null}
             </div>
           </Card>
         </Section>
@@ -178,7 +178,6 @@ const Layout = styled.div`
 
 const SectionHeader = styled.div`
   width: fit-content;
-  color: var(--primary-light);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -186,6 +185,7 @@ const SectionHeader = styled.div`
   .SubTitle {
     font-size: 1.2rem;
     font-family: 'SBAggroL';
+  color: var(--primary-light);
   }
 
   svg {
@@ -199,6 +199,10 @@ const BlockList = styled.div`
   justify-content: center;
   align-items: flex-start;
   width: 100%;
+
+  path {
+    color: var(--greyDark);
+  }
 `;
 
 const Card = styled.div`

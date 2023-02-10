@@ -25,11 +25,8 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
     {},
     getUser
   );
-  
-  console.log("Component")
 
   useEffect(() => {
-    console.log("pdfhandler useEffect")
     if (pdfhandler !== undefined) {
       setGetUser(true);
       setNowPage(1);
@@ -37,12 +34,10 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
   }, [pdfhandler]);
 
   useEffect(() => {
-    console.log("nowPage useEffect")
     setGetUser(true);
   }, [nowPage]);
 
   useEffect(() => {
-    console.log("getQuestion useEffect")
     if (getQuestion !== null && getQuestion.success) {
       setQuestions([...getQuestion?.data.content]);
       setAllQuestion(Math.floor(getQuestion?.data.totalElements / 10) + 1);
@@ -93,8 +88,11 @@ const QuestionBoxTitle = styled.div`
   align-items: center;
   gap: 1rem;
   font-family: 'SBAggroL';
-  color: var(--greyDark);
   width: 100%;
+  
+  *{
+    color: var(--greyDark);
+  }
 `;
 
 const Controler = styled.div`

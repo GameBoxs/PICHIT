@@ -31,7 +31,10 @@ position: relative;
     height: inherit;
     position: absolute;
     bottom: 0;
-    color: ${(props) => props.isHost? "var(--primary)" : "var(--greyDark)"};
+    
+    path {
+      color: ${(props) => props.isHost? "var(--primary)" : "var(--greyDark)"} !important;
+    }
   }
 `;
 

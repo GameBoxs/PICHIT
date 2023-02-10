@@ -62,7 +62,7 @@ const HistoryList = ({ setSelectedID }) => {
             })}
             {blankPosts.map((item, idx) => {
               return (
-                <ListItem item={item} key={idx} index={idx} cursor="default" />
+                <ListItem item={item} key={idx} cursor="default" />
               );
             })}
           </ListBody>
