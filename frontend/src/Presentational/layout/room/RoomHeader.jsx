@@ -157,8 +157,8 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       state: {
         userinfo: userinfo,
         roomId: id,
-        isHost: host,
-      },
+        isHost: host
+      }
     });
   };
 
