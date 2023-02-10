@@ -139,11 +139,6 @@ public class InterviewService {
         InterviewJoin interviewJoin = interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
                 .orElseThrow(() -> new ResourceForbiddenException("미참여자를 지정하였습니다."));
 
-        String signalData = objectMapper.writeValueAsString(req);
-
-        httpRequestService.broadCastSignal(conference.getSessionId(),
-                "broadcast-interview-end", signalData);
-
         openvidu.fetch();
         openvidu.stopRecording(conference.getRecordingId());
 
@@ -152,6 +147,12 @@ public class InterviewService {
         conference.setParticipantFinished(req.getIntervieweeId(), true);
         // Redis에 진행 중이던 면접자 삭제
         conference.setCurrentInterviewee(null);
+
+        String signalData = objectMapper.writeValueAsString(new InterviewState(conference));
+
+        httpRequestService.broadCastSignal(conference.getSessionId(),
+                "broadcast-interview-end", signalData);
+
         setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
 
         interviewJoin.setFinished(1);
