@@ -100,7 +100,7 @@ public class ConferenceService {
 
         List<Participant> participants = new ArrayList<>();
         for (InterviewJoin join : interviewRoom.getInterviewJoins()) {
-            participants.add(new Participant(join.getUser(), join.getId()));
+            participants.add(new Participant(join));
         }
 
         conference = new Conference();

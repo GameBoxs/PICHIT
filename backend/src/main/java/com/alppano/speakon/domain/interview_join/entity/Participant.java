@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Participant extends UserInfoDto {
     private Long interviewJoinId;
+    private boolean finished;
 
-    public Participant(User user, Long interviewJoinId) {
-        super(user);
-        this.interviewJoinId = interviewJoinId;
+    public Participant(InterviewJoin interviewJoin) {
+        super(interviewJoin.getUser());
+        this.interviewJoinId = interviewJoin.getId();
+        this.finished = interviewJoin.getFinished() == 1 ? true : false;
     }
 }

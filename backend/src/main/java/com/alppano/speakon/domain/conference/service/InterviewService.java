@@ -6,12 +6,15 @@ import com.alppano.speakon.common.exception.ResourceNotFoundException;
 import com.alppano.speakon.common.util.DataFileUtil;
 import com.alppano.speakon.domain.conference.dto.Conference;
 import com.alppano.speakon.domain.conference.dto.InterviewRequest;
+import com.alppano.speakon.domain.conference.dto.InterviewState;
 import com.alppano.speakon.domain.datafile.entity.DataFile;
 import com.alppano.speakon.domain.datafile.repository.DataFileRepository;
 import com.alppano.speakon.domain.interview_join.entity.InterviewJoin;
+import com.alppano.speakon.domain.interview_join.entity.Participant;
 import com.alppano.speakon.domain.interview_join.repository.InterviewJoinRepository;
 import com.alppano.speakon.domain.interview_recording.entity.InterviewRecording;
 import com.alppano.speakon.domain.interview_recording.repository.InterviewRecordingRepository;
+import com.alppano.speakon.domain.question.dto.QuestionSimpleInfo;
 import com.alppano.speakon.domain.question.entity.Question;
 import com.alppano.speakon.domain.question.repository.QuestionRepository;
 import com.alppano.speakon.domain.recording_timestamp.entity.RecordingTimestamp;
@@ -104,7 +107,7 @@ public class InterviewService {
         String signalData = objectMapper.writeValueAsString(req);
 
         httpRequestService.broadCastSignal(conference.getSessionId(),
-                "broadcast-interviewee", signalData);
+                "broadcast-interview-start", signalData);
 
         interviewJoin.setStartedTime(LocalDateTime.now());
 
@@ -118,7 +121,8 @@ public class InterviewService {
         conference.setRecordingId(recording.getId());
 
         // Redis에 새로 진행할 면접자를 UPDATE
-        conference.setCurrentInterviewee(req.getIntervieweeId());
+//        conference.setCurrentInterviewee(req.getIntervieweeId());
+        conference.setCurrentInterviewee(new Participant(interviewJoin));
         setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
     }
 
@@ -144,6 +148,8 @@ public class InterviewService {
         openvidu.stopRecording(conference.getRecordingId());
 
         // TODO: 리팩토링
+        // Redis에 현재 면접자 면접완료 세팅
+        conference.setParticipantFinished(req.getIntervieweeId(), true);
         // Redis에 진행 중이던 면접자 삭제
         conference.setCurrentInterviewee(null);
         setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
@@ -208,7 +214,7 @@ public class InterviewService {
                 // conference 검사
                 interviewJoinRepository.findByUserIdAndInterviewRoomId(requesterId, req.getInterviewRoomId())
                         .orElseThrow(() -> new ResourceForbiddenException("회의 참여자만 질문할 수 있습니다..."));
-                questionRepository.findById(req.getQuestionId()).orElseThrow(
+                Question question = questionRepository.findById(req.getQuestionId()).orElseThrow(
                         () -> new ResourceNotFoundException("존재하지 않는 질문입니다...")
                 );
                 if (conference.getQuestionProceeding() != null) {
@@ -217,11 +223,11 @@ public class InterviewService {
                 if (conference.getCurrentInterviewee() == null) {
                     throw new ResourceForbiddenException("진행 중인 면접자가 없습니다.");
                 }
-                if (!conference.getCurrentInterviewee().equals(req.getIntervieweeId())) {
+                if (!conference.getCurrentInterviewee().getId().equals(req.getIntervieweeId())) {
                     throw new ResourceForbiddenException("잘못된 면접자를 지정하였습니다...");
                 }
                 // 제안할 질문을 set한다. (거의 동시에 요청이 들어와도 늦게 들어왔다면 discard된다)
-                conference.setQuestionProceeding(req.getQuestionId());
+                conference.setQuestionProceeding(new QuestionSimpleInfo(question));
                 setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
 
                 return operations.exec();
@@ -230,7 +236,7 @@ public class InterviewService {
         // 회의 정보를 redis로 부터 다시 불러옴
         Conference conference = retrieveConference(req.getInterviewRoomId());
         // 값이 변경 되지 않았다면? -> Redis Tx에서 set요청이 discard된 것
-        if (!conference.getQuestionProceeding().equals(req.getQuestionId())) {
+        if (!conference.getQuestionProceeding().getQuestionId().equals(req.getQuestionId())) {
             throw new ResourceForbiddenException("먼저 들어온 질문에 의해 요청이 거절되었습니다.");
         }
         Question question = questionRepository.findById(req.getQuestionId()).orElseThrow(
@@ -259,10 +265,10 @@ public class InterviewService {
         if (conference.getCurrentInterviewee() == null) {
             throw new ResourceForbiddenException("진행 중인 면접자가 없습니다.");
         }
-        if (!conference.getCurrentInterviewee().equals(req.getIntervieweeId())) {
+        if (!conference.getCurrentInterviewee().getId().equals(req.getIntervieweeId())) {
             throw new ResourceForbiddenException("잘못된 면접자를 지정하였습니다...");
         }
-        if (!conference.getQuestionProceeding().equals(req.getQuestionId())) {
+        if (!conference.getQuestionProceeding().getQuestionId().equals(req.getQuestionId())) {
             throw new ResourceForbiddenException("잘못된 질문을 지정하였습니다...");
         }
 
@@ -276,4 +282,15 @@ public class InterviewService {
         setRedisValue(String.valueOf(req.getInterviewRoomId()), conference);
     }
 
+    public InterviewState getInterviewState(Long requesterId, Long interviewRoomId) throws JsonProcessingException {
+        interviewJoinRepository.findByUserIdAndInterviewRoomId(requesterId, interviewRoomId)
+                .orElseThrow(() -> new ResourceForbiddenException("참여 중인 면접방만 접근할 수 있습니다."));
+
+        Conference conference = retrieveConference(interviewRoomId);
+        if (conference == null) {
+            throw new ResourceNotFoundException("면접 세션이 존재하지 않습니다.");
+        }
+
+        return new InterviewState(conference);
+    }
 }
