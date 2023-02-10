@@ -25,13 +25,12 @@ const ToggleButton = ({handler,toggle,ToggleHandler}) => {
         width: 70px;
         height: 30px;
         outline: none;
-        background: #7b7a7a;
+        background: var(--greyLight-2);
         
         border-radius: 20px;
-        box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
         
         &:checked {
-            background: #40b6f5;
+            background: var(--primary);
             &::before {
                 left: 40px;
             }

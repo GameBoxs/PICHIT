@@ -10,7 +10,7 @@ function PlanTime({startDate}) {
   const date = [
     {
       type: "YEAR",
-      value: Date[0].slice(0,2),
+      value: Date[0].slice(2,4),
     },
     {
       type: "MONTH",

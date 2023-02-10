@@ -4,18 +4,11 @@ import Soundbar from "../../Soundbar";
 import Sampling from "../../../../store/asset/HypeBoy.mp3";
 import ControlPanel from "../../ControlPanel";
 
-const SoundArea = ({sound}) => {
-  //#region Hook
-
+const SoundArea = ({sound, audioRef, isPlaying, setIsPlaying}) => {
   //#region useState Hook
   const [percentage, setPercentage] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrectTime] = useState(0);
-  //#endregion
-
-  //#region useRef Hook
-  const audioRef = useRef();
   //#endregion
 
   //#endregion
@@ -69,26 +62,6 @@ const SoundArea = ({sound}) => {
   };
   //#endregion
 
-  //#region 재생시간구하는 함수
-  const playTime = (time) => {
-    //받아온 시간을 바탕으로 duration에 맞는 값으로 계산
-    const thisTime = time.split(":").map((el) => parseFloat(el));
-    let start = 0;
-
-    if (thisTime.length === 2) {
-      start = thisTime[0] * 60 + thisTime[1];
-    } else {
-      start = thisTime[0] * 3600 + thisTime[1] * 60 + thisTime[2];
-    }
-
-    //현재 재생 시간을 selectTime으로 맞춤
-    audioRef.current.currentTime = start;
-
-    setIsPlaying(true);
-    audioRef.current.play();
-  };
-  //#endregion
-  
   return (
     <SoundWrap>
       {/* 보이는 사운드 바 */}

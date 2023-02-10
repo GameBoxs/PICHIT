@@ -102,7 +102,7 @@ const MainQuestion = styled.div`
 const QuestionBody = styled.div`
   padding: 3vh 1vh 2vh 1vh;
   border-bottom: solid 1px var(--greyLight-2);
-  background-color:${props => props.isFinished ? `var(--greyLight-2)` : null};
+  background-color:${props => props.isFinished ? `var(--greyLight-1)` : null};
   cursor: ${props => props.isFinished ? null : 'pointer'};
 
   & .SubTitle {

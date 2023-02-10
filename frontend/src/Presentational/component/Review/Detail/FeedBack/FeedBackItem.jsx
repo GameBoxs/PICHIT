@@ -8,7 +8,7 @@ const FeedBackItem = ({data}) => {
               <SubTitle title={data.writer.name}></SubTitle>
               <SubTitle title={data.score}></SubTitle>
             </FeedBackTitle>
-            <SubTitle title={data.content}></SubTitle>
+            <div>{data.content}</div>
         </FeedBack>
     )
 }
@@ -30,11 +30,17 @@ const FeedBackTitle = styled.div`
     font-weight: bold;
     font-size: 25px;
     margin-right: 25px;
+    color: var(--greyDark);
   }
 
   & > div:nth-child(2){
     font-weight: bold;
     font-size: 25px;
+    color: var(--primary);
+  }
+
+  & > div:nth-child(3) {
+    color: var(--textColor);
   }
 `
 
