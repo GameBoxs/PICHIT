@@ -35,6 +35,7 @@ function RoomHeader({
   const [deleteData, setDeleteData] = useState(false);
   const [joinId, setJoinId] = useState(0);
 
+
   // axios 통신 시 보낼 정보들
   const enterObj = {
     interviewRoomId: id,

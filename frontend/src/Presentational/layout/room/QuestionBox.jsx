@@ -25,6 +25,8 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
     {},
     getUser
   );
+  
+  console.log("--------------------------------------------------")
 
   useEffect(() => {
     if (pdfhandler !== undefined) {
