@@ -51,7 +51,6 @@ function RoomPage() {
 
   useEffect(() => {
     const tmpData = postData?.data;
-
     if (postData && tmpData) {
       let originParticipants = tmpData.participants;
       let userIsMe = {}
