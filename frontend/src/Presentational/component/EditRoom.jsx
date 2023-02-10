@@ -7,7 +7,7 @@ import "react-day-picker/dist/style.css";
 import Title from "../common/Title";
 
 import useAxios from "../../action/hooks/useAxios";
-import { useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { testToken } from "../../store/values";
@@ -17,7 +17,7 @@ import Button from "../common/Button";
 function EditRoom({ setModalOpen, data }) {
   const navigate = useNavigate();
   const params = useParams();
-  
+
   const roomParamsId = params.id;
 
   const [toggle, setToggle] = useState(false);
@@ -26,7 +26,7 @@ function EditRoom({ setModalOpen, data }) {
     console.log(toggle);
   };
 
-  // 방 수정 정보 들어감 -> 이전 정보 값 들고 옴 
+  // 방 수정 정보 들어감 -> 이전 정보 값 들고 옴
   const [room, setRoom] = useState({
     title: data.title,
     description: data.description,
@@ -66,8 +66,6 @@ function EditRoom({ setModalOpen, data }) {
     setSelected(day);
   };
 
-
-
   const [editData, setEditData] = useState(false);
   const token = useSelector((state) => state.token);
   const roomId = data.id;
@@ -82,43 +80,39 @@ function EditRoom({ setModalOpen, data }) {
     console.log(date);
   };
 
-  //Axios put 통신  
+  //Axios put 통신
   const [putData, isLoading] = useAxios(
     `interviewrooms/${roomParamsId}`,
     "PUT",
-      token,
+    token,
     room,
     editData
   );
 
   const RoomEdit = (e) => {
     console.log(room);
-    setEditData(true)
+    setEditData(true);
   };
 
   // 방 수정했을 때 방장 확인을 못하는 오류로 state로 host 값을 직접 전달해줌
-  useEffect(() =>{
-    if (
-      putData &&
-      putData.success === true &&
-      putData.success !== undefined
-    ){
+  useEffect(() => {
+    if (putData && putData.success === true && putData.success !== undefined) {
       setModalOpen(false);
-      console.log(putData)
-      navigate(`/room/${roomParamsId}`,{
-        state:{
-          host : true
-        }
-      })
+      console.log(putData);
+      navigate(`/room/${roomParamsId}`, {
+        state: {
+          host: true,
+        },
+      });
       window.location.reload();
     }
-  },[putData])
+  }, [putData]);
 
   return (
     <Wrap onClick={closeModal}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <Header>방 수정하기</Header>
-        <Layout height="40%">
+        <Layout>
           <Section width="50%">
             <DayPicker
               mode="single"
@@ -159,18 +153,23 @@ function EditRoom({ setModalOpen, data }) {
                 />
               </Info>
               <Info>
-                <InfoText>비밀방 여부</InfoText>
-                <ToggleButton
-                  toggle={toggle}
-                  ToggleHandler={Togglehandler}
-                  onClick={Togglehandler}
-                />
+                <div>
+                  <InfoText>비밀방 여부</InfoText>
+                  <ToggleButton
+                    toggle={toggle}
+                    ToggleHandler={Togglehandler}
+                    onClick={Togglehandler}
+                  />
+                </div>
                 {toggle ? (
+                  <InputNum>
+                  <InfoText>비밀번호</InfoText>
                   <InfoInput
                     name="password"
                     defaultValue={room.password}
                     onChange={InputHandler}
                   />
+                  </InputNum>
                 ) : null}
               </Info>
             </InfoList>
@@ -185,17 +184,25 @@ function EditRoom({ setModalOpen, data }) {
             ></RoomText>
           </Section>
         </Layout>
-        <Layout height="20%">
+        <Layout>
           <Button handler={RoomEdit} text={"생성하기"} isImportant={true} />
           <Button handler={closeModal} text={"취소하기"} isImportant={false} />
-          {/* <button onClick={RoomEdit}>생성하기</button>
-          <button onClick={closeModal}>취소하기</button> */}
         </Layout>
       </ModalContainer>
     </Wrap>
   );
 }
 export default EditRoom;
+
+const InputNum = styled.div`
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+
+  input {
+    width: 50%;
+  }
+`
 
 const Wrap = styled.div`
   position: fixed;
@@ -232,34 +239,71 @@ const ModalContainer = styled.div`
 
 const Layout = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   gap: 1em;
   height: auto;
   width: 100%;
   margin-bottom: 1em;
   margin-top: 1em;
+
+  &:first-child {
+    height: 50vh;
+  }
+
+  &:last-child {
+    div {
+      height: 5vh;
+    }
+  }
+
+  .rdp-day_selected, .rdp-day_selected:focus-visible, .rdp-day_selected:hover {
+    background-color: var(--primary) !important;
+  }
 `;
 
 const Section = styled.div`
   width: ${(props) => props.width};
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const InfoList = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
-`;
-const Info = styled.div`
-  display: inline-flex;
-  padding: 10px;
   align-items: center;
+  height: inherit;
 `;
 
 const InfoText = styled.div``;
+
+const Info = styled.div`
+display: grid;
+grid-template-columns: 1fr 1fr;
+  padding-inline: 10px;
+  align-items: center;
+
+  &:last-child {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding:10px;
+    }
+  }
+`;
+
 const InfoInput = styled.input.attrs({ type: "text" })`
-  background-color: gray;
+  background-color: var(--greyLight-1);
+  padding: 1rem;
   border-radius: 5px;
   height: 30px;
   margin: 10px;
@@ -268,8 +312,9 @@ const InfoInput = styled.input.attrs({ type: "text" })`
 `;
 
 const InfoPerson = styled.input.attrs({ type: "number" })`
-  background-color: gray;
+  background-color: var(--greyLight-1);
   border-radius: 5px;
+  padding: 1rem;
   height: 30px;
   width: 180px;
   margin: 10px;
@@ -277,13 +322,16 @@ const InfoPerson = styled.input.attrs({ type: "number" })`
 `;
 
 const RoomText = styled.textarea`
-  width: 100%;
-  height: 200px;
+  width: 90% !important;
+  height: 170px !important;
+  margin: 0 5%;
   border: none;
+  resize: none;
 `;
 
 const Header = styled.div`
   margin: 10px;
   text-align: center;
-  font-size: 18px;
+  font-size: 2rem;
+  color: var(--primary);
 `;
