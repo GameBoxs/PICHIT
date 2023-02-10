@@ -61,16 +61,12 @@ const DetailArea = ({ selectedID }) => {
   }, [selectedID]);
 
   const playTime = (time) => {
-    //받아온 시간을 바탕으로 duration에 맞는 값으로 계산
-
     //현재 재생 시간을 selectTime으로 맞춤
     audioRef.current.currentTime = time;
 
     setIsPlaying(true);
     audioRef.current.play();
   };
-
-  console.log(data);
 
   return (
     <DetailWrap>

@@ -233,10 +233,6 @@ const Member = styled.div`
     display: none;
   }
 
-  & > input:checked + label {
-    color: var(--primary);
-  }
-
   & label {
     width: 5rem;
     height: 2rem;
@@ -251,6 +247,10 @@ const Member = styled.div`
 
     &:hover {
       color: var(--primary);
+    }
+
+    p {
+      color: var(--greyDark);
     }
   }
 

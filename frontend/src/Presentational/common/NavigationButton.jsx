@@ -46,9 +46,9 @@ function NavigationButton(props) {
       })
     );
 
-    navigate("/");
-
+    menuToggle.current.classList.toggle("active");
     window.location.reload();
+    navigate("/");
   };
 
   const movePage = () => {

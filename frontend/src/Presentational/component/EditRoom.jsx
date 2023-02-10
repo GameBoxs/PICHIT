@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { testToken } from "../../store/values";
 import { useParams } from "react-router-dom";
+import Button from "../common/Button";
 
 function EditRoom({ setModalOpen, data }) {
   const navigate = useNavigate();
@@ -185,8 +186,10 @@ function EditRoom({ setModalOpen, data }) {
           </Section>
         </Layout>
         <Layout height="20%">
-          <button onClick={RoomEdit}>생성하기</button>
-          <button onClick={closeModal}>취소하기</button>
+          <Button handler={RoomEdit} text={"생성하기"} isImportant={true} />
+          <Button handler={closeModal} text={"취소하기"} isImportant={false} />
+          {/* <button onClick={RoomEdit}>생성하기</button>
+          <button onClick={closeModal}>취소하기</button> */}
         </Layout>
       </ModalContainer>
     </Wrap>
@@ -230,9 +233,9 @@ const ModalContainer = styled.div`
 const Layout = styled.div`
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1em;
-  height: ${(props) => props.width};
+  height: auto;
   width: 100%;
   margin-bottom: 1em;
   margin-top: 1em;

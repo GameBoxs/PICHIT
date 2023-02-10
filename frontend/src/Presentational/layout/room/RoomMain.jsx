@@ -199,6 +199,10 @@ const BlockList = styled.div`
   justify-content: center;
   align-items: flex-start;
   width: 100%;
+
+  path {
+    color: var(--greyDark);
+  }
 `;
 
 const Card = styled.div`

@@ -100,7 +100,6 @@ const Button = styled.button.attrs({ type: "submit" })`
   justify-content: center;
   align-items: center;
   background-color: transparent;
-  color: var(--primary);
   cursor: pointer;
 
   &:hover {
@@ -109,6 +108,10 @@ const Button = styled.button.attrs({ type: "submit" })`
 
   * {
     font-size: 2rem;
+  }
+
+  path {
+    color: var(--primary);
   }
 `;
 
