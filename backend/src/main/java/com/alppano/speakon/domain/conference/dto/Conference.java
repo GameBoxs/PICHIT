@@ -26,13 +26,3 @@ public class Conference {
         }
     }
 }
-
-
-//public class Conference {
-//    private String sessionId;
-//    private Long managerId;
-//    private List<Participant> participants;
-//    private Long questionProceeding;
-//    private Long currentInterviewee;
-//    private String recordingId;
-//}
