@@ -34,6 +34,7 @@ function RoomPage() {
     useAxios(`interviewrooms/${roomParamsId}`, "POST", token, valid)
   ;
   console.log(postData)
+  console.log("roomPage",host)
   //useEffect
   useEffect(() => {
     setAboutUser(userinfo);

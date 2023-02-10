@@ -56,7 +56,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     deleteData
   );
 
-  const [quitRes] = useAxios(
+  const [quitRes, isLoading, errorContext] = useAxios(
     //방 나가기
     `interviewjoins/${id}`,
     "DELETE",
@@ -64,6 +64,10 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     quitObj,
     userJoin.quit
   );
+  
+  console.log("id",id)
+  console.log("quitObj",quitObj)
+  console.log("userJoin.quit",userJoin.quit)
 
   //useEffect
   useEffect(() => {
@@ -99,11 +103,17 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   }, [deleteResult]);
 
   useLayoutEffect(() => {
+    // 무한 렌더링 (404오류 뜰 때 useAxios false)
+    if (errorContext){
+      setUserJoin({
+        enter: false,
+        quit: false,})
+      }
     //방 탈퇴하기 성공 후 새로고침
     if (quitRes !== null && quitRes.success) {
       window.location.reload();
     }
-  }, [quitRes]);
+  }, [quitRes,errorContext]);
 
   //Event Function
   const joinHandler = (isJoin) => {
@@ -202,7 +212,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       화상채팅 시작하기
     </Button>
   );
-
   //화면 렌더링 함수
   const readyRoom = join ? (
     <>
@@ -213,7 +222,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     <>{EnterBtn}</>
   );
 
-  const RoomHost = host ? (
+  const RoomHost = manager.id === userinfo.id ? (
     <BtnContainer>
       {participants.length >= 2 ? (sessionOpened ? StartBtn : ReadyBtn) : null}
       <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
