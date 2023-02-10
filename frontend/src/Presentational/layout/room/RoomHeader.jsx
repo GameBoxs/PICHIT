@@ -150,18 +150,16 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       }
     });
   };
-  
+
   const moveToRoom = () => {
     // setGoSession(true)
     navigate("/interview", {
       state: {
         userinfo: userinfo,
         roomId: id,
-        isHost: host
+        isHost: host,
       },
     });
-
-    
   };
 
   const createRoom = () => {
@@ -256,11 +254,15 @@ const ManagerLayout = styled.div`
   display: flex;
   width: 100%;
   gap: 1rem;
-  font-family: 'SBAggroL';
+  font-family: "SBAggroL";
   color: var(--greyDark);
 
   & .SubTitle:first-child {
     color: var(--greyLight-3);
+  }
+  
+  & .SubTitle:last-child {
+    color: var(--greyDark);
   }
 
   margin-bottom: 3rem;
@@ -294,7 +296,8 @@ const Layout = styled.div`
     font-size: 2rem;
     text-align: left;
     margin-block: 1rem;
-    font-family: 'SBAggroL';
+    font-family: "SBAggroL";
+    color: var(--primary);
   }
 
   .Btn {
@@ -309,5 +312,9 @@ const Layout = styled.div`
   svg {
     margin-top: 0rem;
     font-size: 2rem;
+
+    path {
+      color: var(--primary);
+    }
   }
 `;

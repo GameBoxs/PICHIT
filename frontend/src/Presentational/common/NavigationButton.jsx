@@ -46,17 +46,19 @@ function NavigationButton(props) {
       })
     );
 
-    navigate("/");
-
+    menuToggle.current.classList.toggle("active");
     window.location.reload();
+    navigate("/");
   };
 
   const movePage = () => {
     navigate("/review");
+    menuToggle.current.classList.toggle("active");
   };
 
   const moveMain = () => {
     navigate("/");
+    menuToggle.current.classList.toggle("active");
   };
 
   const NavHeight =
@@ -105,10 +107,14 @@ const MenuItem = styled.li`
   cursor: pointer;
   display: block;
   height: 70px;
-  text-align: center;
-  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--white);
+
   &:hover {
     background: var(--primary-dark);
+    color: var(--greyLight-1);
   }
 `;
 

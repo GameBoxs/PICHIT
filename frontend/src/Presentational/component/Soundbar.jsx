@@ -43,8 +43,6 @@ const Soundbar = (props) => {
     }
   }, [props]);
 
-  console.log(timeStamp);
-
   return (
     <SliderContainer>
       <GlobalStyle />
@@ -80,7 +78,7 @@ export default memo(Soundbar);
 const TimeStampBox = styled.div`
   position: absolute;
   height: 0.5rem;
-  width: 3px;
+  width: 5px;
   background-color: var(--primary-light);
   margin-left: ${(props) => props.timeStampMargin}px;
   display: inline-block;
