@@ -26,6 +26,8 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     enter: false,
     quit: false,
   });
+  const [joinEnter, setJoinEnter] =useState(false)
+  const [joinQuit, setJoinQuit] =useState(false)
   const [deleteData, setDeleteData] = useState(false);
   const [joinId, setJoinId] = useState(0);
 
@@ -38,14 +40,16 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   const quitObj = { id: joinId };
 
   //useAxios
-  const [enterRes] = useAxios(
+  const [enterRes, enterLoading, enterError] = useAxios(
     //방 참가하기
     `interviewjoins`,
     "POST",
     token,
     enterObj,
-    userJoin.enter
+    joinEnter
   );
+
+  console.log("enterRes",enterRes)
 
   const deleteResult = useAxios(
     //방 삭제하기
@@ -56,30 +60,36 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     deleteData
   );
 
-  const [quitRes] = useAxios(
+  const [quitRes, isLoading, errorContext] = useAxios(
     //방 나가기
-    `interviewjoins/${id}`,
+    `interviewjoins/${userinfo.interviewJoinId}`,
     "DELETE",
     token,
     quitObj,
-    userJoin.quit
+    joinQuit
   );
+  console.log("이거 있는거 맞음 ??",userinfo.interviewJoinId)
 
+  console.log("quitRes",quitRes)
+  
   //useEffect
   useEffect(() => {
     setJoinId(userinfo.interviewJoinId);
   }, [userinfo]);
 
   useLayoutEffect(() => {
+      if (enterError) {
+        setJoinEnter(false)
+      }
     //방 참여하기 성공 후 새로고침
     if (enterRes !== null) {
+      setJoinEnter(false)
       if (enterRes.success) {
-        window.location.reload();
       } else {
         alert("이미 참가한 방입니다");
       }
     }
-  }, [enterRes]);
+  }, [enterRes,enterError]);
 
   useEffect(() => {
     //방 삭제하기
@@ -99,29 +109,28 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
   }, [deleteResult]);
 
   useLayoutEffect(() => {
+    // 무한 렌더링 (404오류 뜰 때 useAxios false)
+    if (errorContext){
+      setJoinQuit(false)
+    }
     //방 탈퇴하기 성공 후 새로고침
     if (quitRes !== null && quitRes.success) {
       window.location.reload();
     }
-  }, [quitRes]);
+  }, [quitRes,errorContext]);
 
   //Event Function
   const joinHandler = (isJoin) => {
     //방 참여하기
     joinRoom(isJoin);
-    setUserJoin({
-      enter: true,
-      quit: false,
-    });
+    setJoinEnter(true)
   };
 
   const quitHandler = (isJoin) => {
     //방 탈퇴하기
     joinRoom(isJoin);
-    setUserJoin({
-      enter: false,
-      quit: true,
-    });
+
+    setJoinQuit(true)
   };
 
   const showModal = () => {
@@ -202,7 +211,6 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       화상채팅 시작하기
     </Button>
   );
-
   //화면 렌더링 함수
   const readyRoom = join ? (
     <>
@@ -213,7 +221,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
     <>{EnterBtn}</>
   );
 
-  const RoomHost = host ? (
+  const RoomHost = manager.id === userinfo.id ? (
     <BtnContainer>
       {participants.length >= 2 ? (sessionOpened ? StartBtn : ReadyBtn) : null}
       <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
