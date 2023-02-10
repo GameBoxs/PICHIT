@@ -2,6 +2,7 @@ import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { ToggleButton } from "../common/ToggleButton";
 import Title from "../common/Title";
+import Button from "../common/Button";
 
 import useAxios from "../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
@@ -204,18 +205,23 @@ function CreateRoom({ setModalOpen }) {
                 />
               </Info>
               <Info>
-                <InfoText>비밀방 여부</InfoText>
-                <ToggleButton
-                  toggle={toggle}
-                  ToggleHandler={Togglehandler}
-                  onClick={Togglehandler}
-                />
+                <div>
+                  <InfoText>비밀방 여부</InfoText>
+                  <ToggleButton
+                    toggle={toggle}
+                    ToggleHandler={Togglehandler}
+                    onClick={Togglehandler}
+                  />
+                </div>
                 {toggle ? (
+                  <InputNum>
+                  <InfoText>비밀번호</InfoText>
                   <InfoInput
                     name="password"
-                    value={room.password}
+                    defaultValue={room.password}
                     onChange={InputHandler}
                   />
+                  </InputNum>
                 ) : null}
               </Info>
             </InfoList>
@@ -232,14 +238,24 @@ function CreateRoom({ setModalOpen }) {
           </Section>
         </Layout>
         <Layout height="20%">
-          <button onClick={roomCreate}>생성하기</button>
-          <button onClick={closeModal}>취소하기</button>
+          <Button handler={roomCreate} text={"생성하기"} isImportant={true} />
+          <Button handler={closeModal} text={"취소하기"} isImportant={false} />
         </Layout>
       </ModalContainer>
     </Wrap>
   );
 }
 export default CreateRoom;
+
+const InputNum = styled.div`
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+
+  input {
+    width: 50%;
+  }
+`
 
 const Wrap = styled.div`
   position: fixed;
@@ -248,7 +264,7 @@ const Wrap = styled.div`
   bottom: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.8);
-  z-index:9998;
+  z-index: 9998;
 `;
 
 const ModalContainer = styled.div`
@@ -276,34 +292,71 @@ const ModalContainer = styled.div`
 
 const Layout = styled.div`
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
   gap: 1em;
-  height: ${(props) => props.width};
+  height: auto;
   width: 100%;
   margin-bottom: 1em;
   margin-top: 1em;
+
+  &:first-child {
+    height: 50vh;
+  }
+
+  &:last-child {
+    div {
+      height: 5vh;
+    }
+  }
+
+  .rdp-day_selected, .rdp-day_selected:focus-visible, .rdp-day_selected:hover {
+    background-color: var(--primary) !important;
+  }
 `;
 
 const Section = styled.div`
   width: ${(props) => props.width};
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const InfoList = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
-`;
-const Info = styled.div`
-  display: inline-flex;
-  padding: 10px;
   align-items: center;
+  height: inherit;
 `;
 
 const InfoText = styled.div``;
+
+const Info = styled.div`
+display: grid;
+grid-template-columns: 1fr 1fr;
+  padding-inline: 10px;
+  align-items: center;
+
+  &:last-child {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding:10px;
+    }
+  }
+`;
+
 const InfoInput = styled.input.attrs({ type: "text" })`
-  background-color: gray;
+  background-color: var(--greyLight-1);
+  padding: 1rem;
   border-radius: 5px;
   height: 30px;
   margin: 10px;
@@ -312,8 +365,9 @@ const InfoInput = styled.input.attrs({ type: "text" })`
 `;
 
 const InfoPerson = styled.input.attrs({ type: "number" })`
-  background-color: gray;
+  background-color: var(--greyLight-1);
   border-radius: 5px;
+  padding: 1rem;
   height: 30px;
   width: 180px;
   margin: 10px;
@@ -321,12 +375,19 @@ const InfoPerson = styled.input.attrs({ type: "number" })`
 `;
 
 const RoomText = styled.textarea`
-  width: 100%;
-  height: 200px;
+  width: 90% !important;
+  height: 170px !important;
+  margin: 0 5%;
   border: none;
+  resize: none;
 `;
 
 const Header = styled.div`
   margin: 10px;
   text-align: center;
+  
+  .Title {
+    font-size: 2rem;
+    color: var(--primary);
+  }
 `;
