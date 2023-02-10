@@ -30,10 +30,10 @@ function RoomPage() {
     password: password,
   });
   const [aboutUser, setAboutUser] = useState({});
-  const [postData, isLoading] = useCallback(
+  const [postData, isLoading] =
     useAxios(`interviewrooms/${roomParamsId}`, "POST", token, valid)
-  );
-  
+  ;
+  console.log(postData)
   //useEffect
   useEffect(() => {
     setAboutUser(userinfo);
@@ -52,9 +52,7 @@ function RoomPage() {
     const tmpData = postData?.data;
 
     if (postData && tmpData) {
-      console.log(tmpData)
       let originParticipants = tmpData.participants;
-      console.log(originParticipants)
       let userIsMe = {}
       for (let i in originParticipants) {
         if (i === 0) {
@@ -70,30 +68,6 @@ function RoomPage() {
         }
       }
       tmpData.participants = originParticipants
-      // let newParticipant = []
-      // for (let i in originParticipants) {
-      //   if (i === 0) {
-      //     if (originParticipants[i].id === userinfo.id) {
-      //       newParticipant = originParticipants
-      //       break;
-      //     }
-      //   }
-      //    else {
-      //     if (originParticipants[i].id === userinfo.id) {
-      //       newParticipant.push(originParticipants[i])
-      //       originParticipants.filter(P => {
-      //         if (P.id !== userinfo.id) {
-      //           return true
-      //         }
-      //         return false
-      //       })
-      //     }
-      //   }
-      // }
-      // newParticipant.push([...originParticipants])
-      // tmpData.participants = newParticipant
-      console.log(tmpData)
-      // console.log(newParticipant)
 
 
       setData(tmpData); // 데이터 저장

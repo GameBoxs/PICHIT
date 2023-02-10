@@ -21,4 +21,7 @@ const EmptyBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-family: 'SBAggroL';
+    gap: 0.5rem;
+    
 `

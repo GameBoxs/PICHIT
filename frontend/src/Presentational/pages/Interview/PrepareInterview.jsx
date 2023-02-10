@@ -77,6 +77,7 @@ const InnerBox = styled.div`
   margin-block: 0.8em;
   font-size: 1.2em;
   text-align: center;
+  color : var(--primary);
 `;
 
 const Fade = styled.div`
@@ -100,7 +101,7 @@ const SentanceBox = styled.div`
 `;
 
 const Dot = styled.div`
-  background-color: black;
+  background-color: var(--primary);
   width: 0.2em;
   height: 0.2em;
   border-radius: 1em;
@@ -114,6 +115,7 @@ const Prepare = styled.h1`
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  color : var(--primary);
 `;
 
 const Container = styled.div`
@@ -124,4 +126,5 @@ const Container = styled.div`
   height: 100vh;
   width: 100vw;
   background: var(--greyLight-1);
+  font-family: 'SBAggroL';
 `;
