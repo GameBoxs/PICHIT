@@ -58,15 +58,17 @@ function RoomListItem(props) {
   };
   return (
     <RoomItem onClick={clickRoomItem}>
-      <div className="rommtitle">
-        <h3>
+      <RoomContent className="rommtitle">
+        <RoomTitle>
           {props.title}
-        </h3>
-        <p>
+        </RoomTitle>
+        <RoomInfo>
           {props.currentPersonCount}/{props.maxPersonCount}
-        </p>
-      </div>
-      <p>{props.startDate}</p>
+        </RoomInfo>
+      </RoomContent>
+        <RoomInfo>
+          {props.startDate}
+        </RoomInfo>
     </RoomItem>
   );
 }
@@ -76,7 +78,7 @@ export default RoomListItem;
 const RoomItem = styled.li`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   /* border: 1px solid black; */
   border-radius: 15px;
   width: 32%;
@@ -84,7 +86,7 @@ const RoomItem = styled.li`
   padding: 2% 4%;
   margin-bottom: 2%;
   box-shadow: 4px 4px 12px 1px rgba(0, 0, 0, 0.2);
-  div {
+  .roomtitle {
     display: flex;
     justify-content: space-between;
     /* margin: 0px 5px; */
@@ -93,4 +95,18 @@ const RoomItem = styled.li`
     display: flex;
     flex-direction: row-reverse;
   }
+  font-family: 'SBAggroL';
 `;
+
+const RoomContent = styled.div`
+`
+const RoomTitle = styled.div`
+font-size: 1.2rem;
+font-weight: bold;
+margin-bottom: 1rem;
+`
+
+const RoomInfo = styled.p`
+font-size: 14px;
+
+`
