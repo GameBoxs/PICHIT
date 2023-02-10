@@ -155,8 +155,8 @@ function RoomHeader({
       state: {
         userinfo: userinfo,
         roomId: id,
-        isHost: host,
-      },
+        isHost: host
+      }
     });
   };
 

@@ -7,7 +7,7 @@ function MainTop() {
         <Header>
           <WcontainerContents>
             <MainHeadingWrapper>
-              <H1Tag>PICHIT</H1Tag>
+              <H1Tag>PITCHIT</H1Tag>
               <WithOutTag>ON</WithOutTag>
             </MainHeadingWrapper>
             <MultiSubtitle>
