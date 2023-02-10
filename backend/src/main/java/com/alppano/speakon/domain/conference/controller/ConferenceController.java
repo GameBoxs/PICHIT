@@ -127,7 +127,7 @@ public class ConferenceController {
     public ResponseEntity<ApiResponse<InterviewState>> getInterviewState(@PathVariable("interviewRoomId") Long interviewRoomId,
                                                                          @AuthenticationPrincipal LoginUser loginUser) throws JsonProcessingException {
         InterviewState interviewState = interviewService.getInterviewState(loginUser.getId(), interviewRoomId);
-        ApiResponse<InterviewState> result = new ApiResponse(Boolean.TRUE, "세션 생성 성공", interviewState);
+        ApiResponse<InterviewState> result = new ApiResponse(Boolean.TRUE, "면접 진행 상태 조회 성공", interviewState);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
