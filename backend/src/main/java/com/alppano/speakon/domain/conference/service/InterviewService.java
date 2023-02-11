@@ -181,6 +181,11 @@ public class InterviewService {
         List<RecordingTimestamp> timestampList = new ArrayList<>();
 
         for (Question question : questions) {
+            // 질문을 시작한 적이 없는 경우는 패스
+            if(question.getStartedTime() == null) {
+                continue;
+            }
+
             long secondTime = Duration.between(interviewJoin.getStartedTime(), question.getStartedTime()).getSeconds();
 
             RecordingTimestamp recordingTimestamp = RecordingTimestamp.builder()
