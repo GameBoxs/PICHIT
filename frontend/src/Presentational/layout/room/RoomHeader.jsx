@@ -51,7 +51,7 @@ function RoomHeader({
     "POST",
     token,
     enterObj,
-    joinEnter
+    userJoin.enter
   );
 
   const deleteResult = useAxios(
@@ -65,11 +65,11 @@ function RoomHeader({
 
   const [quitRes, isLoading, errorContext] = useAxios(
     //방 나가기
-    `interviewjoins/${userinfo.interviewJoinId}`,
+    `interviewjoins/${id}`,
     "DELETE",
     token,
     quitObj,
-    joinQuit
+    userJoin.quit
   );
 
   //useEffect
@@ -85,6 +85,7 @@ function RoomHeader({
     if (enterRes !== null) {
       setJoinEnter(false);
       if (enterRes.success) {
+        window.location.reload();
       } else {
         alert("이미 참가한 방입니다");
       }
@@ -122,8 +123,11 @@ function RoomHeader({
   //Event Function
   const joinHandler = (isJoin) => {
     //방 참여하기
-    setJoin(isJoin)
-    setJoinEnter(true);
+    joinRoom(isJoin);
+    setUserJoin({
+      enter: true,
+      quit: false,
+    });
   };
 
   const quitHandler = (isJoin) => {

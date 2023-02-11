@@ -77,7 +77,9 @@ function RoomPage() {
 
       // Participants 안에 user 이름이 있으면 해당 정보(interviewjoinId 포함)를 aboutUser에 저장, 이후 자식 컴포넌트에 전달됨
       if (MemberArr?.length >= 2) {
+        console.log("if문")
         for (let i = 0; i < MemberArr.length; i++) {
+          console.log("for문")
           if (MemberArr[i].name === userinfo.name) {
             setJoin(true);
 
@@ -91,6 +93,7 @@ function RoomPage() {
 
       setData(tmpData); // 데이터 저장
     }
+    console.log("여기 안들어와?")
   }, [postData]);
 
   return (

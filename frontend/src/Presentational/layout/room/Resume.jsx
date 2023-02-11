@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ViewPdf from "../../component/room/resume/ViewPdf";
 import * as pdfjs from "pdfjs-dist";
+import useAxios from "../../../action/hooks/useAxios";
 
 import { IoClose } from "react-icons/io5";
 import { useSelector } from "react-redux";
@@ -23,14 +24,27 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   const [showPdf, setShowPdf] = useState(false);
   // 조회 할 때 useAxios 컨트롤 용도로 쓸려했는데,,
 
-  // 이름 클릭시 상태 변화 
-  const [memData , setMemData] =useState()
+  // 이름 클릭시 상태 변화
+  const [memData, setMemData] = useState();
 
   const [inquire, setInquire] = useState(false);
 
+  // 방에 입장 했을 때 자기소개서 파일이 있는지 조회하기 위한 useAxios 
+  const [getData] =useAxios(
+    `interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
+    "GET",
+    token
+    )
+
+    useEffect(() => {
+      setMemData(getData)
+      console.log("memData",memData)
+    },[getData])  
+
+
   // 본인이 아닌 다른사람의 이름을 눌렀을 때 (자기소개서 유무)
   const userInquirePdf =
-     memData === null  ? (
+    memData === null ? (
       <FileListBody>등록된 자소서가 없습니다</FileListBody>
     ) : (
       <FileListBody>
@@ -39,28 +53,49 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
     );
 
   // 본인 이름을 눌렀을 때
-  const myInquirePdf =<>
-    {memData === null ? (
-      <ResumeUpload setMemData={setMemData} pdfhandler={pdfhandler} token={token}/> 
-      ) : (<>
-    { memData === undefined? (<FileListBody>보고 싶은 자기소개서를 선택해 주세요</FileListBody> ) :(<MyResume setMemData={setMemData} pdfhandler={pdfhandler} setShowPdf={setShowPdf} token={token} />
-    )}
+  const myInquirePdf = (
+    <>
+      {memData === null ? (
+        <ResumeUpload
+          setMemData={setMemData}
+          pdfhandler={pdfhandler}
+          token={token}
+        />
+      ) : (
+        <>
+          {memData === undefined ? (
+            <FileListBody>보고 싶은 자기소개서를 선택해 주세요</FileListBody>
+          ) : (
+            <MyResume
+              setMemData={setMemData}
+              pdfhandler={pdfhandler}
+              setShowPdf={setShowPdf}
+              token={token}
+            />
+          )}
+        </>
+      )}
     </>
-    ) }
-    </>
-
-
+  );
 
   // pdf 창 닫기
   const onPdfClose = (e) => {
     setShowPdf(false);
   };
 
-
   return (
     <MainContainer>
-      <MemberList memData={memData} setMemData={setMemData}  token={token} pdfhandler={pdfhandler}  participants={participants} setPdfHandler={setPdfHandler} setShowPdf={setShowPdf} setInquire={setInquire}
-      inquire={inquire} />
+      <MemberList
+        memData={memData}
+        setMemData={setMemData}
+        token={token}
+        pdfhandler={pdfhandler}
+        participants={participants}
+        setPdfHandler={setPdfHandler}
+        setShowPdf={setShowPdf}
+        setInquire={setInquire}
+        inquire={inquire}
+      />
       <FileContainer>
         {showPdf ? (
           <ModalOverlay visible={showPdf}>
@@ -155,12 +190,15 @@ const FileContainer = styled.div`
   justify-content: center;
   width: inherit;
   height: inherit;
+  min-height: 600px;
 `;
 
 const FileList = styled.div`
   display: flex;
   flex-direction: column;
   width: inherit;
+  height: inherit;
+  min-height: 600px;
 `;
 
 const FileListTitle = styled.div`
@@ -173,7 +211,7 @@ const FileListTitle = styled.div`
 
 const FileListBody = styled.div`
   display: flex;
-  height: inherit;
+  height: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
