@@ -10,11 +10,13 @@ import { useEffect } from "react";
 const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
   const token = useSelector((state) => state.token);
 
-  const [Questions, setQuestions] = useState([]);
+  const [aboutQuestions, setAboutQuestions] = useState({
+    questions: [],
+    allQuestion: 1,
+    length: 0,
+    get: false,
+  });
   const [nowPage, setNowPage] = useState(1);
-  const [getUser, setGetUser] = useState(false);
-  const [allQuestion, setAllQuestion] = useState(1);
-  const [questionLength, setQuestionLength] = useState(0);
 
   const [getQuestion] = useAxios(
     `interviewjoins/${pdfhandler.interviewJoinId}/questions?page=${
@@ -23,55 +25,61 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
     "GET",
     token,
     {},
-    getUser
+    aboutQuestions.get
   );
 
+  console.log("getQuestion");
+
   useEffect(() => {
+    console.log("pdfhandler")
     if (pdfhandler !== undefined) {
-      setGetUser(true);
       setNowPage(1);
+      setAboutQuestions((prev) => {
+        return {
+          ...prev,
+          get: true,
+        };
+      });
     }
   }, [pdfhandler]);
 
   useEffect(() => {
-    setGetUser(true);
-  }, [nowPage]);
-
-  useEffect(() => {
+    console.log('이거 자체는 몇 번?')
     if (getQuestion !== null && getQuestion.success) {
-      setQuestions([...getQuestion?.data.content]);
-      setAllQuestion(Math.floor(getQuestion?.data.totalElements / 10) + 1);
-      setQuestionLength(getQuestion?.data.totalElements)
-
-      setGetUser(false);
+      setAboutQuestions(() => {
+        return {
+          questions: [...getQuestion?.data.content],
+          allQuestion: Math.floor(getQuestion?.data.totalElements / 10) + 1,
+          length: getQuestion?.data.totalElements,
+          get: false,
+        };
+      });
     }
   }, [getQuestion]);
-
-  // QuestionList: 해당 참가자에게 달려있는 질문 list 목록
-  // QuestionInsert: 질문 입력 칸
 
   return (
     <Question>
       <QuestionBoxTitle>
         <div>질문</div>
-        <div>{questionLength}</div>
+        <div>{aboutQuestions.length}</div>
       </QuestionBoxTitle>
+      {/* QuestionList: 해당 참가자에게 달려있는 질문 list 목록 */}
       <QuestionList
         idx={idx}
-        Questions={Questions}
-        setGetUser={setGetUser}
+        Questions={aboutQuestions.questions}
         userinfo={userinfo}
         pdfhandler={pdfhandler}
       />
       <Controler>
+        {/* QuestionInsert: 질문 입력 칸 */}
         <QuestionInsert
           userinfo={userinfo}
           pdfhandler={pdfhandler}
           token={token}
-          commentHandler={setGetUser}
+          commentHandler={setAboutQuestions}
         />
         <PageBar
-          totalpages={allQuestion} //전체 데이터 길이
+          totalpages={aboutQuestions.allQuestion} //전체 데이터 길이
           setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
           currentPage={nowPage} //현재페이지
         />
@@ -87,10 +95,10 @@ const QuestionBoxTitle = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
-  font-family: 'SBAggroL';
+  font-family: "SBAggroL";
   width: 100%;
-  
-  *{
+
+  * {
     color: var(--greyDark);
   }
 `;
