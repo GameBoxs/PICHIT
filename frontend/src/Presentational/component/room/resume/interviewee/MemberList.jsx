@@ -33,7 +33,6 @@ function MemberList({
       })
         .then((res) => {
             setMemData(res.data);
-            console.log(memData);
         })
         .catch((err) => {
           // console.log(err);
