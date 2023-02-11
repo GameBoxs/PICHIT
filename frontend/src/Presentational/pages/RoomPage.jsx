@@ -75,8 +75,6 @@ function RoomPage() {
       //interviewJoinId 받아서 정보 넣기
       const MemberArr = tmpData.participants; // 참가자 명단
 
-      console.log(MemberArr, userinfo)
-
       // Participants 안에 user 이름이 있으면 해당 정보(interviewjoinId 포함)를 aboutUser에 저장, 이후 자식 컴포넌트에 전달됨
       if (MemberArr?.length >= 2) {
         for (let i = 0; i < MemberArr.length; i++) {

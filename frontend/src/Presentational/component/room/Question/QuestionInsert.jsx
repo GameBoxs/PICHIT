@@ -35,7 +35,12 @@ const QuestionInsert = (props) => {
         ...question,
         content: "",
       });
-      commentHandler(true);
+      commentHandler((prev) => {
+        return {
+          ...prev,
+          get: true,
+        };
+      });
     }
   }, [postData]);
 
