@@ -51,7 +51,7 @@ function RoomHeader({
     "POST",
     token,
     enterObj,
-    userJoin.enter
+    joinEnter
   );
 
   const deleteResult = useAxios(
@@ -69,7 +69,7 @@ function RoomHeader({
     "DELETE",
     token,
     quitObj,
-    userJoin.quit
+    joinQuit
   );
 
   //useEffect
@@ -123,11 +123,8 @@ function RoomHeader({
   //Event Function
   const joinHandler = (isJoin) => {
     //방 참여하기
-    joinRoom(isJoin);
-    setUserJoin({
-      enter: true,
-      quit: false,
-    });
+    setJoin(isJoin)
+    setJoinQuit(false);
   };
 
   const quitHandler = (isJoin) => {
