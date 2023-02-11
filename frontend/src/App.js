@@ -12,7 +12,8 @@ import Footer from "./Presentational/common/Footer";
 import "./font.css";
 
 import Navigation from "./Presentational/common/Navigation";
-import InterviewPage from "./Presentational/pages/Interview/InterviewPage";
+// import InterviewPage from "./Presentational/pages/Interview/InterviewPage";
+import InterviewPage from "./Presentational/pages/Interview/NewInterviewPage";
 import MainPage from "./Presentational/pages/MainPage";
 import ReviewPage from "./Presentational/pages/ReviewPage";
 import RoomPage from "./Presentational/pages/RoomPage";

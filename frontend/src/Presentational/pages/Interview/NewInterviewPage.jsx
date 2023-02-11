@@ -1,23 +1,29 @@
 // Page Import Start
 import PrepareInterview from "./PrepareInterview";
+import SelectIntervieweePage from "./NewSelectIntervieweePage";
 // Page Import End
 
 // ETC Import Start
-import React, { useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { PITCHIT_URL } from "../../../store/values";
 // ETC Import End
 
 // OpenVidu Import Start
 import { OpenVidu } from "openvidu-browser";
 import {getToken, leaveSession,} from '../../../action/modules/chatModule';
+import useAxios from "../../../action/hooks/useAxios";
+import axios from "axios";
 // OpenVidu Import End
 
 const NewInterviewPage = () => {
     const navigate = useNavigate(); // Page 이동을 위한 navigate
-    const roomInfo = useSelector((state) => state.room);
+    // const roomInfo = useSelector((state) => state.room);
+    const roomInfo = JSON.parse(localStorage.getItem('roomInfo'));
+    // 로컬 스토리지 값 없으면 메인으로 돌아가게 하기
     const myToken = useSelector((state) => state.token);
     const [info, setInfo] = useState({
         interviewee: "미지정",
@@ -30,11 +36,22 @@ const NewInterviewPage = () => {
       });
     const [session, setSession] = useState(null);
     const [OV, setOV] = useState(new OpenVidu());
+    const [roomStateExecute, setRoomStateExecute] = useState(true);
+
+    // Error 여부 보고 404 면 이전으로 되돌아 가게
+    const [roomStateData, roomStateIsLoading, roomStateError] = useAxios(
+        `conference/interviewrooms/${roomInfo.roomId}/interviewstate`,
+        "GET",
+        myToken,
+        {},
+        roomStateExecute
+    )
 
     // 초기 세션 참가시 실행 함수
     const joinSession = () => {
         setSession(OV.initSession());
-    }
+    };
+    
     // 참여자 목록 리스트 수정 함수
     const deleteSubscriber = (streamManager) => {
         let subscribers = info.subscribers;
@@ -47,34 +64,112 @@ const NewInterviewPage = () => {
         }
     };
 
-    // 컴포넌트 마운트 될 때 실행
-    useEffect(() => {
-        joinSession();
+    const checkRoomstate = () => {
+        if (roomStateData && roomStateData.data) {
+            let data = roomStateData.data;
+            if(data){
 
-        window.addEventListener("beforeunload", () => {
-            leaveSession(session, setOV);
-        });
-        return () => {
-            window.removeEventListener("beforeunload", () => {
-                leaveSession(session, setOV);
-            });
-        };
-    }, []);
+            }
+        }
+    }
+
+    useEffect(() => {
+        if(roomStateExecute){
+            setRoomStateExecute( () => false);
+        }
+    },[roomStateExecute])
+
+    // 컴포넌트 마운트 될 때 실행
+    // useEffect(() => {
+    //     window.addEventListener("beforeunload", (e) => {
+    //         e.stopPropagation();
+    //         leaveSession(session, setOV);
+    //         e.returnValue='';
+    //     });
+    //     return () => {
+    //         window.removeEventListener("beforeunload", (e) => {
+    //             e.stopPropagation();
+    //             leaveSession(session, setOV);
+    //             e.returnValue='';
+    //         });
+    //     };
+    // }, []);
+
+    // useEffect(() => {
+    //     return () => {
+    //         window.removeEventListener("beforeunload", (e) => {
+    //             console.log('종료됨?');
+    //             e.stopPropagation();
+    //             leaveSession(session, setOV);
+    //             navigate('/interview',{state:{},replace:true});
+    //             window.location.reload();
+    //             e.returnValue='';
+    //         });
+    //     };
+    // })
+
+
+    // useEffect(() => {
+    //     window.addEventListener("beforeunload", (e) => {
+    //         console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    //         e.stopPropagation();
+    //         leaveSession(session, setOV);
+    //         navigate('/interview',{state:{},replace:true});
+    //         window.location.reload();
+    //         e.returnValue='';
+    //     });
+    //     return () => {
+    //         window.removeEventListener("beforeunload", (e) => {
+    //             console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    //             e.stopPropagation();
+    //             leaveSession(session, setOV);
+    //             navigate('/interview',{state:{},replace:true});
+    //             window.location.reload();
+    //             e.returnValue='';
+    //         });
+    //     };
+    // }, []);
+    
+    // useEffect(() => {
+    //     window.addEventListener("beforeunload", (e) => {
+    //         console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    //         return leaveSession(session, setOV);
+    //     });
+    //     window.addEventListener("unload", (e) => {
+    //         console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    //         return leaveSession(session, setOV);
+    //     });
+    //     return () => {
+    //         window.removeEventListener("beforeunload", (e) => {
+    //             console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    //             return leaveSession(session, setOV);
+    //         });
+    //         window.removeEventListener("unload", (e) => {
+    //             console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    //             return leaveSession(session, setOV);
+    //         });
+    //     };
+    // }, []);
 
     // state OV가 변경 될 때 마다 실행
     useEffect(() => {
         setInfo((prev) => {
-        return {
-            ...prev,
-            session: undefined,
-            subscribers: [],
-            mySessionId: roomInfo.roomId,
-            myUserName: roomInfo.userInfo.name,
-            mainStreamManager: undefined,
-            publisher: undefined,
-        };
+            return {
+                ...prev,
+                session: undefined,
+                subscribers: [],
+                mySessionId: roomInfo.roomId,
+                myUserName: roomInfo.userInfo.name,
+                mainStreamManager: undefined,
+                publisher: undefined,
+            };
         });
     }, [OV]);
+
+    useEffect(() => {
+        console.log('New 1번만 실행하니?');
+        joinSession();
+    },[])
 
     useEffect(() => {
         let mySession = session;
@@ -246,7 +341,8 @@ const NewInterviewPage = () => {
 
     return (
         <Routes>
-            <Route path="/" element={<PrepareInterview session={session}setOV={setOV} info={info}/>} />
+            <Route path="/" element={<PrepareInterview session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} setRoomStateExecute={setRoomStateExecute}/>} />
+            <Route path="/selectinterviewee" element={<SelectIntervieweePage session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} setRoomStateExecute={setRoomStateExecute}/>} />
         </Routes>
     )
 }
