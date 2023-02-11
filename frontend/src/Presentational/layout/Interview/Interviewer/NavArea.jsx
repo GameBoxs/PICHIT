@@ -7,58 +7,59 @@ import Swal from "sweetalert2";
 import useAxios from "../../../../action/hooks/useAxios";
 
 const NavArea = ({isHost, info, myToken}) => {
-    const [closeExecute, setCloseExecute] = useState(false);
-    const roomInfo = JSON.parse(localStorage.getItem('roomInfo'));
-    const [closeData, closeIsLoading, closeError] = useAxios(
-        'conference/interview/end',
-        "POST",
-        myToken,
-        {
-            interviewRoomId : roomInfo.roomId,
-            intervieweeId : info.interviewee,
-            questionId : "",
-            questionContent : ""
-        },
-        closeExecute
-    )
+  const roomInfo = JSON.parse(localStorage.getItem('roomInfo'));
+  const [closeExecute, setCloseExecute] = useState(false);
+  const [closeData, closeIsLoading, closeError] = useAxios(
+      'conference/interview/end',
+      "POST",
+      myToken,
+      {
+          interviewRoomId : roomInfo.roomId,
+          intervieweeId : info.interviewee,
+          questionId : "",
+          questionContent : ""
+      },
+      closeExecute
+  )
 
-    useEffect(()=> {
-        if(closeExecute) setCloseExecute(false);
-    },[closeExecute])
+  useEffect(()=> {
+      if(closeExecute) setCloseExecute(false);
+  },[closeExecute])
 
-    const finishInterviewe = () => {
-        Swal.fire({
-          title: "현재 면접을 종료하고 대기실로 돌아갑니다.",
-          text:'대기실로 가기 전에 모든 질문이 끝났는지 확인해 주세요.',
-          icon: "warning",
-          showCancelButton: true,
-          cancelButtonText: "취소",
-          showConfirmButton: true,
-          confirmButtonText: "확인",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            setCloseExecute(true);
-          }
-        });
-    }
+  const finishInterviewe = () => {
+    console.log('info가 뭔데 ',info);
+      Swal.fire({
+        title: "현재 면접을 종료하고 대기실로 돌아갑니다.",
+        text:'대기실로 가기 전에 모든 질문이 끝났는지 확인해 주세요.',
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonText: "취소",
+        showConfirmButton: true,
+        confirmButtonText: "확인",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setCloseExecute(true);
+        }
+      });
+  }
 
-    return (
-        <InterviewNav>
-            <NavCompo></NavCompo>
-            <NavCompo>Pitchit</NavCompo>
-            <NavCompo>
-                <TotalTimer />
-                {
-                    isHost ?
-                    <MdOutlineLogout
-                        className="logOutBtn"
-                        onClick={finishInterviewe}
-                    />
-                    : null
-                }
-            </NavCompo>
-        </InterviewNav>
-    )
+  return (
+      <InterviewNav>
+          <NavCompo></NavCompo>
+          <NavCompo>Pitchit</NavCompo>
+          <NavCompo>
+              <TotalTimer />
+              {
+                  isHost ?
+                  <MdOutlineLogout
+                      className="logOutBtn"
+                      onClick={finishInterviewe}
+                  />
+                  : null
+              }
+          </NavCompo>
+      </InterviewNav>
+  )
 }
 
 export default NavArea;

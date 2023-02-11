@@ -76,6 +76,10 @@ const NewInterviewPage = () => {
             let currentQuestion = data.questionProceeding ? data.questionProceeding : null;
             // 만약 현재 면접자 ID가 존재 한다면 면접은 진행중 임
             if(currentInterviewee) {
+                setInfo((prev) => {
+                    return { ...prev, interviewee: currentInterviewee };
+                  });
+
                 // 진행 중인 면접자 ID와 내 ID가 일치하면 나는 면접자 인 상태로 재접속한 것 이므로
                 // 면접자 페이지로 이동 시킴, 따로 던져줄 데이터는 없음.
                 if(roomInfo.userInfo.id === currentInterviewee) {
@@ -172,6 +176,9 @@ const NewInterviewPage = () => {
             // when an Interview Start signal is received.
             mySession.on("broadcast-interview-start", (signal) => {
                 let intervieweeID = JSON.parse(signal.data).intervieweeId;
+                setInfo((prev) => {
+                    return { ...prev, interviewee: intervieweeID };
+                  });
                 if(intervieweeID) {
                     if(intervieweeID === roomInfo.userInfo.id) {
                         navigate("/interview/interviewer", {
