@@ -71,7 +71,7 @@ const NewSelectIntervieweePage = (props) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 if(result.value) {
-                    selectInterviwee(result.value, info.mySessionID, myToken);
+                    selectInterviwee(result.value, roomInfo.roomId, myToken);
                 }
             } else {
                 session.signal({

@@ -90,11 +90,6 @@ const InterviewerPage = ({ session, setSession, OV, setOV, info, setInfo }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         setCloseExecute(true);
-        // session.signal({
-        //   data:'',
-        //   to:[],
-        //   type: 'moveToSelect'
-        // })
       }
     });
   }

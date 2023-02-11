@@ -1,6 +1,7 @@
 // Page Import Start
 import PrepareInterview from "./PrepareInterview";
 import SelectIntervieweePage from "./NewSelectIntervieweePage";
+import InterviewerPage from "./NewInterviewerPage";
 // Page Import End
 
 // ETC Import Start
@@ -39,7 +40,8 @@ const NewInterviewPage = () => {
     const [roomStateExecute, setRoomStateExecute] = useState(true);
 
     // Error 여부 보고 404 면 이전으로 되돌아 가게
-    const [roomStateData, roomStateIsLoading, roomStateError] = useAxios(
+    const [roomStateData, setRoomStateData] = useState();
+    const [roomStateDatas, roomStateIsLoading, roomStateError] = useAxios(
         `conference/interviewrooms/${roomInfo.roomId}/interviewstate`,
         "GET",
         myToken,
@@ -65,11 +67,50 @@ const NewInterviewPage = () => {
     };
 
     const checkRoomstate = () => {
+        console.log('roomStateData 가뭔데 ', roomStateData);
         if (roomStateData && roomStateData.data) {
+            // 재 접속 마다 Axios 에서 방 상태 데이터 가져온것을 변수에 저장.
             let data = roomStateData.data;
-            if(data){
+            // 현재 면접자 ID
+            let currentInterviewee = data.currentInterviewee ? data.currentInterviewee.id : null;
+            let currentQuestion = data.questionProceeding ? data.questionProceeding : null;
+            // 만약 현재 면접자 ID가 존재 한다면 면접은 진행중 임
+            if(currentInterviewee) {
+                // 진행 중인 면접자 ID와 내 ID가 일치하면 나는 면접자 인 상태로 재접속한 것 이므로
+                // 면접자 페이지로 이동 시킴, 따로 던져줄 데이터는 없음.
+                if(roomInfo.userInfo.id === currentInterviewee) {
+                    navigate("/interview/interviewer", {
+                        state: {}, replace:true
+                    });
+                }
 
+                // 면접관 이라는 소리
+                else {
+                    // 현재 질문 중일 때
+                    if(currentQuestion) {
+                        navigate("/interview/interviewee", {
+                            state: {
+                                currentQuestionId:currentQuestion.questionId,
+                                currentQuestionContent:currentQuestion.content
+                            }, replace:true
+                        });
+                    } else{
+                        navigate("/interview/interviewee", {
+                            state: {}, replace:true
+                        });
+                    }
+                }
+            } 
+            else { // 면접자 ID가 존재 하지 않기 때문에 면접 세션이 진행중이 지 않으므로 대기실로
+                navigate("/interview/selectinterviewee", {
+                    state: {}, replace:true
+                });
             }
+        } else{
+            // 아무 것도 없이 방 자체가 초기 상태 라면.
+            navigate("/interview/selectinterviewee", {
+                state: {}, replace:true
+            });
         }
     }
 
@@ -78,6 +119,11 @@ const NewInterviewPage = () => {
             setRoomStateExecute( () => false);
         }
     },[roomStateExecute])
+
+    useEffect(() => {
+        if(roomStateDatas && roomStateDatas.data) setRoomStateData(roomStateDatas);
+        if(roomStateData !== undefined) checkRoomstate();
+    },[roomStateDatas,roomStateData])
 
     // state OV가 변경 될 때 마다 실행
     useEffect(() => {
@@ -125,7 +171,7 @@ const NewInterviewPage = () => {
 
             // when an Interview Start signal is received.
             mySession.on("broadcast-interview-start", (signal) => {
-                let intervieweeID = signal.data;
+                let intervieweeID = JSON.parse(signal.data).intervieweeId;
                 if(intervieweeID) {
                     if(intervieweeID === roomInfo.userInfo.id) {
                         navigate("/interview/interviewer", {
@@ -241,9 +287,7 @@ const NewInterviewPage = () => {
                         });
                     }
                     finally{
-                        navigate("/interview/selectinterviewee", {
-                            state: {}, replace:true
-                        });
+                        
                     }
                 }).catch((error) => {
                     if(error.message === 'NotAllowedError: Permission denied'){
@@ -270,6 +314,7 @@ const NewInterviewPage = () => {
         <Routes>
             <Route path="/" element={<PrepareInterview session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} setRoomStateExecute={setRoomStateExecute}/>} />
             <Route path="/selectinterviewee" element={<SelectIntervieweePage session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} setRoomStateExecute={setRoomStateExecute}/>} />
+            <Route path="/interviewer" element={<InterviewerPage session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} />} />
         </Routes>
     )
 }
