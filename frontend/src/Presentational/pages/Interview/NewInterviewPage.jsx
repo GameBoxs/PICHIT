@@ -79,78 +79,6 @@ const NewInterviewPage = () => {
         }
     },[roomStateExecute])
 
-    // 컴포넌트 마운트 될 때 실행
-    // useEffect(() => {
-    //     window.addEventListener("beforeunload", (e) => {
-    //         e.stopPropagation();
-    //         leaveSession(session, setOV);
-    //         e.returnValue='';
-    //     });
-    //     return () => {
-    //         window.removeEventListener("beforeunload", (e) => {
-    //             e.stopPropagation();
-    //             leaveSession(session, setOV);
-    //             e.returnValue='';
-    //         });
-    //     };
-    // }, []);
-
-    // useEffect(() => {
-    //     return () => {
-    //         window.removeEventListener("beforeunload", (e) => {
-    //             console.log('종료됨?');
-    //             e.stopPropagation();
-    //             leaveSession(session, setOV);
-    //             navigate('/interview',{state:{},replace:true});
-    //             window.location.reload();
-    //             e.returnValue='';
-    //         });
-    //     };
-    // })
-
-
-    // useEffect(() => {
-    //     window.addEventListener("beforeunload", (e) => {
-    //         console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    //         e.stopPropagation();
-    //         leaveSession(session, setOV);
-    //         navigate('/interview',{state:{},replace:true});
-    //         window.location.reload();
-    //         e.returnValue='';
-    //     });
-    //     return () => {
-    //         window.removeEventListener("beforeunload", (e) => {
-    //             console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    //             e.stopPropagation();
-    //             leaveSession(session, setOV);
-    //             navigate('/interview',{state:{},replace:true});
-    //             window.location.reload();
-    //             e.returnValue='';
-    //         });
-    //     };
-    // }, []);
-    
-    // useEffect(() => {
-    //     window.addEventListener("beforeunload", (e) => {
-    //         console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    //         return leaveSession(session, setOV);
-    //     });
-    //     window.addEventListener("unload", (e) => {
-    //         console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    //         return leaveSession(session, setOV);
-    //     });
-    //     return () => {
-    //         window.removeEventListener("beforeunload", (e) => {
-    //             console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    //             return leaveSession(session, setOV);
-    //         });
-    //         window.removeEventListener("unload", (e) => {
-    //             console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    //             return leaveSession(session, setOV);
-    //         });
-    //     };
-    // }, []);
-
     // state OV가 변경 될 때 마다 실행
     useEffect(() => {
         setInfo((prev) => {
@@ -167,7 +95,6 @@ const NewInterviewPage = () => {
     }, [OV]);
 
     useEffect(() => {
-        console.log('New 1번만 실행하니?');
         joinSession();
     },[])
 

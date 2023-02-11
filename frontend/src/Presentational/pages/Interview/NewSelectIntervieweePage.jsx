@@ -26,8 +26,8 @@ const NewSelectIntervieweePage = (props) => {
     const roomInfo = JSON.parse(localStorage.getItem('roomInfo'));
 
     //방장이 면접자를 고를 때/고르지 않을 때 뜰 문구
-    const [isSelect, setIsSelect] = useState(true);
-    const sentance = isSelect ? "방장이 면접자를 선택하고 있습니다2" : "대기 중입니다";
+    const [isSelect, setIsSelect] = useState(false);
+    const sentance = isSelect ? "방장이 면접자를 선택하고 있습니다" : "대기 중입니다";
 
     const intervieweeSelectHandler = () => {
         session.signal({
@@ -40,9 +40,13 @@ const NewSelectIntervieweePage = (props) => {
         let MemberList = new Object();
         let mydata = roomStateData.data.participants.filter(item => item.id === myID);
         
-        if(mydata.finished === false){
+        console.log('룸 정보는? ', roomInfo, myID, myNickName);
+        console.log('내 데이터는? ', mydata);
+
+        if(mydata[0].finished === false){
             MemberList[myID] = myNickName;
         }
+        console.log('멤버 리스트야', MemberList);
 
         for (let i = 0; i < info.subscribers.length; i++) {
             let targetID = JSON.parse(
@@ -52,7 +56,7 @@ const NewSelectIntervieweePage = (props) => {
               info.subscribers[i].stream.connection.data
             ).clientData;
             let targetData = roomStateData.data.participants.filter(item => item.id === targetID )
-            if(targetData.finished === false){
+            if(targetData[0].finished === false){
               MemberList[targetID] = targetNickName;
             }
         }
@@ -98,7 +102,7 @@ const NewSelectIntervieweePage = (props) => {
                 e.returnValue='';
             });
         };
-    }, []);
+    }, [props]);
 
     useEffect(() => {
         setRoomStateExecute(true);
