@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import useAxios from "../../../../action/hooks/useAxios";
 
 const NavArea = ({isHost, info, myToken}) => {
-  const roomInfo = JSON.parse(localStorage.getItem('roomInfo'));
+  const roomInfo = JSON.parse(sessionStorage.getItem('roomInfo'));
   const [closeExecute, setCloseExecute] = useState(false);
   const [closeData, closeIsLoading, closeError] = useAxios(
       'conference/interview/end',

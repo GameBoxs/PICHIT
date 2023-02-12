@@ -166,7 +166,7 @@ function RoomHeader({ join, joinRoom, data, host, password, token, userinfo }) {
       roomId : id,
       isHost : host
     }))
-    localStorage.setItem('roomInfo',JSON.stringify({
+    sessionStorage.setItem('roomInfo',JSON.stringify({
       userInfo : userinfo,
       roomId : id,
       isHost : host

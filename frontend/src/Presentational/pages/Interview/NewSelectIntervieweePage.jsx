@@ -24,7 +24,7 @@ const MySwal = withReactContent(Swal);
 const NewSelectIntervieweePage = (props) => {
     const navigate = useNavigate(); // Page 이동을 위한 navigate
     const {session, setOV, info, myToken, roomStateData, setRoomStateExecute} = props;
-    const roomInfo = JSON.parse(localStorage.getItem('roomInfo'));
+    const roomInfo = JSON.parse(sessionStorage.getItem('roomInfo'));
 
     //방장이 면접자를 고를 때/고르지 않을 때 뜰 문구
     const [isSelect, setIsSelect] = useState(false);

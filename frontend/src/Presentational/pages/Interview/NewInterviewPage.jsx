@@ -21,7 +21,7 @@ import useAxios from "../../../action/hooks/useAxios";
 const NewInterviewPage = () => {
     const navigate = useNavigate(); // Page 이동을 위한 navigate
     // const roomInfo = useSelector((state) => state.room);
-    const roomInfo = JSON.parse(localStorage.getItem('roomInfo'));
+    const roomInfo = JSON.parse(sessionStorage.getItem('roomInfo'));
     // 로컬 스토리지 값 없으면 메인으로 돌아가게 하기
     const myToken = useSelector((state) => state.token);
     const [info, setInfo] = useState({

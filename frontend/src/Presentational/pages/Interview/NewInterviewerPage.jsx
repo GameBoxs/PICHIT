@@ -16,7 +16,7 @@ import { leaveSession } from "../../../action/modules/chatModule";
 
 const NewInterviewerPage = (props) => {
     const {session, setOV, info, myToken, roomStateData } = props;
-    const roomInfo = JSON.parse(localStorage.getItem('roomInfo'));
+    const roomInfo = JSON.parse(sessionStorage.getItem('roomInfo'));
     const navigate = useNavigate();
 
     useEffect(() => {

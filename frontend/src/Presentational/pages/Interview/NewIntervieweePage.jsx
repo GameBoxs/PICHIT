@@ -11,7 +11,7 @@ const IntervieweePage = (props) => {
   const { session, setSession, OV, setOV, info, setInfo, roomStateData } =
     props;
   const token = useSelector((state) => state.token);
-  const roomInfo = JSON.parse(localStorage.getItem("roomInfo"));
+  const roomInfo = JSON.parse(sessionStorage.getItem("roomInfo"));
 
 
   const navigate = useNavigate();

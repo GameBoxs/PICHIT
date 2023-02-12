@@ -12,7 +12,7 @@ const MySwal = withReactContent(Swal)
 
 const QuestionArea = (props) => {
   const { setIsQuestion, session, roomStateData, token, info } = props;
-  const roomInfo = JSON.parse(localStorage.getItem("roomInfo"));
+  const roomInfo = JSON.parse(sessionStorage.getItem("roomInfo"));
   console.log('Qestion Area 진입 데이터는???? ', roomStateData);
 
   const [highlight, setHighlight] = useState({
