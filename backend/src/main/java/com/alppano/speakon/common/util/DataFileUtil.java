@@ -55,6 +55,8 @@ public class DataFileUtil {
 
         try {
             moveFile(from, to);
+            String envFileName = ".recording." + sessionId;
+            deleteFile(getOpenviduFullPath(sessionId + "/" + envFileName));
         } catch (IOException e) {
             throw new ResourceNotFoundException("면접 녹음파일 저장에 실패하였습니다.");
         }
@@ -71,8 +73,8 @@ public class DataFileUtil {
         return dataFile;
     }
 
-    public boolean deleteFile(DataFile dataFile) {
-        File temp = new File(getFullPath(dataFile.getStoredFileName()));
+    public boolean deleteFile(String path) {
+        File temp = new File(getFullPath(path));
         if (temp.exists()) {
             temp.delete();
         }

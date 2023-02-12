@@ -77,7 +77,7 @@ public class InterviewRecordingService {
             throw new ResourceForbiddenException("자신의 면접 녹음만 삭제할 수 있습니다.");
         }
 
-        dataFileUtil.deleteFile(recording.getDataFile());
+        dataFileUtil.deleteFile(dataFileUtil.getFullPath(recording.getDataFile().getStoredFileName()));
         interviewJoin.setInterviewRecording(null);
         recordingRepository.delete(recording);
         dataFileRepository.delete(recording.getDataFile());
