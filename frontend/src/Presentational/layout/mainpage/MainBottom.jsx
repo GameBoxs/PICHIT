@@ -4,23 +4,21 @@ import styled from "styled-components";
 import TotalCategory from "../../component/TotalCategory";
 import MyCategory from "../../component/MyCategory";
 import PageBar from "../../common/Pagination/PageBar";
-import PageZero from "../../common/Pagination/PageZero"
-import Pagination from "../../common/Pagination/Pagination"
+import PageZero from "../../common/Pagination/PageZero";
+import Pagination from "../../common/Pagination/Pagination";
 import CreateRoom from "../../component/CreateRoom";
 import Button from "../../common/Button";
-import RoomListBox from "../../component/RoomListBox"
-import TitleSection from "../../component/TitleSection"
+import RoomListBox from "../../component/RoomListBox";
+import TitleSection from "../../component/TitleSection";
 //sweetalert2
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 //통신
 import useAxios from "../../../action/hooks/useAxios";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import _ from "lodash";
-
-const MySwal = withReactContent(Swal);
-// // React sweet alert 쓸려고 사용함
+import BoardBody from "./BoardBody";
 
 function MainBottom() {
   // //페이지네이션
@@ -28,129 +26,120 @@ function MainBottom() {
   // const [totalElements, setTotalElements] = useState(0); //전체 데이터 길이
   const [totalpages, setTotalPages] = useState(0); //전체 데이터 길이
   //조건검색
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("");
-  const [finished, setFinished] = useState("");
+  const [aboutCondition, setAboutCondition] = useState({
+    search: "",
+    sort: "",
+    finished: "",
+  });
   //통신
   const [APIurl, serAPIurl] = useState("interviewrooms?");
-  const myCategory = `my-interviewrooms?page=${
-    currentPage - 1
-  }&finished=${finished}`;
-  const totalCategory = `interviewrooms?page=${
-    currentPage - 1
-  }&title=${search}&sort=${sort}`;
+  const myCategory = `my-interviewrooms?page=${currentPage - 1}&finished=${
+    aboutCondition.finished
+  }`;
+  const totalCategory = `interviewrooms?page=${currentPage - 1}&title=${
+    aboutCondition.search
+  }&sort=${aboutCondition.sort}`;
 
   //로그인에 따른 카테고리 기본값
-  const token = useSelector(state => state.token)//으로 원래는 사용자 토큰을 받아야하는데 지금은 테스트라서 testToken으로 수민꺼 들고올거다.
+  const token = useSelector((state) => state.token); //으로 원래는 사용자 토큰을 받아야하는데 지금은 테스트라서 testToken으로 수민꺼 들고올거다.
 
   // TOTAL/MY 카테고리
   const [roomPosition, setRoomPosition] = useState(false); // false : total, true ; my
-  // const [roomPosition, setRoomPosition] = useState(token ? true : false); // false : total, true ; my
-
+  
   //버튼을 통한 TOTAL/MY 값
   function roomSwitch(position) {
     // console.log('클릭됨'+position)
     if (position === "toTotal") {
       setRoomPosition(false);
       serAPIurl(totalCategory);
-      setCurrentPage(1); 
+      setCurrentPage(1);
+
       //카테고리 이동후 초기화
-      setFinished("");
+      setAboutCondition((prev) => {
+        return { ...prev, finished: "" };
+      });
     } else {
       setRoomPosition(true);
       serAPIurl(myCategory);
       setCurrentPage(1);
+
       //카테고리 이동후 초기화
-      setSearch("");
-      setSort("");
+      setAboutCondition((prev) => {
+        return { ...prev, search: "", sort: "" };
+      });
     }
   }
 
   //검색
-  function searchHandler(e) {
-    setSearch(e);
-  }
-
-  //sort선택
-  function sortHandler(e) {
-    setSort(e);
-  }
-  function finishedHandler(e) {
-    setFinished(e);
+  function conditionHandler(e, type) {
+    setAboutCondition((prev) => {
+      return {
+        ...prev,
+        [type]: e,
+      };
+    });
   }
 
   // roomlist통신
   const [data, setData] = useState([]); //total데이터 저장
   const [getData, isLoading] = useAxios(APIurl, "GET", token);
 
-  console.log("0--")
-
   useEffect(() => {
     if (getData && getData.data) {
       setData(getData);
       // setTotalElements(totalElements=>getData.data.totalElements); //데이터 전체 수
-      setTotalPages(totalPage=>getData.data.totalPages); //페이지 전체 수
+      setTotalPages((totalPage) => getData.data.totalPages); //페이지 전체 수
       // console.log('렌더링 확인용:::::'+getData.data.totalElements)
     }
   }, [getData]);
   //이거 로그인환경에서 처음에 null, total데이터, my데이터 로 값변경일어나면서 렌더링
-  
+
   useEffect(() => {
     if (roomPosition) {
       serAPIurl(myCategory);
     } else {
       serAPIurl(totalCategory);
     }
+  }, [currentPage, aboutCondition]);
 
-  }, [currentPage, search, sort, finished]);
-
-  //방생성하기
-  const [modalOpen, setModalOpen] = useState(false);
-  const showModal = () => {
-    setModalOpen(true);
-  };
   // console.log('렌더링 확인용:::::'+totalpages)
   return (
     <Layout>
       <Header>
-        <h1> ROOM LIST</h1>
-        <TitleSection roomPosition={roomPosition} roomSwitch={roomSwitch} token={token}/>
+        <h1>면접방</h1>
+        <TitleSection
+          roomPosition={roomPosition}
+          roomSwitch={roomSwitch}
+          token={token}
+        />
       </Header>
-      {
-          isLoading===true? <div>loading...</div> :
-      <section>
-        <Main>
-          {roomPosition ? <MyCategory finishedHandler={finishedHandler}/> : <TotalCategory searchHandler={searchHandler} sortHandler={sortHandler}/>}
-          <RoomListdiv>
-              {data.data ?<RoomListBox search={search} roomsData={data.data} roomPosition={roomPosition} finished={finished}/> : <div>loading...</div>}
-            </RoomListdiv>
-            <PaginationBox>
-              {totalpages===0?<PageZero/>:
-              <PageBar
-                setCurrentPage={setCurrentPage} //현재 페이지를 계산하는 함수
-                currentPage={currentPage} //현재페이지
-                totalpages={totalpages} //페이지 길이
-              />}
-
-              {/* <Pagination/> */}
-
-            </PaginationBox>
-          </Main>
-          <Footer>
-            <button onClick={showModal}>방만들기</button>
-            {modalOpen && <CreateRoom setModalOpen={setModalOpen} />}
-          </Footer>
-        </section>
-      }
+      {isLoading === true ? (
+        <div>loading...</div>
+      ) : (
+        <BoardBody
+          roomPosition={roomPosition}
+          conditionHandler={conditionHandler}
+          data={data.data}
+          aboutCondition={aboutCondition}
+          totalpages={totalpages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
     </Layout>
   );
 }
+
 export default MainBottom;
 
 const Layout = styled.div`
   /* margin-inline: 15rem; */
+  height: fit-content;
   margin-bottom: 100px;
   width: 65vw;
+  background-color: var(--greyLight-1);
+  border-radius: 3vw;
+  padding: 5vh 5vw;
 `;
 
 const Header = styled.div`
@@ -162,35 +151,4 @@ const Header = styled.div`
     margin-bottom: 1rem;
     font-family: "SBAggroB";
   }
-`;
-
-const Titlesection = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: "SBAggroL";
-`;
-
-const Main = styled.div`
-  margin: 0;
-  .search-input {
-    width: 100%;
-    margin-block: 2rem 1.5rem;
-  }
-`;
-
-const RoomListdiv = styled.div`
-  margin-block: 1rem 3rem;
-  height: 30rem;
-`;
-
-const Footer = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-`;
-
-const PaginationBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;

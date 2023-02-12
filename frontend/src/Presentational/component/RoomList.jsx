@@ -36,7 +36,7 @@ export default RoomList;
 const RoomListul = styled.ul`
     display: flex;
     flex-flow: wrap;
-    gap: 0.5rem 1rem;
+    gap: 1rem;
     list-style:none;
-    
+    width: 100%;
 `
