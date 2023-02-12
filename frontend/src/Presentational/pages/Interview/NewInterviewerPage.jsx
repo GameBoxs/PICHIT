@@ -21,21 +21,15 @@ const NewInterviewerPage = (props) => {
 
     useEffect(() => {
         window.addEventListener("beforeunload", (e) => {
-            console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-            e.stopPropagation();
             leaveSession(session, setOV);
             navigate('/interview',{state:{},replace:true});
             window.location.reload();
-            e.returnValue='';
         });
         return () => {
             window.removeEventListener("beforeunload", (e) => {
-                console.log('변경 감지@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-                e.stopPropagation();
                 leaveSession(session, setOV);
                 navigate('/interview',{state:{},replace:true});
                 window.location.reload();
-                e.returnValue='';
             });
         };
     }, [props]);
