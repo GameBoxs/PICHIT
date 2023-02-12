@@ -93,7 +93,7 @@ const DetailArea = ({ selectedID }) => {
                     totalpages={totalPage}
                   />
                   {
-                    data[nowPage-1] ?
+                    data[nowPage-1] && sound.timestamp[nowPage - 1] ?
                     <FeedBackArea
                       title={data[nowPage - 1].content}
                       data={data[nowPage - 1].feedbacks}
