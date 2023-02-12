@@ -14,6 +14,9 @@ import { createSession } from "../../../action/modules/chatModule";
 import { TiStarburst } from "react-icons/ti";
 import SubTitle from "../../common/SubTitle";
 
+import { useDispatch } from "react-redux";
+import { changeRoom } from "../../../reducer/roomStore";
+
 const MySwal = withReactContent(Swal);
 
 function RoomHeader({
@@ -28,6 +31,7 @@ function RoomHeader({
   const { join, host } = userJoinInfo;
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [joinEnter, setJoinEnter] = useState(false);
@@ -158,14 +162,17 @@ function RoomHeader({
   };
 
   const moveToRoom = () => {
-    // setGoSession(true)
-    navigate("/interview", {
-      state: {
-        userinfo: userinfo,
-        roomId: id,
-        isHost: host
-      }
-    });
+    dispatch(changeRoom({
+      userInfo : userinfo,
+      roomId : id,
+      isHost : host
+    }))
+    sessionStorage.setItem('roomInfo',JSON.stringify({
+      userInfo : userinfo,
+      roomId : id,
+      isHost : host
+    }))
+    navigate("/interview");
   };
 
   const createRoom = () => {

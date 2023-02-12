@@ -1,31 +1,40 @@
 import React from "react";
 import styled from "styled-components";
 import { FaStar } from "react-icons/fa";
-import { useRef } from "react";
-import { useEffect } from "react";
 
-const Rating = ({ RatingHandler, starScore }) => {
+const Rating = ({ setFeedback, starScore }) => {
+  //별점 값 받아오는 함수
+  const RatingHandler = (e) => {
+    setFeedback((prev) => {
+      return {
+        ...prev,
+        starScore: e.target.value,
+      };
+    });
+  };
+
+  console.log(starScore);
 
   const gradle = Array(5)
     .fill(0)
     .map((_, idx) => {
       return (
-        <React.Fragment
-        key={idx}
-      >
+        <React.Fragment key={idx}>
           <RatingLabel
             key={idx}
             aria-label={`${idx + 1} stars`}
             htmlFor={`rating2-${10 * (idx + 1)}`}
           >
-            <RatingIcon starScore={starScore === 0 ? false:true}>
+            <RatingIcon
+              starScore={starScore === 0 || starScore <= idx ? false : true}
+            >
               <FaStar />
             </RatingIcon>
           </RatingLabel>
           <RatingInput
             name="rating2"
             id={`rating2-${10 * (idx + 1)}`}
-            value={idx+1}
+            value={idx + 1}
             type="radio"
             onClick={RatingHandler}
           />
@@ -58,7 +67,9 @@ export default Rating;
 
 const RatingIcon = styled.div`
   pointer-events: none;
-  color: ${props => props.starScore?'#f7e160' : '#ddd'};
+  path {
+    color: ${(props) => (props.starScore ? "#f7e160" : "#ddd")};
+  }
 
   &.rating__icon--none {
     color: #eee;
