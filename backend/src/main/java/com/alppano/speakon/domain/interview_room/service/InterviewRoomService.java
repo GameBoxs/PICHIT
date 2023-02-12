@@ -102,7 +102,7 @@ public class InterviewRoomService {
         // 참가자 정보
         List<Participant> participants = new ArrayList<>();
         for (InterviewJoin join : interviewRoom.getInterviewJoins()) {
-            participants.add(new Participant(join.getUser(), join.getId()));
+            participants.add(new Participant(join));
         }
         interviewRoomDetailInfo.setParticipants(participants);
 
