@@ -93,7 +93,7 @@ public class ResumeService {
             throw new ResourceForbiddenException("자신의 자기소개서만 삭제할 수 있습니다.");
         }
 
-        dataFileUtil.deleteFile(resume.getDataFile());
+        dataFileUtil.deleteFile(dataFileUtil.getFullPath(resume.getDataFile().getStoredFileName()));
         interviewJoin.setResume(null);
         resumeRepository.delete(resume);
         dataFileRepository.delete(resume.getDataFile());
@@ -114,7 +114,7 @@ public class ResumeService {
         }
 
         DataFile temp = resume.getDataFile();
-        dataFileUtil.deleteFile(temp);
+        dataFileUtil.deleteFile(dataFileUtil.getFullPath(temp.getStoredFileName()));
         dataFileRepository.delete(temp);
 
         DataFile dataFile = dataFileUtil.storeFile(multipartFile);

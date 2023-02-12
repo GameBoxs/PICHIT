@@ -53,7 +53,7 @@ public class DataFileService {
                 () -> new ResourceNotFoundException("존재하지 않는 파일 입니다.")
         );
 
-        dataFileUtil.deleteFile(dataFile);
+        dataFileUtil.deleteFile(dataFileUtil.getFullPath(dataFile.getStoredFileName()));
 
         dataFileRepository.delete(dataFile);
     }
