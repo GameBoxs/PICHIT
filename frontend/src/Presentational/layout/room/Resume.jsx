@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ViewPdf from "../../component/room/resume/ViewPdf";
 import * as pdfjs from "pdfjs-dist";
-import useAxios from "../../../action/hooks/useAxios";
+import axios from "axios";
+import { PITCHIT_URL } from "../../../store/values";
 
 import { IoClose } from "react-icons/io5";
 import { useSelector } from "react-redux";
@@ -28,18 +29,31 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   const [memData, setMemData] = useState();
 
   const [inquire, setInquire] = useState(false);
+  
+    const myInterviewJoinId =participants[0].interviewJoinId
 
-  // 방에 입장 했을 때 자기소개서 파일이 있는지 조회하기 위한 useAxios 
-  const [getData] =useAxios(
-    `interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
-    "GET",
-    token
-    )
+    const [errorContext, setError] = useState(null);
+    // 방에 입장 했을 때 자기소개서 파일이 있는지 조회하기 위한 axios (최초 렌더링 할 때만 실행 됨)
 
     useEffect(() => {
-      setMemData(getData)
-      console.log("memData",memData)
-    },[getData])  
+      axios({
+        method: "GET",
+        url: `${PITCHIT_URL}/interviewjoins/${myInterviewJoinId}/resumes`,
+        headers: {
+          Authorization: token,
+        },
+        data: null,
+      })
+        .then((res) => {
+            setMemData(res.data);
+            console.log("한번만 되는거 맞음?")
+        })
+        .catch((err) => {
+          console.log(err);
+          setError(err);
+          setMemData(null);
+        });
+    },[])  
 
 
   // 본인이 아닌 다른사람의 이름을 눌렀을 때 (자기소개서 유무)

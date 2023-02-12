@@ -3,14 +3,15 @@ import styled from "styled-components";
 import QuestionItem from "./QuestionItem";
 import SubTitle from "../../../common/SubTitle";
 
-const QuestionList = ({ Questions, setGetUser, userinfo, pdfhandler }) => {
+const QuestionList = ({ Questions, userinfo, pdfhandler }) => {
+
+
   return (
     <List>
       {Questions.map((Question) => (
         <QuestionItem
           Question={Question}
           key={Question.id}
-          setGetUser={setGetUser}
           userinfo={userinfo}
           pdfhandler={pdfhandler}
         />

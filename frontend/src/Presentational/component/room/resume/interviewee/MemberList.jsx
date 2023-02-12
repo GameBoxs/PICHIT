@@ -33,9 +33,10 @@ function MemberList({
       })
         .then((res) => {
             setMemData(res.data);
+            console.log("MemberList")
         })
         .catch((err) => {
-          // console.log(err);
+          console.log(err);
           setError(err);
           setMemData(null);
         });
@@ -44,7 +45,7 @@ function MemberList({
   
   useEffect(() => {
     setInquire(false);
-  }, [memData]);
+  }, [errorContext]);
 
 
   // pdf 이름에 따른 함수

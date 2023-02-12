@@ -9,7 +9,6 @@ import { useEffect } from "react";
 
 const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
   const token = useSelector((state) => state.token);
-
   const [aboutQuestions, setAboutQuestions] = useState({
     questions: [],
     allQuestion: 1,
@@ -28,7 +27,8 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
     aboutQuestions.get
   );
 
-  console.log("getQuestion");
+
+  console.log("getQuestion",getQuestion);
 
   useEffect(() => {
     console.log("pdfhandler")
