@@ -128,24 +128,6 @@ function RoomPage() {
 
   }, [postData]);
 
-  useEffect(()=>{
-    if (contextError !== null){
-      MySwal.fire({
-        html: (
-          <div>
-            비밀번호가 틀렸습니다
-          </div>
-        ),
-        icon: "error",
-        showConfirmButton: false,
-        showCancelButton: false,
-      })
-    }
-    return(()=>{
-      navigate('/')
-    })
-  },[contextError])
-
   return (
     <Container>
       {aboutUser === {} ? (
