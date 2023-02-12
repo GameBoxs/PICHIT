@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState} from "react";
 import {MdCancel} from 'react-icons/md';
 
-function TotalCategory(props) {
+function TotalCategory({conditionHandler}) {
     //검색
     const [search, setSearch]=useState("");
     function onChangeSearch(e){
@@ -11,16 +11,16 @@ function TotalCategory(props) {
     }
     function onSearch(e){
       e.preventDefault();
-      props.searchHandler(search)
+      conditionHandler(search, "search")
     }
     function clearSearch(){
       setSearch("")
-      props.searchHandler("")
+      conditionHandler("", "search")
     }
 
     //sort선택
     function sortSelect(e){
-      props.sortHandler(e)
+      conditionHandler(e, "sort")
     }
 
   return (

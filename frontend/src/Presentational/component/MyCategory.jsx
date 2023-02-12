@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
 
-function MyCategory(props) {
+function MyCategory({conditionHandler}) {
   //sort
   function sortSelect(e){
-    props.finishedHandler(e)
+    conditionHandler(e, "finished")
   }
 
   return(
@@ -19,7 +19,7 @@ function MyCategory(props) {
 export default MyCategory;
 
 const SortCartegory = styled.div`
-margin: 15px 0px;
 `;
+
 const SortBtn = styled.button`
   `
