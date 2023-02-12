@@ -4,7 +4,6 @@ import QuestionItem from "./QuestionItem";
 import SubTitle from "../../../common/SubTitle";
 
 const QuestionList = ({ Questions, setGetUser, userinfo, pdfhandler }) => {
-  console.log("여기 렌더링 몇번?")
   return (
     <List>
       {Questions.map((Question) => (

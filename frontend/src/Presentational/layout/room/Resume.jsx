@@ -22,7 +22,6 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   const [pdfUrl, setPdfUrl] = useState();
   // pdf 모달 띄우는 용
   const [showPdf, setShowPdf] = useState(false);
-  // pdf 업로드 용인듯 ( 이것도 필요없을지도 )
   // 조회 할 때 useAxios 컨트롤 용도로 쓸려했는데,,
 
   // 이름 클릭시 상태 변화
