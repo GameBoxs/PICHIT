@@ -46,7 +46,6 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
       })
         .then((res) => {
             setMemData(res.data);
-            console.log("한번만 되는거 맞음?")
         })
         .catch((err) => {
           console.log(err);

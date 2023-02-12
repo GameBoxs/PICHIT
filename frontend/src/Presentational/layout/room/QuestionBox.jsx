@@ -27,7 +27,6 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
     aboutQuestions.get
   );
 
-
   console.log("getQuestion",getQuestion);
 
   useEffect(() => {

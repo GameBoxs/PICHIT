@@ -31,7 +31,7 @@ const QuestionItem = ({ Question, pdfhandler, userinfo }) => {
     retouchQuestion
   );
 
-  console.log("putData",putData)
+  // console.log("putData",putData)
 
   useEffect(() => {
     setQuestion({

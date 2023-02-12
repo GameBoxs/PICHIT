@@ -18,8 +18,7 @@ function MemberList({
     
   // 자기소개서를 등록하지 않아서 에러발생시 사용 할 데이터
   const [errorContext, setError] = useState(null);
-
-
+  
   // 자기소개서 axios
   useEffect(() => {
     if (inquire) {
@@ -39,9 +38,15 @@ function MemberList({
           console.log(err);
           setError(err);
           setMemData(null);
-        });
+        })
     }
-  }, [inquire]);
+    return(()=>{
+      setInquire(false);
+      setMemData(null)
+    })
+
+  }, [pdfhandler]);
+
   
   useEffect(() => {
     setInquire(false);
