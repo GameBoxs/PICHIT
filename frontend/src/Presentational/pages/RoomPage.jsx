@@ -38,6 +38,8 @@ function RoomPage() {
     valid,
     userinfo.id !== 0 ? true: false
   );
+
+  console.log(postData)
   
   useEffect(() => {
     const tmpData = postData?.data;
