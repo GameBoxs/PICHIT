@@ -2,19 +2,17 @@ import styled, { css } from "styled-components";
 import { useEffect, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import React from 'react'
-import PageZero from "./PageZero"
-import Pagination from "./Pagination"
 
 //전체 데이터 길이, 페이지당 게시물 수, 현재 페이지를 계산하는 함수, 현재페이지
-function PageBar({ setCurrentPage, currentPage, totalpages }) {
-  const step = 10; // 한챕터당 페이지수
+function Pagination({ setCurrentPage, currentPage, totalpages }) {
+  const step = 4; // 한챕터당 페이지수
   const mainOrReview = step === 5 ? true : false; //메인이랑 복기 Bar길이를 위함
   const [page, setPage] = useState({
     min: 1,
     max: step,
   });
 
-  console.log("pagebar");
+  // console.log("pagebar");
 
   // 챕터 리스트 생성
   let pages = [];
@@ -28,8 +26,7 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
         break;
       }
     }
-    // console.log("pagebar"+pages);
-
+    console.log("pagebar"+pages);
 
   //챕터 이동 함수
   function prev() {
@@ -67,17 +64,17 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
   // })
 
   useEffect(() => {
-    // console.log("여긴가3333");
+    console.log("여긴가3333");
     //데이터가 없는경우(totalpages===0)
     if (totalpages === 0) {
       setLastPage(true);
       setFirstPage(true);
-    // console.log("여긴가444");
+    console.log("여긴가444");
     }
 
     //그외
     else {
-    // console.log("여긴가5555");
+    console.log("여긴가5555");
       //첫 장이면
       pages.includes(1) ? setFirstPage(true) : setFirstPage(false);
       //마지막 장이면
@@ -106,7 +103,8 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
     </>
   );
 }
-export default React.memo(PageBar);
+
+export default Pagination;
 
 const Bar = styled.div`
   /* border: solid 2px skyblue; //pagination영역을 위한 border: ; */
