@@ -1,144 +1,168 @@
-import React from "react";
+// ETC Import Start
+import React, {useState, useEffect} from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import Button from "../../common/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-
-import Screen from "../../layout/Interview/Screen";
-
+import Button from "../../common/Button";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+// ETC Import End
 
-import { leaveSession } from "../../../action/modules/chatModule";
-import { selectInterviwee } from "../../../action/modules/chatModule";
-import { useSelector } from "react-redux";
-import { useState } from "react";
-import { useEffect } from "react";
+// component Import Start
+import Screen from "../../layout/Interview/Screen";
+// component Import End
 
+// Module Import Start
+import { leaveSession, selectInterviwee } from "../../../action/modules/chatModule";
+import useAxios from "../../../action/hooks/useAxios";
+// Module Import End
+
+// Global Variable Start
 const MySwal = withReactContent(Swal);
+// Global Variable End
 
-const SelectIntervieweePage = ({
-  session,
-  setSession,
-  OV,
-  setOV,
-  info,
-  setInfo,
-}) => {
-  const {userinfo, roomId, isHost} = useLocation().state;
-  let navigate = useNavigate();
-  const myToken = useSelector((state) => state.token);
-  const [roomNum, setRoomNum] = useState(0);
+const SelectIntervieweePage = (props) => {
+    const navigate = useNavigate(); // Page 이동을 위한 navigate
+    const {session, setOV, info, myToken, roomStateData, setRoomStateExecute} = props;
+    const roomInfo = JSON.parse(sessionStorage.getItem('roomInfo'));
 
-  //방장이 면접자를 고를 때/고르지 않을 때 뜰 문구
-  const [isSelect, setIsSelect] = useState(true);
-  const sentance = isSelect ? "방장이 면접자를 선택하고 있습니다" : "대기 중입니다";
+    //방장이 면접자를 고를 때/고르지 않을 때 뜰 문구
+    const [isSelect, setIsSelect] = useState(false);
+    const sentance = isSelect ? "방장이 면접자를 선택하고 있습니다" : "대기 중입니다";
 
-  useEffect(() => {
-    let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
-    setRoomNum(roomID)
-  }, [info])
+    const [allCloseExecute, setAllCloseExecute] = useState(false);
+    const [allCloseData, allCloseIsLoading, allCloseError] = useAxios(
+      `conference/sessions/close/${roomInfo.roomId}`,
+      'DELETE',
+      myToken,
+      {},
+      allCloseExecute
+    )
 
-  useEffect(()=> {
-    session.on("signal:startSelectInterviewer", (e) => {
-      setIsSelect(true);
-    });
-    session.on("signal:stopSelectInterviewer", (e) => {
-      setIsSelect(false);
-    });
-  },[session])
-
-  const handler = () => {
-    session.signal({
-      data:'',
-      to:[],
-      type: 'startSelectInterviewer'
-    })
-    let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
-    let myNickName = JSON.parse(info.publisher.stream.connection.data).clientData;
-    let MemberList = new Object();
-    
-    if(JSON.parse(info.publisher.stream.connection.data).isFinishedInterViewee === false){
-      MemberList[myID] = myNickName;
-    }
-    
-    for (let i = 0; i < info.subscribers.length; i++) {
-      let targetID = JSON.parse(
-        info.subscribers[i].stream.connection.data
-      ).clientId;
-      let targetNickName = JSON.parse(
-        info.subscribers[i].stream.connection.data
-      ).clientData;
-      if(JSON.parse(info.subscribers[i].stream.connection.data).isFinishedInterViewee === false){
-        MemberList[targetID] = targetNickName;
-      }
-    }
-
-    MySwal.fire({
-      title: "면접자를 선택해주세요",
-      icon: "question",
-      input: "select",
-      inputOptions: MemberList,
-      inputPlaceholder: "면접자 선택",
-      showCancelButton: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        if (result.value) {
-          if(myID.toString() === result.value.toString()){
-            let convert = JSON.parse(info.publisher.stream.connection.data);
-            convert.isFinishedInterViewee = true;
-            info.publisher.stream.connection.data = JSON.stringify(convert);
-          } else {
-            for (let i = 0; i < info.subscribers.length; i++) {
-              if(JSON.parse(info.subscribers[i].stream.connection.data).clientId.toString() === result.value.toString()){
-                let convert = JSON.parse(info.subscribers[i].stream.connection.data);
-                convert.isFinishedInterViewee = true;
-                info.subscribers[i].stream.connection.data = JSON.stringify(convert);
-                break;
-              }
-            }
-          }
-          selectInterviwee(result.value.toString(), roomNum, myToken);
-          session.signal({
-            data: result.value.toString(),
-            to: [],
-            type: "stage",
-          });
-        } else {
-          // selectInterviwee(3212, session.sessionId);
-          selectInterviwee("미지정", session.sessionId);
-        }
-      }
-      else {
+    const intervieweeSelectHandler = () => {
         session.signal({
-          data:'',
-          to:[],
-          type: 'stopSelectInterviewer'
+            data:'',
+            to:[],
+            type: 'startSelectInterviewer'
         })
-      }
-    })
-  }
+        let myID = roomInfo.userInfo.id;
+        let myNickName = roomInfo.userInfo.name;
+        let MemberList = new Object();
+        let mydata = roomStateData.data.participants.filter(item => item.id === myID);
+        
+        console.log('룸 정보는? ', roomInfo, myID, myNickName);
+        console.log('내 데이터는? ', mydata);
 
-  return (
-    <Container>
-      <Title>대기실</Title>
-      <ConditionSentance>{sentance}</ConditionSentance>
-      <Screen number={info.subscribers.length} info={info} />
-      <BottomPanel>
-        {isHost ? (
-          <Button handler={handler} text="시작" isImportant={true} />
-        ) : null}
-        <Button
-          text="종료"
-          handler={() => {
+        if(mydata[0].finished === false){
+            MemberList[myID] = myNickName;
+        }
+        console.log('멤버 리스트야', MemberList);
+
+        for (let i = 0; i < info.subscribers.length; i++) {
+            let targetID = JSON.parse(
+              info.subscribers[i].stream.connection.data
+            ).clientId;
+            let targetNickName = JSON.parse(
+              info.subscribers[i].stream.connection.data
+            ).clientData;
+            let targetData = roomStateData.data.participants.filter(item => item.id === targetID )
+            if(targetData[0].finished === false){
+              MemberList[targetID] = targetNickName;
+            }
+        }
+
+        MySwal.fire({
+            title: "면접자를 선택해주세요",
+            icon: "question",
+            input: "select",
+            inputOptions: MemberList,
+            inputPlaceholder: "면접자 선택",
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if(result.value) {
+                    selectInterviwee(result.value, roomInfo.roomId, myToken);
+                }
+            } else {
+                session.signal({
+                    data:'',
+                    to:[],
+                    type: 'stopSelectInterviewer'
+                })
+            }
+        })
+    }
+
+    useEffect(() => {
+        window.addEventListener("beforeunload", (e) => {
             leaveSession(session, setOV);
-            navigate(`/room/${roomNum}`,{state:{},replace:true});
-          }}
-          isImportant={false}
-        />
-      </BottomPanel>
-    </Container>
-  );
-};
+            navigate('/interview',{state:{},replace:true});
+            window.location.reload();
+        });
+        return () => {
+            window.removeEventListener("beforeunload", (e) => {
+                leaveSession(session, setOV);
+                navigate('/interview',{state:{},replace:true});
+                window.location.reload();
+            });
+        };
+    }, [props]);
+
+    useEffect(() => {
+      if(allCloseExecute) setAllCloseExecute(false);
+    },[allCloseExecute])
+
+    useEffect(() => {
+        setRoomStateExecute(true);
+    },[])
+
+    useEffect(()=> {
+        if(session){
+            session.on("signal:startSelectInterviewer", (e) => {
+              setIsSelect(true);
+            });
+            session.on("signal:stopSelectInterviewer", (e) => {
+              setIsSelect(false);
+            });
+        }
+    },[session])
+
+    return (
+        <Container>
+          <Title>대기실</Title>
+          <ConditionSentance>{sentance}</ConditionSentance>
+          <Screen number={info.subscribers.length} info={info} />
+          <BottomPanel>
+            {roomInfo.isHost ? (
+              <Button handler={intervieweeSelectHandler} text="시작" isImportant={true} />
+            ) : null}
+            {
+              roomInfo.isHost ?
+              <Button
+                text="스터디 종료"
+                handler={() => {
+                  Swal.fire({
+                    title: "스터디 종료",
+                    text:`스터디를 종료 하시겠습니까?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    showConfirmButton: true,
+                    confirmButtonText: "확인",
+                    cancelButtonText : "취소"
+                }).then(res => {
+                    if(res.isConfirmed){
+                      setAllCloseExecute(true);
+                    }
+                  })
+                }}
+                isImportant={false}
+              />
+              : null
+            }
+          </BottomPanel>
+        </Container>
+      );
+}
 
 export default SelectIntervieweePage;
 
@@ -174,3 +198,4 @@ const Container = styled.div`
   align-items: center;
   background: var(--greyLight-1);
 `;
+

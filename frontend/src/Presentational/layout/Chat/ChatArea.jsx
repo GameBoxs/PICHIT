@@ -24,10 +24,10 @@ const ChatArea = ({session,info}) => {
                 setBounceFlag(false);
             })
             mySession.on('signal:who-typing',(e) => { // 누군가 타이핑 입력중이라는것 신호 받기
-                // console.log(e);
-                // console.log(session);
+                // console.log('e가 뭐야 ',e);
+                // console.log('e 세션은 또 뭐고 ', session);
                 // 내가 입력중일때 뜨면 안되므로 다른 사람이 입력중일때를 검사
-                if(e.data !== '' && session.connection.connectionId !== e.from){
+                if(e.data !== '' && session.connection.connectionId !== e.from.connectionId){
                     setBounceFlag(true);
                 }
                 // 혹시나 입력 해놓고 오랫동안 보내지 않으면 2분 뒤에 ...없앰
@@ -85,6 +85,10 @@ const ChatBody = styled.div`
     
     &::-webkit-scrollbar {
         display: none;
+    }
+
+    *{
+        border-radius: 0 !important;
     }
 `
 const InputBody = styled.div`
