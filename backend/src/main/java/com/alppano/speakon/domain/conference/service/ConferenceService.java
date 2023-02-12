@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
@@ -114,6 +115,7 @@ public class ConferenceService {
      * redis 회의 정보 제거 + openvidu 세션 제거 /
      * mariaDB로 회의 정보 이관 및 최종 종료
      */
+    @Transactional
     public void closeConference(Long requesterId, Long interviewRoomId) throws IOException, OpenViduJavaClientException, OpenViduHttpException {
         //TODO: MariaDB에 자료 이관 작업
         InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
