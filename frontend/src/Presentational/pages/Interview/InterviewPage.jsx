@@ -1,323 +1,333 @@
-import React from "react";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-
-import IntervieweePage from "./IntervieweePage"
-import InterviewerPage from "./InterviewerPage";
-import SelectIntervieweePage from "./SelectIntervieweePage";
+// Page Import Start
 import PrepareInterview from "./PrepareInterview";
+import SelectIntervieweePage from "./SelectIntervieweePage";
+import InterviewerPage from "./InterviewerPage";
+import IntervieweePage from "./IntervieweePage"
+// Page Import End
 
-// OpenVidu 관련 Import
-import { useState,useEffect } from "react";
-import { OpenVidu } from "openvidu-browser";
-import {OpenViduLogger} from "openvidu-browser/lib/OpenViduInternal/Logger/OpenViduLogger"
+// ETC Import Start
+import React, { useEffect, useState } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import {getToken, leaveSession,} from '../../../action/modules/chatModule';
-// import {useNavigate} from 'react-router-dom';
-
 import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+// ETC Import End
+
+// OpenVidu Import Start
+import { OpenVidu } from "openvidu-browser";
+import {getToken, leaveSession} from '../../../action/modules/chatModule';
+import useAxios from "../../../action/hooks/useAxios";
+// OpenVidu Import End
 
 const InterviewPage = () => {
-  const navigate = useNavigate();
-  /* 
-    roomPage에서 받아온 값
-    id : 해당 유저 아이디
-    rommId : 방 아이디
-  */
-  const {userinfo, roomId, isHost} = useLocation().state;
-
-  // const mySession = useSelector((state) => state.chatSession);
-  const mySession = roomId;
-  const myToken = useSelector((state) => state.token);
-
-  const [info, setInfo] = useState({
-    interviewee: "미지정",
-    mySessionId: mySession,
-    // myUserName: "Participant" + Math.floor(Math.random() * 100),
-    myUserName: userinfo.name,
-    session: undefined,
-    mainStreamManager: undefined,
-    publisher: undefined,
-    subscribers: [],
-  });
-  const [session, setSession] = useState(null);
-  const [OV, setOV] = useState(new OpenVidu());
-
-  // 컴포넌트 마운트 될 때 실행
-  useEffect(() => {
-    window.addEventListener("beforeunload", () => {
-      leaveSession(session, setOV);
-    });
-  }, []);
-
-  // 컴포넌트 마운트가 끊길 때 실행
-  useEffect(() => {
-    return () => {
-      window.removeEventListener("beforeunload", () => {
-        leaveSession(session, setOV);
-      });
-    };
-  });
-
-  // state OV가 변경 될 때 마다 실행
-  useEffect(() => {
-    setInfo((prev) => {
-      return {
-        ...prev,
+    const navigate = useNavigate(); // Page 이동을 위한 navigate
+    // const roomInfo = useSelector((state) => state.room);
+    const roomInfo = JSON.parse(sessionStorage.getItem('roomInfo'));
+    // 로컬 스토리지 값 없으면 메인으로 돌아가게 하기
+    const myToken = useSelector((state) => state.token);
+    const [info, setInfo] = useState({
+        interviewee: "미지정",
+        mySessionId: roomInfo.roomId,
+        myUserName: roomInfo.userInfo.name,
         session: undefined,
-        subscribers: [],
-        mySessionId: mySession,
-        // myUserName: "Participant" + Math.floor(Math.random() * 100),
-        myUserName: userinfo.name,
         mainStreamManager: undefined,
         publisher: undefined,
-      };
-    });
-  }, [OV]);
-
-  // 세션 참여 함수
-  const joinSession = () => {
-    // OpenVidu 초기화
-    setSession(OV.initSession());
-    // OpenViduLogger.getInstance().enableProdMode(); // 건들지 말것
-    // OpenViduLogger.getInstance().disableLogger(); // << 내가 작성한 console.log() 가 안나올때 해당 67번째 줄 주석 처리 하면 작동함.
-  };
-
-  // 컴포넌트 마운트 될 때 세션 참여 함수 실행
-  useEffect(() => {
-    joinSession();
-  },[])
-
-  // 참여자 목록 리스트 수정 함수
-  const deleteSubscriber = (streamManager) => {
-    let subscribers = info.subscribers;
-    let index = subscribers.indexOf(streamManager, 0);
-    if (index > -1) {
-      subscribers.splice(index, 1);
-      setInfo((prev) => {
-        return { ...prev, subscribers: subscribers };
+        subscribers: [],
       });
-    }
-  };
+    const [session, setSession] = useState(null);
+    const [OV, setOV] = useState(new OpenVidu());
+    const [roomStateExecute, setRoomStateExecute] = useState(true);
+    const [initFinish, setInitFinish] = useState(false);
 
-  useEffect(() => {
-    let mySession = session;
+    // Error 여부 보고 404 면 이전으로 되돌아 가게
+    const [roomStateData, setRoomStateData] = useState();
+    const [roomStateDatas, roomStateIsLoading, roomStateError] = useAxios(
+        `conference/interviewrooms/${roomInfo.roomId}/interviewstate`,
+        "GET",
+        myToken,
+        {},
+        roomStateExecute
+    )
 
-    if (mySession !== null) {
-      // 누군가 세션에 참가했다는 신호를 받았을 때
-      mySession.on("streamCreated", (e) => {
-        let subscriber = mySession.subscribe(e.stream, undefined);
+    // 초기 세션 참가시 실행 함수
+    const joinSession = () => {
+        setSession(OV.initSession());
+    };
+    
+    // 참여자 목록 리스트 수정 함수
+    const deleteSubscriber = (streamManager) => {
         let subscribers = info.subscribers;
-        subscribers.push(subscriber);
-
-        setInfo((prev) => {
-          return { ...prev, subscribers: subscribers };
-        });
-      });
-
-      // 누군가 세션에서 나갔다는 신호를 받았을 때
-      mySession.on("streamDestroyed", (e) => {
-        console.log("연결 해제");
-        console.log(e);
-        console.log("커넥션 ID: " + e.stream.connection.connectionId);
-        deleteSubscriber(e.stream.streamManager);
-      });
-
-      // 면접자가 정해졌다는 신호를 받았을 때
-      mySession.on("broadcast-interviewee", (e) => {
-        console.log("면접자 : " + JSON.parse(e.data).intervieweeId);
-        setInfo((prev) => {
-          return { ...prev, interviewee: JSON.parse(e.data).intervieweeId };
-        });
-      });
-
-      // 예외 발생했다는 신호를 받았을 때
-      mySession.on("exception", (exception) => {
-        console.warn(exception);
-      });
-
-      mySession.on("broadcast-interview-end", (event) => {
-        navigate("/interview/selectinterviewee", {
-          state: {
-            userinfo: userinfo,
-            roomId: roomId,
-            isHost: isHost,
-          },replace:true
-        });
-      })
-
-      // 시작 신호 받았을 때
-      mySession.on("signal:stage", (event) => {
-        console.log('---스터디시작 서버에 저장한 아이디 : ', event.data , ' / 내 아이디 :', userinfo.id, ' / 같은가?', event.data.toString() === userinfo.id.toString());
-        // 면접자 미지정이 아니라면
-        if(event.data !== '미지정'){
-          // 내가 면접자 일때 면접자 페이지로 이동
-          if(event.data.toString() === userinfo.id.toString()){
-            navigate("/interview/interviewer", {
-              state: {
-                userinfo: userinfo,
-                roomId: roomId,
-                isHost: isHost,
-              },replace:true
+        let index = subscribers.indexOf(streamManager, 0);
+        if (index > -1) {
+            subscribers.splice(index, 1);
+            setInfo((prev) => {
+                return { ...prev, subscribers: subscribers };
             });
-          } 
-          // 면접자가 아니라면 면접관 페이지로 이동
-          else{
-            navigate("/interview/interviewee", {
-              state: {
-                userinfo: userinfo,
-                roomId: roomId,
-                isHost: isHost,
-              },replace:true
-            });
-          }
         }
-      })
+    };
 
-      // 내 세션에 토큰으로 인증
-      getToken(roomId,myToken).then((token) => {
-        mySession
-          .connect(token.data, { clientData: info.myUserName, clientId: userinfo.id, clientRoomJoinId: userinfo.interviewJoinId, clientRoomId: roomId, isFinishedInterViewee: false })
-          .then(async () => {
-            let publisher=null;
-            try{
-              publisher = await OV.initPublisherAsync(undefined, {
-                audioSource: undefined,
-                videoSource: undefined,
-                publishAudio: true,
-                publishVideo: true,
-                resolution: "640x480",
-                frameRate: 30,
-                insertMode: "APPEND",
-                mirror: false,
-              });
-
-              mySession.publish(publisher);
-  
-              let devices = await OV.getDevices();
-              let videoDevices = devices.filter(
-                (device) => device.kind === "videoinput"
-              );
-              
-              let currentVideoDeviceId = publisher.stream
-                .getMediaStream()
-                .getVideoTracks()[0]
-                .getSettings().deviceId;
-  
-              let currentVideoDevice = videoDevices.find(
-                (device) => device.deviceId === currentVideoDeviceId
-              );
-  
-              setInfo((prev) => {
-                return {
-                  ...prev,
-                  currentVideoDevice: currentVideoDevice,
-                  mainStreamManager: publisher,
-                  publisher: publisher,
-                };
-              });
-             } catch(e){
-              let devices = await OV.getDevices();
-              console.log('디바이스 --- ', devices, devices.length);
-              console.log(e.name);
-              if(devices.length !== 0){
-                if(e.name === 'INPUT_VIDEO_DEVICE_NOT_FOUND') {
-                  Swal.fire({
-                    title: "카메라를 찾을 수 없음!",
-                    text:`카메라를 찾을 수 없습니다. 그래도 진행 하시겠습니까?`,
-                    icon: "warning",
-                    showCancelButton: true,
-                    showConfirmButton: true,
-                    confirmButtonText: "확인",
-                  }).then(res => {
-                    if(res.isDenied){
-                      navigate("/",{state:{}, replace:true});
-                      window.location.reload();
-                    }
-                  })
-                  publisher = await OV.initPublisherAsync(undefined, {
-                    audioSource: undefined,
-                    videoSource: false,
-                    publishAudio: true,
-                    publishVideo: false,
-                    resolution: "640x480",
-                    frameRate: 30,
-                    insertMode: "APPEND",
-                    mirror: false,
+    const checkRoomstate = () => {
+        console.log('roomStateData 가뭔데 ', roomStateData);
+        if (roomStateData && roomStateData.data) {
+            // 재 접속 마다 Axios 에서 방 상태 데이터 가져온것을 변수에 저장.
+            let data = roomStateData.data;
+            // 현재 면접자 ID
+            let currentInterviewee = data.currentInterviewee ? data.currentInterviewee.id : null;
+            let currentQuestion = data.questionProceeding ? data.questionProceeding : null;
+            // 만약 현재 면접자 ID가 존재 한다면 면접은 진행중 임
+            if(currentInterviewee) {
+                setInfo((prev) => {
+                    return { ...prev, interviewee: currentInterviewee };
                   });
+
+                // 진행 중인 면접자 ID와 내 ID가 일치하면 나는 면접자 인 상태로 재접속한 것 이므로
+                // 면접자 페이지로 이동 시킴, 따로 던져줄 데이터는 없음.
+                if(roomInfo.userInfo.id === currentInterviewee) {
+                    navigate("/interview/interviewer", {
+                        state: {}, replace:true
+                    });
                 }
-                else if(e.name === 'INPUT_AUDIO_DEVICE_NOT_FOUND') {
-                  Swal.fire({
-                    title: "마이크를 찾을 수 없습니다!",
-                    text:`본 서비스는 마이크는 필수 입니다.\n마이크 장치 연결 후 재접속 해주세요`,
-                    icon: "warning",
-                    showCancelButton: false,
-                    showConfirmButton: true,
-                    confirmButtonText: "확인",
-                  }).then(res => {
-                    if(res.isConfirmed) {
-                      navigate("/",{state:{}, replace:true});
-                      window.location.reload();
+
+                // 면접관 이라는 소리
+                else {
+                    // 현재 질문 중일 때
+                    if(currentQuestion) {
+                        console.log('면접자는 있고 질문중');
+                        navigate("/interview/interviewee", {
+                            state: {}, replace:true
+                        });
+                    } else{
+                        console.log('면접자는 있는데 질문중은 아니다');
+                        navigate("/interview/interviewee", {
+                            state: {}, replace:true
+                        });
                     }
-                  })
                 }
-              }
-              mySession.publish(publisher);
-              setInfo((prev) => {
-                return {
-                  ...prev,
-                  publisher: publisher,
-                };
-              });
-             }
-             finally{
-               navigate("/interview/selectinterviewee", {
-                 state: {
-                   userinfo: userinfo,
-                   roomId: roomId,
-                   isHost: isHost,
-                 },replace:true
-               });
-             }
-
-          })
-          .catch((error) => {
-            console.log(
-              "세션 연결 에러 발생: 코드",
-              error.code,
-              ' 메세지 ',
-              error.message
-            );
-
-            if(error.message === 'NotAllowedError: Permission denied'){
-              Swal.fire({
-                title: "장비 권한 없음!",
-                text:`상단의 주소창에서 카메라를 클릭하여 허용해 주시거나, \n브라우저 설정에서 허용으로 변경해 주세요`,
-                icon: "warning",
-                showCancelButton: false,
-                showConfirmButton: true,
-                confirmButtonText: "확인",
-              }).then((result) => {
-                if (result.isConfirmed){
-                  navigate('/',{state:{},replace:true});
-                  window.location.reload();
-                }
-              });
+            } 
+            else { // 면접자 ID가 존재 하지 않기 때문에 면접 세션이 진행중이 지 않으므로 대기실로
+                navigate("/interview/selectinterviewee", {
+                    state: {}, replace:true
+                });
             }
-            
-          });
-      });
+        } else{
+            // 아무 것도 없이 방 자체가 초기 상태 라면.
+            navigate("/interview/selectinterviewee", {
+                state: {}, replace:true
+            });
+        }
     }
-  }, [session]);
-  
-  return (
-    <Routes>
-      <Route path="/" element={<PrepareInterview session={session} setSession={setSession} OV={OV} setOV={setOV} info={info} setInfo={setInfo}/>} />
-      <Route path="/interviewee" element={<IntervieweePage session={session} setSession={setSession} OV={OV} setOV={setOV} info={info} setInfo={setInfo}/>} />
-      <Route path="/interviewer" element={<InterviewerPage session={session} setSession={setSession} OV={OV} setOV={setOV} info={info} setInfo={setInfo}/>} />
-      <Route path="/selectinterviewee" element={<SelectIntervieweePage session={session} setSession={setSession} OV={OV} setOV={setOV} info={info} setInfo={setInfo}/>} />
-    </Routes>
-  );
-};
+
+    useEffect(() => {
+        if(roomStateExecute){
+            setRoomStateExecute( () => false);
+        }
+    },[roomStateExecute])
+
+    useEffect(() => {
+        if(roomStateDatas && roomStateDatas.data) setRoomStateData(roomStateDatas);
+        if(roomStateData&& roomStateData.data && initFinish) checkRoomstate();
+    },[roomStateDatas,roomStateData,initFinish])
+
+    // state OV가 변경 될 때 마다 실행
+    useEffect(() => {
+        setInfo((prev) => {
+            return {
+                ...prev,
+                session: undefined,
+                subscribers: [],
+                mySessionId: roomInfo.roomId,
+                myUserName: roomInfo.userInfo.name,
+                mainStreamManager: undefined,
+                publisher: undefined,
+            };
+        });
+    }, [OV]);
+
+    useEffect(() => {
+        joinSession();
+    },[])
+
+    useEffect(() => {
+        let mySession = session;
+
+        if(mySession !== null){
+            // when an some one join signal is received.
+            mySession.on("streamCreated", (e) => {
+                let subscriber = mySession.subscribe(e.stream, undefined);
+                let subscribers = info.subscribers;
+                subscribers.push(subscriber);
+
+                setInfo((prev) => {
+                    return { ...prev, subscribers: subscribers };
+                });
+            });
+
+            // when an some one disconnected signal is received.
+            mySession.on("streamDestroyed", (e) => {
+                deleteSubscriber(e.stream.streamManager);
+            })
+
+            // when an exception signal is received.
+            mySession.on("exception", (exception) => {
+                console.warn(exception);
+            });
+
+            // when an Interview Start signal is received.
+            mySession.on("broadcast-interview-start", (signal) => {
+                let intervieweeID = JSON.parse(signal.data).intervieweeId;
+                setInfo((prev) => {
+                    return { ...prev, interviewee: intervieweeID };
+                  });
+                if(intervieweeID) {
+                    if(intervieweeID === roomInfo.userInfo.id) {
+                        navigate("/interview/interviewer", {
+                            state: {}, replace:true
+                        });
+                    }
+                    else {
+                        navigate("/interview/interviewee", {
+                            state: {}, replace:true
+                        });
+                    }
+                }
+            })
+            
+            // when an Interview End signal is received.
+            mySession.on("broadcast-interview-end", (e) => {
+                navigate("/interview/selectinterviewee", {
+                    state: {}, replace:true
+                });
+            })
+
+            mySession.on('session-closed', () => {
+                leaveSession(session, setOV);
+                navigate('/review',{state:{},replace:true});
+            })
+
+            // init publish
+            getToken(roomInfo.roomId, myToken).then((token) => {
+                mySession.connect(token.data, { clientData: info.myUserName, clientId: roomInfo.userInfo.id, clientRoomJoinId: roomInfo.userInfo.interviewJoinId, clientRoomId: roomInfo.roomId })
+                .then(async () => {
+                    let publisher = null;
+                    try {
+                        publisher = await OV.initPublisherAsync(undefined, {
+                            audioSource: undefined,
+                            videoSource: undefined,
+                            publishAudio: true,
+                            publishVideo: true,
+                            resolution: "640x480",
+                            frameRate: 30,
+                            insertMode: "APPEND",
+                            mirror: false,
+                        })
+
+                        mySession.publish(publisher);
+
+                        let devices = await OV.getDevices();
+                        let videoDevices = devices.filter((device) =>
+                            device.kind === "videoinput"
+                        )
+
+                        let currentVideoDeviceId = publisher.stream
+                            .getMediaStream()
+                            .getVideoTracks()[0]
+                            .getSettings().deviceId;
+                        
+                        let currentVideoDevice = videoDevices.find((device) =>
+                            device.deviceId === currentVideoDeviceId
+                        )
+
+                        setInfo((prev) => {
+                            return {
+                                ...prev,
+                                currentVideoDevice: currentVideoDevice,
+                                mainStreamManager: publisher,
+                                publisher: publisher,
+                            };
+                        });
+                    } catch (error) {
+                        let devices = await OV.getDevices();
+                        if(devices.length !== 0) {
+                            if(error.name === 'INPUT_VIDEO_DEVICE_NOT_FOUND') {
+                                Swal.fire({
+                                    title: "카메라를 찾을 수 없음!",
+                                    text:`카메라를 찾을 수 없습니다. 그래도 진행 하시겠습니까?`,
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    showConfirmButton: true,
+                                    confirmButtonText: "확인",
+                                }).then(res => {
+                                    if(res.isDenied){
+                                        navigate("/",{state:{}, replace:true});
+                                        window.location.reload();
+                                    }
+                                })
+                                publisher = await OV.initPublisherAsync(undefined, {
+                                    audioSource: undefined,
+                                    videoSource: false,
+                                    publishAudio: true,
+                                    publishVideo: false,
+                                    resolution: "640x480",
+                                    frameRate: 30,
+                                    insertMode: "APPEND",
+                                    mirror: false,
+                                });
+                            }
+                            else if(error.name === 'INPUT_AUDIO_DEVICE_NOT_FOUND') {
+                                Swal.fire({
+                                    title: "마이크를 찾을 수 없습니다!",
+                                    text:`본 서비스는 마이크는 필수 입니다.\n마이크 장치 연결 후 재접속 해주세요`,
+                                    icon: "warning",
+                                    showCancelButton: false,
+                                    showConfirmButton: true,
+                                    confirmButtonText: "확인",
+                                }).then(res => {
+                                    if(res.isConfirmed) {
+                                        navigate("/",{state:{}, replace:true});
+                                        window.location.reload();
+                                    }
+                                })
+                            }
+                        }
+                        mySession.publish(publisher);
+                        setInfo((prev) => {
+                            return {
+                                ...prev,
+                                publisher: publisher,
+                            };
+                        });
+                    }
+                    finally{
+                        setInitFinish(true);
+                    }
+                }).catch((error) => {
+                    if(error.message === 'NotAllowedError: Permission denied'){
+                        Swal.fire({
+                            title: "장치 권한을 허용해 주세요",
+                            text:`상단의 주소창에서 카메라를 클릭하여 허용해 주시거나, \n브라우저 설정에서 허용으로 변경해 주세요 \n메인화면으로 돌아갑니다.`,
+                            icon: "error",
+                            showCancelButton: false,
+                            showConfirmButton: true,
+                            confirmButtonText: "확인",
+                        }).then((result) => {
+                            if (result.isConfirmed){
+                                navigate('/',{state:{},replace:true});
+                                window.location.reload();
+                            }
+                        });
+                    }
+                })
+            })
+        }
+    }, [session]);
+
+    return (
+        <Routes>
+            <Route path="/" element={<PrepareInterview session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} setRoomStateExecute={setRoomStateExecute}/>} />
+            <Route path="/selectinterviewee" element={<SelectIntervieweePage session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} setRoomStateExecute={setRoomStateExecute}/>} />
+            <Route path="/interviewer" element={<InterviewerPage session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} />} />
+            <Route path="/interviewee" element={<IntervieweePage session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} />} />
+        </Routes>
+    )
+}
 
 export default InterviewPage;
