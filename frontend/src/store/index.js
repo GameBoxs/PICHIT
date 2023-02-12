@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import tokenReducer from "../reducer/tokenSlicer";
-import chatSessionReducer from "../reducer/chatStore"
+import roomReducer from "../reducer/roomStore"
 import userStoreReducer from "../reducer/userStore"
 
 export default configureStore({
     reducer: {
         token: tokenReducer,
-        chatSession : chatSessionReducer,
+        room : roomReducer,
         userinfo : userStoreReducer
     }
 })

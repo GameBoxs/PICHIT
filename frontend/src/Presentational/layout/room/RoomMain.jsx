@@ -121,7 +121,9 @@ function RoomMain(props) {
         <SubTitle title={"자기소개서 보기"} />
       </SectionHeader>
       <Layout>
-        <Section>{RoomSection}</Section>
+        <Section>
+          {RoomSection}
+          </Section>
         <Section>{RoomQuestion}</Section>
       </Layout>
     </MainPageContainer>

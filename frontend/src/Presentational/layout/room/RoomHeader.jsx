@@ -14,6 +14,9 @@ import { createSession } from "../../../action/modules/chatModule";
 import { TiStarburst } from "react-icons/ti";
 import SubTitle from "../../common/SubTitle";
 
+import { useDispatch } from "react-redux";
+import { changeRoom } from "../../../reducer/roomStore";
+
 const MySwal = withReactContent(Swal);
 
 function RoomHeader({
@@ -28,6 +31,7 @@ function RoomHeader({
   const { join, host } = userJoinInfo;
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [joinEnter, setJoinEnter] = useState(false);
@@ -35,6 +39,7 @@ function RoomHeader({
   const [deleteData, setDeleteData] = useState(false);
   const [joinId, setJoinId] = useState(0);
 
+  // console.log(userinfo)
 
   // axios 통신 시 보낼 정보들
   const enterObj = {
@@ -42,7 +47,7 @@ function RoomHeader({
     password: password,
   };
 
-  const quitObj = { id: joinId };
+  // const quitObj = { id: joinId };
 
   //useAxios
   const [enterRes, enterLoading, enterError] = useAxios(
@@ -55,22 +60,24 @@ function RoomHeader({
   );
 
   const deleteResult = useAxios(
-    //방 삭제하기
+    //방 삭제하기(roomid)
     `interviewrooms/${id}`,
     "DELETE",
     token,
     null,
     deleteData
   );
+  
 
   const [quitRes, isLoading, errorContext] = useAxios(
-    //방 나가기
-    `interviewjoins/${id}`,
+    //방 나가기(interviewjoinid)
+    `interviewjoins/${userinfo.interviewJoinId}`,
     "DELETE",
     token,
-    quitObj,
+    null,
     joinQuit
   );
+
 
   //useEffect
   useEffect(() => {
@@ -78,6 +85,7 @@ function RoomHeader({
   }, [userinfo]);
 
   useLayoutEffect(() => {
+    // 무한 렌더링 방지 
     if (enterError) {
       setJoinEnter(false);
     }
@@ -90,7 +98,7 @@ function RoomHeader({
         alert("이미 참가한 방입니다");
       }
     }
-  }, [enterRes, enterError]);
+  }, [enterRes]);
 
   useEffect(() => {
     //방 삭제하기
@@ -124,7 +132,8 @@ function RoomHeader({
   const joinHandler = (isJoin) => {
     //방 참여하기
     setJoin(isJoin)
-    setJoinQuit(false);
+    setJoinEnter(true)
+
   };
 
   const quitHandler = (isJoin) => {
@@ -152,14 +161,17 @@ function RoomHeader({
   };
 
   const moveToRoom = () => {
-    // setGoSession(true)
-    navigate("/interview", {
-      state: {
-        userinfo: userinfo,
-        roomId: id,
-        isHost: host
-      }
-    });
+    dispatch(changeRoom({
+      userInfo : userinfo,
+      roomId : id,
+      isHost : host
+    }))
+    sessionStorage.setItem('roomInfo',JSON.stringify({
+      userInfo : userinfo,
+      roomId : id,
+      isHost : host
+    }))
+    navigate("/interview");
   };
 
   const createRoom = () => {
