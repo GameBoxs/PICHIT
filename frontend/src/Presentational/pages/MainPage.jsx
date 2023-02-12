@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
 
 import MainBottom from "../layout/mainpage/MainBottom";
 import MainTop from "../layout/mainpage/MainTop";
