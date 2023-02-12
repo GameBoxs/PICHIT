@@ -9,7 +9,7 @@ function PageBar({
   totalpages,
 }) {
 
-  const step = 10; // 한챕터당 페이지수
+  const step = 3; // 한챕터당 페이지수
   const mainOrReview = (step===5)?true:false //메인이랑 복기 Bar길이를 위함
   const [minPage, setMinPage] = useState(1);
   const [maxPage, setMaxPage] = useState(step);

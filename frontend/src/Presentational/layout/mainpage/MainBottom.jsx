@@ -7,6 +7,7 @@ import PageBar from "../../common/Pagination/PageBar";
 import CreateRoom from "../../component/CreateRoom";
 import Button from "../../common/Button";
 import RoomListBox from "../../component/RoomListBox"
+import TitleSection from "../../component/TitleSection"
 //sweetalert2
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -38,12 +39,12 @@ function MainBottom() {
   const [isLogined, setIsLogined] = useState(false) //false : 비로그인, true : 로그인
   const token = useSelector(state => state.token)//으로 원래는 사용자 토큰을 받아야하는데 지금은 테스트라서 testToken으로 수민꺼 들고올거다.
   const [categoryWhether,setCategoryWhether] =  useState(token?true:false)
-  
   // TOTAL/MY 카테고리
   const [roomPosition, setRoomPosition] = useState(token?true:false); // false : total, true ; my
 
   //버튼을 통한 TOTAL/MY 값
   function roomSwitch(position) {
+    // console.log('클릭됨'+position)
     if (position === "toTotal") {
       setRoomPosition(false);
       serAPIurl(totalCategory);
@@ -58,16 +59,6 @@ function MainBottom() {
       setSearch("")
       setSort("")
     }
-  }
-
-  //비로그인 사용자가 MY 클릭시
-  function needLogin(){
-    MySwal.fire({
-      text: "로그인이 필요한 서비스 입니다.",
-      showConfirmButton:false,
-      icon:'warning',
-      timer: 1500
-    })
   }
 
   //검색
@@ -116,48 +107,18 @@ function MainBottom() {
     <Layout>
       <Header>
         <h1> ROOM LIST</h1>
-        <Titlesection>
-          <p>
-            {roomPosition
-              ? "내가 참여한 목록입니다(예정만 보여줌)"
-              : "모든방 목록입니다"}
-          </p>
-          <div>
-            <button
-              onClick={() => {
-                roomSwitch("toTotal");
-              }}
-            >
-              TOTAL
-            </button>
-            <button
-              onClick={() => {
-                if (token) {
-                  roomSwitch("toMy");
-                } else {
-                  // console.log('못넘어간다')//여기에 스윗알럿 하면 될듯
-                  needLogin()
-                }
-              }}
-            >
-              MY
-            </button>
-          </div>
-        </Titlesection>
+        <TitleSection roomPosition={roomPosition} roomSwitch={roomSwitch} token={token}/>
       </Header>
       {
           isLoading===true? <div>loading...</div> :
       <section>
         <Main>
           {roomPosition ? <MyCategory finishedHandler={finishedHandler}/> : <TotalCategory searchHandler={searchHandler} sortHandler={sortHandler}/>}
-          {/* {roomPosition ? null : <TotalCategory />} */}
           <RoomListdiv>
               {data.data ?<RoomListBox search={search} roomsData={data.data} roomPosition={roomPosition} finished={finished}/> : <div>loading...</div>}
             </RoomListdiv>
             <PaginationBox>
               <PageBar
-                // totalPosts={totalElements} //전체 데이터 길이
-                // postsPerPage={postsPerPage} //페이지당 게시물 수
                 setCurrentPage={setCurrentPage} //현재 페이지를 계산하는 함수
                 currentPage={currentPage} //현재페이지
                 totalpages={totalpages} //페이지 길이
