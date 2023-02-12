@@ -12,6 +12,7 @@ const DetailArea = ({ selectedID }) => {
   const token = useSelector((state) => state.token);
   const audioRef = useRef();
 
+  
   const [data, setData] = useState();
   const [nowPage, setNowPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
@@ -20,7 +21,8 @@ const DetailArea = ({ selectedID }) => {
     timestamp: {},
   });
   const [isPlaying, setIsPlaying] = useState(false);
-
+  console.log('데이타가 왜 없는데 ', data);
+  
   const [getData, isLoadingData] = useAxios(
     `interviewjoins/${selectedID}/questions-with-feedbacks?size=2000`,
     "GET",
@@ -90,12 +92,16 @@ const DetailArea = ({ selectedID }) => {
                     currentPage={nowPage} //현재페이지
                     totalpages={totalPage}
                   />
-                  <FeedBackArea
-                    title={data[nowPage - 1].content}
-                    data={data[nowPage - 1].feedbacks}
-                    timeStamp={sound.timestamp[nowPage - 1]}
-                    playTime={playTime}
-                  />
+                  {
+                    data[nowPage-1] && sound.timestamp[nowPage - 1] ?
+                    <FeedBackArea
+                      title={data[nowPage - 1].content}
+                      data={data[nowPage - 1].feedbacks}
+                      timeStamp={sound.timestamp[nowPage - 1]}
+                      playTime={playTime}
+                    />
+                    : null
+                  }
                 </>
               )
             ) : (

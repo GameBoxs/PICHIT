@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useState, useRef, memo } from "react";
 import Soundbar from "../../Soundbar";
-import Sampling from "../../../../store/asset/HypeBoy.mp3";
 import ControlPanel from "../../ControlPanel";
 
 const SoundArea = ({sound, audioRef, isPlaying, setIsPlaying}) => {
