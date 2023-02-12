@@ -17,14 +17,8 @@ function RoomList(props) {
             {props.rooms.map((room,index)=>
                 <RoomListItem
                     key={index} 
-                    id={room.id} 
+                    data = {room}
                     index={index}
-                    title={room.title} 
-                    currentPersonCount={room.currentPersonCount} 
-                    maxPersonCount={room.maxPersonCount} 
-                    startDate={room.startDate}
-                    secretRoom={room.secretRoom}
-                    finished={room.finished}
                 />
             )}
         </RoomListul>
@@ -36,7 +30,7 @@ export default RoomList;
 const RoomListul = styled.ul`
     display: flex;
     flex-flow: wrap;
-    gap: 0.5rem 1rem;
+    gap: 1rem;
     list-style:none;
-    
+    width: 100%;
 `

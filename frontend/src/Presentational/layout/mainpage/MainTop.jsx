@@ -11,10 +11,10 @@ function MainTop() {
               <WithOutTag>ON</WithOutTag>
             </MainHeadingWrapper>
             <MultiSubtitle>
-              <p>Our team is 'Alppano'.</p>
-              <p>The members are a celebrity and 'kjh man' and four people.</p>
-              <p>The author of this page has a headache today.</p>
-              <p>work hard.&nbsp;</p>
+              <p>화상 면접 스터디 PICHIT</p>
+              <p>자유롭게 면접을 진행해보세요</p>
+              <p>이후에 나의 면접 실력을 체크해보세요</p>
+              <p></p>
             </MultiSubtitle>
           </WcontainerContents>
         </Header>
@@ -101,6 +101,10 @@ const MultiSubtitle = styled.div`
   text-transform: none;
   opacity: 0;
   animation: ${fadeInUp} 1s 0.6s both;
+
+  *{
+    margin-bottom: 1rem;
+  }
 `;
 
 const LinkBlack = styled.a`
