@@ -98,15 +98,15 @@ const Second = styled.div`
   background-color: #ffffff;
   display: flex;
   justify-content: center;
-  height: 100vh;
-  padding: 1em 3em;
+  min-height: 100vh;
+  height: fit-content;
+  padding: 20vh 3em 10vh 3em;
 `;
 
 const First = styled.div`
   background-color: var(--white);
   height: 100vh;
   position: relative;
-  padding: 1em 3em;
   margin: 0 auto;
 
   display: flex;
@@ -117,7 +117,8 @@ const First = styled.div`
 
 const MainPageLayout = styled.div`
   margin-bottom: 10vh;
-  height: 250vh;
+  min-height: 250vh;
+  height: fit-content;
   margin: 0 auto;
   overflow-x: hidden;
   display: flex;

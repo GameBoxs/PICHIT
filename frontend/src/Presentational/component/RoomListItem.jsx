@@ -12,20 +12,19 @@ const MySwal = withReactContent(Swal);
 
 function RoomListItem(props) {
   // 비밀방 클릭시, 비밀번호 입력 모달 띄우도록 설정,
-  const token = useSelector(state => state.token)
+  const token = useSelector((state) => state.token);
   let navigate = useNavigate();
-  const roomId = props.id
+  const roomId = props.id;
 
   const clickRoomItem = () => {
-    if (token === null ){
+    if (token === null) {
       MySwal.fire({
         text: "로그인이 필요한 서비스 입니다.",
-        showConfirmButton:false,
-        icon:'warning',
-        timer: 1500
-      })
-    }
-    else{
+        showConfirmButton: false,
+        icon: "warning",
+        timer: 1500,
+      });
+    } else {
       if (props.secretRoom === true) {
         MySwal.fire({
           title: "비밀번호 입력",
@@ -59,16 +58,12 @@ function RoomListItem(props) {
   return (
     <RoomItem onClick={clickRoomItem}>
       <RoomContent className="rommtitle">
-        <RoomTitle>
-          {props.title}
-        </RoomTitle>
+        <RoomTitle>{props.title}</RoomTitle>
         <RoomInfo>
           {props.currentPersonCount}/{props.maxPersonCount}
         </RoomInfo>
       </RoomContent>
-        <RoomInfo>
-          {props.startDate}
-        </RoomInfo>
+      <RoomInfo>{props.startDate}</RoomInfo>
     </RoomItem>
   );
 }
@@ -76,16 +71,25 @@ function RoomListItem(props) {
 export default RoomListItem;
 
 const RoomItem = styled.li`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* border: 1px solid black; */
-  border-radius: 15px;
   width: 32%;
   height: 140px;
-  padding: 2% 4%;
-  margin-bottom: 2%;
-  box-shadow: 4px 4px 12px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 1rem;
+  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
+    -0.2rem -0.2rem 0.5rem var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-weight: 600;
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  background-color: var(--greyLight-1);
+  color: var(--greyDark);
+  padding: 1rem;
+  gap: 1rem;
+
   .roomtitle {
     display: flex;
     justify-content: space-between;
@@ -95,18 +99,22 @@ const RoomItem = styled.li`
     display: flex;
     flex-direction: row-reverse;
   }
-  font-family: 'SBAggroL';
+  font-family: "SBAggroL";
 `;
 
 const RoomContent = styled.div`
-`
+width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 1rem;
+`;
+
 const RoomTitle = styled.div`
-font-size: 1.2rem;
-font-weight: bold;
-margin-bottom: 1rem;
-`
+  font-size: 1.2rem;
+  color: var(--greyDark);
+`;
 
 const RoomInfo = styled.p`
-font-size: 14px;
-
-`
+  font-size: 0.8rem;
+`;
