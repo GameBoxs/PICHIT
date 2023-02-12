@@ -31,7 +31,6 @@ const QuestionItem = ({ Question, pdfhandler, userinfo }) => {
     retouchQuestion
   );
 
-  // console.log("putData",putData)
 
   useEffect(() => {
     setQuestion({
@@ -43,8 +42,8 @@ const QuestionItem = ({ Question, pdfhandler, userinfo }) => {
 
   useEffect(() => {
     if (putData !== null && putData.success) {
-      console.log("수정됨?")
       setRetouchQuestion(false)
+      window.location.reload();
     }
     if (putError) {
       setRetouchQuestion(false)

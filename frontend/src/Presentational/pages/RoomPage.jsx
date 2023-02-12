@@ -11,6 +11,12 @@ import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import GoHome from "../common/GoHome";
+import { useNavigate } from "react-router-dom";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 function RoomPage() {
   // roomId 값을 RoomListItem에서 Link state에 받아와서
@@ -18,6 +24,7 @@ function RoomPage() {
   const location = useLocation();
   const params = useParams();
   const { token, userinfo } = useSelector((state) => state);
+  let navigate = useNavigate();
 
   const roomParamsId = params.id;
   const password = location.state?.password;
@@ -31,7 +38,7 @@ function RoomPage() {
     password: password,
   });
   const [aboutUser, setAboutUser] = useState({});
-  const [postData, isLoading] = useAxios(
+  const [postData, isLoading, contextError] = useAxios(
     `interviewrooms/${roomParamsId}`,
     "POST",
     token,
@@ -39,7 +46,7 @@ function RoomPage() {
     userinfo.id !== 0 ? true: false
   );
 
-  console.log(postData)
+
   
   useEffect(() => {
     const tmpData = postData?.data;
@@ -79,9 +86,7 @@ function RoomPage() {
 
       // Participants 안에 user 이름이 있으면 해당 정보(interviewjoinId 포함)를 aboutUser에 저장, 이후 자식 컴포넌트에 전달됨
       if (MemberArr?.length >= 2) {
-        console.log("if문")
         for (let i = 0; i < MemberArr.length; i++) {
-          console.log("for문")
           if (MemberArr[i].name === userinfo.name) {
             setJoin(true);
 
@@ -95,8 +100,26 @@ function RoomPage() {
 
       setData(tmpData); // 데이터 저장
     }
-    console.log("여기 안들어와?")
+
   }, [postData]);
+
+  useEffect(()=>{
+    if (contextError !== null){
+      MySwal.fire({
+        html: (
+          <div>
+            비밀번호가 틀렸습니다
+          </div>
+        ),
+        icon: "error",
+        showConfirmButton: false,
+        showCancelButton: false,
+      })
+    }
+    return(()=>{
+      navigate('/')
+    })
+  },[contextError])
 
   return (
     <Container>

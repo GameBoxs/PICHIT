@@ -27,10 +27,8 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
     aboutQuestions.get
   );
 
-  console.log("getQuestion",getQuestion);
 
   useEffect(() => {
-    console.log("pdfhandler")
     if (pdfhandler !== undefined) {
       setNowPage(1);
       setAboutQuestions((prev) => {
@@ -40,10 +38,12 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
         };
       });
     }
+
   }, [pdfhandler]);
 
+  
+
   useEffect(() => {
-    console.log('이거 자체는 몇 번?')
     if (getQuestion !== null && getQuestion.success) {
       setAboutQuestions(() => {
         return {

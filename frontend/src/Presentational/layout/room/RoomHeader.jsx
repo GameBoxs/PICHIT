@@ -39,7 +39,7 @@ function RoomHeader({
   const [deleteData, setDeleteData] = useState(false);
   const [joinId, setJoinId] = useState(0);
 
-  console.log(userinfo)
+  // console.log(userinfo)
 
   // axios 통신 시 보낼 정보들
   const enterObj = {
@@ -77,8 +77,7 @@ function RoomHeader({
     null,
     joinQuit
   );
-  console.log("quitRes",quitRes)
-  console.log("errorContext",errorContext)
+
 
   //useEffect
   useEffect(() => {

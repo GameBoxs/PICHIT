@@ -80,6 +80,7 @@ function CreateRoom({ setModalOpen }) {
     room,
     createData
   );
+
   
   // Daypicker 날짜 선택 handler 
   const handleDaySelect = (date) => {
@@ -88,7 +89,6 @@ function CreateRoom({ setModalOpen }) {
       setRoom(format(date, "yyyy-MM-dd"));
     }
     setRoom("");
-    console.log(date);
   };
 
   const roomCreate = (e) => {
@@ -117,7 +117,6 @@ function CreateRoom({ setModalOpen }) {
       alert("유효 할 수 없는 비밀번호 입니다. 다시 설정해주세요")
     }
     else{
-      console.log(room)
       setCreateData(true);
     }
   }
@@ -145,14 +144,17 @@ function CreateRoom({ setModalOpen }) {
           cancelButtonText: "취소하기",
         }).then((result) => {
           if (result.isConfirmed) {
-            console.log(createResult.data.id);
             navigate(`/room/${createResult.data.id}`, {
               state: {
                 id: createResult.data.id,
                 password:room.password
-              },
+              } 
             });
           }
+          else if(
+            result.dismiss === Swal.DismissReason.cancel){
+              window.location.reload();
+            }
         });
       }
   }, [createResult]);
