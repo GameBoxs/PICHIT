@@ -106,7 +106,6 @@ function MainBottom() {
   return (
     <Layout>
       <Header>
-        <h1>면접방</h1>
         <TitleSection
           roomPosition={roomPosition}
           roomSwitch={roomSwitch}
@@ -143,12 +142,12 @@ const Layout = styled.div`
 `;
 
 const Header = styled.div`
-  border-bottom: 2px solid gray;
   padding: 4rem 0 1rem 0;
 
   & h1 {
-    font-size: 3.5rem;
+    font-size: 2rem;
     margin-bottom: 1rem;
     font-family: "SBAggroB";
+    color: var(--primary);
   }
 `;

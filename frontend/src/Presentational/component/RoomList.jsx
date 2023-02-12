@@ -17,14 +17,8 @@ function RoomList(props) {
             {props.rooms.map((room,index)=>
                 <RoomListItem
                     key={index} 
-                    id={room.id} 
+                    data = {room}
                     index={index}
-                    title={room.title} 
-                    currentPersonCount={room.currentPersonCount} 
-                    maxPersonCount={room.maxPersonCount} 
-                    startDate={room.startDate}
-                    secretRoom={room.secretRoom}
-                    finished={room.finished}
                 />
             )}
         </RoomListul>
