@@ -5,7 +5,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 // ETC Import End
 
 // CustomHook Import Start
-import NavArea from "../../layout/Interview/Interviewer/NavArea";
+import NavArea from "../../layout/Interview/NavArea";
 import BodyArea from "../../layout/Interview/Interviewer/BodyArea";
 import { leaveSession } from "../../../action/modules/chatModule";
 // CustomHook Import End
@@ -43,7 +43,7 @@ const NewInterviewerPage = (props) => {
     return (
         <Container>
             <NavArea isHost={roomInfo.isHost} info={info} myToken={myToken}/>
-            <BodyArea session={session} info={info} />
+            <BodyArea session={session} info={info} roomStateData={roomStateData}/>
         </Container>
     )
 }

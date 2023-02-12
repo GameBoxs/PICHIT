@@ -2,22 +2,20 @@
 import PrepareInterview from "./PrepareInterview";
 import SelectIntervieweePage from "./NewSelectIntervieweePage";
 import InterviewerPage from "./NewInterviewerPage";
+import IntervieweePage from "./NewIntervieweePage"
 // Page Import End
 
 // ETC Import Start
-import React, { memo, useCallback, useEffect, useState } from "react";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { PITCHIT_URL } from "../../../store/values";
 // ETC Import End
 
 // OpenVidu Import Start
 import { OpenVidu } from "openvidu-browser";
-import {getToken, leaveSession,} from '../../../action/modules/chatModule';
+import {getToken} from '../../../action/modules/chatModule';
 import useAxios from "../../../action/hooks/useAxios";
-import axios from "axios";
 // OpenVidu Import End
 
 const NewInterviewPage = () => {
@@ -38,6 +36,7 @@ const NewInterviewPage = () => {
     const [session, setSession] = useState(null);
     const [OV, setOV] = useState(new OpenVidu());
     const [roomStateExecute, setRoomStateExecute] = useState(true);
+    const [initFinish, setInitFinish] = useState(false);
 
     // Error 여부 보고 404 면 이전으로 되돌아 가게
     const [roomStateData, setRoomStateData] = useState();
@@ -92,13 +91,12 @@ const NewInterviewPage = () => {
                 else {
                     // 현재 질문 중일 때
                     if(currentQuestion) {
+                        console.log('면접자는 있고 질문중');
                         navigate("/interview/interviewee", {
-                            state: {
-                                currentQuestionId:currentQuestion.questionId,
-                                currentQuestionContent:currentQuestion.content
-                            }, replace:true
+                            state: {}, replace:true
                         });
                     } else{
+                        console.log('면접자는 있는데 질문중은 아니다');
                         navigate("/interview/interviewee", {
                             state: {}, replace:true
                         });
@@ -126,8 +124,8 @@ const NewInterviewPage = () => {
 
     useEffect(() => {
         if(roomStateDatas && roomStateDatas.data) setRoomStateData(roomStateDatas);
-        if(roomStateData !== undefined) checkRoomstate();
-    },[roomStateDatas,roomStateData])
+        if(roomStateData&& roomStateData.data && initFinish) checkRoomstate();
+    },[roomStateDatas,roomStateData,initFinish])
 
     // state OV가 변경 될 때 마다 실행
     useEffect(() => {
@@ -294,7 +292,7 @@ const NewInterviewPage = () => {
                         });
                     }
                     finally{
-                        
+                        setInitFinish(true);
                     }
                 }).catch((error) => {
                     if(error.message === 'NotAllowedError: Permission denied'){
@@ -322,6 +320,7 @@ const NewInterviewPage = () => {
             <Route path="/" element={<PrepareInterview session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} setRoomStateExecute={setRoomStateExecute}/>} />
             <Route path="/selectinterviewee" element={<SelectIntervieweePage session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} setRoomStateExecute={setRoomStateExecute}/>} />
             <Route path="/interviewer" element={<InterviewerPage session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} />} />
+            <Route path="/interviewee" element={<IntervieweePage session={session} setOV={setOV} info={info} myToken={myToken} roomStateData={roomStateData} />} />
         </Routes>
     )
 }

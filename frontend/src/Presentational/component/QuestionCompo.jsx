@@ -11,7 +11,6 @@ import { useSelector } from "react-redux";
 const MySwal = withReactContent(Swal);
 
 const QuestionCompo = ({ questionInfo, roomID, intervieweeID }) => {
-  console.log('questionInfo --- ',questionInfo);
   const { id, content, writer, permission, finished } = questionInfo;
   const token = useSelector((state) => state.token);
   const [execute, setExecute] = useState(false);
@@ -56,7 +55,7 @@ const QuestionCompo = ({ questionInfo, roomID, intervieweeID }) => {
 
   
   const QuestionHandler = () => {
-    if( permission && finished === false){
+    if(permission && finished === false){
       MySwal.fire({
         title: "질문을 제출 하시겠습니까?",
         // text: content,

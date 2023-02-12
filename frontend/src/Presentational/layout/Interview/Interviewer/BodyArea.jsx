@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 
 // Component Import Start
@@ -8,7 +8,6 @@ import UserVideoComponent from "../../../component/Chat/OpenVidu/UserVideoCompon
 // Component Import End
 
 const BodyArea = ({ session, info }) => {
-
     function People() {
         return (
           <>
