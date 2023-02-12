@@ -83,7 +83,7 @@ function MainBottom() {
   const [data, setData] = useState([]); //total데이터 저장
   const [getData, isLoading] = useAxios(APIurl, "GET", token);
 
-  console.log("0--")
+  // console.log("0--")
 
   useEffect(() => {
     if (getData && getData.data) {

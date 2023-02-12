@@ -39,6 +39,7 @@ function RoomHeader({
   const [deleteData, setDeleteData] = useState(false);
   const [joinId, setJoinId] = useState(0);
 
+  // console.log(userinfo)
 
   // axios 통신 시 보낼 정보들
   const enterObj = {
@@ -46,7 +47,7 @@ function RoomHeader({
     password: password,
   };
 
-  const quitObj = { id: joinId };
+  // const quitObj = { id: joinId };
 
   //useAxios
   const [enterRes, enterLoading, enterError] = useAxios(
@@ -59,22 +60,24 @@ function RoomHeader({
   );
 
   const deleteResult = useAxios(
-    //방 삭제하기
+    //방 삭제하기(roomid)
     `interviewrooms/${id}`,
     "DELETE",
     token,
     null,
     deleteData
   );
+  
 
   const [quitRes, isLoading, errorContext] = useAxios(
-    //방 나가기
-    `interviewjoins/${id}`,
+    //방 나가기(interviewjoinid)
+    `interviewjoins/${userinfo.interviewJoinId}`,
     "DELETE",
     token,
-    quitObj,
+    null,
     joinQuit
   );
+
 
   //useEffect
   useEffect(() => {
@@ -82,6 +85,7 @@ function RoomHeader({
   }, [userinfo]);
 
   useLayoutEffect(() => {
+    // 무한 렌더링 방지 
     if (enterError) {
       setJoinEnter(false);
     }
@@ -94,7 +98,7 @@ function RoomHeader({
         alert("이미 참가한 방입니다");
       }
     }
-  }, [enterRes, enterError]);
+  }, [enterRes]);
 
   useEffect(() => {
     //방 삭제하기
@@ -128,7 +132,8 @@ function RoomHeader({
   const joinHandler = (isJoin) => {
     //방 참여하기
     setJoin(isJoin)
-    setJoinQuit(false);
+    setJoinEnter(true)
+
   };
 
   const quitHandler = (isJoin) => {

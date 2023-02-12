@@ -6,13 +6,14 @@ import useAxios from "../../../../action/hooks/useAxios";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { FaPenNib, FaRedoAlt } from "react-icons/fa";
 
-const QuestionItem = ({ Question, setGetUser, pdfhandler, userinfo }) => {
+import QuestionItemDelete from "./QuestionItemDelete";
+
+const QuestionItem = ({ Question, pdfhandler, userinfo }) => {
   const { content, writer, permission, id } = Question;
 
   //usestate 줄일 수 있으면 줄이기
   const insertRef = useRef();
   const token = useSelector((state) => state.token);
-  const [delQuestion, setDelQuestion] = useState(false);
   const [retouchQuestion, setRetouchQuestion] = useState(false);
   const [tryRetouch, setTryRetouch] = useState(false);
   // 질문 입력을 위한 body 값
@@ -22,21 +23,14 @@ const QuestionItem = ({ Question, setGetUser, pdfhandler, userinfo }) => {
     writerId: 0,
   });
 
-  const [delRes] = useAxios(
-    `questions/${id}`,
-    "DELETE",
-    token,
-    {},
-    delQuestion
-  );
-
-  const [putData] = useAxios(
+  const [putData, putLoading, putError] = useAxios(
     `questions/${id}`,
     "PUT",
     token,
     question,
     retouchQuestion
   );
+
 
   useEffect(() => {
     setQuestion({
@@ -47,15 +41,11 @@ const QuestionItem = ({ Question, setGetUser, pdfhandler, userinfo }) => {
   }, [pdfhandler]);
 
   useEffect(() => {
-    if (delRes !== null && delRes.success) {
-      setGetUser(true);
-      setDelQuestion(false);
-    }
-  }, [delRes]);
-
-  useEffect(() => {
     if (putData !== null && putData.success) {
-      setGetUser(true);
+      setRetouchQuestion(false)
+      window.location.reload();
+    }
+    if (putError) {
       setRetouchQuestion(false)
     }
   }, [putData]);
@@ -79,14 +69,7 @@ const QuestionItem = ({ Question, setGetUser, pdfhandler, userinfo }) => {
   return (
     <Item>
       {permission ? (
-        <Buttons
-          title="삭제하기"
-          onClick={() => {
-            setDelQuestion(true);
-          }}
-        >
-          <AiFillCloseCircle />
-        </Buttons>
+       <QuestionItemDelete id={id} token={token} />
       ) : null}
 
       <Content>

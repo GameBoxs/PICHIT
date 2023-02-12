@@ -33,13 +33,13 @@ function RoomListItem(props) {
           confirmButtonText: "입장하기",
           preConfirm: () => {
             const password = Swal.getPopup().querySelector("#password").value;
+  
             if (!password) {
               Swal.showValidationMessage(`Please enter login and password`);
             }
             return { password: password };
           },
         }).then((result) => {
-          console.log(result.value.password)
           navigate(`/room/${roomId}`, {
             state: {
               id: props.id,

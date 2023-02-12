@@ -14,7 +14,7 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
     max: step,
   });
 
-  console.log("pagebar");
+  // console.log("pagebar");
 
   // 챕터 리스트 생성
   let pages = [];
