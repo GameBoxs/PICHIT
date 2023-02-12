@@ -74,7 +74,7 @@ public class DataFileUtil {
     }
 
     public boolean deleteFile(String path) {
-        File temp = new File(getFullPath(path));
+        File temp = new File(path);
         if (temp.exists()) {
             temp.delete();
         }
