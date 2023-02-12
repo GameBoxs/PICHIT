@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import styled from "styled-components";
 import CreateRoom from "../../component/CreateRoom";
+import Button from "../../common/Button";
 
 function BoardBodyBottom() {
     //방생성하기
@@ -10,7 +11,7 @@ function BoardBodyBottom() {
     };
 
     return <Footer>
-      <button onClick={showModal}>방만들기</button>
+      <Button text={"방 만들기"} handler={showModal} isImportant={true}>방만들기</Button>
       {modalOpen && <CreateRoom setModalOpen={setModalOpen} />}
     </Footer>
 }
@@ -20,4 +21,5 @@ export default BoardBodyBottom
 const Footer = styled.div`
   display: flex;
   flex-direction: row-reverse;
+  padding: 1rem 0;
 `;
