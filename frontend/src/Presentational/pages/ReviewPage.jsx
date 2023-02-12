@@ -45,7 +45,11 @@ const ReviewPage = (props) => {
         <HistoryList setSelectedID={setSelectedID} />
       </BoardBox>
       <ReviewBox>
-        <DetailArea selectedID={selectedID} />
+        {
+          selectedID ?
+          <DetailArea selectedID={selectedID} />
+          : null
+        }
       </ReviewBox>
     </ReviewMainBody>
   );
