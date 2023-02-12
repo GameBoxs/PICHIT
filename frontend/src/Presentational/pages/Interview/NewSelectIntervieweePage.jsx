@@ -14,6 +14,7 @@ import Screen from "../../layout/Interview/Screen";
 
 // Module Import Start
 import { leaveSession, selectInterviwee } from "../../../action/modules/chatModule";
+import useAxios from "../../../action/hooks/useAxios";
 // Module Import End
 
 // Global Variable Start
@@ -28,6 +29,15 @@ const NewSelectIntervieweePage = (props) => {
     //방장이 면접자를 고를 때/고르지 않을 때 뜰 문구
     const [isSelect, setIsSelect] = useState(false);
     const sentance = isSelect ? "방장이 면접자를 선택하고 있습니다" : "대기 중입니다";
+
+    const [allCloseExecute, setAllCloseExecute] = useState(false);
+    const [allCloseData, allCloseIsLoading, allCloseError] = useAxios(
+      `conference/sessions/close/${roomInfo.roomId}`,
+      'DELETE',
+      myToken,
+      {},
+      allCloseExecute
+    )
 
     const intervieweeSelectHandler = () => {
         session.signal({
@@ -105,6 +115,10 @@ const NewSelectIntervieweePage = (props) => {
     }, [props]);
 
     useEffect(() => {
+      if(allCloseExecute) setAllCloseExecute(false);
+    },[allCloseExecute])
+
+    useEffect(() => {
         setRoomStateExecute(true);
     },[])
 
@@ -131,8 +145,7 @@ const NewSelectIntervieweePage = (props) => {
             <Button
               text="종료"
               handler={() => {
-                leaveSession(session, setOV);
-                navigate(`/room/${roomInfo.roomId}`,{state:{},replace:true});
+                setAllCloseExecute(true);
               }}
               isImportant={false}
             />

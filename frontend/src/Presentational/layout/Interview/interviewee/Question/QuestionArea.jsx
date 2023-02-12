@@ -6,11 +6,13 @@ import AboutFeedBack from "./AboutFeedBack";
 import AboutRating from "./AboutRating";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
+import useAxios from "../../../../../action/hooks/useAxios";
 
 const MySwal = withReactContent(Swal)
 
 const QuestionArea = (props) => {
-  const { setIsQuestion, session, roomStateData } = props;
+  const { setIsQuestion, session, roomStateData, token, info } = props;
+  const roomInfo = JSON.parse(localStorage.getItem("roomInfo"));
   console.log('Qestion Area 진입 데이터는???? ', roomStateData);
 
   const [highlight, setHighlight] = useState({
@@ -22,9 +24,41 @@ const QuestionArea = (props) => {
     feedbackContext: "",
   });
   const [finishExecute, setfinishExecute] = useState(false);
+  const [sendFeedbackExecute, setSendFeedbackExecute] = useState(false);
+
+  // 질문 종료 서버에 알리기위한 Axios
+  const [requestQuestEnd, requestQuestEndIsLoading, requestQuestEndError] = useAxios(
+    "conference/interview/question/end",
+    "POST",
+    token,
+    {
+      interviewRoomId: roomInfo.roomId,
+      intervieweeId: info.interviewee,
+      questionId: highlight.questionId,
+      score: feedback.starScore,
+      content: feedback.feedBackContext,
+    },
+    finishExecute
+  );
+
+  // 패드백 전송 Axios
+  const [sendFeedBackData, sendFeedBackIsLoading, sendFeedBackError] = useAxios(
+    "feedbacks",
+    "POST",
+    token,
+    {
+      questionId: highlight.questionId,
+      score: feedback.starScore,
+      content: feedback.feedbackContext,
+    },
+    sendFeedbackExecute
+  );
   
   useEffect(() => {
     if (finishExecute) {
+      setfinishExecute(false);
+    }
+    if(sendFeedbackExecute) {
       // 아래에 평가 별 0으로 초기화 하는 내용 넣어야 함.
       setFeedback((prev) => {
         return {
@@ -37,6 +71,7 @@ const QuestionArea = (props) => {
         questionId: "",
         questionContent: "질문을 제출해 주세요.",
       });
+
       MySwal.fire({
         text: "질문이 끝났습니다. 다음 질문을 선택해 주세요.",
         showConfirmButton: false,
@@ -44,10 +79,9 @@ const QuestionArea = (props) => {
         timer: 1500,
       });
 
-      setIsQuestion(true);
-      setfinishExecute(false);
+      setSendFeedbackExecute(false);
     }
-  }, [finishExecute]);
+  }, [finishExecute,sendFeedbackExecute]);
 
   useEffect(() => {
     if(session !== null){
@@ -57,14 +91,8 @@ const QuestionArea = (props) => {
         setIsQuestion(true);
       });
       session.on("broadcast-question-end", (data) => {
-        // 아래에 피드백 전송 데이터 보내기
-        /* 
-        
-        
-              여기 비어있는데 맞나요??
-               
-  
-        */
+        setIsQuestion(true);
+        setSendFeedbackExecute(true);
       });
     }
   }, [session]);
@@ -84,6 +112,7 @@ const QuestionArea = (props) => {
 
   // 질문 끝내기 버튼 클릭시 발생할 함수.
   const finishHandler = () => {
+    console.log('현재 피드백 적은 내용 - ', feedback.feedbackContext);
     if (highlight.questionId) {
       MySwal.fire({
         title: "질문 종료",
@@ -102,7 +131,6 @@ const QuestionArea = (props) => {
       }).then((result) => {
         if (result.isConfirmed) {
           setfinishExecute(true);
-          console.log(feedback);
         }
       });
     }

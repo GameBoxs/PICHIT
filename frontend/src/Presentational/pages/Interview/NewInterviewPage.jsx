@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 
 // OpenVidu Import Start
 import { OpenVidu } from "openvidu-browser";
-import {getToken} from '../../../action/modules/chatModule';
+import {getToken, leaveSession} from '../../../action/modules/chatModule';
 import useAxios from "../../../action/hooks/useAxios";
 // OpenVidu Import End
 
@@ -192,10 +192,15 @@ const NewInterviewPage = () => {
             })
             
             // when an Interview End signal is received.
-            mySession.on("broadcast-interview-end", () => {
+            mySession.on("broadcast-interview-end", (e) => {
                 navigate("/interview/selectinterviewee", {
                     state: {}, replace:true
                 });
+            })
+
+            mySession.on('session-closed', () => {
+                leaveSession(session, setOV);
+                navigate('/review',{state:{},replace:true});
             })
 
             // init publish

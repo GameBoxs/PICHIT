@@ -96,6 +96,8 @@ const BodyArea = (props) => {
         setIsQuestion={setIsQuestion}
         session={session}
         roomStateData={roomStateData}
+        token = {token}
+        info = {info}
       />
 
       {/* 자소서보기/채팅/ */}
