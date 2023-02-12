@@ -136,13 +136,29 @@ const NewSelectIntervieweePage = (props) => {
             {roomInfo.isHost ? (
               <Button handler={intervieweeSelectHandler} text="시작" isImportant={true} />
             ) : null}
-            <Button
-              text="종료"
-              handler={() => {
-                setAllCloseExecute(true);
-              }}
-              isImportant={false}
-            />
+            {
+              roomInfo.isHost ?
+              <Button
+                text="스터디 종료"
+                handler={() => {
+                  Swal.fire({
+                    title: "스터디 종료",
+                    text:`스터디를 종료 하시겠습니까?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    showConfirmButton: true,
+                    confirmButtonText: "확인",
+                    cancelButtonText : "취소"
+                }).then(res => {
+                    if(res.isConfirmed){
+                      setAllCloseExecute(true);
+                    }
+                  })
+                }}
+                isImportant={false}
+              />
+              : null
+            }
           </BottomPanel>
         </Container>
       );
