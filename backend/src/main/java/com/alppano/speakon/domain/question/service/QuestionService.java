@@ -108,7 +108,7 @@ public class QuestionService {
             throw new ResourceForbiddenException("모의면접이 완료된 후 질문 및 피드백을 조회가능합니다.");
         }
 
-        Page<QuestionWithFeedback> result = questionRepository.findAllByInterviewJoinId(pageable, interviewJoinId)
+        Page<QuestionWithFeedback> result = questionRepository.findAllByInterviewJoinIdAndStartedTimeIsNotNull(pageable, interviewJoinId)
                 .map(question -> new QuestionWithFeedback(question));
 
         return new PagedResult<>(result);
