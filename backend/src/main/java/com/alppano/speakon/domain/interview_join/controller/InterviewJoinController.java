@@ -45,8 +45,8 @@ public class InterviewJoinController {
     @Operation(summary = "자신이 참여한 면접 목록 조회")
     @GetMapping("/my-interviewjoins")
     public ResponseEntity<ApiResponse<PagedResult<InterviewJoinInfo>>> getMyInterviewJoins(@AuthenticationPrincipal LoginUser loginUser,
-                                                                                                 @PageableDefault(size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                                                                                                 @RequestParam int finished) {
+                                                                                           @PageableDefault(size = 9, sort = "startedTime", direction = Sort.Direction.DESC) Pageable pageable,
+                                                                                           @RequestParam int finished) {
         PagedResult<InterviewJoinInfo> list = interviewJoinService.getMyInterviewJoins(pageable, finished, loginUser.getId());
         ApiResponse<PagedResult<InterviewJoinInfo>> result = new ApiResponse(Boolean.TRUE, "조회 성공", list);
         return new ResponseEntity<>(result, HttpStatus.OK);
