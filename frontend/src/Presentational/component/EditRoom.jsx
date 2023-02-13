@@ -185,7 +185,7 @@ function EditRoom({ setModalOpen, data }) {
           </Section>
         </Layout>
         <Layout>
-          <Button handler={RoomEdit} text={"생성하기"} isImportant={true} />
+          <Button handler={RoomEdit} text={"수정하기"} isImportant={true} />
           <Button handler={closeModal} text={"취소하기"} isImportant={false} />
         </Layout>
       </ModalContainer>
