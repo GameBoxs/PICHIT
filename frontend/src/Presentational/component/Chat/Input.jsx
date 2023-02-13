@@ -6,6 +6,7 @@ const Input = ({ SetIncomMessage, session, info }) => {
   const [textValue, SetTextValue] = useState("");
   const [inputFlag, setInputFlag] = useState(false);
   let flag = false;
+
   useEffect(() => {
     if (textValue === "\n") SetTextValue("");
     if(textValue && inputFlag===false){
@@ -54,9 +55,11 @@ const Input = ({ SetIncomMessage, session, info }) => {
 
   function clickBtn() {
     SetTextValue(textValue.trim());
+
     if (textValue === "" || textValue.trim() === "") {
       return;
     }
+
     let time = getTime();
     const data = { Name: JSON.parse(info.publisher.stream.connection.data).clientData.toString(), Time: time, Message: textValue };
     // SetIncomMessage(data);
@@ -97,6 +100,7 @@ const InputWrap = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+  height: 100%;
 `;
 
 const InputText = styled.textarea.attrs({ rows: 1 })`
