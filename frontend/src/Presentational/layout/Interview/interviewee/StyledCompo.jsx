@@ -99,12 +99,6 @@ export const BodyCompo = styled.div`
 
     & ${QuestionBody}:last-child {
       padding-top: 0;
-
-      .ChatTitle {
-        padding-top: 2.5vh;
-        color: var(--greyLight-3);
-      }
-
       .ChatWrap{
         height: 80%;
       }
