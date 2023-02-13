@@ -7,13 +7,15 @@ import Pagination from "./Pagination"
 
 //전체 데이터 길이, 페이지당 게시물 수, 현재 페이지를 계산하는 함수, 현재페이지
 function PageBar({ setCurrentPage, currentPage, totalpages }) {
-  const step = 10; // 한챕터당 페이지수
+  const step = 3; // 한챕터당 페이지수
   const mainOrReview = step === 5 ? true : false; //메인이랑 복기 Bar길이를 위함
   const [page, setPage] = useState({
     min: 1,
     max: step,
   });
+  const fit=step<=totalpages;
 
+  console.log(fit);
   // console.log("pagebar");
 
   // 챕터 리스트 생성
@@ -28,7 +30,7 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
         break;
       }
     }
-    // console.log("pagebar"+pages);
+    // console.log("pagebar"+pages);[1,2,3,4]
 
 
   //챕터 이동 함수
@@ -67,7 +69,7 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
   // })
 
   useEffect(() => {
-    // console.log("여긴가3333");
+    console.log("여긴가3333");
     //데이터가 없는경우(totalpages===0)
     if (totalpages === 0) {
       setLastPage(true);
@@ -89,7 +91,7 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
   return (
     <>
       <PagenationBar>
-        <GrFormPrevious onClick={prev} className={firstPage ? "Head":"Prev"} />
+        <GrFormPrevious onClick={prev} className={firstPage ? "Head":"Prev" } isChecked={fit}/>
         <Bar className="paginationBar" length={mainOrReview}>
           {pages.map((page, index) => {
             return (
@@ -101,7 +103,7 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
               );
             })}
         </Bar>
-          <GrFormNext onClick={next} className={lastPage?"Tail":"Next"} />
+          <GrFormNext onClick={next} className={lastPage?"Tail":"Next"} isChecked={fit}/>
       </PagenationBar>
     </>
   );
@@ -147,25 +149,28 @@ const Button = styled.button`
 const PagenationBar = styled.div`
   display: flex;
   align-items: center;
-
-  .Prev {
-    font-size: 50px;
-    cursor: pointer;
-  }
-  .Head {
-    font-size: 50px;
-    polyline {
-      stroke: #b6b6b6;
+  ${(props) =>
+    props.isChecked ?`display:none`
+    :
+    `.Prev {
+      font-size: 50px;
+      cursor: pointer;
     }
-  }
-  .Next {
-    font-size: 50px;
-    cursor: pointer;
-  }
-  .Tail {
-    font-size: 50px;
-    polyline {
-      stroke: #b6b6b6;
+    .Head {
+      font-size: 50px;
+      polyline {
+        stroke: #b6b6b6;
+      };
     }
-  }
+    .Next {
+      font-size: 50px;
+      cursor: pointer;
+    }
+    .Tail {
+      font-size: 50px;
+      polyline {
+        stroke: #b6b6b6;
+      };
+    }`}
+    ;
 `;
