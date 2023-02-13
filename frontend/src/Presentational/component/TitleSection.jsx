@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 //sweetalert2
 import Swal from "sweetalert2";
@@ -5,39 +6,56 @@ import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
 
-
 function TitleSection(props) {
-  const isUser = props.token
-  function switchHandler(e){
-    props.roomSwitch(e)
+  const isUser = props.token;
+  const [isChecked, setIsChecked] = useState(true);
+
+  function switchHandler(e) {
+    props.roomSwitch(e);
+    setIsChecked(e === "toTotal" ? true : false);
   }
-  function testFuntion(){
-    console.log('찍혀라 얍')
-  }
+
   //비로그인 사용자가 MY 클릭시
-  function needLogin(){
+  function needLogin() {
     MySwal.fire({
       text: "로그인이 필요한 서비스 입니다.",
-      showConfirmButton:false,
-      icon:'warning',
-      timer: 1500
-    })
+      showConfirmButton: false,
+      icon: "warning",
+      timer: 1500,
+    });
   }
   return (
-    <Titlesection>
-      <p>
-        {props.roomPosition
-          ? "내가 참여한 목록입니다(예정만 보여줌)"
-          : "모든방 목록입니다"}
-      </p>
+    <Titlesection isChecked={isChecked}>
+      <TitleBody>
+        <h1>면접방</h1>
+        <p>
+          {props.roomPosition
+            ? "내가 참여한 방만 볼 수 있습니다."
+            : "모든방을 볼 수 있습니다."}
+        </p>
+      </TitleBody>
       <div>
-        <button onClick={()=>{switchHandler("toTotal")}}>
-            TOTAL
+        <button
+          onClick={() => {
+            switchHandler("toTotal");
+          }}
+        >
+          모든
+          <br />
+          면접방
         </button>
-        <button onClick={()=>{if(isUser){
-            switchHandler("toMy");}
-            else{needLogin()}}}>
-            MY
+        <button
+          onClick={() => {
+            if (isUser) {
+              switchHandler("toMy");
+            } else {
+              needLogin();
+            }
+          }}
+        >
+          나의
+          <br />
+          면접방
         </button>
       </div>
     </Titlesection>
@@ -46,9 +64,38 @@ function TitleSection(props) {
 
 export default TitleSection;
 
+const TitleBody = styled.div``;
+
 const Titlesection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'SBAggroL';
-`
+  font-family: "SBAggroL";
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  div button {
+    color: var(--white);
+    width: 4rem;
+    height: 4rem;
+    border: none;
+    border-radius: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+  }
+
+  div button:first-child {
+    background-color: ${props => props.isChecked?`var(--primary)`:`var(--greyLight-3)`};
+  }
+
+  div button:last-child {
+    
+    background-color: ${props => !props.isChecked?`var(--primary)`:`var(--greyLight-3)`};
+  }
+`;
