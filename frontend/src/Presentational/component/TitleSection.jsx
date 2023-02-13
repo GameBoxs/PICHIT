@@ -91,11 +91,12 @@ const Titlesection = styled.div`
   }
 
   div button:first-child {
+    cursor: pointer;
     background-color: ${props => props.isChecked?`var(--primary)`:`var(--greyLight-3)`};
   }
 
   div button:last-child {
-    
+    cursor: pointer;
     background-color: ${props => !props.isChecked?`var(--primary)`:`var(--greyLight-3)`};
   }
 `;
