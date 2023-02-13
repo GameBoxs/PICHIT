@@ -6,31 +6,27 @@ import PageZero from "./PageZero"
 import Pagination from "./Pagination"
 
 //전체 데이터 길이, 페이지당 게시물 수, 현재 페이지를 계산하는 함수, 현재페이지
-function PageBar({ setCurrentPage, currentPage, totalpages }) {
-  const step = 8; // 한챕터당 페이지수
-  const mainOrReview = step === 5 ? true : false; //메인이랑 복기 Bar길이를 위함
+function PageBar({ setCurrentPage, currentPage, totalpages, step}) {
+  // const step = 5; // 한챕터당 페이지수
+  const mainOrReview = step === '5' ? true : false; //메인이랑 복기 Bar길이를 위함
   const [page, setPage] = useState({
     min: 1,
     max: step,
   });
-  const fit=step<=totalpages;
-
+  const fit=(step<totalpages);//false:페이지 더보기 없게, true:페이지 더보기 존재
   console.log(fit);
-  // console.log("pagebar");
 
   // 챕터 리스트 생성
   let pages = [];
     for (let i = page.min; i <= page.max; i++) {
       pages.push(i);
       if (totalpages === 0) {
-        console.log('여기 들어오냐')
         break;
       }
       if (i === totalpages) {
         break;
       }
     }
-    // console.log("pagebar"+pages);[1,2,3,4]
 
 
   //챕터 이동 함수
@@ -63,23 +59,15 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
   //현재 챕터 위치(버튼 비활성화를 위해)
   const [firstPage, setFirstPage] = useState(false);
   const [lastPage, setLastPage] = useState(false);
-  // const [edgePage, setEdgePage] = useState({
-  //   first:false,
-  //   last:false,
-  // })
 
   useEffect(() => {
-    console.log("여긴가3333");
-    //데이터가 없는경우(totalpages===0)
     if (totalpages === 0) {
       setLastPage(true);
       setFirstPage(true);
-    // console.log("여긴가444");
     }
 
     //그외
     else {
-    // console.log("여긴가5555");
       //첫 장이면
       pages.includes(1) ? setFirstPage(true) : setFirstPage(false);
       //마지막 장이면
@@ -92,9 +80,7 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
     <>
       <PagenationBar>
         {
-          totalpages > step ?
-          <GrFormPrevious onClick={prev} className={firstPage ? "Head":"Prev" } isChecked={fit}/>
-          : null
+          fit&&<GrFormPrevious onClick={prev} className={firstPage ? "Head":"Prev"}/>
         }
         <Bar className="paginationBar" length={mainOrReview}>
           {pages.map((page, index) => {
@@ -108,9 +94,7 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
             })}
         </Bar>
         {
-          totalpages > step ?
-          <GrFormNext onClick={next} className={lastPage?"Tail":"Next"} isChecked={fit}/>
-          : null
+          fit&&<GrFormNext onClick={next} className={lastPage?"Tail":"Next"}/>
         }
       </PagenationBar>
     </>
@@ -120,7 +104,7 @@ export default React.memo(PageBar);
 
 const Bar = styled.div`
   /* border: solid 2px skyblue; //pagination영역을 위한 border: ; */
-  width: ${(props) => (props.length ? "250px" : "500px")};
+  width: ${(props) => (props.length ? "260px" : "500px")};
   height: 23px;
   display: flex;
   justify-content: center;
@@ -157,28 +141,25 @@ const Button = styled.button`
 const PagenationBar = styled.div`
   display: flex;
   align-items: center;
-  ${(props) =>
-    props.isChecked ?`display:none`
-    :
-    `.Prev {
-      font-size: 50px;
-      cursor: pointer;
-    }
-    .Head {
-      font-size: 50px;
-      polyline {
-        stroke: #b6b6b6;
-      };
-    }
-    .Next {
-      font-size: 50px;
-      cursor: pointer;
-    }
-    .Tail {
-      font-size: 50px;
-      polyline {
-        stroke: #b6b6b6;
-      };
-    }`}
-    ;
+  .Prev {
+    font-size: 50px;
+    cursor: pointer;
+  }
+  .Head {
+    font-size: 50px;
+    polyline {
+      stroke: #b6b6b6;
+    };
+  }
+  .Next {
+    font-size: 50px;
+    cursor: pointer;
+  }
+  .Tail {
+    font-size: 50px;
+    polyline {
+      stroke: #b6b6b6;
+    };
+  }
+  ;
 `;
