@@ -15,6 +15,7 @@ import com.alppano.speakon.domain.interview_recording.entity.InterviewRecording;
 import com.alppano.speakon.domain.interview_recording.repository.InterviewRecordingRepository;
 import com.alppano.speakon.domain.recording_timestamp.dto.TimestampWithQuestion;
 import com.alppano.speakon.domain.recording_timestamp.entity.RecordingTimestamp;
+import com.alppano.speakon.domain.recording_timestamp.repository.RecordingTimestampRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,7 @@ import java.util.List;
 public class InterviewRecordingService {
 
     private final InterviewRecordingRepository recordingRepository;
+    private final RecordingTimestampRepository recordingTimestampRepository;
     private final DataFileRepository dataFileRepository;
     private final InterviewJoinRepository interviewJoinRepository;
     private final DataFileUtil dataFileUtil;
@@ -92,7 +94,7 @@ public class InterviewRecordingService {
             throw new ResourceForbiddenException("자신의 면접 녹음만 조회할 수 있습니다.");
         }
 
-        List<RecordingTimestamp> timestampList = recording.getRecordingTimestamps();
+        List<RecordingTimestamp> timestampList = recordingTimestampRepository.findAllByInterviewRecordingIdOrderBySecondTimeAsc(recording.getId());
 
         List<TimestampWithQuestion> timestampWithQuestions = new ArrayList<>();
 
