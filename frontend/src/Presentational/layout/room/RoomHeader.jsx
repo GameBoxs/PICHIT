@@ -166,11 +166,19 @@ function RoomHeader({
       roomId : id,
       isHost : host
     }))
-    sessionStorage.setItem('roomInfo',JSON.stringify({
-      userInfo : userinfo,
-      roomId : id,
-      isHost : host
-    }))
+    sessionStorage.setItem(
+      "roomInfo",
+      JSON.stringify({
+        userInfo: {
+          id: userinfo.id,
+          interviewJoinId: userinfo.interviewJoinId,
+          name: userinfo.name,
+          finished: userinfo.finished,
+        },
+        roomId: id,
+        isHost: host,
+      })
+    );
     navigate("/interview");
   };
 

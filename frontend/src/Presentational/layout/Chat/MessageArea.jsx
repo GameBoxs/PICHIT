@@ -29,7 +29,7 @@ const MessageArea = ({Message}) => {
 
 const MessageWrap = styled.div`
     width: inherit;
-    height: 94%;
+    height: 100%;
     padding-inline: 0;
     overflow: auto;
     & *{

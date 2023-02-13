@@ -215,11 +215,3 @@ const RemoveBtn = styled.div`
     color: var(--primary);
   }
 `;
-const SubmitBtn = styled.button`
-  margin: 0% 1rem;
-`;
-const SortCartegory = styled.div`
-  margin: 15px 0px;
-`;
-
-const SortBtn = styled.button``;

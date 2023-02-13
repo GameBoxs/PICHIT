@@ -34,12 +34,10 @@ $shadow: .3rem .3rem .6rem var(--greyLight-2), -.2rem -.2rem .5rem var(--white);
     }
 
     body.dark {
-        background: #353535;
+        transition: 0.2s;
         & *{ 
-            color: white;
             transition: 0.2s;
         }
-        transition: 0.2s;
     }
 
     *::before, *::after {
