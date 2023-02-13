@@ -30,7 +30,7 @@ function CreateRoom({ setModalOpen }) {
   const [room, setRoom] = useState({
     title: "",
     description: "",
-    contactWay:"",
+    contactWay: "",
     maxPersonCount: 2,
     password: "",
     finished: 0,
@@ -81,8 +81,7 @@ function CreateRoom({ setModalOpen }) {
     createData
   );
 
-  
-  // Daypicker 날짜 선택 handler 
+  // Daypicker 날짜 선택 handler
   const handleDaySelect = (date) => {
     setSelected(date);
     if (date) {
@@ -92,71 +91,61 @@ function CreateRoom({ setModalOpen }) {
   };
 
   const roomCreate = (e) => {
-    if (room.title === '') {
-      alert("제목을 입력해주세요")
-    }
-    else if(room.description === ''){
-      alert ("설명을 입력해주세요")
-    }
-    else if (room.maxPersonCount === '' ) {
-      alert("모집인원을 입력해주세요")
-    }
-    else if (room.maxPersonCount > 4 ) {
-      alert("최대 모집인원을 초과하였습니다")
-    }
-    else if (room.maxPersonCount < 1 ) {
-      alert("최소 2명 이상의 모집인원을 입력 해 주세요")
-    }
-    else if(room.startDate === ''){
-      alert ("시작 날짜를 설정해주세요")
-    }
-    else if (toggle===true && room.password ===''){
-      alert ("비밀번호를 설정해주세요")
-    }
-    else if (toggle === true && room.password.length > 10){
-      alert("유효 할 수 없는 비밀번호 입니다. 다시 설정해주세요")
-    }
-    else{
+    if (room.title === "") {
+      alert("제목을 입력해주세요");
+    } else if (room.description === "") {
+      alert("설명을 입력해주세요");
+    } else if (room.maxPersonCount === "") {
+      alert("모집인원을 입력해주세요");
+    } else if (room.maxPersonCount > 4) {
+      alert("최대 모집인원을 초과하였습니다");
+    } else if (room.maxPersonCount < 1) {
+      alert("최소 2명 이상의 모집인원을 입력 해 주세요");
+    } else if (room.startDate === "") {
+      alert("시작 날짜를 설정해주세요");
+    } else if (toggle === true && room.password === "") {
+      alert("비밀번호를 설정해주세요");
+    } else if (toggle === true && room.password.length > 10) {
+      alert("유효 할 수 없는 비밀번호 입니다. 다시 설정해주세요");
+    } else {
       setCreateData(true);
     }
-  }
+  };
 
-  // 면접방 생성에 성공했을 때 감지하는 useEffect 
+  // 면접방 생성에 성공했을 때 감지하는 useEffect
   useEffect(() => {
-      if (
-        createResult &&
-        createResult.success === true &&
-        createResult.success !== undefined
-      ) {
-        setModalOpen(false);
-        MySwal.fire({
-          html: (
-            <div>
-              면접방이 생성 되었습니다
-              <br />
-              면접방으로 이동하시겠습니까?
-            </div>
-          ),
-          icon: "success",
-          showConfirmButton: true,
-          confirmButtonText: "이동하기",
-          showCancelButton: true,
-          cancelButtonText: "취소하기",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigate(`/room/${createResult.data.id}`, {
-              state: {
-                id: createResult.data.id,
-                password:room.password
-              } 
-            });
-          }
-          else if(
-            result.dismiss === Swal.DismissReason.cancel){
-              window.location.reload();
-            }
-        });
-      }
+    if (
+      createResult &&
+      createResult.success === true &&
+      createResult.success !== undefined
+    ) {
+      setModalOpen(false);
+      MySwal.fire({
+        html: (
+          <div>
+            면접방이 생성 되었습니다
+            <br />
+            면접방으로 이동하시겠습니까?
+          </div>
+        ),
+        icon: "success",
+        showConfirmButton: true,
+        confirmButtonText: "이동하기",
+        showCancelButton: true,
+        cancelButtonText: "취소하기",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate(`/room/${createResult.data.id}`, {
+            state: {
+              id: createResult.data.id,
+              password: room.password,
+            },
+          });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          window.location.reload();
+        }
+      });
+    }
   }, [createResult]);
 
   // 생성하기 버튼 눌렀을 때 활성화 되는 함수
@@ -213,16 +202,18 @@ function CreateRoom({ setModalOpen }) {
                     toggle={toggle}
                     ToggleHandler={Togglehandler}
                     onClick={Togglehandler}
+                    className="subInput"
                   />
                 </div>
                 {toggle ? (
                   <InputNum>
-                  <InfoText>비밀번호</InfoText>
-                  <InfoInput
-                    name="password"
-                    defaultValue={room.password}
-                    onChange={InputHandler}
-                  />
+                    <InfoText>비밀번호</InfoText>
+                    <InfoInput
+                      name="password"
+                      defaultValue={room.password}
+                      onChange={InputHandler}
+                      className="subInput"
+                    />
                   </InputNum>
                 ) : null}
               </Info>
@@ -248,16 +239,6 @@ function CreateRoom({ setModalOpen }) {
   );
 }
 export default CreateRoom;
-
-const InputNum = styled.div`
-  display: flex;
-  gap: 1rem;
-  width: 100%;
-
-  input {
-    width: 50%;
-  }
-`
 
 const Wrap = styled.div`
   position: fixed;
@@ -312,7 +293,9 @@ const Layout = styled.div`
     }
   }
 
-  .rdp-day_selected, .rdp-day_selected:focus-visible, .rdp-day_selected:hover {
+  .rdp-day_selected,
+  .rdp-day_selected:focus-visible,
+  .rdp-day_selected:hover {
     background-color: var(--primary) !important;
   }
 `;
@@ -335,8 +318,8 @@ const InfoList = styled.div`
 const InfoText = styled.div``;
 
 const Info = styled.div`
-display: grid;
-grid-template-columns: 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   padding-inline: 10px;
   align-items: center;
 
@@ -344,14 +327,19 @@ grid-template-columns: 1fr 1fr;
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: right;
+    justify-content: left;
 
     div {
+      width: 100%;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: flex-start;
       gap: 1rem;
-      padding:10px;
+      padding-top: 10px;
+
+      * {
+        padding-block: 0;
+      }
     }
   }
 `;
@@ -387,9 +375,24 @@ const RoomText = styled.textarea`
 const Header = styled.div`
   margin: 10px;
   text-align: center;
-  
+
   .Title {
     font-size: 2rem;
     color: var(--primary);
+  }
+`;
+
+const InputNum = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  width: 100%;
+
+  input {
+    width: 100%;
+  }
+
+  ${InfoText} {
+    width: 180px;
   }
 `;

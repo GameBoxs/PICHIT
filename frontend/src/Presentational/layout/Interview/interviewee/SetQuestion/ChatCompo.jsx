@@ -1,6 +1,7 @@
 import React from "react";
+import styled from "styled-components";
 import { QuestionBody } from "../StyledCompo";
-import SubTitle from "../../../../common/SubTitle";
+import { BiChevronDown } from "react-icons/bi";
 import ChatArea from "../../../Chat/ChatArea";
 
 function ChatCompo(props) {
@@ -13,9 +14,12 @@ function ChatCompo(props) {
 
   return (
     <QuestionBody>
-      <div onClick={chatHandler} className="ChatTitle">
-        채팅
-      </div>
+      <ChatTitle onClick={chatHandler} className="ChatTitle">
+        <SubDiv>채팅</SubDiv>
+        <SubDiv chatOn={chatOn}>
+          <BiChevronDown />
+        </SubDiv>
+      </ChatTitle>
       {/* <SubTitle title={"채팅"} /> */}
       <ChatArea session={session} info={info} chatOn={chatOn} />
     </QuestionBody>
@@ -23,3 +27,24 @@ function ChatCompo(props) {
 }
 
 export default ChatCompo;
+
+const SubDiv = styled.div`
+  color: var(--greyLight-3);
+
+  transform: ${props => props.chatOn ? "rotate(180deg)" : "rotate(0deg)"};
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  path {
+    color: var(--primary);
+  }
+`;
+
+const ChatTitle = styled.div`
+  padding-top: 2vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
