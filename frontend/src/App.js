@@ -34,6 +34,8 @@ function App() {
   const token = useSelector(state=>state.token)
   const dispatch = useDispatch();
 
+  console.log(token)
+
   const handleOpenPop = () => {
     //팝업 생성 함수
     const width = 400;

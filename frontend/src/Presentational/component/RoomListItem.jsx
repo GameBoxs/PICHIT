@@ -9,7 +9,7 @@ import { FaLock } from "react-icons/fa";
 const MySwal = withReactContent(Swal);
 
 function RoomListItem(props) {
-  const { data, index } = props;
+  const { data } = props;
   const {
     id,
     secretRoom,

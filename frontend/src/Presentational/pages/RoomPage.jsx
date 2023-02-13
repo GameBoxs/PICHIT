@@ -1,28 +1,3 @@
-/* 
-
-
-
-
-
-
-
-
-
-
-
-여기는 Dev-fe!! 
-
-
-
-
-
-
-
-
-
-*/
-
-
 import React, { useCallback, useState, useEffect } from "react";
 import styled from "styled-components";
 import useAxios from "../../action/hooks/useAxios";
@@ -128,23 +103,23 @@ function RoomPage() {
 
   }, [postData]);
 
-  useEffect(()=>{
-    if (contextError !== null){
-      MySwal.fire({
-        html: (
-          <div>
-            비밀번호가 틀렸습니다
-          </div>
-        ),
-        icon: "error",
-        showConfirmButton: false,
-        showCancelButton: false,
-      })
-    }
-    return(()=>{
-      navigate('/')
-    })
-  },[contextError])
+  // useEffect(()=>{
+  //   if (contextError !== null){
+  //     MySwal.fire({
+  //       html: (
+  //         <div>
+  //           비밀번호가 틀렸습니다
+  //         </div>
+  //       ),
+  //       icon: "error",
+  //       showConfirmButton: false,
+  //       showCancelButton: false,
+  //     })
+  //   }
+  //   return(()=>{
+  //     navigate('/')
+  //   })
+  // },[contextError])
 
   return (
     <Container>
