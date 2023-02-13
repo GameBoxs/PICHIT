@@ -98,13 +98,24 @@ function EditRoom({ setModalOpen, data }) {
   useEffect(() => {
     if (putData && putData.success === true && putData.success !== undefined) {
       setModalOpen(false);
-      console.log(putData);
-      navigate(`/room/${roomParamsId}`, {
-        state: {
-          host: true,
-        },
-      });
+      if (room.password === null){
+        navigate(`/room/${roomParamsId}`, {
+          state: {
+            host: true,
+          },
+        });
+      }
+      else{
+ 
+        navigate(`/room/${roomParamsId}`, {
+          state: {
+            host: true,
+            password:room.password
+          },
+        });
+      }
       window.location.reload();
+
     }
   }, [putData]);
 

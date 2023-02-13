@@ -28,7 +28,8 @@ function RoomListItem(props) {
   const clickRoomItem = () => {
     if (token === null) {
       MySwal.fire({
-        text: "로그인이 필요한 서비스 입니다.",
+        title:"로그인이 필요한 서비스 입니다.",
+        text: "상단 메뉴에서 카카오 로그인을 이용해 주세요 ",
         showConfirmButton: false,
         icon: "warning",
         timer: 1500,

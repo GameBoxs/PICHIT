@@ -5,6 +5,8 @@ import axios from "axios";
 import { PITCHIT_URL } from "../../../../store/values";
 import { useSelector } from "react-redux";
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
+import { useEffect } from "react";
 
 
 const ViewPDF = ({ pdfhandler }) => {
@@ -13,20 +15,21 @@ const ViewPDF = ({ pdfhandler }) => {
   const {token} =useSelector(state=>state)
   const [data,setData] = useState()
 
-  axios({
-    method:"get",
-    url:`${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
-    headers:{
-      Authorization: token,
-    }
-  }).then((res) => {
-    setData(res.data.data.uri)
-    console.log(data)
-
-  })
-  .catch((err) => 
-    console.log(err))
-
+  useEffect(()=>{
+    axios({
+      method:"get",
+      url:`${PITCHIT_URL}/interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
+      headers:{
+        Authorization: token,
+      }
+    }).then((res) => {
+      setData(res.data.data.uri)
+      console.log(data)
+  
+    })
+    .catch((err) => 
+      console.log(err))
+  },[])
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
@@ -36,7 +39,7 @@ const ViewPDF = ({ pdfhandler }) => {
       <Document   file={{
       url:data
     }} onLoadSuccess={onDocumentLoadSuccess}>
-        <Page pageNumber={pageNumber} />
+        <Page wr pageNumber={pageNumber} />
       </Document>
       <PageNext>
         <Next onClick={()=> pageNumber > 1 ? setPageNumber(pageNumber-1):null}>◀</Next>
