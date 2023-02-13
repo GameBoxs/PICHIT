@@ -10,7 +10,7 @@ import MessageArea from "./MessageArea";
     MessageArea에서 스크롤바 없애기
 */
 
-const ChatArea = ({session,info}) => {
+const ChatArea = ({session,info, chatOn}) => {
     const [incomM, SetIncomM] = useState([]);
     const [tD, setT] = useState();
     const [flag,setFlag] = useState(false);
@@ -53,7 +53,7 @@ const ChatArea = ({session,info}) => {
     }
 
     return(
-        <ChatWrap>
+        <ChatWrap chatOn={chatOn} className="ChatWrap">
             <ChatBody>
                 <MessageArea Message={incomM}/>
                 {/* <MessageArea session={session}/> */}
@@ -75,6 +75,7 @@ const ChatWrap = styled.div`
     width: 100%;
     height: calc(100% - 31px);
     border-radius: 0;
+    visibility: ${props => props.chatOn ? 'visible':'hidden'};
 `
 const ChatBody = styled.div`
     margin-top: 2%;

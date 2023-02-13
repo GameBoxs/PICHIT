@@ -134,7 +134,7 @@ const Member = styled.div`
 
 const AllQuestions = styled.div`
   width: 100%;
-  height: calc(100% - ${(props) => (props.chatOn ? "35%" : "22%")});
+  height: calc(100% - ${(props) => (props.chatOn ? "40%" : "20%")});
   margin-top: 2vh;
   overflow-y: scroll;
   border-radius: 0 !important;
