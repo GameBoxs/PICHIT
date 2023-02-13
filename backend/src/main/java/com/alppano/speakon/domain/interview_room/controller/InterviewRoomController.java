@@ -45,6 +45,7 @@ public class InterviewRoomController {
     @Operation(summary = "면접방 삭제")
     @DeleteMapping("/interviewrooms/{id}")
     public ResponseEntity<ApiResponse<InterviewRoomDetailInfo>> deleteInterviewRoom(@AuthenticationPrincipal LoginUser loginUser,
+
                                                                                     @PathVariable("id") Long interviewRoomId) {
         interviewRoomService.deleteInterviewRoom(interviewRoomId, loginUser.getId());
 

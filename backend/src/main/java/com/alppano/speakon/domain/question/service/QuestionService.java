@@ -103,6 +103,11 @@ public class QuestionService {
             throw new ResourceForbiddenException("자신의 면접만 질문 목록을 조회할 수 있습니다.");
         }
 
+        // 모의 면접이 완료된 후 질문 및 피드백 조회가능
+        if(interviewJoin.getUser().getId().equals(userId) && interviewJoin.getFinished() == 0) {
+            throw new ResourceForbiddenException("모의면접이 완료된 후 질문 및 피드백을 조회가능합니다.");
+        }
+
         Page<QuestionWithFeedback> result = questionRepository.findAllByInterviewJoinId(pageable, interviewJoinId)
                 .map(question -> new QuestionWithFeedback(question));
 
@@ -115,6 +120,11 @@ public class QuestionService {
 
         if (interviewJoinRepository.findByUserIdAndInterviewRoomId(userId, interviewJoin.getInterviewRoom().getId()).isEmpty()) {
             throw new ResourceForbiddenException("면접방에 참여한 사람만 질문 목록을 조회할 수 있습니다.");
+        }
+
+        // 내 면접 질문인 경우 면접이 끝나기 전까지 열람 불가
+        if(interviewJoin.getUser().getId().equals(userId) && interviewJoin.getFinished() == 0) {
+            throw new ResourceForbiddenException("모의면접 시작 전에 자신이 받은 질문 목록을 조회할 수 없습니다.");
         }
 
         Page<QuestionInfo> result = questionRepository.findAllByInterviewJoinId(pageable, interviewJoinId)
