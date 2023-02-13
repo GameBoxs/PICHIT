@@ -8,7 +8,7 @@ const MySwal = withReactContent(Swal);
 
 function TitleSection(props) {
   const isUser = props.token;
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(true);
 
   function switchHandler(e) {
     props.roomSwitch(e);
