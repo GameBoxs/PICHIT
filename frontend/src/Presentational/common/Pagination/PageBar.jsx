@@ -7,7 +7,7 @@ import Pagination from "./Pagination"
 
 //전체 데이터 길이, 페이지당 게시물 수, 현재 페이지를 계산하는 함수, 현재페이지
 function PageBar({ setCurrentPage, currentPage, totalpages }) {
-  const step = 3; // 한챕터당 페이지수
+  const step = 8; // 한챕터당 페이지수
   const mainOrReview = step === 5 ? true : false; //메인이랑 복기 Bar길이를 위함
   const [page, setPage] = useState({
     min: 1,
@@ -91,7 +91,11 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
   return (
     <>
       <PagenationBar>
-        <GrFormPrevious onClick={prev} className={firstPage ? "Head":"Prev" } isChecked={fit}/>
+        {
+          totalpages > step ?
+          <GrFormPrevious onClick={prev} className={firstPage ? "Head":"Prev" } isChecked={fit}/>
+          : null
+        }
         <Bar className="paginationBar" length={mainOrReview}>
           {pages.map((page, index) => {
             return (
@@ -103,7 +107,11 @@ function PageBar({ setCurrentPage, currentPage, totalpages }) {
               );
             })}
         </Bar>
+        {
+          totalpages > step ?
           <GrFormNext onClick={next} className={lastPage?"Tail":"Next"} isChecked={fit}/>
+          : null
+        }
       </PagenationBar>
     </>
   );
