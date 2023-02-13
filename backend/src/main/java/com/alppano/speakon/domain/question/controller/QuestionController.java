@@ -66,7 +66,7 @@ public class QuestionController {
 
     @Operation(summary = "면접 참여자의 질문(+피드백) 목록 조회 (복기)")
     @GetMapping("/interviewjoins/{interviewJoinId}/questions-with-feedbacks")
-    public ResponseEntity<ApiResponse<PagedResult<QuestionWithFeedback>>> getQuestionsWithFeedbackByInterviewJoin(@PageableDefault(size = 1, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+    public ResponseEntity<ApiResponse<PagedResult<QuestionWithFeedback>>> getQuestionsWithFeedbackByInterviewJoin(@PageableDefault(size = 1, sort = "startedTime", direction = Sort.Direction.ASC) Pageable pageable,
                                                                                                                   @AuthenticationPrincipal LoginUser loginUser,
                                                                                                                   @PathVariable Long interviewJoinId) {
         PagedResult<QuestionWithFeedback> list = questionService.getQuestionListByInterviewJoin(pageable, interviewJoinId, loginUser.getId());
