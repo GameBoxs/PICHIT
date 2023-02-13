@@ -9,6 +9,8 @@ function SetQuestionArea(props) {
   const { questionData, setReqBody, session, info, reqBody } = props;
   const [chatOn, setChatOn] = useState(false);
 
+  console.log(info)
+
   const [members, setMembers] = useState({
     interviewee: {},
     interviewers: [],
@@ -40,6 +42,7 @@ function SetQuestionArea(props) {
       //면접관들 리스트
       const Members = MemberList.filter((person) => {
         if (person.id == info.interviewee) {
+
           setMembers((prev) => {
             return {
               ...prev,
