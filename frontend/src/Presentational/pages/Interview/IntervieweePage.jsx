@@ -13,7 +13,6 @@ const IntervieweePage = (props) => {
   const token = useSelector((state) => state.token);
   const roomInfo = JSON.parse(sessionStorage.getItem("roomInfo"));
 
-
   const navigate = useNavigate();
 
   useEffect(() => {

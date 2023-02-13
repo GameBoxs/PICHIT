@@ -6,10 +6,8 @@ import ChatCompo from "./ChatCompo";
 import { useEffect } from "react";
 
 function SetQuestionArea(props) {
-  const { questionData, setReqBody, session, info, reqBody } = props;
+  const { questionData, setReqBody, session, info, reqBody,roomStateData } = props;
   const [chatOn, setChatOn] = useState(false);
-
-  console.log(info)
 
   const [members, setMembers] = useState({
     interviewee: {},
@@ -19,15 +17,20 @@ function SetQuestionArea(props) {
   useEffect(() => {
     if(info.publisher !== undefined){
       let MemberList = [];
-  
+
       let myID = JSON.parse(info.publisher.stream.connection.data).clientId;
       let myNickName = JSON.parse(
         info.publisher.stream.connection.data
       ).clientData;
-  
-      MemberList.push({ id: myID, name: myNickName });
+      
+      let myInterviewJoinId = JSON.parse(
+        info.publisher.stream.connection.data
+        ).clientRoomJoinId;
+        
+      MemberList.push({ id: myID, name: myNickName, interviewJoinId:myInterviewJoinId });
   
       for (let i = 0; i < info.subscribers.length; i++) {
+
         let targetID = JSON.parse(
           info.subscribers[i].stream.connection.data
         ).clientId;
@@ -35,8 +38,12 @@ function SetQuestionArea(props) {
         let targetNickName = JSON.parse(
           info.subscribers[i].stream.connection.data
         ).clientData;
+
+        let targetInterviewJoinId = JSON.parse(
+          info.subscribers[i].stream.connection.data
+          ).clientRoomJoinId;
   
-        MemberList.push({ id: targetID, name: targetNickName });
+        MemberList.push({ id: targetID, name: targetNickName, interviewJoinId:targetInterviewJoinId });
       }
   
       //면접관들 리스트
