@@ -27,7 +27,7 @@ function RoomHeader({
   token,
   userinfo,
 }) {
-  const { id, title, participants, sessionOpened, manager } = data;
+  const { id, title, participants, sessionOpened, manager,currentPersonCount, maxPersonCount, } = data;
   const { join, host } = userJoinInfo;
 
   const navigate = useNavigate();
@@ -166,11 +166,19 @@ function RoomHeader({
       roomId : id,
       isHost : host
     }))
-    sessionStorage.setItem('roomInfo',JSON.stringify({
-      userInfo : userinfo,
-      roomId : id,
-      isHost : host
-    }))
+    sessionStorage.setItem(
+      "roomInfo",
+      JSON.stringify({
+        userInfo: {
+          id: userinfo.id,
+          interviewJoinId: userinfo.interviewJoinId,
+          name: userinfo.name,
+          finished: userinfo.finished,
+        },
+        roomId: id,
+        isHost: host,
+      })
+    );
     navigate("/interview");
   };
 
@@ -182,6 +190,7 @@ function RoomHeader({
     });
   };
 
+    
   //JSX 변수
   const ReadyBtn = (
     <Button text={"스터디 준비하기"} handler={createRoom} isImportant={true} />
@@ -190,6 +199,8 @@ function RoomHeader({
   const StartBtn = (
     <Button text={"스터디 시작하기"} handler={moveToRoom} isImportant={true} />
   );
+
+  
 
   const QuitBtn = (
     <Button
@@ -221,14 +232,19 @@ function RoomHeader({
       화상채팅 시작하기
     </Button>
   );
+
+  const Recuritment = maxPersonCount - currentPersonCount;
+
   //화면 렌더링 함수
   const readyRoom = join ? (
     <>
       {sessionOpened ? StudyStartBtn : <p>스터디룸을 준비중입니다</p>}
       {QuitBtn}
     </>
-  ) : (
-    <>{EnterBtn}</>
+  ) : (<>
+  {Recuritment === 0? (<p>방에 참여하실 수 없습니다</p>):(<>{EnterBtn}</>)}
+  </>
+    
   );
 
   const RoomHost =
