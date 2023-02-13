@@ -5,6 +5,8 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useSelector } from "react-redux";
 import { FaLock } from "react-icons/fa";
+import axios from "axios";
+import { PITCHIT_URL } from "../../store/values";
 
 const MySwal = withReactContent(Swal);
 
@@ -39,27 +41,45 @@ function RoomListItem(props) {
           confirmButtonText: "입장하기",
           preConfirm: () => {
             const password = Swal.getPopup().querySelector("#password").value;
-
             if (!password) {
               Swal.showValidationMessage(`Please enter login and password`);
             }
             return { password: password };
           },
         }).then((result) => {
-          navigate(`/room/${roomId}`, {
-            state: {
-              id: id,
-              password: result.value.password,
+          axios({
+            method: "post",
+            url: `${PITCHIT_URL}/interviewrooms/${roomId}`,
+            headers: {
+              Authorization: token,
             },
-          });
-        });
-      } else {
-        navigate(`/room/${roomId}`, {
-          state: {
-            id: id,
-          },
+            data: { password: result.value.password },
+          })
+            .then((res) => {
+              navigate(`/room/${roomId}`, {
+                state: {
+                  id: id,
+                  password: result.value.password,
+                },
+              });
+            })
+            .catch((err) => {
+              MySwal.fire({
+                text: "잘못된 비밀번호 입니다. 다시 입력해주세요",
+                showConfirmButton: false,
+                icon: "warning",
+                timer: 1500,
+              });
+            });
         });
       }
+    else{
+      navigate(`/room/${roomId}`, {
+        state: {
+          id: id,
+        },
+      });
+    }
     }
   };
   return (

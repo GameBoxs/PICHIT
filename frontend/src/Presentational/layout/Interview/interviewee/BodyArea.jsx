@@ -102,6 +102,7 @@ const BodyArea = (props) => {
 
       {/* 자소서보기/채팅/ */}
       <SetQuestionArea
+        roomStateData={roomStateData}
         questionData={questionData}
         reqBody={reqBody}
         setReqBody={setReqBody}
