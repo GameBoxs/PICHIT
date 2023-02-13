@@ -2,13 +2,15 @@ import styled from "styled-components";
 import SubTitle from "../../common/SubTitle";
 
 const IncomMessage = ({ data }) => {
+  console.log(data)
+
   return (
     <IncomWrap>
       <TitleArea>
-        <div>{data.Name}</div>
-        <div>{data.Time}</div>
+        <div>{data?.Name}</div>
+        <div>{data?.Time}</div>
       </TitleArea>
-      <MessageText>{data.Message}</MessageText>
+      <MessageText>{data?.Message}</MessageText>
     </IncomWrap>
   );
 };

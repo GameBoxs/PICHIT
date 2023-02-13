@@ -69,7 +69,7 @@ export const BodyCompo = styled.div`
     ${QuestionBody}:nth-child(1) {
       display: grid;
       grid-template-rows: 1fr 2fr 1fr;
-      background-color: #ffffed;
+      background-color: var(--white);
     }
   }
 
@@ -92,6 +92,23 @@ export const BodyCompo = styled.div`
     ${QuestionBody} .SubTitle:last-child {
       margin-top: 0.5vh;
     }
+
+    ${QuestionBody} textarea {
+      padding: 0.5rem 1.4rem;
+    }
+
+    & ${QuestionBody}:last-child {
+      padding-top: 0;
+
+      .ChatTitle {
+        padding-top: 2.5vh;
+        color: var(--greyLight-3);
+      }
+
+      .ChatWrap{
+        height: 80%;
+      }
+    }
   }
 
   &:nth-child(2) ${QuestionBody}:nth-child(2), &:nth-child(3) ${QuestionBody}:nth-child(1) {
@@ -102,6 +119,7 @@ export const BodyCompo = styled.div`
 
   .SubTitle {
     color: var(--greyLight-3) !important;
+    font-weight: normal !important;
   }
 `;
 

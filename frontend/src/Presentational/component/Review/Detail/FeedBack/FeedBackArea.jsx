@@ -17,17 +17,17 @@ const FeedBackArea = ({ title, data, timeStamp, playTime }) => {
   //시간 표시
   let tmpVal = timeStamp.secondTime;
 
-  var m = Math.floor((tmpVal % 3600) / 60);
-  var s = Math.floor((tmpVal % 3600) % 60);
+  let m = Math.floor((tmpVal % 3600) / 60);
+  let s = Math.floor((tmpVal % 3600) % 60);
 
-  var sDisplay = s > 0 ? (s < 10 ? "0" + s.toString() : s) : "00";
-  var mDisplay = m > 0 ? (m < 10 ? "0" + m.toString() : m) : "00";
+  let sDisplay = s > 0 ? (s < 10 ? "0" + s.toString() : s) : "00";
+  let mDisplay = m > 0 ? (m < 10 ? "0" + m.toString() : m) : "00";
   
   let tmpArr = [];
   
   if (tmpVal > 3600) {
-    var h = Math.floor(tmpVal / 3600);
-    var hDisplay = h > 0 ? h : "00";
+    let h = Math.floor(tmpVal / 3600);
+    let hDisplay = h > 0 ? h : "00";
 
     tmpArr = [hDisplay, mDisplay, sDisplay];
   } else {
@@ -68,8 +68,8 @@ const PlayBtn = styled.div`
   min-width: 10vw;
   height: 6vh;
   padding: 1rem;
-  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
-    -0.2rem -0.2rem 0.5rem var(--white);
+  box-shadow: 0.3rem 0.3rem 0.6rem let(--greyLight-2),
+    -0.2rem -0.2rem 0.5rem let(--white);
   justify-self: center;
   display: flex;
   align-items: center;
@@ -78,22 +78,22 @@ const PlayBtn = styled.div`
   transition: 0.3s ease;
   grid-column: 1 / 2;
   grid-row: 4 / 5;
-  background-color: var(--primary);
-  box-shadow: inset 0.2rem 0.2rem 1rem var(--primary-light),
-    inset -0.2rem -0.2rem 1rem var(--primary-dark),
-    0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--white);
+  background-color: let(--primary);
+  box-shadow: inset 0.2rem 0.2rem 1rem let(--primary-light),
+    inset -0.2rem -0.2rem 1rem let(--primary-dark),
+    0.3rem 0.3rem 0.6rem let(--greyLight-2), -0.2rem -0.2rem 0.5rem let(--white);
 
   & * {
-    color: var(--greyLight-1);
+    color: let(--greyLight-1);
   }
 
   &:hover * {
-    color: var(--white);
+    color: let(--white);
   }
 
   &:active {
-    box-shadow: inset 0.2rem 0.2rem 1rem var(--primary-dark),
-      inset -0.2rem -0.2rem 1rem var(--primary-light);
+    box-shadow: inset 0.2rem 0.2rem 1rem let(--primary-dark),
+      inset -0.2rem -0.2rem 1rem let(--primary-light);
   }
 `;
 
@@ -117,17 +117,17 @@ const FeedBackWrap = styled.div`
   .SubTitle,
   .Title {
     font-family: "SBAggroL";
-    color: var(--greyDark);
+    color: let(--greyDark);
   }
 
   .Title {
     font-size: 2rem !important;
-    color: var(--primary);
+    color: let(--primary);
   }
 
   .SubTitle {
     font-size: 1.2rem !important;
-    color: var(--primary-light);
+    color: let(--primary-light);
   }
 `;
 

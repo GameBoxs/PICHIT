@@ -1,7 +1,6 @@
 import React, { memo } from "react";
 import styled, { keyframes } from "styled-components";
 import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs";
-import { useMemo } from "react";
 
 //재생 버튼
 const SoundBtn = ({ play, isPlaying }) => {

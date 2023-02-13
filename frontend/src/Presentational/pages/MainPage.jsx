@@ -24,7 +24,7 @@ const MainPage = ({isToken}) => {
   const TapeContent = new Array(12).fill().map((_, idx) => {
     return <TapeCompo key={idx} num={idx}/>;
   });
-
+  
   return (
     <MainPageLayout>
       <First ref={(el) => (MainDiv.current[0] = el)}>
