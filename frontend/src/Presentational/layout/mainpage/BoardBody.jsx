@@ -39,6 +39,7 @@ function BoardBody(props) {
               setCurrentPage={setCurrentPage} //현재 페이지를 계산하는 함수
               currentPage={currentPage} //현재페이지
               totalpages={totalpages} //페이지 길이
+              step='5'
             />
           )}
         </PaginationBox>

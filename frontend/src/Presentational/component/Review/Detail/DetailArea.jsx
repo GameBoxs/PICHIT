@@ -21,7 +21,6 @@ const DetailArea = ({ selectedID }) => {
     timestamp: {},
   });
   const [isPlaying, setIsPlaying] = useState(false);
-  console.log('데이타가 왜 없는데 ', data);
   
   const [getData, isLoadingData] = useAxios(
     `interviewjoins/${selectedID}/questions-with-feedbacks?size=2000`,
@@ -30,6 +29,7 @@ const DetailArea = ({ selectedID }) => {
     null,
     selectedID ? true : false
   );
+  
 
   const [getSound, isLoadingSound] = useAxios(
     `interviewjoins/${selectedID}/recordings`,
@@ -38,7 +38,7 @@ const DetailArea = ({ selectedID }) => {
     token,
     null,
     selectedID ? true : false
-  );
+    );
 
   useEffect(() => {
     if (getSound && getSound.success && getSound.data) {
@@ -65,7 +65,6 @@ const DetailArea = ({ selectedID }) => {
   const playTime = (time) => {
     //현재 재생 시간을 selectTime으로 맞춤
     audioRef.current.currentTime = time;
-
     setIsPlaying(true);
     audioRef.current.play();
   };
@@ -91,6 +90,7 @@ const DetailArea = ({ selectedID }) => {
                     setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
                     currentPage={nowPage} //현재페이지
                     totalpages={totalPage}
+                    step='10'
                   />
                   {
                     data[nowPage-1] && sound.timestamp[nowPage - 1] ?
@@ -127,8 +127,7 @@ const Container = styled.div`
 
   .paginationBar {
     width: 100%;
-    height: 1em;
-
+    height: 3em;
     * {
       height: 0.6em;
       width: 0.6em;
@@ -156,7 +155,7 @@ const DetailWrap = styled.div`
     font-family: "SBAggroB";
     color: var(--primary-light);
     padding: 1.4rem 1rem 1rem 1rem;
-    /* border-bottom: solid 2px var(--greyDark); */
+    border-bottom: solid 2px var(--greyDark);
   }
 
   & > div:nth-child(4) {
