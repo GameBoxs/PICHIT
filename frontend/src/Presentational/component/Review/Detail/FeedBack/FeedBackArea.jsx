@@ -9,7 +9,7 @@ import { useEffect } from "react";
 
 const FeedBackArea = ({ title, data, timeStamp, playTime }) => {
   const targetElement = useRef(null);
-
+  console.log(title)
   useEffect(() => {
     targetElement.current.scrollIntoView({ behavior: "smooth" });
   }, [title]);

@@ -7,14 +7,14 @@ import Pagination from "./Pagination"
 
 //전체 데이터 길이, 페이지당 게시물 수, 현재 페이지를 계산하는 함수, 현재페이지
 function PageBar({ setCurrentPage, currentPage, totalpages, step}) {
-  // const step = 5; // 한챕터당 페이지수
-  const mainOrReview = step === '5' ? true : false; //메인이랑 복기 Bar길이를 위함
+  const steps = Number(step); // 한챕터당 페이지수
+  const mainOrReview = steps === '5' ? true : false; //메인이랑 복기 Bar길이를 위함
   const [page, setPage] = useState({
     min: 1,
-    max: step,
+    max: steps,
   });
-  const fit=(step<totalpages);//false:페이지 더보기 없게, true:페이지 더보기 존재
-  console.log(fit);
+  const fit=(steps<totalpages);//false:페이지 더보기 없게, true:페이지 더보기 존재
+  // console.log('렌더링 확인용:::::'+steps)
 
   // 챕터 리스트 생성
   let pages = [];
@@ -31,26 +31,26 @@ function PageBar({ setCurrentPage, currentPage, totalpages, step}) {
 
   //챕터 이동 함수
   function prev() {
-    const prevtmp = Math.floor((currentPage - 1) / step) * step + 1 - step;
+    const prevtmp = Math.floor((Number(currentPage) - 1) / steps) * steps + 1 - steps;
     if (prevtmp >= 1) {
       setCurrentPage(prevtmp);
       setPage(() => {
         return {
           min: prevtmp,
-          max: prevtmp + step - 1,
+          max: prevtmp + steps - 1,
         };
       });
     }
   }
   
   function next() {
-    const nexttmp = Math.floor((currentPage - 1) / step) * step + 1 + step;
+    const nexttmp = Math.floor((Number(currentPage) - 1) / steps) * steps + 1 + steps;
     if (nexttmp <= totalpages) {
       setCurrentPage(nexttmp);
       setPage(() => {
         return {
           min: nexttmp,
-          max: nexttmp + step - 1,
+          max: nexttmp + steps - 1,
         };
       });
     }
@@ -82,6 +82,7 @@ function PageBar({ setCurrentPage, currentPage, totalpages, step}) {
         {
           fit&&<GrFormPrevious onClick={prev} className={firstPage ? "Head":"Prev"}/>
         }
+        {/* <GrFormPrevious onClick={prev} className={firstPage ? "Head":"Prev"}/> */}
         <Bar className="paginationBar" length={mainOrReview}>
           {pages.map((page, index) => {
             return (
@@ -96,6 +97,7 @@ function PageBar({ setCurrentPage, currentPage, totalpages, step}) {
         {
           fit&&<GrFormNext onClick={next} className={lastPage?"Tail":"Next"}/>
         }
+        {/* <GrFormNext onClick={next} className={lastPage?"Tail":"Next"}/> */}
       </PagenationBar>
     </>
   );
@@ -141,6 +143,7 @@ const Button = styled.button`
 const PagenationBar = styled.div`
   display: flex;
   align-items: center;
+  /* border: solid 2px skyblue; */
   .Prev {
     font-size: 50px;
     cursor: pointer;

@@ -32,11 +32,9 @@ function MainBottom() {
     finished: "",
   });
   //통신
-  const [APIurl, serAPIurl] = useState("interviewrooms?");
-  const myCategory = `my-interviewrooms?page=${currentPage - 1}&finished=${
-    aboutCondition.finished
-  }`;
-  const totalCategory = `interviewrooms?page=${currentPage - 1}&title=${
+  const [APIurl, serAPIurl] = useState("interviewrooms?&finished=0");
+  const myCategory = `my-interviewrooms?page=${currentPage - 1}&finished=0`;
+  const totalCategory = `interviewrooms?&finished=0&page=${currentPage - 1}&title=${
     aboutCondition.search
   }&sort=${aboutCondition.sort}`;
 

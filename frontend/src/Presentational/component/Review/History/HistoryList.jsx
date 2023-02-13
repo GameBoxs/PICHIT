@@ -39,7 +39,7 @@ const HistoryList = ({ setSelectedID }) => {
   let blankPosts = new Array(5 - nowPageElements).fill({
     item: { title: "", startDate: "" },
   });
-  // console.log(blankPosts);
+  // console.log(nowPage,totalPage);
 
   return (
     <HistoryContainer>
@@ -66,11 +66,14 @@ const HistoryList = ({ setSelectedID }) => {
               );
             })}
           </ListBody>
-          <PageBar
-            totalpages={totalPage}
-            setCurrentPage={setNowPage}
-            currentPage={nowPage}
-          />
+          <PaginationBox>
+            <PageBar
+              totalpages={totalPage}
+              setCurrentPage={setNowPage}
+              currentPage={nowPage}
+              step='5'
+            />
+          </PaginationBox>
         </>
       ) : (
         <div>Loading..</div>
@@ -100,6 +103,11 @@ const HistoryContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3rem;
+`;
+const PaginationBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default memo(HistoryList);
