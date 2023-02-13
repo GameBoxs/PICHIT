@@ -73,6 +73,13 @@ function RoomListItem(props) {
             });
         });
       }
+    else{
+      navigate(`/room/${roomId}`, {
+        state: {
+          id: id,
+        },
+      });
+    }
     }
   };
   return (
