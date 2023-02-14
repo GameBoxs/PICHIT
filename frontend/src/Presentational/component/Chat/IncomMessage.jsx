@@ -46,7 +46,10 @@ const TitleArea = styled.div`
 `;
 
 const MessageText = styled.p`
-  white-space: pre;
+  /* white-space: pre; */
+  white-space: normal;
+  word-break: break-all;
+  width: 400px;
 `;
 
 export default IncomMessage;

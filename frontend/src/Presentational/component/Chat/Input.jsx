@@ -103,14 +103,7 @@ const InputWrap = styled.div`
   height: 100%;
 `;
 
-const InputText = styled.textarea.attrs({ rows: 1 })`
-  /* border: none;
-    /* line-height: 50px; */
-  /* &:focus{
-        outline: 0;
-    } */
-  /* resize: none;  */
-
+const InputText = styled.textarea.attrs({ rows: 1})`
   width: 90%;
   border: none;
   border-radius: 1rem;

@@ -45,6 +45,18 @@ function RoomPage() {
     valid,
     userinfo.id !== 0 ? true: false
   );
+  
+  useEffect(()=>{
+    if(contextError&&contextError.message==="Request failed with status code 403"){
+      MySwal.fire({
+        text:"면접이 완료된 방은 접근할 수 없습니다",
+        icon:"warning",
+        showConfirmButton: false,
+        timer: 1500
+      })
+      navigate('/')
+    }
+  },[contextError])
 
 
   

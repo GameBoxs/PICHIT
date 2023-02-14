@@ -36,7 +36,7 @@ const ViewPDF = ({ pdfhandler }) => {
   }
   return (
     <Layout>
-      <Document   file={{
+      <Document file={{
       url:data
     }} onLoadSuccess={onDocumentLoadSuccess}>
         <Page wr pageNumber={pageNumber} />
