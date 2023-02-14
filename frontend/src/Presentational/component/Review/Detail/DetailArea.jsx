@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { memo, useEffect, useState, useRef } from "react";
+import React, { memo, useEffect, useState, useRef } from "react";
 import useAxios from "../../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 
@@ -11,7 +11,7 @@ import PageBar from "../../../common/Pagination/PageBar";
 const DetailArea = ({ selectedID }) => {
   const token = useSelector((state) => state.token);
   const audioRef = useRef();
-
+  const moveRef = useRef();
   
   const [data, setData] = useState();
   const [nowPage, setNowPage] = useState(1);
@@ -60,6 +60,12 @@ const DetailArea = ({ selectedID }) => {
 
   useEffect(() => {
     setNowPage(1);
+    if(selectedID){
+      moveRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: "start",
+      });
+    }
   }, [selectedID]);
 
   const playTime = (time) => {
@@ -70,16 +76,16 @@ const DetailArea = ({ selectedID }) => {
   };
 
   return (
-    <DetailWrap>
+    <DetailWrap ref={moveRef}>
+      <SubTitle title="면접 피드백"  />
       {data !== undefined ? (
         <>
-          <SubTitle title="면접 피드백" />
           <Container>
             {selectedID && data ? (
               isLoadingData === true ? (
                 <div>loading...</div>
               ) : (
-                <>
+                <React.Fragment>
                   <SoundArea
                     sound={sound}
                     audioRef={audioRef}
@@ -102,7 +108,7 @@ const DetailArea = ({ selectedID }) => {
                     />
                     : null
                   }
-                </>
+                </React.Fragment>
               )
             ) : (
               //<FeedBackArea title={currentPost.question} data={currentPost.reviews}/>
@@ -110,7 +116,7 @@ const DetailArea = ({ selectedID }) => {
             )}
           </Container>
         </>
-      ) : null}
+      ) : <NullCompo>기록을 선택해주세요</NullCompo>}
     </DetailWrap>
   );
 };
@@ -144,6 +150,9 @@ const NullCompo = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 1.2rem;
+  margin-top: 1rem;
+  border-radius: 3rem;
+  background-color: var( --greyLight-1);
 `;
 
 const DetailWrap = styled.div`

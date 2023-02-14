@@ -1,5 +1,5 @@
 // ETC Import Start
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { Navigate, useNavigate } from "react-router-dom";
 // ETC Import End
@@ -19,20 +19,32 @@ const InterviewerPage = (props) => {
     const roomInfo = JSON.parse(sessionStorage.getItem('roomInfo'));
     const navigate = useNavigate();
 
+    const outSession = useCallback(() => {
+        leaveSession(session, setOV);
+        navigate('/interview',{state:{},replace:true});
+        window.location.reload();
+    },[props]);
+  
     useEffect(() => {
-        window.addEventListener("beforeunload", (e) => {
-            leaveSession(session, setOV);
-            navigate('/interview',{state:{},replace:true});
-            window.location.reload();
-        });
+        window.addEventListener("beforeunload", outSession);
         return () => {
-            window.removeEventListener("beforeunload", (e) => {
-                leaveSession(session, setOV);
-                navigate('/interview',{state:{},replace:true});
-                window.location.reload();
-            });
+            window.removeEventListener("beforeunload", outSession);
         };
     }, [props]);
+    // useEffect(() => {
+    //     window.addEventListener("beforeunload", (e) => {
+    //         leaveSession(session, setOV);
+    //         navigate('/interview',{state:{},replace:true});
+    //         window.location.reload();
+    //     });
+    //     return () => {
+    //         window.removeEventListener("beforeunload", (e) => {
+    //             leaveSession(session, setOV);
+    //             navigate('/interview',{state:{},replace:true});
+    //             window.location.reload();
+    //         });
+    //     };
+    // }, []);
 
     return (
         <Container>

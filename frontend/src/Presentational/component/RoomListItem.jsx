@@ -38,10 +38,12 @@ function RoomListItem(props) {
       if (secretRoom === true) {
         MySwal.fire({
           title: "비밀번호 입력",
-          html: `<input type="text" id="password" class="swal2-input" placeholder="password">`,
+          input: "text",
+          inputAttributes: {
+            autocapitalize: "off",
+          },
           confirmButtonText: "입장하기",
-          preConfirm: () => {
-            const password = Swal.getPopup().querySelector("#password").value;
+          preConfirm: (password) => {
             if (!password) {
               Swal.showValidationMessage(`Please enter login and password`);
             }
