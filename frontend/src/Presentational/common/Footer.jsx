@@ -8,7 +8,7 @@ const Footer = () => {
           <Cols>
             <FirstCol>
               <Logo>PICHIT</Logo>
-              <Ex>copyright By D107<br />gi화상면접 스터디 서비스입니다.</Ex>
+              <Ex>copyright By D107<br />화상면접 스터디 서비스입니다.</Ex>
             </FirstCol>
             <Col>
               <Header>Connect</Header>

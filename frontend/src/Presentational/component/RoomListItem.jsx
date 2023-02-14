@@ -107,7 +107,7 @@ const RoomInfo = styled.p`
 `;
 
 const RoomItem = styled.li`
-  width: 32%;
+  width: 30%;
   height: 140px;
   border-radius: 1rem;
   box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
