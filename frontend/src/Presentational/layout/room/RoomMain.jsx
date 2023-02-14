@@ -14,17 +14,16 @@ function RoomMain(props) {
   const { userJoinInfo, data, userinfo } = props;
   const { join, host } = userJoinInfo;
   const {
-    createdDate,
     currentPersonCount,
     description,
-    finished,
-    id,
     manager,
     maxPersonCount,
     participants,
     startDate,
-    title,
+    sessionOpened
   } = data;
+
+  console.log(data)
 
   const [isJoin, setIsJoin] = useState(false);
   const [pdf, setPdf] = useState(0);
@@ -52,7 +51,7 @@ function RoomMain(props) {
   const RoomQuestion =
     isJoin || host ? (
       pdfhandler.interviewJoinId !== userinfo.interviewJoinId ? (
-        <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} />
+        <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} sessionOpened={sessionOpened}/>
       ) : (
         <PopUp>
           스터디 전에

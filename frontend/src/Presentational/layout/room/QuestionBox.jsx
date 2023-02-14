@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import PageBar from "../../common/Pagination/PageBar";
 import { useEffect } from "react";
 
-const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
+const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
   const token = useSelector((state) => state.token);
   const [aboutQuestions, setAboutQuestions] = useState({
     questions: [],
@@ -27,7 +27,6 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
     aboutQuestions.get
   );
 
-
   useEffect(() => {
     if (pdfhandler !== undefined) {
       setNowPage(1);
@@ -38,10 +37,7 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
         };
       });
     }
-
   }, [pdfhandler]);
-
-  
 
   useEffect(() => {
     if (getQuestion !== null && getQuestion.success) {
@@ -71,12 +67,16 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
       />
       <Controler>
         {/* QuestionInsert: 질문 입력 칸 */}
-        <QuestionInsert
-          userinfo={userinfo}
-          pdfhandler={pdfhandler}
-          token={token}
-          commentHandler={setAboutQuestions}
-        />
+        {!sessionOpened ? (
+          <QuestionInsert
+            userinfo={userinfo}
+            pdfhandler={pdfhandler}
+            token={token}
+            commentHandler={setAboutQuestions}
+          />
+        ) : (
+          <div className="guidance">질문을 입력할 수 없습니다</div>
+        )}
         <PageBar
           totalpages={aboutQuestions.allQuestion} //전체 데이터 길이
           setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
