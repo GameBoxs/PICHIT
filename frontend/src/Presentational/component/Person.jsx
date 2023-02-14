@@ -44,5 +44,5 @@ const PersonContainer = styled.div`
   align-items: center;
   justify-content: center;
   max-width: ${props => `calc(100%/${props.people})`};
-  min-width: 5vw;
+  min-width: 4vw;
 `;
