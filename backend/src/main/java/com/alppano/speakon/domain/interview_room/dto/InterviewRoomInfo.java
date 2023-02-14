@@ -17,6 +17,7 @@ public class InterviewRoomInfo {
     private int maxPersonCount;
     private boolean secretRoom;
     private boolean finished;
+    private boolean packed;
     private LocalDateTime startDate;
 
     public InterviewRoomInfo(InterviewRoom dto) {
@@ -27,6 +28,7 @@ public class InterviewRoomInfo {
         this.secretRoom = dto.getPassword() == null ? false : true;
         this.finished = dto.getFinished() == 0 ? false : true;
         this.startDate = dto.getStartDate();
+        this.packed = dto.getInterviewJoins().size() == dto.getMaxPersonCount() ? true : false;
     }
 
 }
