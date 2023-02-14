@@ -6,7 +6,7 @@ function EmptyRoomList(props) {
     const emptyTitle = props.main
     const emptySubTitle = props.sub
     return(
-        <EmptyBox> 
+        <EmptyBox className="guidance"> 
             <Title title={emptyTitle}/>
             <SubTitle title={emptySubTitle}/>
         </EmptyBox>

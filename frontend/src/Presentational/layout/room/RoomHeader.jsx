@@ -242,7 +242,7 @@ function RoomHeader({
       {QuitBtn}
     </>
   ) : (<>
-  {Recuritment === 0? (<p>방에 참여하실 수 없습니다</p>):(<>{EnterBtn}</>)}
+  {Recuritment === 0? (<p>방에 참여할 수 없습니다</p>):(<>{EnterBtn}</>)}
   </>
     
   );

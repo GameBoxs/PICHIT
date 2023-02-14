@@ -86,15 +86,18 @@ function RoomListItem(props) {
   };
   return (
     <RoomItem onClick={clickRoomItem}>
-      <RoomInfo>No.{id}</RoomInfo>
       <RoomContent className="rommtitle">
         <RoomTitle>
-          {title}
+          <div>{title}</div>
           {secretRoom ? <FaLock /> : null}
         </RoomTitle>
-        <RoomInfo>
-          {currentPersonCount}/{maxPersonCount}
-        </RoomInfo>
+        {currentPersonCount === maxPersonCount ? (
+          <div className="guidance">남은 인원 수가 없습니다</div>
+        ) : (
+          <RoomInfo>
+            <span>{currentPersonCount}</span>/<span>{maxPersonCount}</span>
+          </RoomInfo>
+        )}
       </RoomContent>
       <RoomInfo>{startDate.slice(0, 10).split("-").join(".")}</RoomInfo>
     </RoomItem>
@@ -105,10 +108,19 @@ export default RoomListItem;
 
 const RoomInfo = styled.p`
   font-size: 0.8rem;
+
+  & span {
+    font-size: 0.8rem;
+    color: var(--grayLight-2);
+  }
+
+  & span:first-child {
+    color: var(--primary);
+  }
 `;
 
 const RoomItem = styled.li`
-  width: 32%;
+  width: 30%;
   height: 140px;
   border-radius: 1rem;
   box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
@@ -136,11 +148,11 @@ const RoomItem = styled.li`
 
   p {
     display: flex;
-    flex-direction: row-reverse;
   }
 
-  & ${RoomInfo}:first-child {
-    color: var(--greyLight-3);
+  .guidance {
+    font-size: 0.8rem;
+    color: var(--greyLight-2);
   }
 `;
 
@@ -163,8 +175,22 @@ const RoomTitle = styled.div`
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  justify-content: center;
+  width: 90%;
+
+  div {
+    max-width: inherit;
+    width: fit-content;
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+  }
 
   path {
-    color: var(--primary);
+    color: var(--greyDark);
   }
 `;
