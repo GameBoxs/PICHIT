@@ -48,7 +48,7 @@ const ReviewPage = (props) => {
         {
           selectedID ?
           <DetailArea selectedID={selectedID} />
-          : null
+          : <DetailArea selectedID={null} />
         }
       </ReviewBox>
     </ReviewMainBody>
