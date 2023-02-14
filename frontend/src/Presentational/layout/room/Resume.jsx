@@ -48,7 +48,7 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
             setMemData(res.data);
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
           setError(err);
           setMemData(null);
         });

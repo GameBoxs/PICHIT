@@ -23,7 +23,6 @@ function EditRoom({ setModalOpen, data }) {
   const [toggle, setToggle] = useState(false);
   const Togglehandler = (toggle) => {
     setToggle(toggle);
-    console.log(toggle);
   };
 
   // 방 수정 정보 들어감 -> 이전 정보 값 들고 옴
@@ -90,8 +89,27 @@ function EditRoom({ setModalOpen, data }) {
   );
 
   const RoomEdit = (e) => {
-    console.log(room);
-    setEditData(true);
+      if (room.title.trim() === "") {
+      alert("제목을 입력해주세요");
+    } else if (room.description === "") {
+      alert("설명을 입력해주세요");
+    } else if (room.maxPersonCount === "") {
+      alert("모집인원을 입력해주세요");
+    } else if (room.maxPersonCount > 4) {
+      alert("최대 모집인원을 초과하였습니다");
+    } else if (room.maxPersonCount <= 1) {
+      alert("최소 2명 이상의 모집인원을 입력 해 주세요");
+    } else if (room.startDate === "") {
+      alert("시작 날짜를 설정해주세요");
+    } else if (toggle === true && room.password === "") {
+      alert("비밀번호를 설정해주세요");
+    } else if (toggle === true && room.password.trim() === "") {
+      alert("사용할 수 없는 비밀번호 입니다.다시 설정해주세요");
+    } else if (toggle === true && room.password.length > 10) {
+      alert("유효 할 수 없는 비밀번호 입니다. 다시 설정해주세요");
+    } else {
+       setEditData(true);
+    }
   };
 
   // 방 수정했을 때 방장 확인을 못하는 오류로 state로 host 값을 직접 전달해줌
@@ -177,8 +195,9 @@ function EditRoom({ setModalOpen, data }) {
                   <InfoText>비밀번호</InfoText>
                   <InfoInput
                     name="password"
-                    defaultValue={room.password}
+                    defalutValue={room.password}
                     onChange={InputHandler}
+                    pattern="^[a-zA-Z0-9]+$"
                   />
                   </InputNum>
                 ) : null}
@@ -191,6 +210,7 @@ function EditRoom({ setModalOpen, data }) {
             <RoomText
               placeholder="방 생성에 필요한 정보를 입력하세요"
               name="description"
+              value={room.description}
               onChange={InputHandler}
             ></RoomText>
           </Section>
