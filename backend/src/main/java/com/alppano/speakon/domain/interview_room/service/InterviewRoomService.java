@@ -89,6 +89,10 @@ public class InterviewRoomService {
         InterviewRoom interviewRoom = interviewRoomRepository.findById(interviewRoomId)
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 면접방입니다."));
 
+        if(interviewRoom.getFinished() == 1) {
+            throw new ResourceForbiddenException("면접이 완료된 방은 접근할 수 없습니다.");
+        }
+
         // 비밀방인 경우, 비밀번호 확인
         if (interviewRoom.getPassword() != null) {
             if (dto == null || !interviewRoom.getPassword().equals(dto.getPassword())) {
