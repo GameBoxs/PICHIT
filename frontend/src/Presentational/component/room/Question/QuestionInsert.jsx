@@ -55,7 +55,12 @@ const QuestionInsert = (props) => {
   // 질문 작성 handler 작성 버튼 클릭시 click=true로 활성화 됨
   const QuestionHandler = (e) => {
     e.preventDefault();
-    setClick(true);
+    if(question.content.trim()===''){
+      alert('질문을 입력해주세요')
+    }
+    else{
+      setClick(true);
+    }
   };
 
   return (
