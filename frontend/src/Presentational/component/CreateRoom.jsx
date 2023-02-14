@@ -91,7 +91,7 @@ function CreateRoom({ setModalOpen }) {
   };
 
   const roomCreate = (e) => {
-    if (room.title === "") {
+    if (room.title.trim() === "") {
       alert("제목을 입력해주세요");
     } else if (room.description === "") {
       alert("설명을 입력해주세요");
@@ -99,11 +99,11 @@ function CreateRoom({ setModalOpen }) {
       alert("모집인원을 입력해주세요");
     } else if (room.maxPersonCount > 4) {
       alert("최대 모집인원을 초과하였습니다");
-    } else if (room.maxPersonCount < 1) {
+    } else if (room.maxPersonCount <= 1) {
       alert("최소 2명 이상의 모집인원을 입력 해 주세요");
     } else if (room.startDate === "") {
       alert("시작 날짜를 설정해주세요");
-    } else if (toggle === true && room.password === "") {
+    } else if (toggle === true && room.password.trim() === "") {
       alert("비밀번호를 설정해주세요");
     } else if (toggle === true && room.password.length > 10) {
       alert("유효 할 수 없는 비밀번호 입니다. 다시 설정해주세요");
@@ -210,8 +210,10 @@ function CreateRoom({ setModalOpen }) {
                     <InfoText>비밀번호</InfoText>
                     <InfoInput
                       name="password"
-                      defaultValue={room.password}
+                      maxLength="11"
+                      Value={room.password|| ''}
                       onChange={InputHandler}
+                      pattern="^[a-zA-Z0-9]+$"
                       className="subInput"
                     />
                   </InputNum>
