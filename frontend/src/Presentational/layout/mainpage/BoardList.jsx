@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import RoomListBox from "../../component/RoomListBox";
+import Loading from '../../common/Loading'
 
 function BoardList(props) {
     const {data, aboutCondition, roomPosition} = props
@@ -14,7 +15,7 @@ function BoardList(props) {
           roomPosition={roomPosition}
         />
       ) : (
-        <div>loading...</div>
+        <Loading/>
       )}
     </RoomListdiv>
   );

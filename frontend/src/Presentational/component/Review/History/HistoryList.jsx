@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 import ListItem from "./ListItem";
 import PageBar from "../../../common/Pagination/PageBar";
+import Loading from '../../../common/Loading'
 
 import useAxios from "../../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
@@ -44,7 +45,7 @@ const HistoryList = ({ setSelectedID }) => {
   return (
     <HistoryContainer>
       {isLoading && data === undefined ? (
-        <div>Loading..</div>
+        <Loading/>
       ) : currentPosts !== undefined ? (
         <>
           <ListBody>
@@ -76,7 +77,7 @@ const HistoryList = ({ setSelectedID }) => {
           </PaginationBox>
         </>
       ) : (
-        <div>Loading..</div>
+        <Loading/>
       )}
     </HistoryContainer>
   );
