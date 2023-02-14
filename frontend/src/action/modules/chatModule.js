@@ -20,14 +20,18 @@ export const selectInterviwee = async (intervieweeId, interviewRoomId, myToken) 
 export const getToken = async (roomId,myToken) => {
   // const sessionId = await createSession(mySessionId);
   // return await createToken(sessionId);
-  const response = await axios.get(
-    APPLICATION_SERVER_URL + "conference/sessions/connections/" + roomId,
-    {
-      headers: { "Content-Type": "application/json", "Authorization":myToken },
-    }
-  );
-
-  return response.data; // 리턴 값은 Token
+  try{
+    const response = await axios.get(
+      APPLICATION_SERVER_URL + "conference/sessions/connections/" + roomId,
+      {
+        headers: { "Content-Type": "application/json", "Authorization":myToken },
+      }
+    );
+  
+    return response.data; // 리턴 값은 Token
+  } catch{
+    return '404';
+  }
 };
 
 export const createSession = async (roomId, myToken) => {

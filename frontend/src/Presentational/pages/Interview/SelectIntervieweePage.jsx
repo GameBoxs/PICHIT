@@ -1,5 +1,5 @@
 // ETC Import Start
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -93,20 +93,32 @@ const SelectIntervieweePage = (props) => {
         })
     }
 
+    const outSession = useCallback(() => {
+        leaveSession(session, setOV);
+        navigate('/interview',{state:{},replace:true});
+        window.location.reload();
+    },[props]);
+
     useEffect(() => {
-        window.addEventListener("beforeunload", (e) => {
-            leaveSession(session, setOV);
-            navigate('/interview',{state:{},replace:true});
-            window.location.reload();
-        });
+        window.addEventListener("beforeunload", outSession);
         return () => {
-            window.removeEventListener("beforeunload", (e) => {
-                leaveSession(session, setOV);
-                navigate('/interview',{state:{},replace:true});
-                window.location.reload();
-            });
+            window.removeEventListener("beforeunload", outSession);
         };
     }, [props]);
+    // useEffect(() => {
+    //     window.addEventListener("beforeunload", (e) => {
+    //         leaveSession(session, setOV);
+    //         navigate('/interview',{state:{},replace:true});
+    //         window.location.reload();
+    //     });
+    //     return () => {
+    //         window.removeEventListener("beforeunload", (e) => {
+    //             leaveSession(session, setOV);
+    //             navigate('/interview',{state:{},replace:true});
+    //             window.location.reload();
+    //         });
+    //     };
+    // }, []);
 
     useEffect(() => {
       if(allCloseExecute) setAllCloseExecute(false);
