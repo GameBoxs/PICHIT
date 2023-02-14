@@ -130,6 +130,7 @@ function MainBottom() {
 export default MainBottom;
 
 const Layout = styled.div`
+/* border: 1px solid red; */
   /* margin-inline: 15rem; */
   height: fit-content;
   margin-bottom: 100px;
