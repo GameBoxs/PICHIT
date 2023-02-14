@@ -43,7 +43,7 @@ $shadow: .3rem .3rem .6rem var(--greyLight-2), -.2rem -.2rem .5rem var(--white);
         color: var(--greyDark);
 
         *{
-            color: var(--greyDark);
+            color: var(--greyDark) !important;
         }
     }
 `;

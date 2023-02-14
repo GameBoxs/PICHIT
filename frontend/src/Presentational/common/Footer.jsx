@@ -7,34 +7,30 @@ const Footer = () => {
         <Sheet>
           <Cols>
             <FirstCol>
-              <Logo>Speak On</Logo>
-              <Ex>Securities offered through Neighborly Securities.</Ex>
+              <Logo>PICHIT</Logo>
+              <Ex>copyright By D107<br />gi화상면접 스터디 서비스입니다.</Ex>
             </FirstCol>
             <Col>
-              <Header>Our Compamy</Header>
+              <Header>Connect</Header>
               <Group>
-                <Text>Careers</Text>
-                <Text>Blog</Text>
-                <Text>Careers</Text>
-                <Text>Blog</Text>
+                <Text>GitHub</Text>
+                <Text>Figjam</Text>
               </Group>
             </Col>
             <Col>
-              <Header>General Info</Header>
+              <Header>Our BE Info</Header>
               <Group>
-                <Text>Careers</Text>
-                <Text>Blog</Text>
-                <Text>Careers</Text>
-                <Text>Blog</Text>
+                <Text>이희수(팀장)</Text>
+                <Text>임수민</Text>
               </Group>
             </Col>
             <Col>
-              <Header>Connet</Header>
+              <Header>Our FE Info</Header>
               <Group>
-                <Text>Careers</Text>
-                <Text>Blog</Text>
-                <Text>Careers</Text>
-                <Text>Blog</Text>
+                <Text>김민지</Text>
+                <Text>김지현</Text>
+                <Text>김지훈</Text>
+                <Text>이효진</Text>
               </Group>
             </Col>
           </Cols>
@@ -52,18 +48,22 @@ const FooterList = styled.div`
   width: 100%;
   position: relative;
   transform: translateY(50%);
-  height: 250px;
+  height: 260px;
 `;
 const Sheet = styled.div`
   margin: 0 auto;
-  width: 960px;
+  width: 980px;
   padding-top: 10px;
 `;
 const Cols = styled.div`
-  columns: 4;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 `;
 const Col = styled.div`
   padding: 10px;
+  width: 25%;
+  height: 100%;
 `;
 const FirstCol = styled.div`
   padding: 10px;
@@ -99,4 +99,5 @@ const Logo = styled.div`
 const Ex = styled.div`
   font-size: 15px;
   color: white;
+  margin-bottom: 4rem;
 `;
