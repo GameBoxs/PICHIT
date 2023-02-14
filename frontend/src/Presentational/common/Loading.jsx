@@ -3,28 +3,25 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 function Loading(){
     return(
-        // <TestCompo>
-            <LoadingCompo>
-                loading...
-                <AiOutlineLoading3Quarters/>
-            </LoadingCompo>
-        // </TestCompo>
+        <LoadingCompo>
+            loading...
+            <AiOutlineLoading3Quarters/>
+        </LoadingCompo>
     )
 }
 
 export default Loading;
 
-// const TestCompo = styled.div`
+const TestCompo = styled.div`
 //     width : 400px;
 //     height: 400px;
 //     /* display: flex; */
-
-// `
+`
 
 const LoadingCompo = styled.div`
-    width: 100%;
-    height: 100%;
+    width: inherit;
+    height: inherit;
     display: flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
 `
