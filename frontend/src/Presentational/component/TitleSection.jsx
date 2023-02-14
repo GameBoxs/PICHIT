@@ -64,7 +64,11 @@ function TitleSection(props) {
 
 export default TitleSection;
 
-const TitleBody = styled.div``;
+const TitleBody = styled.div`
+  h1 {
+    font-size: 3rem;
+  }
+`;
 
 const Titlesection = styled.div`
   display: flex;
@@ -92,11 +96,11 @@ const Titlesection = styled.div`
 
   div button:first-child {
     cursor: pointer;
-    background-color: ${props => props.isChecked?`var(--primary)`:`var(--greyLight-3)`};
+    background-color: ${props => props.isChecked?`var(--primary-light)`:`var(--greyLight-3)`};
   }
 
   div button:last-child {
     cursor: pointer;
-    background-color: ${props => !props.isChecked?`var(--primary)`:`var(--greyLight-3)`};
+    background-color: ${props => !props.isChecked?`var(--primary-light)`:`var(--greyLight-3)`};
   }
 `;

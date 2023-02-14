@@ -5,7 +5,7 @@ import MainBottom from "../layout/mainpage/MainBottom";
 import MainTop from "../layout/mainpage/MainTop";
 import TapeCompo from "../component/TapeCompo";
 
-const MainPage = ({isToken}) => {
+const MainPage = ({ isToken }) => {
   const MainDiv = useRef([]);
 
   const scrollWithUseRef = (idx) => {
@@ -22,9 +22,9 @@ const MainPage = ({isToken}) => {
   };
 
   const TapeContent = new Array(12).fill().map((_, idx) => {
-    return <TapeCompo key={idx} num={idx}/>;
+    return <TapeCompo key={idx} num={idx} />;
   });
-  
+
   return (
     <MainPageLayout>
       <First ref={(el) => (MainDiv.current[0] = el)}>
@@ -44,7 +44,6 @@ const MainPage = ({isToken}) => {
 
 export default MainPage;
 
-
 const FrontTape = styled.div`
   width: 120vw;
   height: 10vh;
@@ -55,7 +54,7 @@ const FrontTape = styled.div`
   transform: rotate(-2deg);
   z-index: 3;
 
-  display:flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2.5rem;
@@ -76,7 +75,7 @@ const MoveBtn = styled.div`
   cursor: pointer;
   position: absolute;
   z-index: 10;
-    top: 70vh;
+  top: 70vh;
   -webkit-transition: color 200ms ease, 200ms ease;
   transition: color 200ms ease, 200ms ease;
   text-decoration: none;
@@ -84,7 +83,7 @@ const MoveBtn = styled.div`
   display: inline-block;
   border-bottom-color: var(--primary);
   color: var(--primary);
-  cursor:pointer;
+  cursor: pointer;
 
   &:hover {
     //link클래스로 있던거
@@ -115,7 +114,6 @@ const First = styled.div`
 `;
 
 const MainPageLayout = styled.div`
-  margin-bottom: 10vh;
   min-height: 250vh;
   height: fit-content;
   margin: 0 auto;

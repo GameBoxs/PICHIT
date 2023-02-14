@@ -33,14 +33,17 @@ $shadow: .3rem .3rem .6rem var(--greyLight-2), -.2rem -.2rem .5rem var(--white);
         height: fit-content;
     }
 
-    body.dark {
-        transition: 0.2s;
-        & *{ 
-            transition: 0.2s;
-        }
-    }
-
     *::before, *::after {
         box-sizing: border-box;
+    }
+
+    .guidance {
+        width: 100%;
+        text-align: center;
+        color: var(--greyDark);
+
+        *{
+            color: var(--greyDark) !important;
+        }
     }
 `;

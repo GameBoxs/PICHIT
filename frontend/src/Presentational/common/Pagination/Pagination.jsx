@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import { useEffect, useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import React from 'react'
+import React from "react";
 
 //전체 데이터 길이, 페이지당 게시물 수, 현재 페이지를 계산하는 함수, 현재페이지
 function Pagination({ setCurrentPage, currentPage, totalpages }) {
@@ -16,17 +16,17 @@ function Pagination({ setCurrentPage, currentPage, totalpages }) {
 
   // 챕터 리스트 생성
   let pages = [];
-    for (let i = page.min; i <= page.max; i++) {
-      pages.push(i);
-      if (totalpages === 0) {
-        console.log('여기 들어오냐')
-        break;
-      }
-      if (i === totalpages) {
-        break;
-      }
+  for (let i = page.min; i <= page.max; i++) {
+    pages.push(i);
+    if (totalpages === 0) {
+      console.log("여기 들어오냐");
+      break;
     }
-    console.log("pagebar"+pages);
+    if (i === totalpages) {
+      break;
+    }
+  }
+  console.log("pagebar" + pages);
 
   //챕터 이동 함수
   function prev() {
@@ -41,7 +41,7 @@ function Pagination({ setCurrentPage, currentPage, totalpages }) {
       });
     }
   }
-  
+
   function next() {
     const nexttmp = Math.floor((currentPage - 1) / step) * step + 1 + step;
     if (nexttmp <= totalpages) {
@@ -69,12 +69,12 @@ function Pagination({ setCurrentPage, currentPage, totalpages }) {
     if (totalpages === 0) {
       setLastPage(true);
       setFirstPage(true);
-    console.log("여긴가444");
+      console.log("여긴가444");
     }
 
     //그외
     else {
-    console.log("여긴가5555");
+      console.log("여긴가5555");
       //첫 장이면
       pages.includes(1) ? setFirstPage(true) : setFirstPage(false);
       //마지막 장이면
@@ -82,23 +82,25 @@ function Pagination({ setCurrentPage, currentPage, totalpages }) {
     }
   }, [pages]);
 
-
   return (
     <>
       <PagenationBar>
-        <GrFormPrevious onClick={prev} className={firstPage ? "Head":"Prev"} />
+        <GrFormPrevious
+          onClick={prev}
+          className={firstPage ? "Head" : "Prev"}
+        />
         <Bar className="paginationBar" length={mainOrReview}>
           {pages.map((page, index) => {
             return (
               <Button
-              key={index}
-              onClick={() => setCurrentPage(page)}
-              active={page === currentPage ? true : false}
+                key={index}
+                onClick={() => setCurrentPage(page)}
+                active={page === currentPage ? true : false}
               ></Button>
-              );
-            })}
+            );
+          })}
         </Bar>
-          <GrFormNext onClick={next} className={lastPage?"Tail":"Next"} />
+        <GrFormNext onClick={next} className={lastPage ? "Tail" : "Next"} />
       </PagenationBar>
     </>
   );
@@ -146,6 +148,10 @@ const PagenationBar = styled.div`
   display: flex;
   align-items: center;
 
+  polyline {
+    stroke: var(--primary-light);
+  }
+
   .Prev {
     font-size: 50px;
     cursor: pointer;
@@ -153,7 +159,7 @@ const PagenationBar = styled.div`
   .Head {
     font-size: 50px;
     polyline {
-      stroke: #b6b6b6;
+      stroke: var(--greyLight-2);
     }
   }
   .Next {
@@ -163,7 +169,7 @@ const PagenationBar = styled.div`
   .Tail {
     font-size: 50px;
     polyline {
-      stroke: #b6b6b6;
+      stroke: var(--greyLight-2);
     }
   }
 `;

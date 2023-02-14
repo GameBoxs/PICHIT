@@ -17,7 +17,7 @@ import InterviewPage from "./Presentational/pages/Interview/InterviewPage";
 import MainPage from "./Presentational/pages/MainPage";
 import ReviewPage from "./Presentational/pages/ReviewPage";
 import RoomPage from "./Presentational/pages/RoomPage";
-import NotFoundPage from "./Presentational/pages/NotFound/NotFoundPage"
+import NotFoundPage from "./Presentational/pages/NotFound/NotFoundPage";
 import { GlobalStyle } from "./action/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { KAKAO_AUTH_SERVER } from "./store/values";
@@ -31,7 +31,7 @@ import { PITCHIT_URL } from "./store/values";
 function App() {
   const { pathname } = useLocation();
   const [popup, setPopup] = useState();
-  const token = useSelector(state=>state.token)
+  const token = useSelector((state) => state.token);
   const dispatch = useDispatch();
 
   const handleOpenPop = () => {
@@ -91,32 +91,34 @@ function App() {
     };
   }, [popup]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (token !== null) {
       axios({
         method: "GET",
         url: `${PITCHIT_URL}/userinfo`,
         headers: {
           Authorization: token,
-        }
+        },
       })
         .then((res) => {
           dispatch(setUserInfo(res.data));
         })
-        .catch((err) => console.log(err))
+        .catch((err) => console.log(err));
     }
-  }, [token])
+  }, [token]);
 
   return (
     <AppContainer>
       <GlobalStyle />
 
-      <BlockBox>해당 서비스는<br />PC에서만 제공하고 있습니다</BlockBox>
+      <BlockBox>
+        해당 서비스는
+        <br />
+        PC에서만 제공하고 있습니다
+      </BlockBox>
 
       {pathname.includes("interview") ? null : (
-        <Navigation
-          handleOpenPop={handleOpenPop}
-        />
+        <Navigation handleOpenPop={handleOpenPop} />
       )}
 
       <Routes>
@@ -127,7 +129,7 @@ function App() {
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
 
-      {/* {(pathname.includes("interview")) ? null:<Footer /> } */}
+      {pathname.includes("interview") ? null : <Footer />}
     </AppContainer>
   );
 }
@@ -152,4 +154,8 @@ const BlockBox = styled.div`
   }
 `;
 
-const AppContainer = styled.div``;
+const AppContainer = styled.div`
+  position: relative;
+  height: 100%;
+  padding: 0;
+`;
