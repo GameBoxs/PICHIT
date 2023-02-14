@@ -28,7 +28,7 @@ function RoomListItem(props) {
   const clickRoomItem = () => {
     if (token === null) {
       MySwal.fire({
-        title:"로그인이 필요한 서비스 입니다.",
+        title: "로그인이 필요한 서비스 입니다.",
         text: "상단 메뉴에서 카카오 로그인을 이용해 주세요 ",
         showConfirmButton: false,
         icon: "warning",
@@ -38,10 +38,12 @@ function RoomListItem(props) {
       if (secretRoom === true) {
         MySwal.fire({
           title: "비밀번호 입력",
-          html: `<input type="text" id="password" class="swal2-input" placeholder="password">`,
+          input: "text",
+          inputAttributes: {
+            autocapitalize: "off",
+          },
           confirmButtonText: "입장하기",
-          preConfirm: () => {
-            const password = Swal.getPopup().querySelector("#password").value;
+          preConfirm: (password) => {
             if (!password) {
               Swal.showValidationMessage(`Please enter login and password`);
             }
@@ -73,14 +75,13 @@ function RoomListItem(props) {
               });
             });
         });
+      } else {
+        navigate(`/room/${roomId}`, {
+          state: {
+            id: id,
+          },
+        });
       }
-    else{
-      navigate(`/room/${roomId}`, {
-        state: {
-          id: id,
-        },
-      });
-    }
     }
   };
   return (
