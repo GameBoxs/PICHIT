@@ -28,7 +28,7 @@ public class InterviewRoomInfo {
         this.secretRoom = dto.getPassword() == null ? false : true;
         this.finished = dto.getFinished() == 0 ? false : true;
         this.startDate = dto.getStartDate();
-        this.packed = dto.getInterviewJoins().size() == dto.getMaxPersonCount() ? true : false;
+        this.packed = this.currentPersonCount == this.maxPersonCount ? true : false;
     }
 
 }
