@@ -41,7 +41,7 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
 
   }, [pdfhandler]);
 
-  
+  // useEffect(()=>{},[nowPage])
 
   useEffect(() => {
     if (getQuestion !== null && getQuestion.success) {
@@ -55,7 +55,7 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
       });
     }
   }, [getQuestion]);
-
+  console.log(aboutQuestions.get)
   return (
     <Question>
       <QuestionBoxTitle>
@@ -81,6 +81,7 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
           totalpages={aboutQuestions.allQuestion} //전체 데이터 길이
           setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
           currentPage={nowPage} //현재페이지
+          step='10'
         />
       </Controler>
     </Question>

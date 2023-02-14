@@ -30,7 +30,7 @@ function BoardBody(props) {
           aboutCondition={aboutCondition}
           roomPosition={roomPosition}
         />
-
+    
         <PaginationBox>
           {totalpages === 0 ? (
             <PageZero />
