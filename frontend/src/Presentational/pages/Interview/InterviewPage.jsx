@@ -6,7 +6,7 @@ import IntervieweePage from "./IntervieweePage"
 // Page Import End
 
 // ETC Import Start
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
