@@ -177,7 +177,8 @@ const RoomTitle = styled.div`
   width: 90%;
 
   div {
-    width: inherit;
+    max-width: inherit;
+    width: fit-content;
     text-align: center;
     font-size: 1.2rem;
     color: var(--primary);
