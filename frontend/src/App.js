@@ -110,6 +110,9 @@ function App() {
   return (
     <AppContainer>
       <GlobalStyle />
+
+      <BlockBox>해당 서비스는<br />PC에서만 제공하고 있습니다</BlockBox>
+
       {pathname.includes("interview") ? null : (
         <Navigation
           handleOpenPop={handleOpenPop}
@@ -130,5 +133,23 @@ function App() {
 }
 
 export default App;
+
+const BlockBox = styled.div`
+  display: none;
+
+  @media (max-width: 992px) {
+    display: flex;
+    position: fixed;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    padding: 3rem;
+    justify-content: center;
+    align-items: center;
+    font-size: 300%;
+    color: var(--white);
+    background-color: var(--primary);
+  }
+`;
 
 const AppContainer = styled.div``;
