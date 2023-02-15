@@ -134,7 +134,7 @@ const DetailArea = ({ selectedID }) => {
               ) : (
                 <React.Fragment>
                   <Resume>
-                    <SubBtn onClick={handleOpenPop}>자소서 조회</SubBtn>
+                    <SubBtn onClick={handleOpenPop}>자소서 조회git </SubBtn>
                   </Resume>
                   <SoundArea
                     sound={sound}
