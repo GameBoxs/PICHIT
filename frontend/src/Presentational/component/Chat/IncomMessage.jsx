@@ -1,9 +1,7 @@
+/* ETC Import */
 import styled from "styled-components";
-import SubTitle from "../../common/SubTitle";
 
 const IncomMessage = ({ data }) => {
-  console.log(data)
-
   return (
     <IncomWrap>
       <TitleArea>
@@ -15,6 +13,9 @@ const IncomMessage = ({ data }) => {
   );
 };
 
+export default IncomMessage;
+
+/* Styled-Component */
 const IncomWrap = styled.div`
   width: 100%;
   border-bottom: 1px solid var(--greyLight-2);
@@ -46,10 +47,7 @@ const TitleArea = styled.div`
 `;
 
 const MessageText = styled.p`
-  /* white-space: pre; */
   white-space: normal;
   word-break: break-all;
   width: 400px;
 `;
-
-export default IncomMessage;

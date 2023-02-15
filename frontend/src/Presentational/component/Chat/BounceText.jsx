@@ -1,3 +1,4 @@
+/* ETC Import */
 import styled, { keyframes } from "styled-components";
 
 const BounceText = () => {
@@ -9,9 +10,11 @@ const BounceText = () => {
         </BounceWrap>
     )
 }
- 
+
+export default BounceText;
+
+/* Styled-Component */
 const BounceWrap = styled.div`
-    /* width:100px; */
     height: 30px;
     display: flex;
     align-items: center;
@@ -47,5 +50,3 @@ const Ellipsis = styled.div`
         animation-delay: 0.8s;
     }
 `
-
-export default BounceText;

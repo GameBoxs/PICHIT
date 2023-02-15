@@ -1,44 +1,49 @@
+/* ETC Import */
 import React from "react";
 import styled from "styled-components";
 
-// Component Import Start
+/* Component Import */
 import SubTitle from "../../../common/SubTitle";
 import ChatArea from "../../../layout/Chat/ChatArea";
 import UserVideoComponent from "../../../component/Chat/OpenVidu/UserVideoComponent";
-// Component Import End
 
 const BodyArea = ({ session, info }) => {
-    function People() {
-        return (
-          <>
-            { info.publisher !== undefined ? (
-              <CamCompo>
-                <UserVideoComponent streamManager={info.publisher} />
-              </CamCompo>
-            ) 
-            : null }
-            { info.subscribers.map((sub, i) => (
-              <CamCompo key={i}>
-                <UserVideoComponent streamManager={sub} />
-              </CamCompo>
-            )) }
-          </>
-        );
-    }
-
+  /* 참여자 수 만큼 화상 화면 출력 */
+  function People() {
     return (
-        <InterviewBody>
-            <BodyCompo>{People()}</BodyCompo>
-            <BodyCompo>
-                <SubTitle title={"채팅"} />
-                <ChatArea session={session} info={info} chatOn={true}/>
-            </BodyCompo>
-        </InterviewBody>
-    )
+      <>
+      {/* 나의 화면 출력 */}
+        { info.publisher !== undefined ? (
+          <CamCompo>
+            <UserVideoComponent streamManager={info.publisher} />
+          </CamCompo>
+        ) 
+        : null }
+      {/* 참여자 화면 출력 */}
+        { info.subscribers.map((sub, i) => (
+          <CamCompo key={i}>
+            <UserVideoComponent streamManager={sub} />
+          </CamCompo>
+        )) }
+      </>
+    );
+  }
+  return (
+    <InterviewBody>
+        {/* 화면 영역 */}
+        <BodyCompo>{People()}</BodyCompo>
+        {/* 채팅 영역 */}
+        <BodyCompo>
+            <SubTitle title={"채팅"} />
+            <ChatArea session={session} info={info} chatOn={true}/>
+        </BodyCompo>
+    </InterviewBody>
+  )
 }
 
 export default BodyArea;
 
+/* Styled-Component */
 const InterviewerTag = styled.div`
   background-color: #ccc;
   padding: 0.2em 0.6em;
