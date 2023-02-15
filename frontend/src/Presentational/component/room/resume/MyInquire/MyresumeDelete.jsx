@@ -5,7 +5,6 @@ import { PITCHIT_URL } from "../../../../../store/values";
 
 
 function MyresumeDelete({getData,token,setMemData}) {
-  console.log(getData)
   if (getData === null) {
     return (<>
     </>)
@@ -23,7 +22,7 @@ function MyresumeDelete({getData,token,setMemData}) {
         },
       })
         .then((res) => {
-          console.log(res.data);
+          window.location.reload();
           setMemData(null)
 
         })
