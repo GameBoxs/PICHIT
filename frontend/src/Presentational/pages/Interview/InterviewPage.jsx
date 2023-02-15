@@ -5,7 +5,7 @@ import InterviewerPage from "./InterviewerPage";
 import IntervieweePage from "./IntervieweePage";
 
 /* ETC Import */
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -85,10 +85,8 @@ const InterviewPage = () => {
             let data = roomStateData.data;
             /* 
                 currentInterviewee - 현재 방 상태에서 면접자에 대한 데이터가 존재하면 면접자 id를 저장, 아니면 null 저장
-                currentQuestion - 현재 방 상태에서 질문에 대한 데이터가 존재하면 진행중인 질문에 대한 데이터 저장, 아니면 null 저장 
             */
             let currentInterviewee = data.currentInterviewee ? data.currentInterviewee.id : null;
-            let currentQuestion = data.questionProceeding ? data.questionProceeding : null;
             
             /* 면접자ID 가 존재 한다면 */
             if(currentInterviewee) {
