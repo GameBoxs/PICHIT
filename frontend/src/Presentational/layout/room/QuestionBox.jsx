@@ -26,6 +26,9 @@ const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
     {},
     aboutQuestions.get
   );
+  console.log(`interviewjoins/${pdfhandler.interviewJoinId}/questions?size=10&page=${
+    nowPage - 1
+  }`)
   useEffect(() => {
     if (pdfhandler !== undefined) {
       setNowPage(1);
