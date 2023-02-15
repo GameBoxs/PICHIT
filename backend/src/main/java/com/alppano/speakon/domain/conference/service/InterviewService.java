@@ -136,6 +136,9 @@ public class InterviewService {
         if (conference.getCurrentInterviewee() == null) {
             throw new ResourceForbiddenException("진행 중인 면접자가 없습니다.");
         }
+        if (conference.getQuestionProceeding() != null) {
+            throw new ResourceForbiddenException("현재 진행 중인 질문이 있습니다.");
+        }
         InterviewJoin interviewJoin = interviewJoinRepository.findByUserIdAndInterviewRoomId(req.getIntervieweeId(), req.getInterviewRoomId())
                 .orElseThrow(() -> new ResourceForbiddenException("미참여자를 지정하였습니다."));
 
