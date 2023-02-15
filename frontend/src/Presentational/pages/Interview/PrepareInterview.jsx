@@ -1,8 +1,13 @@
+/* ETC Import */
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+
+/* Component Import */
 import InfiniteLoopSlider from "../../component/InfiniteLoopSlider";
 
+/* loop sentence variable */
 const sentence = [
+  /* 보여줄 문구들 */
   "면접관이 들어옵니다",
   "면접관이 자리를 정리합니다",
   "면접관이 간단하게 인사를 나눕니다",
@@ -15,7 +20,7 @@ const sentence = [
 const PrepareInterview = () => {
   const [count, setCount] = useState(0);
 
-  //타이머
+  /* Timer */
   useEffect(() => {
     const timer = setInterval(() => {
       setCount((count) => count + 1);
@@ -24,7 +29,7 @@ const PrepareInterview = () => {
     return () => clearInterval(timer);
   }, []);
 
-  //준비중입니다 옆에 점 찍히는 거
+  /* 준비중입니다 옆 . 찍는 함수 */
   const dots = () => {
     let dotArray = [];
 
@@ -72,6 +77,7 @@ const PrepareInterview = () => {
 
 export default PrepareInterview;
 
+/* Styled-Component */
 const InnerBox = styled.div`
   width: 20em;
   margin-block: 0.8em;
