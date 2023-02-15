@@ -9,7 +9,7 @@ import useAxios from "../../../action/hooks/useAxios";
 const NavArea = ({ isHost, info, myToken }) => {
   const roomInfo = JSON.parse(sessionStorage.getItem("roomInfo"));
   const [closeExecute, setCloseExecute] = useState(false);
-  const [closeData, closeIsLoading, closeError] = useAxios(
+  let [closeData, closeIsLoading, closeError] = useAxios(
     "conference/interview/end",
     "POST",
     myToken,
@@ -23,8 +23,22 @@ const NavArea = ({ isHost, info, myToken }) => {
   );
 
   useEffect(() => {
-    if (closeExecute) setCloseExecute(false);
-  }, [closeExecute]);
+    console.log('에러좀 보자 @@@@@@@@', closeError);
+    if (closeExecute && closeIsLoading === false) {
+      if(closeError && closeError.response.data.message) {
+        Swal.fire({
+          title: "인터뷰 종료 에러!",
+          html:`${closeError.response.data.message} <br/> 종료 전 질문 끝내기 버튼을 눌러 질문을 종료해 주세요.`,
+          icon: "error",
+          showCancelButton: false,
+          showConfirmButton: false,
+          timer:3000,
+        })
+      }
+      setCloseExecute(false);
+      closeError='';
+    }
+  }, [closeExecute,closeIsLoading]);
 
   const finishInterviewe = () => {
     console.log("info가 뭔데 ", info);
