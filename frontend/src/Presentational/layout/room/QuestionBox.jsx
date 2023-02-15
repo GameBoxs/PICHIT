@@ -26,8 +26,6 @@ const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
     {},
     aboutQuestions.get
   );
-  console.log(getQuestion)
-    console.log(aboutQuestions.get)
   useEffect(() => {
     if (pdfhandler !== undefined) {
       setNowPage(1);
