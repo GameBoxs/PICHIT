@@ -32,7 +32,7 @@ const QuestionCompo = ({ questionInfo, roomID, intervieweeID }) => {
   )
 
   useEffect(()=> {
-    if(execute){
+    if(execute && isLoading===false){
       if(error){
         console.log(error.response.data);
         MySwal.fire({
@@ -51,7 +51,7 @@ const QuestionCompo = ({ questionInfo, roomID, intervieweeID }) => {
       }
       setExecute(false);
     } 
-  },[execute])
+  },[execute,isLoading])
 
   
   const QuestionHandler = () => {

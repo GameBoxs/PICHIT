@@ -10,6 +10,8 @@ import CreateRoom from "../../component/CreateRoom";
 import Button from "../../common/Button";
 import RoomListBox from "../../component/RoomListBox";
 import TitleSection from "../../component/TitleSection";
+import Loading from "../../common/Loading";
+
 //sweetalert2
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -33,7 +35,7 @@ function MainBottom() {
   });
   //통신
   const [APIurl, serAPIurl] = useState("interviewrooms?&finished=0");
-  const myCategory = `my-interviewrooms?page=${currentPage - 1}&finished=0`;
+  const myCategory = `my-interviewrooms?finished=0&page=${currentPage - 1}`;
   const totalCategory = `interviewrooms?&finished=0&page=${currentPage - 1}&title=${
     aboutCondition.search
   }&sort=${aboutCondition.sort}`;
@@ -56,7 +58,8 @@ function MainBottom() {
       setAboutCondition((prev) => {
         return { ...prev, finished: "" };
       });
-    } else {
+    } 
+    else {
       setRoomPosition(true);
       serAPIurl(myCategory);
       setCurrentPage(1);
@@ -70,6 +73,7 @@ function MainBottom() {
 
   //검색
   function conditionHandler(e, type) {
+    setCurrentPage(1);
     setAboutCondition((prev) => {
       return {
         ...prev,
@@ -86,7 +90,7 @@ function MainBottom() {
     if (getData && getData.data) {
       setData(getData);
       // setTotalElements(totalElements=>getData.data.totalElements); //데이터 전체 수
-      setTotalPages((totalPage) => getData.data.totalPages); //페이지 전체 수
+      setTotalPages((totalPages) => getData.data.totalPages); //페이지 전체 수
       // console.log('렌더링 확인용:::::'+getData.data.totalElements)
     }
   }, [getData]);
@@ -111,7 +115,7 @@ function MainBottom() {
         />
       </Header>
       {isLoading === true ? (
-        <div>loading...</div>
+        <Loading/>
       ) : (
         <BoardBody
           roomPosition={roomPosition}
@@ -130,6 +134,7 @@ function MainBottom() {
 export default MainBottom;
 
 const Layout = styled.div`
+/* border: 1px solid red; */
   /* margin-inline: 15rem; */
   height: fit-content;
   margin-bottom: 100px;

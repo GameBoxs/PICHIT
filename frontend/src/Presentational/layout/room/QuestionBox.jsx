@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import PageBar from "../../common/Pagination/PageBar";
 import { useEffect } from "react";
 
-const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
+const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
   const token = useSelector((state) => state.token);
   const [aboutQuestions, setAboutQuestions] = useState({
     questions: [],
@@ -16,18 +16,16 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
     get: false,
   });
   const [nowPage, setNowPage] = useState(1);
-
+  
   const [getQuestion] = useAxios(
-    `interviewjoins/${pdfhandler.interviewJoinId}/questions?page=${
+    `interviewjoins/${pdfhandler.interviewJoinId}/questions?size=10&page=${
       nowPage - 1
-    }&size=10`,
+    }`,
     "GET",
     token,
     {},
     aboutQuestions.get
   );
-
-
   useEffect(() => {
     if (pdfhandler !== undefined) {
       setNowPage(1);
@@ -38,10 +36,7 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
         };
       });
     }
-
   }, [pdfhandler]);
-
-  
 
   useEffect(() => {
     if (getQuestion !== null && getQuestion.success) {
@@ -55,7 +50,16 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
       });
     }
   }, [getQuestion]);
-
+  useEffect(()=>{
+    // setNowPage(1);
+    setAboutQuestions((prev) => {
+      return {
+        ...prev,
+        get: true,
+      };
+    });
+  },[nowPage])
+  
   return (
     <Question>
       <QuestionBoxTitle>
@@ -71,16 +75,21 @@ const QuestionBox = ({ idx, userinfo, pdfhandler }) => {
       />
       <Controler>
         {/* QuestionInsert: 질문 입력 칸 */}
-        <QuestionInsert
-          userinfo={userinfo}
-          pdfhandler={pdfhandler}
-          token={token}
-          commentHandler={setAboutQuestions}
-        />
+        {!sessionOpened ? (
+          <QuestionInsert
+            userinfo={userinfo}
+            pdfhandler={pdfhandler}
+            token={token}
+            commentHandler={setAboutQuestions}
+          />
+        ) : (
+          <div className="guidance">질문을 입력할 수 없습니다</div>
+        )}
         <PageBar
           totalpages={aboutQuestions.allQuestion} //전체 데이터 길이
           setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
           currentPage={nowPage} //현재페이지
+          step='10'
         />
       </Controler>
     </Question>

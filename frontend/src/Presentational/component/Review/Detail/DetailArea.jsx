@@ -7,6 +7,7 @@ import SubTitle from "../../../common/SubTitle";
 import FeedBackArea from "./FeedBack/FeedBackArea";
 import SoundArea from "./SoundArea";
 import PageBar from "../../../common/Pagination/PageBar";
+import Loading from '../../../common/Loading'
 
 const DetailArea = ({ selectedID }) => {
   const token = useSelector((state) => state.token);
@@ -83,7 +84,9 @@ const DetailArea = ({ selectedID }) => {
           <Container>
             {selectedID && data ? (
               isLoadingData === true ? (
-                <div>loading...</div>
+                <LoadingCompo>
+                  <Loading/>
+                </LoadingCompo>
               ) : (
                 <React.Fragment>
                   <SoundArea
@@ -131,6 +134,7 @@ const Container = styled.div`
   margin-top: 1rem;
   padding: 2rem 4rem;
 
+
   .paginationBar {
     width: 100%;
     height: 3em;
@@ -171,3 +175,7 @@ const DetailWrap = styled.div`
     margin-top: 50px;
   }
 `;
+
+const LoadingCompo = styled.div`
+  height: 300px;
+`
