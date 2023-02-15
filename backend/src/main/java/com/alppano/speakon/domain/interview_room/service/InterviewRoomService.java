@@ -132,10 +132,14 @@ public class InterviewRoomService {
     }
 
     public PagedResult<InterviewRoomInfo> searchMyInterviewRooms(Pageable pageable, Integer finished, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new ResourceNotFoundException("해당 회원이 존재하지 않습니다.")
+        );
+
         Page<InterviewJoin> queryResult = null;
 
         if (finished != null) {
-            queryResult = interviewJoinRepository.findAllByFinishedAndUserId(pageable, finished, userId);
+            queryResult = interviewJoinRepository.findAllByFinishedAndUserId(pageable, finished, user);
         } else {
             queryResult = interviewJoinRepository.findAllByUserId(pageable, userId);
         }
@@ -144,7 +148,6 @@ public class InterviewRoomService {
 
         return new PagedResult<>(list);
     }
-
 
     @Transactional
     public void setInterviewRoomFinishedStatus(Long interviewRoomId, Integer finished, Long userId) {
