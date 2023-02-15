@@ -14,7 +14,15 @@ function PageBar({ setCurrentPage, currentPage, totalpages, step }) {
     max: steps,
   });
   const fit = steps < totalpages; //false:페이지 더보기 없게, true:페이지 더보기 존재
-  // console.log('렌더링 확인용:::::'+steps)
+  
+  if(currentPage === 1  && page.min !== 1){
+    setPage(() => {
+      return {
+        min: 1,
+        max: steps
+      };
+    });
+  }
 
   // 챕터 리스트 생성
   let pages = [];
@@ -27,6 +35,26 @@ function PageBar({ setCurrentPage, currentPage, totalpages, step }) {
       break;
     }
   }
+  // useEffect(()=>{
+  //   console.log('페이지 넘어가는중')
+  // },[page])
+    // console.log(pages)
+
+  // let pages = [];
+  // const [pages,setPages]=useState([])
+  // useEffect(()=>{
+  //   for (let i = page.min; i <= page.max; i++) {
+  //     pages.push(i);
+  //     if (totalpages === 0) {
+  //       break;
+  //     }
+  //     if (i === totalpages) {
+  //       break;
+  //     }
+  //   }
+  //   return(pages)
+  // },[page])
+  // console.log(pages)
 
   //챕터 이동 함수
   function prev() {
