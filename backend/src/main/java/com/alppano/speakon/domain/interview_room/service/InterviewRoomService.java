@@ -55,6 +55,7 @@ public class InterviewRoomService {
                 .maxPersonCount(dto.getMaxPersonCount())
                 .password(password)
                 .startDate(dto.getStartDate())
+                .contactWay(dto.getContactWay())
                 .finished(0)
                 .build();
 
