@@ -58,7 +58,8 @@ function MainBottom() {
       setAboutCondition((prev) => {
         return { ...prev, finished: "" };
       });
-    } else {
+    } 
+    else {
       setRoomPosition(true);
       serAPIurl(myCategory);
       setCurrentPage(1);
@@ -72,6 +73,7 @@ function MainBottom() {
 
   //검색
   function conditionHandler(e, type) {
+    setCurrentPage(1);
     setAboutCondition((prev) => {
       return {
         ...prev,

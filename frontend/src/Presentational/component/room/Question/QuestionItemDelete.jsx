@@ -18,8 +18,8 @@ function QuestionItemDelete({ token, id }) {
     // 삭제 성공 후 새로고침하기 위해서 
   useEffect(() => {
     if (delRes && delRes.success) {
-      //window.location.reload();
-      console.log("window.location.reload();")
+      window.location.reload();
+  
     }
     // 무한 렌더링 방지용 
     if (delError) {

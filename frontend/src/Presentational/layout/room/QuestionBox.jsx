@@ -16,17 +16,18 @@ const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
     get: false,
   });
   const [nowPage, setNowPage] = useState(1);
-
+  
   const [getQuestion] = useAxios(
-    `interviewjoins/${pdfhandler.interviewJoinId}/questions?page=${
+    `interviewjoins/${pdfhandler.interviewJoinId}/questions?size=10&page=${
       nowPage - 1
-    }&size=10`,
+    }`,
     "GET",
     token,
     {},
     aboutQuestions.get
   );
-
+  console.log(getQuestion)
+    console.log(aboutQuestions.get)
   useEffect(() => {
     if (pdfhandler !== undefined) {
       setNowPage(1);
@@ -51,7 +52,16 @@ const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
       });
     }
   }, [getQuestion]);
-  console.log(aboutQuestions.get)
+  useEffect(()=>{
+    // setNowPage(1);
+    setAboutQuestions((prev) => {
+      return {
+        ...prev,
+        get: true,
+      };
+    });
+  },[nowPage])
+  
   return (
     <Question>
       <QuestionBoxTitle>
