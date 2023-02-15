@@ -92,7 +92,7 @@ const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
           totalpages={aboutQuestions.allQuestion} //전체 데이터 길이
           setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
           currentPage={nowPage} //현재페이지
-          step='10'
+          step='5'
         />
       </Controler>
     </Question>
