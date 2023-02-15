@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -69,16 +70,20 @@ public class ResumeService {
                 () -> new ResourceForbiddenException("해당 면접방에 참여 중이 아닙니다.")
         );
 
-        Resume resume = resumeRepository.findByInterviewJoinId(interviewJoinId).orElseThrow(
-                () -> new ResourceNotFoundException("등록된 자기소개서가 없습니다.")
-        );
+        Optional<Resume> result = resumeRepository.findByInterviewJoinId(interviewJoinId);
 
-        String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/datafiles/")
-                .path(Long.toString(resume.getDataFile().getId()))
-                .toUriString();
+        ResumeInfo resumeInfo = null;
+        
+        if (result.isPresent()) {
+            Resume resume = result.get();
+            String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/datafiles/")
+                    .path(Long.toString(resume.getDataFile().getId()))
+                    .toUriString();
+            resumeInfo = new ResumeInfo(resume.getId(), uri);
+        }
 
-        return new ResumeInfo(resume.getId(), uri);
+        return resumeInfo;
     }
 
     @Transactional
