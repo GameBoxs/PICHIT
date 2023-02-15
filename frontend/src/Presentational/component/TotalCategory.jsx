@@ -30,6 +30,7 @@ function TotalCategory({ conditionHandler }) {
     { type: "등록순", handler: "" },
     { type: "가나다순", handler: "title" },
     { type: "날짜 순", handler: "startDate" },
+    // { type: "입장가능", handler: "packed" },
   ];
 
   const Menu = MenuObj.map((elem, idx) => {
@@ -83,6 +84,7 @@ export default TotalCategory;
 const MenuColor = styled.div``;
 
 const MenuCompo = styled.div`
+  /* border: 1px solid red; */
   padding: 0.5rem;
   width: fit-content;
   grid-column: 3 / 4;
@@ -146,6 +148,10 @@ const MenuCompo = styled.div`
     transform: translateX(10rem);
     transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   }
+  /* #tab-4:checked ~ ${MenuColor} {
+    transform: translateX(15rem);
+    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  } */
 `;
 
 const SearchWrapper = styled.div``;
