@@ -8,8 +8,8 @@ const ListItem = (props) => {
   // console.log('ListItem');
   // console.log(props.item);
   const tempDate =
-    props.item.startDate !== undefined
-      ? new Date(props.item.startDate.toString())
+    props.startedTime !== undefined
+      ? new Date(props.startedTime.toString())
       : null;
 
   const date =
@@ -23,7 +23,7 @@ const ListItem = (props) => {
       : null;
 
   const changeID = () => {
-    if (props.item.startDate !== undefined) {
+    if (props.startedTime !== undefined) {
       props.setSelectedID(props.myID);
     }
   };
@@ -64,12 +64,13 @@ const ListItem = (props) => {
 
 const ItemWrap = styled.div`
   display: grid;
-  grid-template-columns: 1fr 7fr 2fr 1fr;
+  grid-template-columns: 1fr 7fr 3fr 1fr;
   width: 100%;
   min-height: 5rem;
   padding: 0.6rem 1.5rem !important;
   align-items: center;
   border-bottom: var(--greyLight-1) solid 2px;
+  cursor: ${(props) => props.cursor};
 
   * {
     width: 100%;
@@ -86,7 +87,7 @@ const ItemWrap = styled.div`
   & div:nth-child(1),
   & div:nth-child(3) {
     /* cursor: pointer; */
-    cursor: ${(props) => props.cursor};
+    /* cursor: ${(props) => props.cursor}; */
     width: 100%;
     color: var(--greyDark);
   }
