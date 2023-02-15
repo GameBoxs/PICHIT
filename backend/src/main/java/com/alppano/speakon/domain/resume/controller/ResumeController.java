@@ -37,7 +37,12 @@ public class ResumeController {
     public ResponseEntity<ApiResponse<ResumeInfo>> getResume(@AuthenticationPrincipal LoginUser loginUser,
                                                              @PathVariable("id") Long interviewJoinId) {
         ResumeInfo resumeInfo = resumeService.getResume(loginUser.getId(), interviewJoinId);
-        ApiResponse<ResumeInfo> result = new ApiResponse(true, "자기소개서 조회 성공", resumeInfo);
+        ApiResponse<ResumeInfo> result = null;
+        if(resumeInfo != null) {
+            result = new ApiResponse(true, "자기소개서 조회 성공", resumeInfo);
+        } else {
+            result = new ApiResponse(false, "자기소개서가 존재하지 않습니다.");
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
