@@ -1,40 +1,38 @@
 import styled from "styled-components";
-import { IoClose } from "react-icons/io5";
 import axios from "axios";
 import { PITCHIT_URL } from "../../../../../store/values";
-import useAxios from "../../../../../action/hooks/useAxios"
+import useAxios from "../../../../../action/hooks/useAxios";
 import MyresumeDelete from "./MyresumeDelete";
 
-function MyResume({setShowPdf,token,pdfhandler,setMemData}) { 
- 
-    const [getData] =useAxios(
+function MyResume({ setShowPdf, token, pdfhandler, setMemData }) {
+  const [getData] = useAxios(
     `interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
     "GET",
     token
-    )
+  );
 
-    console.log(getData)
-    // const FileId =getData.data.id
+  // const FileId =getData.data.id
 
-    // console.log(FileId)
-    // 등록된 pdf 데이터 삭제
-    if (getData !== null) {
-
-      return (
-          <>
-              <FileResultBody>
-            <FileResultRow>
-              <div className="fileName" onClick={() => setShowPdf(true)}>
-                내 자소서 보기
-              </div>
-              <MyresumeDelete setMemData={setMemData} getData={getData} token={token}/>
-            </FileResultRow>
-          </FileResultBody>
-          </>
-  
-      )
-    }  
-
+  // console.log(FileId)
+  // 등록된 pdf 데이터 삭제
+  if (getData && getData.data !== null) {
+    return (
+      <>
+        <FileResultBody>
+          <FileResultRow>
+            <div className="fileName" onClick={() => setShowPdf(true)}>
+              내 자소서 보기
+            </div>
+            <MyresumeDelete
+              setMemData={setMemData}
+              getData={getData}
+              token={token}
+            />
+          </FileResultRow>
+        </FileResultBody>
+      </>
+    );
+  }
 }
 export default MyResume;
 

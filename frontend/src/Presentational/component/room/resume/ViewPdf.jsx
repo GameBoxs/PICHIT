@@ -24,7 +24,6 @@ const ViewPDF = ({ pdfhandler }) => {
       }
     }).then((res) => {
       setData(res.data.data.uri)
-      console.log(data)
   
     })
     .catch((err) => 
