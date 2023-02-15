@@ -53,6 +53,7 @@ const HistoryList = ({ setSelectedID }) => {
               return (
                 <ListItem
                   item={item.interviewRoom}
+                  startedTime={item.startedTime}
                   key={index}
                   index={index}
                   cursor="pointer"
