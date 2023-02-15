@@ -3,10 +3,10 @@ import useAxios from "../../../../action/hooks/useAxios";
 import { useState, useEffect } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
 
+//질문 삭제
 function QuestionItemDelete({ token, id }) {
   const [delQuestion, setDelQuestion] = useState(false);
 
-  
   const [delRes, delLoading, delError] = useAxios(
     `questions/${id}`,
     "DELETE",

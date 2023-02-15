@@ -1,19 +1,18 @@
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import React, { useRef, useState, useCallback, useEffect } from "react";
 import { ToggleButton } from "../common/ToggleButton";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
-import "react-day-picker/dist/style.css";
-import Title from "../common/Title";
 
 import useAxios from "../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { testToken } from "../../store/values";
 import { useParams } from "react-router-dom";
 import Button from "../common/Button";
 
+import "react-day-picker/dist/style.css";
+
+//방 수정 모달
 function EditRoom({ setModalOpen, data }) {
   const navigate = useNavigate();
   const params = useParams();
@@ -38,7 +37,6 @@ function EditRoom({ setModalOpen, data }) {
   });
 
   // 방 수정하기 모달에 적은 input 값 넣어줌
-
   const InputHandler = (e) => {
     setRoom({
       ...room,
@@ -67,8 +65,6 @@ function EditRoom({ setModalOpen, data }) {
 
   const [editData, setEditData] = useState(false);
   const token = useSelector((state) => state.token);
-  const roomId = data.id;
-  // console.log(roomId);
 
   const handleDaySelect = (date) => {
     setSelected(date);
@@ -76,7 +72,6 @@ function EditRoom({ setModalOpen, data }) {
       setRoom(format(date, "yyyy-MM-dd"));
     }
     setRoom("");
-    console.log(date);
   };
 
   //Axios put 통신

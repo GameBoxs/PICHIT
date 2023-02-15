@@ -1,6 +1,5 @@
-import React, { memo } from "react";
+import React, { memo, useState, useEffect } from "react";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
 
 import ListItem from "./ListItem";
 import PageBar from "../../../common/Pagination/PageBar";
@@ -9,21 +8,27 @@ import Loading from '../../../common/Loading'
 import useAxios from "../../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 
+// 복기하고 싶은 면접방 선택할 수 있게 하는 영역
 const HistoryList = ({ setSelectedID }) => {
   const token = useSelector((state) => state.token);
 
+  //리스트 불러오기
   const [data, setData] = useState();
+  
+  //pagination
   const [nowPage, setNowPage] = useState(1);
   const [nowPageElements, setNowPageElements] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
+  const [currentPosts, setCurrentPosts] = useState();
 
+  //리스트 불러오는 useAxios
   const [getData, isLoading] = useAxios(
     `my-interviewjoins?size=5&page=${nowPage - 1}&finished=1`,
     "GET",
     token
   );
-  const [currentPosts, setCurrentPosts] = useState();
 
+  //리스트 불러온 후 pagination 설정
   useEffect(() => {
     if (getData && getData.data) {
       setData(getData);
@@ -33,22 +38,21 @@ const HistoryList = ({ setSelectedID }) => {
     }
   }, [getData]);
 
-  // console.log('HistoryList data');
-  // console.log(data);
-  // console.log('HistoryList currentPosts');
-  // console.log(currentPosts);
+  // 공백 처리
   let blankPosts = new Array(5 - nowPageElements).fill({
     item: { title: "", startDate: "" },
   });
-  // console.log(nowPage,totalPage);
 
   return (
     <HistoryContainer>
+      {/* 로딩이 완전히 되지 않았거나 데이터를 받아오지 못한 경우 */}
       {isLoading && data === undefined ? (
         <Loading/>
       ) : currentPosts !== undefined ? (
+        // 현재 포스트에 데이터가 있을 경우
         <>
           <ListBody>
+            {/* 현재 포스터 리스트 불러오기 */}
             {currentPosts.map((item, index) => {
               return (
                 <ListItem
@@ -68,6 +72,8 @@ const HistoryList = ({ setSelectedID }) => {
               );
             })}
           </ListBody>
+
+          {/* Pagination */}
           <PaginationBox>
             <PageBar
               totalpages={totalPage}
@@ -88,18 +94,6 @@ const ListBody = styled.div`
   width: 100%;
   height: fit-content;
 `;
-
-// const HistoryPagenationArea = styled.div`
-//   width: 100%;
-//   height: 50px;
-//   margin-bottom: 50px;
-//   span {
-//     display: inline-block;
-//     width: 100%;
-//     text-align: center;
-//   }
-// `
-
 
 const HistoryContainer = styled.div`
   display: flex;

@@ -1,5 +1,6 @@
 import styled, { keyframes } from "styled-components";
 
+//404페이지에 쓰이는 각 폴리곤 크기/위치 지정
 const NotFoundSvg = () => {
   return (
     <SvgWrap
@@ -30,12 +31,7 @@ const NotFoundSvg = () => {
           d="M 580.5 641 L 631.5 671.0126 L 631.5 730.1058 L 580.5 759 L 529.5 730.1058 L 529.5 671.0126 L 580.5 641 Z"
           sketchType="MSShapeGroup"
         />
-        {/* <PolyGon1 d="M353,9 L626.664028,170 L626.664028,487 L353,642 L79.3359724,487 L79.3359724,170 L353,9 Z" sketch:type="MSShapeGroup"/>
-                <PolyGon2 d="M78.5,529 L147,569.186414 L147,648.311216 L78.5,687 L10,648.311216 L10,569.186414 L78.5,529 Z" sketch:type="MSShapeGroup"/>
-                <PolyGon3 d="M773,186 L827,217.538705 L827,279.636651 L773,310 L719,279.636651 L719,217.538705 L773,186 Z" sketch:type="MSShapeGroup" />
-                <PolyGon4 d="M639,529 L773,607.846761 L773,763.091627 L639,839 L505,763.091627 L505,607.846761 L639,529 Z" sketch:type="MSShapeGroup" />
-                <PolyGon5 d="M281,801 L383,861.025276 L383,979.21169 L281,1037 L179,979.21169 L179,861.025276 L281,801 Z" sketch:type="MSShapeGroup" /> */}
-      </SvgG>
+       </SvgG>
     </SvgWrap>
   );
 };

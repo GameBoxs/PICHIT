@@ -1,9 +1,7 @@
 import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
-// import AggroL from "../common/Font/AggroL";
 
-// import AggroM from "../common/Font/AggroM";
-
+//스터디 일자 보여주는 컴포넌트
 function PlanTime({startDate}) {
   const Date = startDate.slice(0,10).split("-")
 
@@ -33,8 +31,6 @@ function PlanTime({startDate}) {
 
   return (
     <TimeLayout>
-      {/* <AggroM /> */}
-      {/* <AggroL /> */}
       <GlobalStyle />
       {dday}
     </TimeLayout>

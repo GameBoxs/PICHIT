@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
 
+//디자인용 상단바
 function GoHome() {
   return <HomeNav>
     <GlobalStyle />

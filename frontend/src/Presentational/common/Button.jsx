@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 const Button = ({ text, handler, isImportant }) => {
+
+  //눈에 띄어야 하는 버튼의 경우 isImportant를 true로 설정
   return (
     <Btn onClick={handler} isImportant={isImportant} className="Btn">
       <BtnText>{text}</BtnText>

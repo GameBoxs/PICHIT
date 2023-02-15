@@ -1,11 +1,9 @@
 import React, { memo } from "react";
 import styled from "styled-components";
 import QuestionItem from "./QuestionItem";
-import SubTitle from "../../../common/SubTitle";
 
+//질문 목록 받아온 것 mapping 해서 보여줄 수 있도록
 const QuestionList = ({ Questions, userinfo, pdfhandler }) => {
-
-
   return (
     <List>
       {Questions.map((Question) => (

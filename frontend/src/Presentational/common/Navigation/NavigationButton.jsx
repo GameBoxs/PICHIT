@@ -1,14 +1,15 @@
 import { useRef } from "react";
 import styled from "styled-components";
-import { GlobalStyle } from "../../action/GlobalStyle";
+
+import { GlobalStyle } from "../../../action/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
-import { slicer } from "../../reducer/tokenSlicer";
-import { setUserInfo } from "../../reducer/userStore";
+import { slicer } from "../../../reducer/tokenSlicer";
+import { setUserInfo } from "../../../reducer/userStore";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import LogInModal from "../component/LogInModal";
+import LogInModal from "../../component/LogInModal";
 
 const MySwal = withReactContent(Swal);
 
@@ -24,6 +25,7 @@ function NavigationButton(props) {
     menuToggle.current.classList.toggle("active");
   };
 
+  //로그인 선택할 시 실행되는 함수->로그인 모달로 이동
   const showSwalWithLink = () => {
     MySwal.fire({
       showConfirmButton: false,
@@ -35,6 +37,7 @@ function NavigationButton(props) {
     });
   };
 
+  //로그아웃 했을 때 실행되는 함수
   const logout = () => {
     localStorage.removeItem("token");
     dispatch(slicer(""));
@@ -51,16 +54,19 @@ function NavigationButton(props) {
     navigate("/");
   };
 
+  //복기 페이지로
   const movePage = () => {
     navigate("/review");
     menuToggle.current.classList.toggle("active");
   };
 
+  //홈으로
   const moveMain = () => {
     navigate("/");
     menuToggle.current.classList.toggle("active");
   };
 
+  //Navheight 결정
   const NavHeight =
     token !== null
       ? location.pathname === "/"
@@ -73,6 +79,8 @@ function NavigationButton(props) {
   return (
     <NavStyle className="navigation" ref={menuToggle} NavHeight={NavHeight}>
       <GlobalStyle />
+
+      {/* 상단 이름 보이는 부분 */}
       <NavUser className="userArea">
         <UserName>
           {token !== null
@@ -80,6 +88,8 @@ function NavigationButton(props) {
             : "로그인이 필요합니다."}
         </UserName>
       </NavUser>
+      
+      {/* 하단 선택 메뉴 */}
       <MenuToggle className="menuToggle" onClick={toggleClick}></MenuToggle>
       {token !== null ? (
         <MenuList className="menuList">
