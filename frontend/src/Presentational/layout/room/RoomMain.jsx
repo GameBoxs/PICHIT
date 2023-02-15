@@ -14,6 +14,7 @@ function RoomMain(props) {
   const { userJoinInfo, data, userinfo } = props;
   const { join, host } = userJoinInfo;
   const {
+    contactWay,
     currentPersonCount,
     description,
     manager,
@@ -35,7 +36,6 @@ function RoomMain(props) {
   }, [props]);
 
   // roompage에 있는 join 값이 바뀔 때 마다 setIsJoin 실행 함
-
   const RoomSection =
     isJoin || host ? (
       <Resume
@@ -61,13 +61,6 @@ function RoomMain(props) {
     ) : (
       <PopUp>질문을 볼 수 없습니다.</PopUp>
     );
-
-  // isJoin값에 따라서 볼 수 있는 컴포넌트가 변경됨
-
-  // const pdfHandler = (person, idx) => {
-  //   console.log(person);
-  //   setPdf(idx);
-  // };
 
   const Recuritment = maxPersonCount - currentPersonCount;
 
@@ -109,9 +102,14 @@ function RoomMain(props) {
             </div>
           </Card>
         </Section>
+        
+        <Description className="ContectWay">
+          <SubTitle title={"연락 방법"} />
+          {contactWay !== null? contactWay:"연락 방법이 없습니다"}
+        </Description>
 
         <Description>
-          <SubTitle title={"Introduce"} />
+          <SubTitle title={"상세 설명"} />
           {description}
         </Description>
       </Layout>
@@ -182,6 +180,17 @@ const Layout = styled.div`
 
     ${Section} {
       height: 100%;
+    }
+  }
+  
+  .ContectWay {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+
+    .SubTitle{
+      margin: 0;
     }
   }
 `;
