@@ -4,8 +4,7 @@ import { memo } from "react";
 import { QuestionBody } from "../StyledCompo";
 import SubTitle from "../../../../common/SubTitle";
 
-function AboutFeedBack({feedback, setFeedback}) {
-
+function AboutFeedBack({ feedback, setFeedback }) {
   // 피드백 내용 set하는 함수
   const changeFeedBack = (e) => {
     setFeedback((prev) => {
@@ -40,4 +39,18 @@ const Feedback = styled.textarea`
   font-size: 1.2em;
   resize: none;
   outline: none;
+
+  &::-webkit-scrollbar {
+    width: 7px;
+    border-radius: 1rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--greyLight-2);
+    border-radius: 1rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: var(--greyLight-1);
+  }
 `;
