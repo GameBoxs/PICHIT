@@ -1,9 +1,7 @@
 import styled, { css } from "styled-components";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import React from "react";
-import PageZero from "./PageZero";
-import Pagination from "./Pagination";
 
 //전체 데이터 길이, 페이지당 게시물 수, 현재 페이지를 계산하는 함수, 현재페이지
 function PageBar({ setCurrentPage, currentPage, totalpages, step }) {

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import useAxios from "../../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";

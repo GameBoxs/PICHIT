@@ -1,4 +1,4 @@
-import { memo, useRef, useEffect } from "react";
+import { memo } from "react";
 import styled from "styled-components";
 import { GlobalStyle } from "../../../../../action/GlobalStyle";
 
