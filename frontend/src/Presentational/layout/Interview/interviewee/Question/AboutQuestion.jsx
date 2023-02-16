@@ -6,6 +6,7 @@ import { BsQuestionCircleFill } from "react-icons/bs";
 import { memo } from "react";
 
 const AboutQuestion = ({ highlight, finishHandler }) => {
+  // 질문 보여주기
   return (
     <QuestionBody>
       <SubNav>
@@ -15,8 +16,10 @@ const AboutQuestion = ({ highlight, finishHandler }) => {
         </TipMark>
       </SubNav>
 
+      {/* 질문 상세 내용 */}
       <Question>{highlight.questionContent}</Question>
 
+      {/* Question Controller */}
       <SubFooter>
         <SubBtn onClick={finishHandler}>질문 끝내기</SubBtn>
       </SubFooter>
