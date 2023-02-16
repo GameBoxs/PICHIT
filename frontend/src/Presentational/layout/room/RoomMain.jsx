@@ -24,8 +24,6 @@ function RoomMain(props) {
     sessionOpened,
   } = data;
 
-  console.log(data);
-
   const [isJoin, setIsJoin] = useState(false);
   const [pdf, setPdf] = useState(0);
   const [pdfhandler, setPdfHandler] = useState({});
