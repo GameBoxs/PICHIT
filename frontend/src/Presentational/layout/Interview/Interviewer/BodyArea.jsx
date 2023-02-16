@@ -80,6 +80,10 @@ const BodyCompo = styled.div`
   position: relative;
   height: 84vh;
 
+  .SubTitle {
+    color: var(--greyLight-2);
+  }
+
   &:nth-child(1) {
     margin: 1.5vh 0.5vw 1.5vh 1vw;
     display: flex;
