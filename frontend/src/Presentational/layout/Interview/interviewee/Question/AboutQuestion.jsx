@@ -48,10 +48,15 @@ const Tooltip = styled.div`
   line-height: 1.7rem;
   color: var(--white);
   background-color: var(--textColor);
-  opacity: 0;
+  opacity: 0.8;
   width: 20rem;
   z-index: 20;
   font-weight: lighter;
+  display: none;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
   
   &:before {
 		pointer-events: none;
@@ -82,7 +87,7 @@ const TipMark = styled.div`
     }
 
     ~ ${Tooltip} {
-      opacity: 0.8;
+      display: block;
     }
   }
 `;

@@ -53,13 +53,15 @@ const FooterList = styled.div`
   -webkit-user-select:none;
   -moz-user-select:none;
   -ms-user-select:none;
-  user-select:none
+  user-select:none;
 `;
+
 const Sheet = styled.div`
   margin: 0 auto;
   width: 980px;
   padding-top: 10px;
 `;
+
 const Cols = styled.div`
   display: flex;
   justify-content: space-between;
