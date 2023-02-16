@@ -5,6 +5,8 @@ import { QuestionBody } from "../StyledCompo";
 import SubTitle from "../../../../common/SubTitle";
 
 function AboutFeedBack({feedback, setFeedback}) {
+
+  // 피드백 내용 set하는 함수
   const changeFeedBack = (e) => {
     setFeedback((prev) => {
       return {

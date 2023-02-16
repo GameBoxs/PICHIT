@@ -4,6 +4,7 @@ import { QuestionBody } from "../StyledCompo";
 import { BiChevronDown } from "react-icons/bi";
 import ChatArea from "../../../Chat/ChatArea";
 
+// 채팅 컴포넌트
 function ChatCompo(props) {
   const { session, chatOn, setChatOn, info } = props;
 
@@ -20,7 +21,6 @@ function ChatCompo(props) {
           <BiChevronDown />
         </SubDiv>
       </ChatTitle>
-      {/* <SubTitle title={"채팅"} /> */}
       <ChatArea session={session} info={info} chatOn={chatOn} />
     </QuestionBody>
   );

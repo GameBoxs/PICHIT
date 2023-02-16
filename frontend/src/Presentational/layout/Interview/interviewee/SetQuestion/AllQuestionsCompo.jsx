@@ -4,7 +4,9 @@ import { QuestionBody, SubNav } from "../StyledCompo";
 import SubTitle from "../../../../common/SubTitle";
 import QuestionCompo from "../../../../component/QuestionCompo";
 import { memo } from "react";
+import Loading from "../../../../common/Loading";
 
+//모든 질문 모아보는 컴포넌트
 function AllQuestionsCompo(props) {
   const { chatOn, members, reqBody, setReqBody, questionData } = props;
 
@@ -54,15 +56,18 @@ function AllQuestionsCompo(props) {
       <SubNav>
         <SubTitle title={"질문"} />
       </SubNav>
+
+      {/* 질문 작성자 선택할 수 있는 Navbar */}
       <Member>
         {interviewees}
         <MemberColor></MemberColor>
       </Member>
-      {/* <AllQuestions chatOn={chatOn} onClick={QuestionHandler}> */}
+
+      {/* 해당 질문 작성자의 질문을 가져옴 */}
       {reqBody.writerId !== 0 ? (
         <AllQuestions chatOn={chatOn}>{Questions}</AllQuestions>
       ) : (
-        "Loading"
+        <Loading />
       )}
     </QuestionBody>
   );

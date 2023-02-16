@@ -13,6 +13,7 @@ const Rating = ({ setFeedback, starScore }) => {
     });
   };
 
+  // 별 5개 차례대로 보여주는 함수
   const gradle = Array(5)
     .fill(0)
     .map((_, idx) => {
@@ -43,18 +44,6 @@ const Rating = ({ setFeedback, starScore }) => {
   return (
     <RatingBox>
       <RatingGroup>
-        {/* <RatingInput
-          className="rating__input--none"
-          defaultChecked
-          name="rating2"
-          id="rating2-0"
-          value="0"
-          type="radio"
-        />
-        <RatingLabel aria-label="0 stars" htmlFor="rating2-0">
-          &nbsp;
-        </RatingLabel> */}
-
         {gradle}
       </RatingGroup>
     </RatingBox>
