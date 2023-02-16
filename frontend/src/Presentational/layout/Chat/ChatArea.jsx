@@ -94,6 +94,10 @@ const ChatBody = styled.div`
     &::-webkit-scrollbar {
         display: none;
     }
+
+    .MessageWrap, .MessageWrap *  {
+        border-radius: 0 !important;
+    }
 `
 const InputBody = styled.div`
     padding-inline: 1.5vw;

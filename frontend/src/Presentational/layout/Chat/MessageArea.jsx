@@ -23,7 +23,7 @@ const MessageArea = ({ Message, page }) => {
   }, [Message]);
 
   return (
-    <MessageWrap ref={scrollRef} page={page}>
+    <MessageWrap ref={scrollRef} page={page} className="MessageWrap">
       {Message.map((data, index) => {
         return <IncomMessage data={data} key={index} />;
       })}
@@ -39,7 +39,6 @@ const MessageWrap = styled.div`
   height: ${(props) => (props.page === "interviewer" ? "93%" : "86%")};
   padding-inline: 0;
   overflow: auto;
-  border-radius: 0 !important;
 
   & * {
     margin: 0px 0 5px 0;
