@@ -73,7 +73,6 @@ const BackgroundTape = styled.div`
 `;
 
 const MoveBtn = styled.div`
-  /* height: 100%; */
   cursor: pointer;
   position: absolute;
   z-index: 10;

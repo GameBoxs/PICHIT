@@ -8,7 +8,8 @@ import PlanTime from "../../component/room/PlanTime";
 import Person from "../../component/room/Person";
 
 import { BsFillPersonFill } from "react-icons/bs";
-// import AggroL from "../../common/Font/AggroL";
+import { BsQuestionCircleFill } from "react-icons/bs";
+import GuideModal from "../../component/Modal/GuideModal";
 
 function RoomMain(props) {
   const { userJoinInfo, data, userinfo } = props;
@@ -27,6 +28,13 @@ function RoomMain(props) {
   const [isJoin, setIsJoin] = useState(false);
   const [pdf, setPdf] = useState(0);
   const [pdfhandler, setPdfHandler] = useState({});
+
+  //모달 생성 판별 여부
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const showModal = () => {
+    setModalOpen(true);
+  };
 
   useEffect(() => {
     setIsJoin(join);
@@ -86,6 +94,15 @@ function RoomMain(props) {
     <MainPageContainer>
       <SectionHeader>
         <SubTitle title={"상세 정보"} />
+        <TipMark onClick={showModal}>
+          <BsQuestionCircleFill />
+        </TipMark>
+        <Tooltip>
+          PICHIT
+          <br />
+          활용 100% 가이드!
+        </Tooltip>
+        {modalOpen && <GuideModal setModalOpen={setModalOpen} />}
       </SectionHeader>
       <Layout>
         <Section>
@@ -108,7 +125,11 @@ function RoomMain(props) {
 
         <Description className="ContectWay">
           <SubTitle title={"연락 방법"} />
-          {contactWay !== null ? contactWay : <div className="guidance">연락 방법이 없습니다</div>}
+          {contactWay !== null ? (
+            contactWay
+          ) : (
+            <div className="guidance">연락 방법이 없습니다</div>
+          )}
         </Description>
 
         <Description>
@@ -129,6 +150,60 @@ function RoomMain(props) {
 }
 
 export default memo(RoomMain);
+
+const Tooltip = styled.div`
+  position: absolute;
+  left: -0.5rem;
+  top: 4rem;
+  padding: 1.5rem;
+  line-height: 1.7rem;
+  color: var(--white);
+  background-color: var(--textColor);
+  opacity: 0.8;
+  width: 12rem;
+  text-align: center;
+  z-index: 20;
+  font-weight: lighter;
+  display: none;
+  border-radius: 2rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  &:before {
+    pointer-events: none;
+    position: absolute;
+    z-index: -1;
+    content: "";
+    border-style: solid;
+    left: 6rem;
+    top: -20px;
+    border-width: 0 10px 20px 10px;
+    border-color: transparent transparent var(--textColor) transparent;
+    transition-property: top;
+  }
+`;
+
+const TipMark = styled.div`
+  color: var(--greyLight-2);
+  font-size: 1.2em;
+  cursor: pointer;
+
+  path {
+    color: var(--greyLight-2);
+  }
+
+  &:hover {
+    path {
+      color: var(--greyDark);
+    }
+
+    ~ ${Tooltip} {
+      display: block;
+    }
+  }
+`;
 
 const Description = styled.div`
   border-radius: 1rem;
@@ -201,6 +276,7 @@ const Layout = styled.div`
 `;
 
 const SectionHeader = styled.div`
+  position: relative;
   width: fit-content;
   display: flex;
   align-items: center;

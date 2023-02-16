@@ -169,4 +169,5 @@ const Container = styled.div`
   justify-content: center;
   padding-block: 10vh;
   background-color: var(--white);
+  position: relative;
 `;

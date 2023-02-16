@@ -91,7 +91,7 @@ const MemberColor = styled.div``;
 const Member = styled.div`
   grid-column: 3 / 4;
   grid-row: 1 / 2;
-  width: 20.4rem;
+  min-width: 20.4rem;
   margin-bottom: 1rem;
   border-radius: 1rem !important;
   display: flex;
@@ -143,6 +143,10 @@ const Member = styled.div`
   }
   #tab-3:checked ~ ${MemberColor} {
     transform: translateX(10rem);
+    transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  #tab-4:checked ~ ${MemberColor} {
+    transform: translateX(15rem);
     transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   }
 `;
