@@ -86,12 +86,13 @@ export default function GuideSlider() {
 }
 
 const SubDiv = styled.div`
-  background-color: antiquewhite;
   width: 100%;
   height: inherit;
-  
+  margin: 0 auto;
+
   img {
     width: 100%;
+    margin: 0 auto;
   }
 `;
 
