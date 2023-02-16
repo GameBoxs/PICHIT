@@ -1,20 +1,15 @@
-import React, { useState } from "react";
+/* ETC Import */
+import React from "react";
 import styled from "styled-components";
-import { BsFillMicFill, BsFillMicMuteFill } from "react-icons/bs";
-import { IoVideocam, IoVideocamOff } from "react-icons/io5";
 
-// OpenVidu 관련 Import
-import OpenViduVideoComponent from "../component/Chat/OpenVidu/OvVideo";
-import { selectInterviwee } from "../../action/modules/chatModule";
-import { useDispatch } from "react-redux";
+/* Component Import */
 import { GlobalStyle } from "../../action/GlobalStyle";
+import OpenViduVideoComponent from "../component/Chat/OpenVidu/OvVideo";
+
+/* Module Import */
+import { selectInterviwee } from "../../action/modules/chatModule";
 
 const DefaultScreen = ({ streamManager, name, session, number, isNone }) => {
-  let dispatch = useDispatch();
-
-  const [isCamOn, setIsCamOn] = useState(true);
-  const [isMicOn, setIsMicOn] = useState(true);
-
   return (
     <ScreenContainer
       className="ScreenChild"
@@ -29,22 +24,6 @@ const DefaultScreen = ({ streamManager, name, session, number, isNone }) => {
       {streamManager !== null ? (
         <OpenViduVideoComponent streamManager={streamManager} />
       ) : null}
-      {/* <Submenu>
-        <Icon
-          onClick={() => {
-            setIsCamOn(!isCamOn);
-          }}
-        >
-          {isCamOn ? <IoVideocam /> : <IoVideocamOff />}
-        </Icon>
-        <Icon
-          onClick={() => {
-            setIsMicOn(!isMicOn);
-          }}
-        >
-          {isMicOn ? <BsFillMicFill /> : <BsFillMicMuteFill />}
-        </Icon>
-      </Submenu> */}
     </ScreenContainer>
   );
 };
@@ -61,22 +40,6 @@ const NameTag = styled.div`
   padding: 1% 2%;
   border-radius: 0.5em;
   justify-self: center;
-`;
-
-const Icon = styled.div``;
-
-const Submenu = styled.div`
-  position: absolute;
-  width: 12vw;
-  height: 5vh;
-  top: 23vh;
-  left: 45%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  font-size: 1em;
-  gap: 0.5em;
 `;
 
 const ScreenContainer = styled.div`

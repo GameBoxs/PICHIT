@@ -1,21 +1,29 @@
-import { memo, useEffect, useRef, useState } from "react";
+/* ETC Import */
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
+
+/* Component Import */
 import IncomMessage from "../../component/Chat/IncomMessage";
 
-const MessageArea = ({Message}) => {
+const MessageArea = ({Message, page}) => {
+    /* 메세지 영역 Dom 담을 Ref */
     const scrollRef = useRef();
+
+    /* 메세지 수신하면 메세지 스크롤 가장 아래로 변경 */
     const scrollToBottom = () => {
         if(scrollRef.current){
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     };
 
+    /* Message 변경 감지 */
     useEffect(() => {
+        /* 스크롤을 가장 하단으로 옮기는 함수 실행 */
         scrollToBottom();
     },[Message]);
 
     return (
-        <MessageWrap ref={scrollRef}>
+        <MessageWrap ref={scrollRef} page={page}>
             {
                 Message.map((data,index) => {
                     return(
@@ -27,9 +35,12 @@ const MessageArea = ({Message}) => {
     )
 }
 
+export default MessageArea;
+
+/* Styled-Component */
 const MessageWrap = styled.div`
     width: inherit;
-    height: 100%;
+    height: ${props => props.page === 'interviewer' ? '93%' : '86%'};
     padding-inline: 0;
     overflow: auto;
     & *{
@@ -54,5 +65,3 @@ const MessageWrap = styled.div`
         background-color: var(--greyLight-1);
     }
 `
-
-export default MessageArea;

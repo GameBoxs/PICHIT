@@ -9,7 +9,6 @@ export const roomStore = createSlice({
   },
   reducers: {
     changeRoom(state, action) {
-      console.log('룸 리덕스 변경 감지',action.payload);
       state = action?.payload
       return state
     },

@@ -13,8 +13,6 @@ const Rating = ({ setFeedback, starScore }) => {
     });
   };
 
-  console.log(starScore);
-
   const gradle = Array(5)
     .fill(0)
     .map((_, idx) => {
