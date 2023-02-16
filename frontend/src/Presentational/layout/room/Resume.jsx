@@ -152,14 +152,6 @@ const FileList = styled.div`
   min-height: 600px;
 `;
 
-const FileListTitle = styled.div`
-  display: flex;
-  align-items: center;
-  height: 20%;
-  border-bottom: 1px solid black;
-  padding-left: 10px;
-`;
-
 const FileListBody = styled.div`
   display: flex;
   height: 100%;
@@ -169,55 +161,6 @@ const FileListBody = styled.div`
   gap: 1rem;
   border-radius: 1rem;
   background-color: var(--greyLight-1);
-`;
-
-const FileResultBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-  height: 550px;
-  border-radius: 1rem;
-  background-color: var(--greyLight-1);
-  padding: 2rem;
-
-  & .sign {
-  }
-
-  & .fileName {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 1em;
-    border: none;
-    background-color: var(--primary);
-    color: var(--white);
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-
-    &:hover {
-      background-color: var(--primary-dark);
-    }
-  }
-`;
-
-const FileResultRow = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-`;
-
-const Input = styled.input.attrs({ type: "file" })`
-  position: absolute;
-  width: 0;
-  height: 0;
-  padding: 0;
-  overflow: hidden;
-  border: 0;
 `;
 
 const Label = styled.label`
@@ -311,6 +254,10 @@ const ButtonContainer = styled.div`
 
 const CloseButton = styled.button`
   width: 50px;
+
+  svg {
+    color: var(--white);
+  }
 `;
 
 const MainContainer = styled.div`
@@ -323,5 +270,9 @@ const MainContainer = styled.div`
 
   & ${FileListBody} {
     height: 550px;
+  }
+
+  path {
+    color: var(--white);
   }
 `;
