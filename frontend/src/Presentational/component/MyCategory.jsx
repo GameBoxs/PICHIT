@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-
+//참가한 방 보기에서 리스트업 할 수 있는 Navbar
 function MyCategory({conditionHandler}) {
   //sort
   function sortSelect(e){

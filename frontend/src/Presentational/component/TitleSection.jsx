@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+
 //sweetalert2
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -10,6 +11,7 @@ function TitleSection(props) {
   const isUser = props.token;
   const [isChecked, setIsChecked] = useState(true);
 
+  //메인 보드에서 모든 면접방/나의 면접방 선택
   function switchHandler(e) {
     props.roomSwitch(e);
     setIsChecked(e === "toTotal" ? true : false);

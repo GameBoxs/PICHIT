@@ -10,6 +10,7 @@ import { PITCHIT_URL } from "../../store/values";
 
 const MySwal = withReactContent(Swal);
 
+//각 방 아이템 컴포넌트
 function RoomListItem(props) {
   const { data } = props;
   const {
@@ -20,12 +21,16 @@ function RoomListItem(props) {
     maxPersonCount,
     startDate,
   } = data;
+
   // 비밀방 클릭시, 비밀번호 입력 모달 띄우도록 설정,
   const token = useSelector((state) => state.token);
   let navigate = useNavigate();
+
   const roomId = id;
 
+  // 방 클릭했을 때
   const clickRoomItem = () => {
+    // 로그인 안 되어 있을 때
     if (token === null) {
       MySwal.fire({
         title: "로그인이 필요한 서비스 입니다.",
@@ -35,6 +40,7 @@ function RoomListItem(props) {
         timer: 1500,
       });
     } else {
+      // 비밀방 판별
       if (secretRoom === true) {
         MySwal.fire({
           title: "비밀번호 입력",
@@ -86,7 +92,7 @@ function RoomListItem(props) {
   };
   return (
     <RoomItem onClick={clickRoomItem}>
-      <RoomContent className="rommtitle">
+      <RoomContent>
         <RoomTitle>
           <div>{title}</div>
           {secretRoom ? <FaLock /> : null}

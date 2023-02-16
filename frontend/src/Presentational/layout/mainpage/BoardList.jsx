@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import RoomListBox from "../../component/RoomListBox";
-import Loading from '../../common/Loading'
+import Loading from "../../common/Loading";
 
+//보드 리스트 판별
 function BoardList(props) {
-    const {data, aboutCondition, roomPosition} = props
+  const { data, aboutCondition, roomPosition } = props;
 
   return (
     <RoomListdiv>
@@ -15,7 +16,7 @@ function BoardList(props) {
           roomPosition={roomPosition}
         />
       ) : (
-        <Loading/>
+        <Loading />
       )}
     </RoomListdiv>
   );

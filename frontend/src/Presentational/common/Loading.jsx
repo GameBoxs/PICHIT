@@ -12,12 +12,6 @@ function Loading(){
 
 export default Loading;
 
-const TestCompo = styled.div`
-//     width : 400px;
-//     height: 400px;
-//     /* display: flex; */
-`
-
 const LoadingCompo = styled.div`
     width: inherit;
     height: inherit;

@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useAxios from "../../../../action/hooks/useAxios";
 import { MdAddCircle } from "react-icons/md";
 import { useRef } from "react";
 
+//질문 입력하는 파트
 const QuestionInsert = (props) => {
   const insertRef = useRef();
 
@@ -17,8 +18,10 @@ const QuestionInsert = (props) => {
     writerId: 0,
   });
 
+  //POST로 질문 내용 전송하는 부분
   const [postData] = useAxios("questions", "POST", token, question, click);
 
+  //postData body 설정
   useEffect(() => {
     setQuestion({
       content: "",
@@ -30,11 +33,17 @@ const QuestionInsert = (props) => {
   useEffect(() => {
     if (postData !== null && postData.success) {
       setClick(false);
+
+      //insert 안에 내용 없애기
       insertRef.current.value = "";
+
+      //post body 설정
       setQuestion({
         ...question,
         content: "",
       });
+
+      //새로 질문 등록한 후 다시 질문 목록 받아오게 하는 함수
       commentHandler((prev) => {
         return {
           ...prev,

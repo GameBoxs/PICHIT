@@ -15,6 +15,7 @@ import ResumeUpload from "../../component/room/resume/MyInquire/ResumeUpload";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
+//pdf 보여주는 컴포넌트
 function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   // 토큰, 유저 정보 가져옴
   const { token, userinfo } = useSelector((state) => state);
@@ -134,67 +135,6 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
 }
 
 export default Resume;
-
-const MemberColor = styled.div``;
-
-const Member = styled.div`
-  grid-column: 3 / 4;
-  grid-row: 1 / 2;
-  width: 20.4rem;
-  margin-bottom: 1rem;
-  border-radius: 1rem !important;
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  & input {
-    display: none;
-  }
-
-  & label {
-    width: 5rem;
-    height: 2rem;
-    font-size: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    color: var(--greyDark);
-    transition: all 0.1s ease;
-    font-family: "SBAggroL";
-
-    &:hover {
-      color: var(--primary);
-    }
-
-    p {
-      color: var(--greyDark);
-    }
-  }
-
-  ${MemberColor} {
-    position: absolute;
-    height: 2rem;
-    width: 5rem;
-    border-radius: 0.8rem !important;
-    box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
-      inset -0.2rem -0.2rem 0.5rem var(--white);
-    pointer-events: none;
-  }
-
-  #tab-1:checked ~ ${MemberColor} {
-    transform: translateX(0);
-    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-  }
-  #tab-2:checked ~ ${MemberColor} {
-    transform: translateX(5rem);
-    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-  }
-  #tab-3:checked ~ ${MemberColor} {
-    transform: translateX(10rem);
-    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-  }
-`;
 
 const FileContainer = styled.div`
   display: flex;

@@ -4,14 +4,15 @@ import SubTitle from "../../../common/SubTitle";
 
 import { AiFillRightCircle } from "react-icons/ai";
 
+// 각 면접방 항목
 const ListItem = (props) => {
-  // console.log('ListItem');
-  // console.log(props.item);
+  // 면접방 일자
   const tempDate =
     props.startedTime !== undefined
       ? new Date(props.startedTime.toString())
       : null;
 
+  // 출력을 위한 string으로 변경
   const date =
     tempDate !== null
       ? tempDate.getFullYear().toString().slice(2, 4) +
@@ -22,12 +23,14 @@ const ListItem = (props) => {
         "일\t"
       : null;
 
+  //다른 항목 선택할 때마다 selectedID 바뀌도록
   const changeID = () => {
     if (props.startedTime !== undefined) {
       props.setSelectedID(props.myID);
     }
   };
 
+  //idx 값이 10보다 작을 경우 앞에 0 추가
   const idx =
     props.index < 10 ? "0" + (props.index + 1).toString() : props.index;
 
@@ -38,20 +41,24 @@ const ListItem = (props) => {
         cursor={props.cursor}
         isBlank={idx === undefined ? true : false}
       >
+        {/* idx */}
         <div>{idx}</div>
 
+        {/* 제목 */}
         {props.item && props.item.title ? (
           <Title title={props.item.title} />
         ) : (
           <Title title="" />
         )}
 
+        {/* 스터디 일시 */}
         {props.item && props.item.title ? (
           <SubTitle title={date}></SubTitle>
         ) : (
           <SubTitle title=""></SubTitle>
         )}
 
+        {/* 이동하기 버튼 */}
         {props.item.title !== "" &&
         props.item.title !== null &&
         props.item.title !== undefined ? (
@@ -108,7 +115,8 @@ const ItemWrap = styled.div`
   }
 
   &:hover {
-    background-color: ${props => props.isBlank? null:'var(--greyLight-1)'};
+    background-color: ${(props) =>
+      props.isBlank ? null : "var(--greyLight-1)"};
     color: var(--primary);
 
     svg {

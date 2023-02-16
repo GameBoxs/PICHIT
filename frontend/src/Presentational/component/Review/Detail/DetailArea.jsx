@@ -1,5 +1,5 @@
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import React, { memo, useEffect, useState, useRef } from "react";
 import useAxios from "../../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -11,21 +11,32 @@ import FeedBackArea from "./FeedBack/FeedBackArea";
 import SoundArea from "./SoundArea";
 import PageBar from "../../../common/Pagination/PageBar";
 import Loading from "../../../common/Loading";
+import { forwardRef } from "react";
 
-const DetailArea = ({ selectedID }) => {
+//각 면접방 상세 피드백을 보여주는 공간
+const DetailArea = ({ selectedID, moveRef }) => {
   const token = useSelector((state) => state.token);
-  const audioRef = useRef();
-  const moveRef = useRef();
 
+  // 현재 오디오 위치를 지정하는 ref
+  const audioRef = useRef();
+
+  //피드백 정보
   const [data, setData] = useState();
+
+  //pagination을 위한 state들
   const [nowPage, setNowPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+
+  //음성 파일과 타임 스탬프
   const [sound, setSound] = useState({
     url: "",
     timestamp: {},
   });
+
+  //현재 재생 중인지, 아닌지 판단하는 항목
   const [isPlaying, setIsPlaying] = useState(false);
 
+  //피드백 관련 데이터 들고오는 useAxios
   const [getData, isLoadingData] = useAxios(
     `interviewjoins/${selectedID}/questions-with-feedbacks?size=2000`,
     "GET",
@@ -34,6 +45,7 @@ const DetailArea = ({ selectedID }) => {
     selectedID ? true : false
   );
 
+  //음성 관련 데이터 받아오는 useAxios
   const [getSound, isLoadingSound] = useAxios(
     `interviewjoins/${selectedID}/recordings`,
     // `interviewjoins/3332/recordings`,
@@ -43,6 +55,7 @@ const DetailArea = ({ selectedID }) => {
     selectedID ? true : false
   );
 
+  //음성 데이터 받아오면 state에 넣음
   useEffect(() => {
     if (getSound && getSound.success && getSound.data) {
       setSound(() => {
@@ -54,6 +67,7 @@ const DetailArea = ({ selectedID }) => {
     }
   }, [getSound]);
 
+  //피드백 데이터 받아오면 state에 넣음
   useEffect(() => {
     if (getData && getData.success && getData.data) {
       setData(getData.data.content);
@@ -61,19 +75,17 @@ const DetailArea = ({ selectedID }) => {
     }
   }, [getData]);
 
+  //원하는 피드백 항목 선택 후
   useEffect(() => {
+    //현재 페이지 설정
     setNowPage(1);
-    if (selectedID) {
-      moveRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
   }, [selectedID]);
 
+  //재생 시간 설정 함수
   const playTime = (time) => {
     //현재 재생 시간을 selectTime으로 맞춤
     audioRef.current.currentTime = time;
+    //플레이 시작
     setIsPlaying(true);
     audioRef.current.play();
   };
@@ -121,57 +133,65 @@ const DetailArea = ({ selectedID }) => {
   }, [resumeData]);
 
   return (
-    <DetailWrap ref={moveRef}>
-      <SubTitle title="면접 피드백" />
-      {data !== undefined ? (
-        <>
-          <Container>
-            {selectedID && data ? (
-              isLoadingData === true ? (
-                <LoadingCompo>
-                  <Loading />
-                </LoadingCompo>
-              ) : (
-                <React.Fragment>
-                  <Resume>
-                    <SubBtn onClick={handleOpenPop}>자소서 조회git </SubBtn>
-                  </Resume>
-                  <SoundArea
-                    sound={sound}
-                    audioRef={audioRef}
-                    isPlaying={isPlaying}
-                    setIsPlaying={setIsPlaying}
-                  />
-                  <PageBar
-                    setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
-                    currentPage={nowPage} //현재페이지
-                    totalpages={totalPage}
-                    step="10"
-                  />
-                  {data[nowPage - 1] && sound.timestamp[nowPage - 1] ? (
-                    <FeedBackArea
-                      title={data[nowPage - 1].content}
-                      data={data[nowPage - 1].feedbacks}
-                      timeStamp={sound.timestamp[nowPage - 1]}
-                      playTime={playTime}
+    <div ref={moveRef}>
+      <DetailWrap>
+        <SubTitle title="면접 피드백" />
+
+        {/* 데이터 있을 경우 해당 내용 표시 */}
+        {data !== undefined ? (
+          <>
+            <Container>
+              {/* 선택된 항목과 데이터가 있을 경우 */}
+              {selectedID && data ? (
+                // 모든 데이터가 로딩 되었는 지 확인
+                isLoadingData === true ? (
+                  <LoadingCompo>
+                    <Loading />
+                  </LoadingCompo>
+                ) : (
+                  <React.Fragment>
+                    {/* 음성 파일 출력 부분 */}
+                    <SoundArea
+                      sound={sound}
+                      audioRef={audioRef}
+                      isPlaying={isPlaying}
+                      setIsPlaying={setIsPlaying}
                     />
-                  ) : null}
-                </React.Fragment>
-              )
-            ) : (
-              //<FeedBackArea title={currentPost.question} data={currentPost.reviews}/>
-              <NullCompo>기록을 선택해주세요</NullCompo>
-            )}
-          </Container>
-        </>
-      ) : (
-        <NullCompo>기록을 선택해주세요</NullCompo>
-      )}
-    </DetailWrap>
+
+                    {/* 페이지네이션 */}
+                    <PageBar
+                      setCurrentPage={setNowPage} //현재 페이지를 계산하는 함수
+                      currentPage={nowPage} //현재페이지
+                      totalpages={totalPage}
+                      step="10"
+                    />
+
+                    {/* 피드백 보여주는 파트 */}
+                    {data[nowPage - 1] && sound.timestamp[nowPage - 1] ? (
+                      <FeedBackArea
+                        title={data[nowPage - 1].content}
+                        data={data[nowPage - 1].feedbacks}
+                        timeStamp={sound.timestamp[nowPage - 1]}
+                        playTime={playTime}
+                      />
+                    ) : null}
+                  </React.Fragment>
+                )
+              ) : (
+                // 데이터 없는 걸로 판단
+                <NullCompo>기록을 선택해주세요</NullCompo>
+              )}
+            </Container>
+          </>
+        ) : (
+          <NullCompo>기록을 선택해주세요</NullCompo>
+        )}
+      </DetailWrap>
+    </div>
   );
 };
 
-export default memo(DetailArea);
+export default forwardRef(DetailArea);
 
 const Container = styled.div`
   min-height: 400px;
@@ -224,39 +244,4 @@ const DetailWrap = styled.div`
 
 const LoadingCompo = styled.div`
   height: 300px;
-`;
-const SubBtn = styled.div`
-  padding: 0.5em 1.2em;
-  font-size: 0.8em;
-  width: fit-content;
-  border-radius: 1rem;
-  justify-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.3s ease;
-  font-weight: 600;
-  grid-column: 1 / 2;
-  grid-row: 1 / 2;
-  background-color: var(--primary);
-  box-shadow: inset 0.1rem 0.1rem 0.5rem var(--primary-light),
-    inset -0.1rem -0.1rem 0.5rem var(--primary-dark),
-    0.15rem 0.15rem 0.3rem var(--greyLight-2),
-    -0.1rem -0.1rem 0.25rem var(--white);
-
-  color: var(--greyLight-1);
-
-  &:hover {
-    color: var(--white);
-  }
-
-  &:active {
-    box-shadow: inset 0.2rem 0.2rem 1rem var(--primary-dark),
-      inset -0.2rem -0.2rem 1rem var(--primary-light);
-  }
-`;
-const Resume = styled.div`
-  display: flex;
-  justify-content: flex-end;
 `;

@@ -27,7 +27,15 @@ function RoomHeader({
   token,
   userinfo,
 }) {
-  const { id, title, participants, sessionOpened, manager,currentPersonCount, maxPersonCount, } = data;
+  const {
+    id,
+    title,
+    participants,
+    sessionOpened,
+    manager,
+    currentPersonCount,
+    maxPersonCount,
+  } = data;
   const { join, host } = userJoinInfo;
 
   const navigate = useNavigate();
@@ -39,15 +47,11 @@ function RoomHeader({
   const [deleteData, setDeleteData] = useState(false);
   const [joinId, setJoinId] = useState(0);
 
-  // console.log(userinfo)
-
   // axios 통신 시 보낼 정보들
   const enterObj = {
     interviewRoomId: id,
     password: password,
   };
-
-  // const quitObj = { id: joinId };
 
   //useAxios
   const [enterRes, enterLoading, enterError] = useAxios(
@@ -67,7 +71,6 @@ function RoomHeader({
     null,
     deleteData
   );
-  
 
   const [quitRes, isLoading, errorContext] = useAxios(
     //방 나가기(interviewjoinid)
@@ -78,14 +81,13 @@ function RoomHeader({
     joinQuit
   );
 
-
   //useEffect
   useEffect(() => {
     setJoinId(userinfo.interviewJoinId);
   }, [userinfo]);
 
   useLayoutEffect(() => {
-    // 무한 렌더링 방지 
+    // 무한 렌더링 방지
     if (enterError) {
       setJoinEnter(false);
     }
@@ -131,14 +133,13 @@ function RoomHeader({
   //Event Function
   const joinHandler = (isJoin) => {
     //방 참여하기
-    setJoin(isJoin)
-    setJoinEnter(true)
-
+    setJoin(isJoin);
+    setJoinEnter(true);
   };
 
   const quitHandler = (isJoin) => {
     //방 탈퇴하기
-    setJoin(isJoin)
+    setJoin(isJoin);
     setJoinQuit(true);
   };
 
@@ -161,11 +162,13 @@ function RoomHeader({
   };
 
   const moveToRoom = () => {
-    dispatch(changeRoom({
-      userInfo : userinfo,
-      roomId : id,
-      isHost : host
-    }))
+    dispatch(
+      changeRoom({
+        userInfo: userinfo,
+        roomId: id,
+        isHost: host,
+      })
+    );
     sessionStorage.setItem(
       "roomInfo",
       JSON.stringify({
@@ -190,7 +193,6 @@ function RoomHeader({
     });
   };
 
-    
   //JSX 변수
   const ReadyBtn = (
     <Button text={"스터디 준비하기"} handler={createRoom} isImportant={true} />
@@ -200,8 +202,7 @@ function RoomHeader({
     <Button text={"스터디 시작하기"} handler={moveToRoom} isImportant={true} />
   );
 
-  
-
+  //방 참가시 보이는 버튼
   const QuitBtn = (
     <Button
       text={"나가기"}
@@ -213,6 +214,7 @@ function RoomHeader({
     </Button>
   );
 
+  //참여 안했을 때 보이는 버튼
   const EnterBtn = (
     <Button
       isImportant={false}
@@ -223,6 +225,7 @@ function RoomHeader({
     </Button>
   );
 
+  //세션 생성 후 스터디 시작하기 버튼
   const StudyStartBtn = (
     <Button
       isImportant={true}
@@ -241,31 +244,25 @@ function RoomHeader({
       {sessionOpened ? StudyStartBtn : <p>스터디룸을 준비중입니다</p>}
       {QuitBtn}
     </>
-  ) : (<>
-  {Recuritment === 0? (<p>방에 참여할 수 없습니다</p>):(<>{EnterBtn}</>)}
-  </>
-    
+  ) : (
+    <>{Recuritment === 0 ? <p>방에 참여할 수 없습니다</p> : <>{EnterBtn}</>}</>
   );
 
-  const RoomHost =
-    host ? (
-      <BtnContainer>
-        {participants.length >= 2
-          ? sessionOpened
-            ? StartBtn
-            : ReadyBtn
-          : null}
-        <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
-          삭제하기
-        </Button>
-        <Button text={"수정하기"} handler={showModal}>
-          수정하기
-        </Button>
-        {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
-      </BtnContainer>
-    ) : (
-      <BtnContainer>{readyRoom}</BtnContainer>
-    );
+  //방장에게 보이는 항목들
+  const RoomHost = host ? (
+    <BtnContainer>
+      {participants.length >= 2 ? (sessionOpened ? StartBtn : ReadyBtn) : null}
+      <Button text={"삭제하기"} handler={deleteRoom} isImportant={false}>
+        삭제하기
+      </Button>
+      <Button text={"수정하기"} handler={showModal}>
+        수정하기
+      </Button>
+      {modalOpen && <EditRoom data={data} setModalOpen={setModalOpen} />}
+    </BtnContainer>
+  ) : (
+    <BtnContainer>{readyRoom}</BtnContainer>
+  );
 
   return (
     <Layout>

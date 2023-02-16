@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { GlobalStyle } from "../../action/GlobalStyle";
 
 const Soundbar = (props) => {
-  const { onChange, percentage, timeline, duration } = props
+  const { onChange, percentage, timeline, duration } = props;
   const [style, setStyle] = useState({
     position: 0, //Thumb 위치 지정
     marginLeft: 0, //Thumb 좌측 margin 설정
@@ -15,25 +15,28 @@ const Soundbar = (props) => {
   const rangeRef = useRef();
   const thumbRef = useRef();
   const prograssbarRef = useRef();
-  
+
   useEffect(() => {
+    //파일 전체 길이가 0이 아니면
     if (duration !== 0) {
-    const rangeWidth = rangeRef.current.getBoundingClientRect().width; //현재 너비를 가져옴
-    const thumbWidth = 20;
-    const centerThumb = (thumbWidth / 100) * percentage * -1;
-    const centerProgressBar =
-      thumbWidth +
-      (rangeWidth / 100) * percentage -
-      (thumbWidth / 100) * percentage;
+      //현재 너비를 통해 진행된 상태, 재생 길이, Thumb 위치 등을 반환함
+      const rangeWidth = rangeRef.current.getBoundingClientRect().width; //현재 너비를 가져옴
+      const thumbWidth = 20;
+      const centerThumb = (thumbWidth / 100) * percentage * -1;
+      const centerProgressBar =
+        thumbWidth +
+        (rangeWidth / 100) * percentage -
+        (thumbWidth / 100) * percentage;
 
-    setStyle(() => {
-      return {
-        position: percentage,
-        marginLeft: centerThumb,
-        progressBarWidth: centerProgressBar,
-      };
-    });
+      setStyle(() => {
+        return {
+          position: percentage,
+          marginLeft: centerThumb,
+          progressBarWidth: centerProgressBar,
+        };
+      });
 
+      //각 타임스탬프 위치 set
       setTimeStamp(() => {
         return timeline.map((el) => {
           const thisTime = parseFloat(el.secondTime);
@@ -48,18 +51,21 @@ const Soundbar = (props) => {
       <GlobalStyle />
       {timeStamp !== {} ? (
         <>
+          {/* 재생되고 있을 때 보이는 바 */}
           <ProgressBar ref={prograssbarRef} width={style.progressBarWidth}>
             {timeStamp.map((el, idx) => {
               return <TimeStampBox key={idx} timeStampMargin={el} />;
             })}
           </ProgressBar>
 
+          {/* 조절하는 컴포넌트 */}
           <Thumb
             position={style.position}
             ref={thumbRef}
             marginLeft={style.marginLeft}
           />
 
+          {/* 백그라운드 바 */}
           <Range
             type={"range"}
             ref={rangeRef}

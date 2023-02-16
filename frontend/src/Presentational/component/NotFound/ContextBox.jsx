@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+// 404 텍스트 파트
 const ContextBox = () => {
   const navigate = useNavigate();
+
   return (
     <BodyWrap>
       <HeadText>404</HeadText>

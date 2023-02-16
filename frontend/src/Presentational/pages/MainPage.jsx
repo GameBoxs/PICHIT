@@ -5,9 +5,10 @@ import MainBottom from "../layout/mainpage/MainBottom";
 import MainTop from "../layout/mainpage/MainTop";
 import TapeCompo from "../component/TapeCompo";
 
-const MainPage = ({ isToken }) => {
+const MainPage = () => {
   const MainDiv = useRef([]);
 
+  //해당 위치로 이동하게 하는 함수
   const scrollWithUseRef = (idx) => {
     if (idx === 0)
       MainDiv.current[1]?.scrollIntoView({
@@ -21,6 +22,7 @@ const MainPage = ({ isToken }) => {
       });
   };
 
+  //테이프 컴포넌트 안에 들어갈 값 생성 후 넣어주기
   const TapeContent = new Array(12).fill().map((_, idx) => {
     return <TapeCompo key={idx} num={idx} />;
   });
@@ -31,11 +33,11 @@ const MainPage = ({ isToken }) => {
         <MoveBtn onClick={() => scrollWithUseRef(0)}>게시판 바로가기</MoveBtn>
         <MainTop />
 
+        {/* 디자인 요소들 */}
         <FrontTape>{TapeContent}</FrontTape>
         <BackgroundTape />
       </First>
       <Second ref={(el) => (MainDiv.current[1] = el)}>
-        {/* <MoveBtn onClick={() => scrollWithUseRef(1)}>UP</MoveBtn> */}
         <MainBottom />
       </Second>
     </MainPageLayout>
