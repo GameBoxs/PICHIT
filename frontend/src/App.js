@@ -107,6 +107,8 @@ function App() {
     <AppContainer>
       <GlobalStyle />
 
+
+      {/* 반응형 */}
       <BlockBox>
         해당 서비스는
         <br />

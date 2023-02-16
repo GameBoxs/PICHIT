@@ -1,11 +1,11 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import useAxios from "../../action/hooks/useAxios";
 
 import RoomHeader from "../layout/room/RoomHeader";
 import RoomMain from "../layout/room/RoomMain";
 import RoomHeaderLoading from "../layout/room/RoomHeaderLoading";
-import RoomMainLoading from "../layout/room/RoomMainLoading";
+import Loading from "../common/Loading"
 
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -22,9 +22,10 @@ function RoomPage() {
   // roomId 값을 RoomListItem에서 Link state에 받아와서
   // useLocation에 넣어논 roomId 값을 가져와서 사용함
   const location = useLocation();
+  let navigate = useNavigate();
+  
   const params = useParams();
   const { token, userinfo } = useSelector((state) => state);
-  let navigate = useNavigate();
 
   const roomParamsId = params.id;
   const password = location.state?.password;
@@ -34,6 +35,8 @@ function RoomPage() {
   const [host, setHost] = useState(false);
 
   const [data, setData] = useState();
+  
+  //비밀번호 저장
   const [valid, setValid] = useState({
     password: password,
   });
@@ -57,12 +60,11 @@ function RoomPage() {
       navigate('/')
     }
   },[contextError])
-
-
   
   useEffect(() => {
     const tmpData = postData?.data;
 
+    //데이터 받은 이후 participants에서 현재 사용자 정보 가져오기
     if (postData && tmpData) {
       let originParticipants = tmpData.participants;
       let userIsMe = {};
@@ -118,7 +120,7 @@ function RoomPage() {
   return (
     <Container>
       {aboutUser === {} ? (
-        "isLoading"
+        <Loading />
       ) : (
         <Room>
           <GoHome />

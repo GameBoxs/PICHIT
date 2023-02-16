@@ -1,14 +1,18 @@
+import React, { memo, useState, useEffect } from "react";
 import styled from "styled-components";
+
 import QuestionList from "../../component/room/Question/QuestionList";
 import QuestionInsert from "../../component/room/Question/QuestionInsert";
-import React, { memo, useState } from "react";
+import PageBar from "../../common/Pagination/PageBar";
+
 import useAxios from "../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
-import PageBar from "../../common/Pagination/PageBar";
-import { useEffect } from "react";
 
+//질문 관련 박스
 const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
   const token = useSelector((state) => state.token);
+  
+  //질문 data
   const [aboutQuestions, setAboutQuestions] = useState({
     questions: [],
     allQuestion: 1,
@@ -26,6 +30,8 @@ const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
     {},
     aboutQuestions.get
   );
+
+  //pdf타겟을 정한 후 질문 리스트를 받아올 수 있도록
   useEffect(() => {
     if (pdfhandler !== undefined) {
       setNowPage(1);
@@ -38,6 +44,7 @@ const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
     }
   }, [pdfhandler]);
 
+  //질문 받아온 후
   useEffect(() => {
     if (getQuestion !== null && getQuestion.success) {
       setAboutQuestions(() => {
@@ -50,8 +57,9 @@ const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
       });
     }
   }, [getQuestion]);
+
+  //pagination으로 현재 페이지 설정한 이후
   useEffect(()=>{
-    // setNowPage(1);
     setAboutQuestions((prev) => {
       return {
         ...prev,
@@ -66,6 +74,7 @@ const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
         <div>질문</div>
         <div>{aboutQuestions.length}</div>
       </QuestionBoxTitle>
+
       {/* QuestionList: 해당 참가자에게 달려있는 질문 list 목록 */}
       <QuestionList
         idx={idx}
@@ -74,6 +83,7 @@ const QuestionBox = ({ idx, userinfo, pdfhandler, sessionOpened }) => {
         pdfhandler={pdfhandler}
       />
       <Controler>
+
         {/* QuestionInsert: 질문 입력 칸 */}
         {!sessionOpened ? (
           <QuestionInsert

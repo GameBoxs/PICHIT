@@ -5,13 +5,6 @@ import Title from "../../../../common/Title";
 import FeedBackItem from "./FeedBackItem";
 
 const FeedBackArea = ({ title, data, timeStamp, playTime }) => {
-  const targetElement = useRef(null);
-
-  //항목 선택할 시 하단으로 이동할 수 있도록
-  useEffect(() => {
-    targetElement.current.scrollIntoView({ behavior: "smooth" });
-  }, [title]);
-
   //시간 표시
   let tmpVal = timeStamp.secondTime;
 
@@ -20,9 +13,9 @@ const FeedBackArea = ({ title, data, timeStamp, playTime }) => {
 
   let sDisplay = s > 0 ? (s < 10 ? "0" + s.toString() : s) : "00";
   let mDisplay = m > 0 ? (m < 10 ? "0" + m.toString() : m) : "00";
-  
+
   let tmpArr = [];
-  
+
   //총 분량이 한 시간 넘는지 판단, 넘으면 시간 표시, 아니면 단순 분/초 표시되도록
   if (tmpVal > 3600) {
     let h = Math.floor(tmpVal / 3600);
@@ -39,14 +32,18 @@ const FeedBackArea = ({ title, data, timeStamp, playTime }) => {
 
       <BtnArea>
         {/* 재생 버튼 */}
-        <PlayBtn onClick={() => {playTime(tmpVal)}}>
+        <PlayBtn
+          onClick={() => {
+            playTime(tmpVal);
+          }}
+        >
           <div>재생하기</div>
           <div>{tmpArr.join(":")}</div>
         </PlayBtn>
       </BtnArea>
 
       {/* 각 질문 항목 */}
-      <div ref={targetElement}>
+      <div>
         {data
           ? data.map((datas, idx) => {
               return <FeedBackItem data={datas} key={idx} />;

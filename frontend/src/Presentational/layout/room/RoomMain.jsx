@@ -21,10 +21,10 @@ function RoomMain(props) {
     maxPersonCount,
     participants,
     startDate,
-    sessionOpened
+    sessionOpened,
   } = data;
 
-  console.log(data)
+  console.log(data);
 
   const [isJoin, setIsJoin] = useState(false);
   const [pdf, setPdf] = useState(0);
@@ -51,7 +51,12 @@ function RoomMain(props) {
   const RoomQuestion =
     isJoin || host ? (
       pdfhandler.interviewJoinId !== userinfo.interviewJoinId ? (
-        <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} sessionOpened={sessionOpened}/>
+        <QuestionBox
+          idx={pdf}
+          userinfo={userinfo}
+          pdfhandler={pdfhandler}
+          sessionOpened={sessionOpened}
+        />
       ) : (
         <PopUp>
           스터디 전에
@@ -102,10 +107,10 @@ function RoomMain(props) {
             </div>
           </Card>
         </Section>
-        
+
         <Description className="ContectWay">
           <SubTitle title={"연락 방법"} />
-          {contactWay !== null? contactWay:"연락 방법이 없습니다"}
+          {contactWay !== null ? contactWay : <div className="guidance">연락 방법이 없습니다</div>}
         </Description>
 
         <Description>
@@ -118,9 +123,7 @@ function RoomMain(props) {
         <SubTitle title={"자기소개서 보기"} />
       </SectionHeader>
       <Layout>
-        <Section>
-          {RoomSection}
-          </Section>
+        <Section>{RoomSection}</Section>
         <Section>{RoomQuestion}</Section>
       </Layout>
     </MainPageContainer>
@@ -142,6 +145,10 @@ const Description = styled.div`
     margin-bottom: 1rem;
     font-family: "SBAggroL";
     color: var(--greyDark);
+  }
+
+  .guidance {
+    width: fit-content;
   }
 `;
 
@@ -182,14 +189,14 @@ const Layout = styled.div`
       height: 100%;
     }
   }
-  
+
   .ContectWay {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 1rem;
 
-    .SubTitle{
+    .SubTitle {
       margin: 0;
     }
   }

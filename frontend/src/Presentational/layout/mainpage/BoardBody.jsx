@@ -6,6 +6,7 @@ import BoardBodyBottom from "./BoardBodyBottom";
 import BoardList from "./BoardList";
 import BoardHeader from "./BoardHeader";
 
+//게시판 전체
 function BoardBody(props) {
   const {
     roomPosition,
