@@ -18,10 +18,9 @@ const BounceWrap = styled.div`
     height: 30px;
     display: flex;
     align-items: center;
-    margin-top: 2%;
     background-color: var( --greyLight-1);
     width: 70px;
-    border-radius: 20px 20px 20px 20px;
+    border-radius: 20px 20px 20px 20px !important;
 `
 
 const bounce = keyframes`
@@ -37,7 +36,7 @@ const Ellipsis = styled.div`
     margin-left: 10px;
     margin-top: 3px;
     background-color: var(--primary);
-    border-radius: 50%;
+    border-radius: 50% !important;
     animation: ${bounce} 1.3s linear infinite;
 
     :first-child {

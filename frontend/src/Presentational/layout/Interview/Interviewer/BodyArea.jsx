@@ -35,7 +35,7 @@ const BodyArea = ({ session, info }) => {
         {/* 채팅 영역 */}
         <BodyCompo>
             <SubTitle title={"채팅"} />
-            <ChatArea session={session} info={info} chatOn={true}/>
+            <ChatArea session={session} info={info} chatOn={true} page={'interviewer'}/>
         </BodyCompo>
     </InterviewBody>
   )

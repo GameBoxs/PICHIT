@@ -2,10 +2,9 @@ import styled from "styled-components";
 import { memo, useEffect, useState } from "react";
 import { BiSend } from "react-icons/bi";
 
-const Input = ({ SetIncomMessage, session, info }) => {
+const Input = ({session, info }) => {
   const [textValue, SetTextValue] = useState("");
   const [inputFlag, setInputFlag] = useState(false);
-  let flag = false;
 
   useEffect(() => {
     if (textValue === "\n") SetTextValue("");
@@ -62,7 +61,6 @@ const Input = ({ SetIncomMessage, session, info }) => {
 
     let time = getTime();
     const data = { Name: JSON.parse(info.publisher.stream.connection.data).clientData.toString(), Time: time, Message: textValue };
-    // SetIncomMessage(data);
     session.signal({
       data: JSON.stringify(data),
       to: [],
@@ -86,15 +84,6 @@ const Input = ({ SetIncomMessage, session, info }) => {
     </InputWrap>
   );
 };
-
-// const InputText = styled.input.attrs({type:"text"})`
-//     border: none;
-//     font-size: 20px;
-//     width: 95%;
-//     &:focus{
-//         outline: 0;
-//     }
-// `
 
 const InputWrap = styled.div`
   display: flex;

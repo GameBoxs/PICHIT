@@ -5,7 +5,7 @@ import styled from "styled-components";
 /* Component Import */
 import IncomMessage from "../../component/Chat/IncomMessage";
 
-const MessageArea = ({Message}) => {
+const MessageArea = ({Message, page}) => {
     /* 메세지 영역 Dom 담을 Ref */
     const scrollRef = useRef();
 
@@ -23,7 +23,7 @@ const MessageArea = ({Message}) => {
     },[Message]);
 
     return (
-        <MessageWrap ref={scrollRef}>
+        <MessageWrap ref={scrollRef} page={page}>
             {
                 Message.map((data,index) => {
                     return(
@@ -40,7 +40,7 @@ export default MessageArea;
 /* Styled-Component */
 const MessageWrap = styled.div`
     width: inherit;
-    height: 100%;
+    height: ${props => props.page === 'interviewer' ? '93%' : '86%'};
     padding-inline: 0;
     overflow: auto;
     & *{

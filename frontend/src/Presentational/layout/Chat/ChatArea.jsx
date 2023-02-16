@@ -7,7 +7,7 @@ import BounceText from "../../component/Chat/BounceText";
 import InputArea from "./InputArea";
 import MessageArea from "./MessageArea";
 
-const ChatArea = ({session,info, chatOn}) => {
+const ChatArea = ({session,info, chatOn, page}) => {
     /* 수신 메세지 저장 */
     const [incomM, SetIncomM] = useState([]);
     /* 단일 수신 메세지 임시로 저장 */
@@ -62,7 +62,7 @@ const ChatArea = ({session,info, chatOn}) => {
     return(
         <ChatWrap chatOn={chatOn} className="ChatWrap">
             <ChatBody>
-                <MessageArea Message={incomM}/>
+                <MessageArea Message={incomM} page={page}/>
                 {
                     bounceFlag ?
                     <BounceText />
@@ -81,13 +81,12 @@ export default memo(ChatArea);
 /* Styled-Component */
 const ChatWrap = styled.div`
     width: 100%;
-    height: calc(100% - 31px);
+    height: calc(100% - 30px);
     border-radius: 0;
     visibility: ${props => props.chatOn ? 'visible':'hidden'};
 `
 const ChatBody = styled.div`
-    margin-top: 2%;
-    padding: 0 3% 7% 5% ;
+    padding: 0 3% 5% 5% ;
     width: calc(100%-10px);
     height: 90%;
     overflow: auto;
