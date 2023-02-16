@@ -33,9 +33,10 @@ function App() {
   const handleOpenPop = () => {
     //팝업 생성 함수
     const width = 400;
+    const height = 700;
 
     //팝업 창 생성
-    const popup = window.open(KAKAO_AUTH_SERVER, "KAKAO", `width=${width}`);
+    const popup = window.open(KAKAO_AUTH_SERVER, "KAKAO", `width=${width}, height=${height}, top=${100}, left=${600}`);
 
     setPopup(popup);
   };
