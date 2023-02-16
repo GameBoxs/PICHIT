@@ -197,22 +197,6 @@ const ModalOverlay = styled.div`
   right: 0;
 `;
 
-const DeleteButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 1em;
-  border: none;
-  background-color: var(--primary-light);
-  padding: 0.5em;
-  color: var(--white);
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--primary-dark);
-  }
-`;
-
 const PdfContainer = styled.div`
   display: flex;
   flex-direction: column;
