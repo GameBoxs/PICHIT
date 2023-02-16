@@ -3,6 +3,7 @@ import styled from "styled-components";
 import CreateRoom from "../../component/CreateRoom";
 import Button from "../../common/Button";
 import { useSelector } from "react-redux";
+
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -11,6 +12,8 @@ const MySwal = withReactContent(Swal);
 function BoardBodyBottom() {
     //방생성하기
     const token =useSelector((state)=>state.token)
+
+    //모달 생성 판별 여부
     const [modalOpen, setModalOpen] = useState(false);
     const showModal = () => {
       if (token){

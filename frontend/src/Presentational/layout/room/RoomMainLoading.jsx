@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import SubTitle from "../../common/SubTitle";
-import React, { useState, useEffect, memo } from "react";
+import React, { memo } from "react";
 
-import { BsFillPersonFill } from "react-icons/bs";
-
+//로딩 시 룸 메인 위치에 보이는 컴포넌트
 function RoomMainLoading() {
   return (
     <MainPageContainer>

@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React from "react";
+import { memo } from "react";
 
 import styled from "styled-components";
 import Title from "../../common/Title";
 
+//로딩일 때 룸헤더 위치에 보이는 컴포넌트
 function RoomHeaderLoading() {
-  
   return (
     <Layout>
       <Title title={""} />
@@ -12,18 +13,7 @@ function RoomHeaderLoading() {
   );
 }
 
-export default RoomHeaderLoading;
-
-const BtnContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const LayoutButton = styled.div`
-  width: 10vw;
-  height: 8vh;
-`;
+export default memo(RoomHeaderLoading);
 
 const Layout = styled.div`
   margin-bottom: 3rem;

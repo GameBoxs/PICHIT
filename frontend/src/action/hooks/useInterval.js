@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 
+//총 시간 흘러가게 하는 훅
 function useInterval(callback, delay) {
   const savedCallback = useRef();
 
@@ -13,8 +14,10 @@ function useInterval(callback, delay) {
     function tick() {
       savedCallback.current();
     }
+
     if (delay !== null) {
       let id = setInterval(tick, delay);
+      
       return () => clearInterval(id);
     }
   }, [delay]);

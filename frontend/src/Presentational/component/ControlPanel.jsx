@@ -3,9 +3,10 @@ import React, { memo } from "react";
 import styled from "styled-components";
 import SoundBtn from "./SoundBtn";
 
+//재생/시간 보여주는 컴포넌트
 const ControlPanel = ({ play, isPlaying, duration, currentTime }) => {
-  //시간 설정 함수
 
+  //시간 설정 함수
   const secondsToHms = (seconds) => {
     if (!seconds) return "00m 00s";
 

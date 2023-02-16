@@ -1,19 +1,15 @@
 import styled from "styled-components";
-import axios from "axios";
-import { PITCHIT_URL } from "../../../../../store/values";
 import useAxios from "../../../../../action/hooks/useAxios";
 import MyresumeDelete from "./MyresumeDelete";
 
 function MyResume({ setShowPdf, token, pdfhandler, setMemData }) {
+  //자소서 가져오기
   const [getData] = useAxios(
     `interviewjoins/${pdfhandler.interviewJoinId}/resumes`,
     "GET",
     token
   );
 
-  // const FileId =getData.data.id
-
-  // console.log(FileId)
   // 등록된 pdf 데이터 삭제
   if (getData && getData.data !== null) {
     return (

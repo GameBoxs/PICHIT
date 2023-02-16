@@ -3,17 +3,15 @@ import { IoClose } from "react-icons/io5";
 import axios from "axios";
 import { PITCHIT_URL } from "../../../../../store/values";
 
-
-function MyresumeDelete({getData,token,setMemData}) {
+//자소서 삭제
+function MyresumeDelete({ getData, token, setMemData }) {
   if (getData === null) {
-    return (<>
-    </>)
-  }
-  else{
-    const fileId = getData.data.id
-       // 등록된 pdf 데이터 삭제
+    //받은 데이터가 없을 때 빈 값 리턴
+    return <></>;
+  } else {
+    const fileId = getData.data.id;
+    // 등록된 pdf 데이터 삭제
     const onDeleteTarget = () => {
-      console.log(getData)
       axios({
         method: "DELETE",
         url: `${PITCHIT_URL}/resumes/${fileId}`,
@@ -23,22 +21,20 @@ function MyresumeDelete({getData,token,setMemData}) {
       })
         .then((res) => {
           window.location.reload();
-          setMemData(null)
-
+          setMemData(null);
         })
         .catch((err) => console.log(err));
     };
-    return (<>
-       <DeleteButton onClick={onDeleteTarget}>
-              <IoClose />
-            </DeleteButton>
-    </>
- 
-    )
+    return (
+      <>
+        <DeleteButton onClick={onDeleteTarget}>
+          <IoClose />
+        </DeleteButton>
+      </>
+    );
   }
-
 }
-export default MyresumeDelete; 
+export default MyresumeDelete;
 
 const DeleteButton = styled.button`
   display: flex;

@@ -1,11 +1,6 @@
-//#region import
 import styled from "styled-components";
-import { GlobalStyle } from "../../action/GlobalStyle";
-import { useState } from "react";
-//#endregion
 
-//#region NormalToggleButton
-const ToggleButton = ({ handler, toggle, ToggleHandler }) => {
+const ToggleButton = ({ toggle, ToggleHandler }) => {
   const ClickedToggle = () => {
     ToggleHandler(!toggle);
   };
@@ -85,56 +80,6 @@ const SwitchBox = styled.div`
   }
 `;
 
-//#region Normal Styled-Component
-const ToggleBody = styled.input.attrs({ type: "checkbox" })`
-  position: relative;
-  -webkit-appearance: none;
-
-  width: 70px;
-  height: 30px;
-  outline: none;
-  background: var(--greyLight-2);
-
-  border-radius: 20px;
-
-  &:checked {
-    background: var(--primary);
-    &::before {
-      left: 40px;
-    }
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    border-radius: 20px;
-    top: 0;
-    left: 0;
-    background: white;
-    transform: scale(1.1);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: 0.5s;
-  }
-`;
-
-const MainDiv = styled.div`
-  & .sunImg {
-    width: 25px;
-    height: 25px;
-    margin-right: 5px;
-  }
-
-  & .moonImg {
-    width: 25px;
-    height: 25px;
-    margin-left: 5px;
-  }
-`;
-//#endregion
-
-//#endregion
 
 //#region DarkModToggleButton
 const DarkModToggleButton = ({ handler }) => {
@@ -211,6 +156,7 @@ const ToggleWrapper = styled.div`
     }
   }
 `;
+
 const DN = styled.input.attrs({ type: "checkbox" })``;
 
 const Toggle = styled.label`
@@ -335,7 +281,5 @@ const ToggleHandler = styled.span`
 
 const Crater = styled.span``;
 const Star = styled.span``;
-//#endregion
-//#endregion
 
 export { ToggleButton, DarkModToggleButton };

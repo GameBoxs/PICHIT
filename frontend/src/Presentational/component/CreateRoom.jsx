@@ -71,7 +71,6 @@ function CreateRoom({ setModalOpen }) {
   const token = useSelector((state) => state.token);
 
   // 방 생성하기 useAxios
-
   const [createData, setCreateData] = useState(false);
   const [createResult, isLoading] = useAxios(
     "interviewrooms",
@@ -90,6 +89,7 @@ function CreateRoom({ setModalOpen }) {
     setRoom("");
   };
 
+  // 방 생성하기
   const roomCreate = (e) => {
     if (room.title.trim() === "") {
       alert("제목을 입력해주세요");

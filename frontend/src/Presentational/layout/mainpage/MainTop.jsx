@@ -1,4 +1,6 @@
-import styled, { css, keyframes } from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+//메인 상단
 
 function MainTop() {
   return (

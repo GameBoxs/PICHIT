@@ -1,31 +1,18 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import TotalCategory from "../../component/TotalCategory";
-import MyCategory from "../../component/MyCategory";
-import PageBar from "../../common/Pagination/PageBar";
-import PageZero from "../../common/Pagination/PageZero";
-import Pagination from "../../common/Pagination/Pagination";
-import CreateRoom from "../../component/CreateRoom";
-import Button from "../../common/Button";
-import RoomListBox from "../../component/RoomListBox";
 import TitleSection from "../../component/TitleSection";
 import Loading from "../../common/Loading";
 
-//sweetalert2
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 //통신
 import useAxios from "../../../action/hooks/useAxios";
 
 import { useSelector } from "react-redux";
-import _ from "lodash";
 import BoardBody from "./BoardBody";
 
 function MainBottom() {
   // //페이지네이션
   const [currentPage, setCurrentPage] = useState(1); //현재페이지
-  // const [totalElements, setTotalElements] = useState(0); //전체 데이터 길이
   const [totalpages, setTotalPages] = useState(0); //전체 데이터 길이
   //조건검색
   const [aboutCondition, setAboutCondition] = useState({
@@ -48,7 +35,6 @@ function MainBottom() {
   
   //버튼을 통한 TOTAL/MY 값
   function roomSwitch(position) {
-    // console.log('클릭됨'+position)
     if (position === "toTotal") {
       setRoomPosition(false);
       serAPIurl(totalCategory);
@@ -91,7 +77,6 @@ function MainBottom() {
       setData(getData);
       // setTotalElements(totalElements=>getData.data.totalElements); //데이터 전체 수
       setTotalPages((totalPages) => getData.data.totalPages); //페이지 전체 수
-      // console.log('렌더링 확인용:::::'+getData.data.totalElements)
     }
   }, [getData]);
   //이거 로그인환경에서 처음에 null, total데이터, my데이터 로 값변경일어나면서 렌더링
@@ -104,7 +89,6 @@ function MainBottom() {
     }
   }, [currentPage, aboutCondition]);
 
-  // console.log('렌더링 확인용:::::'+totalpages)
   return (
     <Layout>
       <Header>
@@ -134,8 +118,6 @@ function MainBottom() {
 export default MainBottom;
 
 const Layout = styled.div`
-/* border: 1px solid red; */
-  /* margin-inline: 15rem; */
   height: fit-content;
   margin-bottom: 100px;
   width: 65vw;

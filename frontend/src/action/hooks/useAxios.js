@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { PITCHIT_URL } from "../../store/values";
-import { useDispatch } from "react-redux";
 
 /* 
   target : 타겟 백엔드 API 주소

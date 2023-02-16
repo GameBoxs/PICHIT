@@ -3,16 +3,13 @@ import {
   Route,
   Routes,
   useLocation,
-  useNavigate,
-  useParams,
 } from "react-router-dom";
 import styled from "styled-components";
 import Footer from "./Presentational/common/Footer";
 
 import "./font.css";
 
-import Navigation from "./Presentational/common/Navigation";
-// import InterviewPage from "./Presentational/pages/Interview/InterviewPage";
+import Navigation from "./Presentational/common/Navigation/Navigation";
 import InterviewPage from "./Presentational/pages/Interview/InterviewPage";
 import MainPage from "./Presentational/pages/MainPage";
 import ReviewPage from "./Presentational/pages/ReviewPage";
@@ -22,7 +19,6 @@ import { GlobalStyle } from "./action/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { KAKAO_AUTH_SERVER } from "./store/values";
 import { slicer } from "./reducer/tokenSlicer";
-import useAxios from "./action/hooks/useAxios";
 import { setUserInfo } from "./reducer/userStore";
 import axios from "axios";
 
@@ -111,6 +107,8 @@ function App() {
     <AppContainer>
       <GlobalStyle />
 
+
+      {/* 반응형 */}
       <BlockBox>
         해당 서비스는
         <br />

@@ -14,16 +14,17 @@ function RoomMain(props) {
   const { userJoinInfo, data, userinfo } = props;
   const { join, host } = userJoinInfo;
   const {
+    contactWay,
     currentPersonCount,
     description,
     manager,
     maxPersonCount,
     participants,
     startDate,
-    sessionOpened
+    sessionOpened,
   } = data;
 
-  console.log(data)
+  console.log(data);
 
   const [isJoin, setIsJoin] = useState(false);
   const [pdf, setPdf] = useState(0);
@@ -35,7 +36,6 @@ function RoomMain(props) {
   }, [props]);
 
   // roompage에 있는 join 값이 바뀔 때 마다 setIsJoin 실행 함
-
   const RoomSection =
     isJoin || host ? (
       <Resume
@@ -51,7 +51,12 @@ function RoomMain(props) {
   const RoomQuestion =
     isJoin || host ? (
       pdfhandler.interviewJoinId !== userinfo.interviewJoinId ? (
-        <QuestionBox idx={pdf} userinfo={userinfo} pdfhandler={pdfhandler} sessionOpened={sessionOpened}/>
+        <QuestionBox
+          idx={pdf}
+          userinfo={userinfo}
+          pdfhandler={pdfhandler}
+          sessionOpened={sessionOpened}
+        />
       ) : (
         <PopUp>
           스터디 전에
@@ -61,13 +66,6 @@ function RoomMain(props) {
     ) : (
       <PopUp>질문을 볼 수 없습니다.</PopUp>
     );
-
-  // isJoin값에 따라서 볼 수 있는 컴포넌트가 변경됨
-
-  // const pdfHandler = (person, idx) => {
-  //   console.log(person);
-  //   setPdf(idx);
-  // };
 
   const Recuritment = maxPersonCount - currentPersonCount;
 
@@ -110,8 +108,13 @@ function RoomMain(props) {
           </Card>
         </Section>
 
+        <Description className="ContectWay">
+          <SubTitle title={"연락 방법"} />
+          {contactWay !== null ? contactWay : <div className="guidance">연락 방법이 없습니다</div>}
+        </Description>
+
         <Description>
-          <SubTitle title={"Introduce"} />
+          <SubTitle title={"상세 설명"} />
           {description}
         </Description>
       </Layout>
@@ -120,9 +123,7 @@ function RoomMain(props) {
         <SubTitle title={"자기소개서 보기"} />
       </SectionHeader>
       <Layout>
-        <Section>
-          {RoomSection}
-          </Section>
+        <Section>{RoomSection}</Section>
         <Section>{RoomQuestion}</Section>
       </Layout>
     </MainPageContainer>
@@ -144,6 +145,10 @@ const Description = styled.div`
     margin-bottom: 1rem;
     font-family: "SBAggroL";
     color: var(--greyDark);
+  }
+
+  .guidance {
+    width: fit-content;
   }
 `;
 
@@ -182,6 +187,17 @@ const Layout = styled.div`
 
     ${Section} {
       height: 100%;
+    }
+  }
+
+  .ContectWay {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+
+    .SubTitle {
+      margin: 0;
     }
   }
 `;
