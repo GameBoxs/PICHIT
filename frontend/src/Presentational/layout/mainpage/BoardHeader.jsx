@@ -1,5 +1,5 @@
 import React from "react";
-import TotalCategory from "../../component/TotalCategory";
+import TotalCategory from "../../component/MainBoard/TotalCategory";
 
 function BoardHeader({roomPosition, conditionHandler}) {
 

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { ToggleButton } from "../common/ToggleButton";
+import { ToggleButton } from "../../common/ToggleButton";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 
-import useAxios from "../../action/hooks/useAxios";
+import useAxios from "../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import Button from "../common/Button";
+import Button from "../../common/Button";
 
 import "react-day-picker/dist/style.css";
 

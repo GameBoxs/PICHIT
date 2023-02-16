@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import TitleSection from "../../component/TitleSection";
+import TitleSection from "../../component/MainBoard/TitleSection";
 import Loading from "../../common/Loading";
 
 //통신
@@ -20,6 +20,7 @@ function MainBottom() {
     sort: "",
     finished: "",
   });
+
   //통신
   const [APIurl, serAPIurl] = useState("interviewrooms?&finished=0");
   const myCategory = `my-interviewrooms?finished=0&page=${currentPage - 1}`;

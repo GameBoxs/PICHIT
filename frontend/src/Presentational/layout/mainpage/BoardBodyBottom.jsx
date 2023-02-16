@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import styled from "styled-components";
-import CreateRoom from "../../component/CreateRoom";
+import CreateRoom from "../../component/Modal/CreateRoom";
 import Button from "../../common/Button";
 import { useSelector } from "react-redux";
 

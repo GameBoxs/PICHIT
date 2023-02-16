@@ -9,7 +9,7 @@ import { setUserInfo } from "../../../reducer/userStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import LogInModal from "../../component/LogInModal";
+import LogInModal from "../../component/Modal/LogInModal";
 
 /* Global Variable */
 const MySwal = withReactContent(Swal);

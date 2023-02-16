@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import RoomListBox from "../../component/RoomListBox";
+import RoomListBox from "../../component/MainBoard/RoomListBox";
 import Loading from "../../common/Loading";
 
 //보드 리스트 판별

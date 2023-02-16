@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { memo } from "react";
 import styled from "styled-components";
-import SubTitle from "../common/SubTitle";
+import SubTitle from "../../common/SubTitle";
 
-import useAxios from "../../action/hooks/useAxios";
+import useAxios from "../../../action/hooks/useAxios";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";

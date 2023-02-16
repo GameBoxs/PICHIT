@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import Title from "../common/Title"
-import SubTitle from "../common/SubTitle"
+import Title from "../../common/Title"
+import SubTitle from "../../common/SubTitle"
 
 //방이 없을 때 안내문구 띄우는 컴포넌트
 function EmptyRoomList(props) {

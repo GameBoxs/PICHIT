@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 /* Component Import */
-import InfiniteLoopSlider from "../../component/InfiniteLoopSlider";
+import InfiniteLoopSlider from "../../component/Interview/InfiniteLoopSlider";
 
 /* loop sentence variable */
 const sentence = [

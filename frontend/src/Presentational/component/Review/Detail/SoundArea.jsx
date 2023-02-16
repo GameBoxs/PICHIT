@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState, memo } from "react";
-import Soundbar from "../../Soundbar";
-import ControlPanel from "../../ControlPanel";
+import Soundbar from "../../AboutSound/Soundbar";
+import ControlPanel from "../../AboutSound/ControlPanel";
 
 const SoundArea = ({sound, audioRef, isPlaying, setIsPlaying}) => {
   const [percentage, setPercentage] = useState(0);
@@ -38,8 +38,6 @@ const SoundArea = ({sound, audioRef, isPlaying, setIsPlaying}) => {
 
       //전체 길이 중 현재 시간이 얼만큼 차지하고 있는 지 백분율로 보여줌
       const percent = ((currentTime / duration) * 100).toFixed(2);
-  
-      console.log(duration)
   
       setPercentage(+percent);
 

@@ -6,7 +6,7 @@ import withReactContent from "sweetalert2-react-content";
 import { useSelector } from "react-redux";
 import { FaLock } from "react-icons/fa";
 import axios from "axios";
-import { PITCHIT_URL } from "../../store/values";
+import { PITCHIT_URL } from "../../../store/values";
 
 const MySwal = withReactContent(Swal);
 

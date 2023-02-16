@@ -4,8 +4,8 @@ import SubTitle from "../../common/SubTitle";
 import React, { useState, useEffect } from "react";
 import QuestionBox from "./QuestionBox";
 import Resume from "./Resume";
-import PlanTime from "../../component/PlanTime";
-import Person from "../../component/Person";
+import PlanTime from "../../component/room/PlanTime";
+import Person from "../../component/room/Person";
 
 import { BsFillPersonFill } from "react-icons/bs";
 // import AggroL from "../../common/Font/AggroL";

@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
-import { ToggleButton } from "../common/ToggleButton";
-import Title from "../common/Title";
-import Button from "../common/Button";
+import { ToggleButton } from "../../common/ToggleButton";
+import Title from "../../common/Title";
+import Button from "../../common/Button";
 
-import useAxios from "../../action/hooks/useAxios";
+import useAxios from "../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

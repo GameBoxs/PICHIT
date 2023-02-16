@@ -3,7 +3,7 @@ import React from "react"
 import styled from "styled-components"
 
 /* Component Import */
-import DefaultScreen from "../../component/DefaultScreen"
+import DefaultScreen from "../../component/Interview/DefaultScreen"
 
 const Screen = ({number, info}) => {
     /* 최대 4명 중 참여하지 않은 빈 자리 수 */

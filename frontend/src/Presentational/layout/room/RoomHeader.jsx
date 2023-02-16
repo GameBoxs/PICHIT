@@ -3,7 +3,7 @@ import React, { useEffect, useState, useLayoutEffect, memo } from "react";
 import styled from "styled-components";
 import Title from "../../common/Title";
 import Button from "../../common/Button";
-import EditRoom from "../../component/EditRoom";
+import EditRoom from "../../component/Modal/EditRoom";
 
 import { useNavigate } from "react-router-dom";
 import useAxios from "../../../action/hooks/useAxios";

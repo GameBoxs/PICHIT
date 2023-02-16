@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { GlobalStyle } from "../../action/GlobalStyle";
+import { GlobalStyle } from "../../../action/GlobalStyle";
 
 const Soundbar = (props) => {
   const { onChange, percentage, timeline, duration } = props;

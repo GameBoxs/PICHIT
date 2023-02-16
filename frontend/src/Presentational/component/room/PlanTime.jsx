@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { GlobalStyle } from "../../action/GlobalStyle";
+import { GlobalStyle } from "../../../action/GlobalStyle";
 
 //스터디 일자 보여주는 컴포넌트
 function PlanTime({startDate}) {

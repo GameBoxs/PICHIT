@@ -3,11 +3,11 @@ import React from "react";
 import styled from "styled-components";
 
 /* Component Import */
-import { GlobalStyle } from "../../action/GlobalStyle";
-import OpenViduVideoComponent from "../component/Chat/OpenVidu/OvVideo";
+import { GlobalStyle } from "../../../action/GlobalStyle";
+import OpenViduVideoComponent from "../Chat/OpenVidu/OvVideo";
 
 /* Module Import */
-import { selectInterviwee } from "../../action/modules/chatModule";
+import { selectInterviwee } from "../../../action/modules/chatModule";
 
 const DefaultScreen = ({ streamManager, name, session, number, isNone }) => {
   return (

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { QuestionBody, SubNav } from "../StyledCompo";
 import SubTitle from "../../../../common/SubTitle";
-import QuestionCompo from "../../../../component/QuestionCompo";
+import QuestionCompo from "../../../../component/Interview/QuestionCompo";
 import { memo } from "react";
 import Loading from "../../../../common/Loading";
 
