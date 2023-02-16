@@ -21,6 +21,7 @@ const BodyArea = (props) => {
   const [isQuestion, setIsQuestion] = useState(false); //useAxios에서 excute로 쓰이는 애들
   const [questionData, setQuestionData] = useState([]); //질문 목록들
 
+  // 질문 받아오는 axios hook
   const [getQuest] = useAxios(
     `questions?writerId=${reqBody.writerId}&intervieweeId=${reqBody.intervieweeId}&interviewRoomId=${reqBody.interviewRoomId}`,
     "GET",
@@ -30,7 +31,9 @@ const BodyArea = (props) => {
   );
 
   useEffect(() => {
+    // publisher 값ㅇ르 가져왔을 때
     if(info.publisher !== undefined){
+      // 방 아이디 가져오기
       let roomID = JSON.parse(info.publisher.stream.connection.data).clientRoomId;
   
       setReqBody(() => {

@@ -4,6 +4,7 @@ import Rating from "../../Rating";
 import SubTitle from "../../../../common/SubTitle";
 import { QuestionBody } from "../StyledCompo";
 
+// 별을 통해 점수 매기는 컴포넌트
 function AboutRating({starScore, setFeedback}) {
   return (
     <QuestionBody>
