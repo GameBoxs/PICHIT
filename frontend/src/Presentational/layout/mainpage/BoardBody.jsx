@@ -58,6 +58,7 @@ const Main = styled.div`
     width: 100%;
     margin-block: 2rem 1.5rem;
   }
+  padding-left: 50px;
 `;
 
 const PaginationBox = styled.div`

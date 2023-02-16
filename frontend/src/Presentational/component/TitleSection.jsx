@@ -77,6 +77,7 @@ const Titlesection = styled.div`
   justify-content: space-between;
   align-items: center;
   font-family: "SBAggroL";
+  margin: 0px 25px;
 
   div {
     display: flex;

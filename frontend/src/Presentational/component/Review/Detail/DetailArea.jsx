@@ -2,7 +2,10 @@ import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import useAxios from "../../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import Swal from "sweetalert2";
 
+import { PITCHIT_URL } from "../../../../store/values";
 import SubTitle from "../../../common/SubTitle";
 import FeedBackArea from "./FeedBack/FeedBackArea";
 import SoundArea from "./SoundArea";
@@ -86,6 +89,48 @@ const DetailArea = ({ selectedID, moveRef }) => {
     setIsPlaying(true);
     audioRef.current.play();
   };
+
+  // 자기소개서 조회
+  const [resumeData, setResumeData] = useState();
+
+  const width = 600;
+  const height = 800;
+  const handleOpenPop = () => {
+    if (resumeData !== null) {
+      setResumeData(null);
+    }
+    axios({
+      method: "get",
+      url: `${PITCHIT_URL}/interviewjoins/${selectedID}/resumes`,
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((res) => {
+        if (res.data.success === false) {
+          setResumeData(res);
+        } else {
+          setResumeData(res.data.data.uri);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    if (resumeData && resumeData.data && resumeData.data.success === false) {
+      Swal.fire({
+        text: "등록된 자소서가 없습니다.",
+        showConfirmButton: false,
+        icon: "warning",
+        timer: 1500,
+      });
+    } else if (resumeData) {
+      window.open(
+        resumeData,
+        "introducePdf",
+        `width=${width}, height=${height}`
+      );
+    }
+  }, [resumeData]);
 
   return (
     <div ref={moveRef}>

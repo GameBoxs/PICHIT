@@ -1,3 +1,4 @@
+/* ETC Import */
 import { useRef } from "react";
 import styled from "styled-components";
 
@@ -6,21 +7,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { slicer } from "../../../reducer/tokenSlicer";
 import { setUserInfo } from "../../../reducer/userStore";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import LogInModal from "../../component/LogInModal";
 
+/* Global Variable */
 const MySwal = withReactContent(Swal);
 
 function NavigationButton(props) {
+  /*
+    navigate - Page 이동에 사용
+    location - url path를 찾기 위해 사용
+    dispatch - Redux store변경에 사용
+    menuToggle - DOM을 참조 하기 위해 사용
+    token - 로그인 후 Redux에 저장한 토큰
+    info - 로그인 후 Redux에 저장한 내 정보 
+  */
   const navigate = useNavigate();
   const location = useLocation();
-  const token = useSelector((state) => state.token);
-  const info = useSelector((state) => state.userinfo);
   const dispatch = useDispatch();
   const menuToggle = useRef();
+  const token = useSelector((state) => state.token);
+  const info = useSelector((state) => state.userinfo);
 
+  /* 메뉴 버튼을 눌렀을 때 toggle을 사용하여 className을 붙임 */
   const toggleClick = () => {
     menuToggle.current.classList.toggle("active");
   };
@@ -66,7 +76,7 @@ function NavigationButton(props) {
     menuToggle.current.classList.toggle("active");
   };
 
-  //Navheight 결정
+  /* 조건에 따른 높이 변경 */
   const NavHeight =
     token !== null
       ? location.pathname === "/"
@@ -112,6 +122,7 @@ function NavigationButton(props) {
 
 export default NavigationButton;
 
+/* Styled-Component */
 const MenuItem = styled.li`
   list-style: none;
   cursor: pointer;
@@ -141,7 +152,6 @@ const MenuList = styled.ul`
     }
     border-top: 1px solid rgba(0, 0, 0, 0.1);
   }
-  /* border-top: 1px solid rgba(0,0,0,0.1); */
 `;
 
 const NavUser = styled.div`
@@ -152,8 +162,8 @@ const NavUser = styled.div`
   overflow: hidden;
   align-items: center;
   border-radius: 10%;
-  transition: 0.5s;
-  transition-delay: 0.75s;
+  transition: 0.2s;
+  transition-delay: 0.4s;
 `;
 
 const UserName = styled.span`
@@ -187,8 +197,9 @@ const MenuToggle = styled.div`
     background: var(--white);
     transform: translateY(-10px);
     box-shadow: 0 10px var(--white);
-    transition: 0.5s;
+    transition: 0.2s;
   }
+
   &::after {
     content: "";
     position: absolute;
@@ -196,7 +207,7 @@ const MenuToggle = styled.div`
     height: 2px;
     background: var(--white);
     transform: translateY(10px);
-    transition: 0.5s;
+    transition: 0.2s;
   }
 `;
 
@@ -228,10 +239,12 @@ const NavStyle = styled.div`
         transform: translateY(0px) rotate(-45deg);
       }
     }
+
     ${NavUser} {
       width: calc(100% - 60px);
       border-radius: 10%;
     }
+
     width: 300px;
     height: ${(props) => props.NavHeight}px;
     border-radius: 2%;

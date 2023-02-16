@@ -20,7 +20,7 @@ export default RoomList;
 const RoomListul = styled.ul`
     display: flex;
     flex-flow: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 1rem;
     list-style:none;
     width: 100%;
