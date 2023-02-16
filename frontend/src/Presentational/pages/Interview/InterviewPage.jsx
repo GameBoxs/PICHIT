@@ -55,6 +55,7 @@ const InterviewPage = () => {
     /* 세션 참여시 실행 함수 */
     const joinSession = () => {
         setSession(OV.initSession()); // chatModule.js 에 있는 함수
+        OV.enableProdMode();
     };
     
     /* 목록에서 나간 참여지 제거 함수 */
@@ -78,7 +79,6 @@ const InterviewPage = () => {
 
     /* 접속시 분기점 체크 */
     const checkRoomstate = () => {
-        console.log('roomStateData 가뭔데 ', roomStateData);
         /* Axios로 부른 데이터가 존재하고, 원하는 데이터가 존재 할 때 */
         if (roomStateData && roomStateData.data) {
             /* data - Axios로 로딩한 데이터 */
