@@ -1,5 +1,6 @@
 import { memo, useRef, useEffect } from "react";
 import styled from "styled-components";
+import { GlobalStyle } from "../../../../../action/GlobalStyle";
 
 import Title from "../../../../common/Title";
 import FeedBackItem from "./FeedBackItem";
@@ -28,6 +29,7 @@ const FeedBackArea = ({ title, data, timeStamp, playTime }) => {
 
   return (
     <FeedBackWrap>
+      <GlobalStyle />
       <Title title={title}></Title>
 
       <BtnArea>
@@ -66,8 +68,8 @@ const PlayBtn = styled.div`
   min-width: 10vw;
   height: 6vh;
   padding: 1rem;
-  box-shadow: 0.3rem 0.3rem 0.6rem let(--greyLight-2),
-    -0.2rem -0.2rem 0.5rem let(--white);
+  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2),
+    -0.2rem -0.2rem 0.5rem var(--white);
   justify-self: center;
   display: flex;
   align-items: center;
@@ -76,22 +78,22 @@ const PlayBtn = styled.div`
   transition: 0.3s ease;
   grid-column: 1 / 2;
   grid-row: 4 / 5;
-  background-color: let(--primary);
-  box-shadow: inset 0.2rem 0.2rem 1rem let(--primary-light),
-    inset -0.2rem -0.2rem 1rem let(--primary-dark),
-    0.3rem 0.3rem 0.6rem let(--greyLight-2), -0.2rem -0.2rem 0.5rem let(--white);
+  background-color: var(--primary);
+  box-shadow: inset 0.2rem 0.2rem 1rem var(--primary-light),
+    inset -0.2rem -0.2rem 1rem var(--primary-dark),
+    0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--white);
 
   & * {
-    color: let(--greyLight-1);
+    color: var(--greyLight-1);
   }
 
   &:hover * {
-    color: let(--white);
+    color: var(--white);
   }
 
   &:active {
-    box-shadow: inset 0.2rem 0.2rem 1rem let(--primary-dark),
-      inset -0.2rem -0.2rem 1rem let(--primary-light);
+    box-shadow: inset 0.2rem 0.2rem 1rem var(--primary-dark),
+      inset -0.2rem -0.2rem 1rem var(--primary-light);
   }
 `;
 
@@ -115,17 +117,17 @@ const FeedBackWrap = styled.div`
   .SubTitle,
   .Title {
     font-family: "SBAggroL";
-    color: let(--greyDark);
+    color: var(--greyDark);
   }
 
   .Title {
     font-size: 2rem !important;
-    color: let(--primary);
+    color: var(--primary);
   }
 
   .SubTitle {
     font-size: 1.2rem !important;
-    color: let(--primary-light);
+    color: var(--primary-light);
   }
 `;
 
