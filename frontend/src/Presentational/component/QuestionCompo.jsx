@@ -10,7 +10,7 @@ import withReactContent from "sweetalert2-react-content";
 import { useSelector } from "react-redux";
 const MySwal = withReactContent(Swal);
 
-const QuestionCompo = ({ questionInfo, roomID, intervieweeID }) => {
+const QuestionCompo = ({ questionInfo, roomID, intervieweeID, idx }) => {
   const { id, content, writer, permission, finished } = questionInfo;
   const token = useSelector((state) => state.token);
   const [execute, setExecute] = useState(false);
@@ -79,7 +79,7 @@ const QuestionCompo = ({ questionInfo, roomID, intervieweeID }) => {
 
   return (
     <QuestionBody onClick={QuestionHandler} isFinished = {finished}>
-      <SubTitle title={`질문 ${id}`} />
+      <SubTitle title={`질문 ${idx+1}`} />
       <MainQuestion>{content}</MainQuestion>
       <UserInfo>{writer.name}</UserInfo>
     </QuestionBody>
@@ -92,6 +92,7 @@ const UserInfo = styled.div`
     width: 100%;
     text-align: right;
     font-size: 0.85em;
+    color: var(--greyDark);
 `;
 
 const MainQuestion = styled.div`

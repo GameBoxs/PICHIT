@@ -21,6 +21,7 @@ function AllQuestionsCompo(props) {
     return (
       <QuestionCompo
         key={id}
+        idx={id}
         questionInfo={el}
         roomID={reqBody.interviewRoomId}
         intervieweeID={reqBody.intervieweeId}
