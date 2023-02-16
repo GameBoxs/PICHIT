@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, forwardRef } from "react";
 import styled from "styled-components";
 import useAxios from "../../../../action/hooks/useAxios";
 import { useSelector } from "react-redux";
@@ -11,7 +11,7 @@ import FeedBackArea from "./FeedBack/FeedBackArea";
 import SoundArea from "./SoundArea";
 import PageBar from "../../../common/Pagination/PageBar";
 import Loading from "../../../common/Loading";
-import { forwardRef } from "react";
+import { SubBtn } from "../../../layout/Interview/interviewee/StyledCompo";
 
 //각 면접방 상세 피드백을 보여주는 공간
 const DetailArea = ({ selectedID }, moveRef) => {
@@ -95,6 +95,7 @@ const DetailArea = ({ selectedID }, moveRef) => {
 
   const width = 600;
   const height = 800;
+
   const handleOpenPop = () => {
     if (resumeData !== null) {
       setResumeData(null);
@@ -150,6 +151,9 @@ const DetailArea = ({ selectedID }, moveRef) => {
                   </LoadingCompo>
                 ) : (
                   <React.Fragment>
+                    <ResumeArea>
+                      <SubBtn onClick={handleOpenPop}>자소서 보기</SubBtn>
+                    </ResumeArea>
                     {/* 음성 파일 출력 부분 */}
                     <SoundArea
                       sound={sound}
@@ -245,3 +249,9 @@ const DetailWrap = styled.div`
 const LoadingCompo = styled.div`
   height: 300px;
 `;
+
+const ResumeArea = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`

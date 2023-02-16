@@ -43,8 +43,6 @@ function useAxios(target, type, token, body, execute=true) {
           setData(res.data);
         })
         .catch((err) => {
-
-          console.log(err)
           setError(err);
         })
         .finally(() => {

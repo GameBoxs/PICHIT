@@ -49,6 +49,11 @@ const FooterList = styled.div`
   position: relative;
   transform: translateY(50%);
   height: 260px;
+  
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none
 `;
 const Sheet = styled.div`
   margin: 0 auto;
@@ -86,6 +91,8 @@ const Group = styled.div`
 `;
 const Text = styled.a`
   color: white;
+  cursor: default;
+
   &:hover {
     color: var(--primary);
   }
