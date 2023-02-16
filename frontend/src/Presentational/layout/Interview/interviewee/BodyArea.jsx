@@ -1,13 +1,15 @@
+/* ETC Import */
 import React, { memo, useState, useEffect } from "react";
 import styled from "styled-components";
 import useAxios from "../../../../action/hooks/useAxios";
+
+/* Component Import */
 import CamArea from "./Cam/CamArea";
 import QuestionArea from "./Question/QuestionArea";
 import SetQuestionArea from "./SetQuestion/SetQuestionArea";
 
 const BodyArea = (props) => {
   const { info, roomInfo, token, session, roomStateData } = props;
-  console.log('BodyArea진입 햇는데 데이터는?? ', roomStateData);
 
   const [reqBody, setReqBody] = useState({
     //요청 보낼 때 쓰는 값들
@@ -19,31 +21,6 @@ const BodyArea = (props) => {
   const [isQuestion, setIsQuestion] = useState(false); //useAxios에서 excute로 쓰이는 애들
   const [questionData, setQuestionData] = useState([]); //질문 목록들
 
-  // console.log(roomStateData)
-
-
-  /*
-  
-
-    얘는 뭐하는 친군가요...?o.o 걍 없애도 되길래 놔둡니다...
-
-    const [closeExecute, setCloseExecute] = useState(false);
-
-    useEffect(() => {
-      if (closeExecute) setCloseExecute(false);
-    }, [closeExecute]);
-  
-
-  */
-
-  // 질문 받아오는 Axios
-  /*
-  
-    얘도 컴포넌트 안에 넣고 싶었지만...다른 곳에서 setIsQuestion을 제어한다고 하더라도
-    isQuestion 값이 유지된 상태에서 반복해서 렌더링 되는 경우가 있어서 무한 렌더링을 하더라거
-    그래서 BodyArea에 놔둡니다
-
-  */
   const [getQuest] = useAxios(
     `questions?writerId=${reqBody.writerId}&intervieweeId=${reqBody.intervieweeId}&interviewRoomId=${reqBody.interviewRoomId}`,
     "GET",
@@ -78,7 +55,6 @@ const BodyArea = (props) => {
   }, [reqBody]);
 
   useEffect(() => {
-    console.log('질문 가져왔음????? ', getQuest);
     //질문 목록을 가져오는데 성공하면 QuestionData에 값을 저장
     if (getQuest !== null && getQuest.success) {
       setIsQuestion(false);

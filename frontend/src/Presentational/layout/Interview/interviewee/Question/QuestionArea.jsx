@@ -13,7 +13,6 @@ const MySwal = withReactContent(Swal)
 const QuestionArea = (props) => {
   const { setIsQuestion, session, roomStateData, token, info } = props;
   const roomInfo = JSON.parse(sessionStorage.getItem("roomInfo"));
-  console.log('Qestion Area 진입 데이터는???? ', roomStateData);
 
   const [highlight, setHighlight] = useState({
     questionId: '',
@@ -86,7 +85,6 @@ const QuestionArea = (props) => {
   useEffect(() => {
     if(session !== null){
       session.on("broadcast-question-start", (data) => {
-        console.log("highlight -- ", JSON.parse(data.data));
         setHighlight(JSON.parse(data.data));
         setIsQuestion(true);
       });
@@ -112,7 +110,6 @@ const QuestionArea = (props) => {
 
   // 질문 끝내기 버튼 클릭시 발생할 함수.
   const finishHandler = () => {
-    console.log('현재 피드백 적은 내용 - ', feedback.feedbackContext);
     if (highlight.questionId) {
       MySwal.fire({
         title: "질문 종료",

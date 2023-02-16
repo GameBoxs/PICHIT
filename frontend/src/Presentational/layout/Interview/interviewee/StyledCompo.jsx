@@ -76,7 +76,7 @@ export const BodyCompo = styled.div`
   &:nth-child(3) {
     display: grid;
     grid-template-rows: var(--mini-compo) ${(props) =>
-        props.chatOn ? "37vh 37vh" : "66vh var(--mini-compo)"};
+        props.chatOn ? "28vh 46vh" : "66vh var(--mini-compo)"};
     transition: 0.5s ease-in-out;
     gap: 0.5vw;
     margin: 0vh 1vw 0vh 0vw;

@@ -1,36 +1,47 @@
-import { memo, useEffect } from "react";
-import { useState } from "react";
+/* ETC Import */
+import { memo, useEffect,useState } from "react";
 import styled from "styled-components";
-import BounceText from "../../component/Chat/BounceText";
 
+/* Component Import */
+import BounceText from "../../component/Chat/BounceText";
 import InputArea from "./InputArea";
 import MessageArea from "./MessageArea";
 
-/*
-    MessageArea에서 스크롤바 없애기
-*/
-
-const ChatArea = ({session,info, chatOn}) => {
+const ChatArea = ({session,info, chatOn, page}) => {
+    /* 수신 메세지 저장 */
     const [incomM, SetIncomM] = useState([]);
+    /* 단일 수신 메세지 임시로 저장 */
     const [tD, setT] = useState();
+    /* 메세지 입력중 이라는 신호 수신 Flag */
     const [flag,setFlag] = useState(false);
-    const [bounceFlag, setBounceFlag] = useState(false); // 입력 신호 올대 ... 띄우는 Flag
+    /* 메세지 입력중 이라는 신호 수신시 ... 띄울 Flag */
+    const [bounceFlag, setBounceFlag] = useState(false);
 
+    /* 단일 수신 메세지를 메세지 리스트에 저장 */
+    const SetIncomMessage = (data) => {
+        let temp = [...incomM];
+        temp.push(data);
+        SetIncomM(temp);
+    }
+
+    /* session 변경 감지 */
     useEffect(() => {
         let mySession = session;
         if (mySession !== null){
+            /* 메세지를 받았을 때 */
             mySession.on('signal:all-chat',(e) => {
+                /* 받은 데이터를 JSON 객체로 변환하여 메세지 저장 */
                 setT(JSON.parse(e.data));
+                /* 메세지를 받았으므로 ... 없어지도록 Flag false */
                 setBounceFlag(false);
             })
-            mySession.on('signal:who-typing',(e) => { // 누군가 타이핑 입력중이라는것 신호 받기
-                // console.log('e가 뭐야 ',e);
-                // console.log('e 세션은 또 뭐고 ', session);
-                // 내가 입력중일때 뜨면 안되므로 다른 사람이 입력중일때를 검사
+            /* 누군가 채팅창 타이핑 중 이라는 신호 받았을 때 */
+            mySession.on('signal:who-typing',(e) => { 
+                /* 내가 입력중일때 뜨면 안되므로 다른 사람이 입력중일때를 검사 */
                 if(e.data !== '' && session.connection.connectionId !== e.from.connectionId){
                     setBounceFlag(true);
                 }
-                // 혹시나 입력 해놓고 오랫동안 보내지 않으면 2분 뒤에 ...없앰
+                /* 혹시나 입력 해놓고 오랫동안 보내지 않으면 1분 뒤에 ...없앰 */
                 setTimeout(() => {
                     setBounceFlag(false);
                 },60000)
@@ -38,25 +49,20 @@ const ChatArea = ({session,info, chatOn}) => {
         }
     },[session])
 
+    /* tD변경 감지 */
     useEffect(() => {
-        if(flag === false)
+        if(flag === false) {
             setFlag(true);
-        else{
+        }
+        else {
             SetIncomMessage(tD);
         }
     },[tD])
 
-    const SetIncomMessage = (data) => {
-        let temp = [...incomM];
-        temp.push(data);
-        SetIncomM(temp);
-    }
-
     return(
         <ChatWrap chatOn={chatOn} className="ChatWrap">
             <ChatBody>
-                <MessageArea Message={incomM}/>
-                {/* <MessageArea session={session}/> */}
+                <MessageArea Message={incomM} page={page}/>
                 {
                     bounceFlag ?
                     <BounceText />
@@ -64,22 +70,23 @@ const ChatArea = ({session,info, chatOn}) => {
                 }
             </ChatBody>
             <InputBody>
-                {/* <InputArea SetIncomMessage={SetIncomMessage} session={session}/> */}
                 <InputArea session={session} info={info}/>
             </InputBody>
         </ChatWrap>
     )
 }
 
+export default memo(ChatArea);
+
+/* Styled-Component */
 const ChatWrap = styled.div`
     width: 100%;
-    height: calc(100% - 31px);
+    height: calc(100% - 30px);
     border-radius: 0;
     visibility: ${props => props.chatOn ? 'visible':'hidden'};
 `
 const ChatBody = styled.div`
-    margin-top: 2%;
-    padding: 0 3% 7% 5% ;
+    padding: 0 3% 5% 5% ;
     width: calc(100%-10px);
     height: 90%;
     overflow: auto;
@@ -97,5 +104,3 @@ const InputBody = styled.div`
     width: calc(100%-10px);
     height: 8%;
 `
-
-export default memo(ChatArea);

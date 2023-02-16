@@ -1,14 +1,21 @@
+/* ETC Import */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import TotalTimer from "../../component/Interview/Interviewer/TotalTimer";
+import Swal from "sweetalert2";
 import { MdOutlineLogout } from "react-icons/md";
 
-import Swal from "sweetalert2";
+/* Component Import */
+import TotalTimer from "../../component/Interview/Interviewer/TotalTimer";
+
+/* Module Import */
 import useAxios from "../../../action/hooks/useAxios";
 
 const NavArea = ({ isHost, info, myToken }) => {
+  /* Session Storage에 저장된 roomInfo key에 해당하는 value를 roomInfo에 저장 */
   const roomInfo = JSON.parse(sessionStorage.getItem("roomInfo"));
+  /* 인터뷰 종료 Execute Flag */
   const [closeExecute, setCloseExecute] = useState(false);
+  /* 인터뷰 종료 custom hook Axios */
   let [closeData, closeIsLoading, closeError] = useAxios(
     "conference/interview/end",
     "POST",
@@ -22,9 +29,11 @@ const NavArea = ({ isHost, info, myToken }) => {
     closeExecute
   );
 
+  /* closeExecute,closeIsLoading 변경 감지 */
   useEffect(() => {
-    console.log('에러좀 보자 @@@@@@@@', closeError);
+    /* closeExecute가 true, closeIsLoading이 false일 때 */
     if (closeExecute && closeIsLoading === false) {
+      /* 만약 Axios 이후 에러가 있을 때 */
       if(closeError && closeError.response.data.message) {
         Swal.fire({
           title: "인터뷰 종료 에러!",
@@ -36,12 +45,13 @@ const NavArea = ({ isHost, info, myToken }) => {
         })
       }
       setCloseExecute(false);
+      /* 에러 내용 비우기 */
       closeError='';
     }
   }, [closeExecute,closeIsLoading]);
 
+  /* 면접종료 후 대기실 돌아가는 함수 */
   const finishInterviewe = () => {
-    console.log("info가 뭔데 ", info);
     Swal.fire({
       title: "현재 면접을 종료하고 대기실로 돌아갑니다.",
       text: "대기실로 가기 전에 모든 질문이 끝났는지 확인해 주세요.",
@@ -74,6 +84,7 @@ const NavArea = ({ isHost, info, myToken }) => {
 
 export default NavArea;
 
+/* Styled-Component */
 const InterviewNav = styled.div`
   height: 5vh;
   margin: 1vw 3vw 1vw 3vw;
