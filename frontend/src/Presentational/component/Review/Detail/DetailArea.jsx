@@ -14,7 +14,7 @@ import Loading from "../../../common/Loading";
 import { forwardRef } from "react";
 
 //각 면접방 상세 피드백을 보여주는 공간
-const DetailArea = ({ selectedID, moveRef }) => {
+const DetailArea = ({ selectedID }, moveRef) => {
   const token = useSelector((state) => state.token);
 
   // 현재 오디오 위치를 지정하는 ref

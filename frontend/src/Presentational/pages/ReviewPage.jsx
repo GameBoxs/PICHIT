@@ -53,7 +53,7 @@ const ReviewPage = (props) => {
       </BoardBox>
       <ReviewBox>
         {selectedID ? (
-          <DetailArea selectedID={selectedID} moveRef={moveRef} />
+          <DetailArea selectedID={selectedID} ref={moveRef} />
         ) : (
           <DetailArea selectedID={null} moveRef={moveRef} />
         )}
@@ -92,10 +92,6 @@ const BoardBox = styled.div`
     color: var(--primary-light);
     padding: 1.4rem 1rem 1rem 1rem;
     height: 100%;
-    /* border-bottom: solid 2px var(--greyDark); */
-    /* background-color: var(--primary-light); */
-    /* border-radius: 1rem  1rem  0 0; */
-    /* border-bottom: solid 3px var(--primary-light); */
 
     * {
       padding: 0;
