@@ -1,23 +1,33 @@
+/* ETC Import */
 import styled from "styled-components";
 import { memo, useEffect, useState } from "react";
 import { BiSend } from "react-icons/bi";
 
 const Input = ({session, info }) => {
+  /* 
+    textValue - 채팅창 입력 값
+    inputFlag - 채팅창 입력 중 신호 Flag
+  */
   const [textValue, SetTextValue] = useState("");
   const [inputFlag, setInputFlag] = useState(false);
 
+  /* textValue 변경 감지 */
   useEffect(() => {
+    /* textValue가 줄바꿈 일 경우 비워주기 */
     if (textValue === "\n") SetTextValue("");
-    if(textValue && inputFlag===false){
+    /* textValue가 null이 아닌 상태에서 inputFlag가 false일 때 */
+    if(textValue && inputFlag === false){
       setInputFlag(true);
     }
-    else if(textValue=='' && inputFlag===true){
+    /* textValue가 비어있는데 inputFlag가 true일 때 */
+    else if(textValue === '' && inputFlag === true){
       setInputFlag(false);
     }
   }, [textValue]);
 
+  /* inputFlag 변경 감지 */
   useEffect(() => {
-    // 타이핑 할때, flag가 true일때 신호 보내기.
+    /* inputFlag가 true면 입력중 이라는 신호 보내기 */
     if(inputFlag === true){
       session.signal({
         data: textValue,
@@ -27,10 +37,12 @@ const Input = ({session, info }) => {
     }
   },[inputFlag])
 
+  /* textValue state set */
   function setText(e) {
     SetTextValue(e.target.value);
   }
 
+  /* 현재 시간 값 */
   function getTime() {
     let today = new Date();
 
@@ -41,9 +53,12 @@ const Input = ({session, info }) => {
     return hours + ":" + minutes + ":" + seconds;
   }
 
+  /* Enter 누를때 실행할 함수 */
   function pressEnter(e) {
     if (e.key === "Enter") {
+      /* 좌우 공백 제거한 값으로 textValue state 변경 */
       SetTextValue(textValue.trim());
+      /* 좌우 공백 제거한 값이 공백일 때 그냥 return */
       if (e.shiftKey || textValue === "") {
         return;
       }
@@ -52,13 +67,16 @@ const Input = ({session, info }) => {
     }
   }
 
+  /* 메세지 전송 함수 */
   function clickBtn() {
+    /* 좌우 공백 제거한 값으로 textValue state 변경 */
     SetTextValue(textValue.trim());
-
+    /* 좌우 공백 제거한 값이 공백일 때 그냥 return */
     if (textValue === "" || textValue.trim() === "") {
       return;
     }
 
+    /* 날짜를 구하고 데이터를 담아 신호 보내기 */
     let time = getTime();
     const data = { Name: JSON.parse(info.publisher.stream.connection.data).clientData.toString(), Time: time, Message: textValue };
     session.signal({
@@ -85,6 +103,9 @@ const Input = ({session, info }) => {
   );
 };
 
+export default memo(Input);
+
+/* Styled-Component */
 const InputWrap = styled.div`
   display: flex;
   align-items: center;
@@ -131,5 +152,3 @@ const SendBtn = styled.div`
     }
   }
 `;
-
-export default memo(Input);
