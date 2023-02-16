@@ -3,25 +3,30 @@ import React, { useState } from "react";
 import { MdCancel } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
 
+//모든 방 보기
 function TotalCategory({ conditionHandler }) {
   //검색
   const [search, setSearch] = useState("");
 
+  //검색 내용 저장
   function onChangeSearch(e) {
     e.preventDefault();
     setSearch(e.target.value);
   }
+
+  //값 post 하도록
   function onSearch(e) {
     e.preventDefault();
     conditionHandler(search, "search");
   }
 
+  //검색 내용 지우기
   function clearSearch() {
     setSearch("");
     conditionHandler("", "search");
   }
 
-  //sort선택
+  //정렬 방식 선택
   function sortSelect(e) {
     conditionHandler(e, "sort");
   }
@@ -33,6 +38,7 @@ function TotalCategory({ conditionHandler }) {
     // { type: "입장가능", handler: "packed" },
   ];
 
+  //메뉴 항목 Nav
   const Menu = MenuObj.map((elem, idx) => {
     return (
       <React.Fragment key={idx}>
@@ -51,6 +57,7 @@ function TotalCategory({ conditionHandler }) {
 
   return (
     <div>
+      {/* 검색바 */}
       <SearchWrapper>
         <SearchForm onSubmit={(e) => onSearch(e)}>
           <InputBox>
@@ -71,6 +78,8 @@ function TotalCategory({ conditionHandler }) {
           </InputBox>
         </SearchForm>
       </SearchWrapper>
+
+      {/* 메뉴 Nav */}
       <MenuCompo>
         {Menu}
         <MenuColor />

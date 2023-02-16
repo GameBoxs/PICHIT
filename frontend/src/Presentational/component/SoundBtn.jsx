@@ -11,6 +11,8 @@ const SoundBtn = ({ play, isPlaying }) => {
           {isPlaying ? <BsFillPauseFill /> : <BsFillPlayFill />}
         </PlayBtn>
       </BtnContainer>
+
+      {/* 디자인 컴포넌트 */}
       <CircleBack className="first" isPlaying={isPlaying} />
       <CircleBack className="second" isPlaying={isPlaying} />
     </Circle>

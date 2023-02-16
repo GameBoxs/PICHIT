@@ -11,7 +11,6 @@ function MemberList({
   token,
   pdfhandler,
   setMemData,
-  memData,
   inquire,
   setInquire
 }) {
@@ -32,7 +31,6 @@ function MemberList({
       })
         .then((res) => {
             setMemData(res.data);
-            console.log("MemberList")
         })
         .catch((err) => {
           console.log(err);

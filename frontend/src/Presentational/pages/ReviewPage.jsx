@@ -1,21 +1,19 @@
 //#region import
-import React, { useState } from "react";
+import React, { useState, memo, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 
 import Title from "../common/Title";
 import SubTitle from "../common/SubTitle";
 import GoHome from "../common/GoHome";
-import FilterArea from "../component/Review/Filter/FilterArea";
 import HistoryList from "../component/Review/History/HistoryList";
 import DetailArea from "../component/Review/Detail/DetailArea";
 import { TiStarburst } from "react-icons/ti";
-import { memo } from "react";
-import SoundArea from "../component/Review/Detail/SoundArea";
 
 //#endregion
 
 const ReviewPage = (props) => {
+  const moveRef = useRef(null);
   const user = useSelector((state) => state.userinfo);
   const [selectedID, setSelectedID] = useState();
 
@@ -32,7 +30,16 @@ const ReviewPage = (props) => {
 
   // 피드백 서브타이틀 텍스트
   const subtitleText = "기록 선택하기";
-  //#endregion
+
+  useEffect(() => {
+    // //선택이 되면 하단 DetailArea로 스크롤 이동
+    if (selectedID) {
+      moveRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [selectedID]);
 
   return (
     <ReviewMainBody>
@@ -45,11 +52,11 @@ const ReviewPage = (props) => {
         <HistoryList setSelectedID={setSelectedID} />
       </BoardBox>
       <ReviewBox>
-        {
-          selectedID ?
-          <DetailArea selectedID={selectedID} />
-          : <DetailArea selectedID={null} />
-        }
+        {selectedID ? (
+          <DetailArea selectedID={selectedID} moveRef={moveRef} />
+        ) : (
+          <DetailArea selectedID={null} moveRef={moveRef} />
+        )}
       </ReviewBox>
     </ReviewMainBody>
   );

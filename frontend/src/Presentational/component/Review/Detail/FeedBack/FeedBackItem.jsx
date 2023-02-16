@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import SubTitle from "../../../../common/SubTitle";
 
+//각 피드백을 누가 어떻게 적었는지 체크
 const FeedBackItem = ({data}) => {
     return (
         <FeedBack>

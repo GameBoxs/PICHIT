@@ -3,17 +3,18 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import useAxios from "../../../../action/hooks/useAxios";
 
-import { AiFillCloseCircle } from "react-icons/ai";
 import { FaPenNib, FaRedoAlt } from "react-icons/fa";
 
 import QuestionItemDelete from "./QuestionItemDelete";
 
+//질문 항목
 const QuestionItem = ({ Question, pdfhandler, userinfo }) => {
   const { content, writer, permission, id } = Question;
 
-  //usestate 줄일 수 있으면 줄이기
   const insertRef = useRef();
   const token = useSelector((state) => state.token);
+  
+  //질문 수정 관련 state
   const [retouchQuestion, setRetouchQuestion] = useState(false);
   const [tryRetouch, setTryRetouch] = useState(false);
   // 질문 입력을 위한 body 값
@@ -23,6 +24,7 @@ const QuestionItem = ({ Question, pdfhandler, userinfo }) => {
     writerId: 0,
   });
 
+  //질문 수정할 시 axios
   const [putData, putLoading, putError] = useAxios(
     `questions/${id}`,
     "PUT",
@@ -31,7 +33,7 @@ const QuestionItem = ({ Question, pdfhandler, userinfo }) => {
     retouchQuestion
   );
 
-
+  //post body 설정
   useEffect(() => {
     setQuestion({
       content: "",
@@ -42,18 +44,23 @@ const QuestionItem = ({ Question, pdfhandler, userinfo }) => {
 
   useEffect(() => {
     if (putData !== null && putData.success) {
+      //새로 질문 등록할 때
+      //화면 새로고침 함
       setRetouchQuestion(false)
       window.location.reload();
     }
     if (putError) {
+      //질문이 등록되지 않았을 때
       setRetouchQuestion(false)
     }
   }, [putData]);
 
+  //수정 시도할 때
   const setRetouch = () => {
     setTryRetouch(!tryRetouch);
   };
 
+  //질문 수정된 내용 입력받고 수정
   const inputHandler = (e) => {
     setQuestion({
       ...question,
@@ -61,6 +68,7 @@ const QuestionItem = ({ Question, pdfhandler, userinfo }) => {
     });
   };
 
+  //완료되면 POST 할 수 있도록
   const putHandler = (e) => {
     e.preventDefault();
     setRetouchQuestion(true);
@@ -74,6 +82,8 @@ const QuestionItem = ({ Question, pdfhandler, userinfo }) => {
 
       <Content>
         {content}
+
+        {/* 수정하려고 할 때 하단에 input 생성 */}
         {tryRetouch ? (
           <QuestionInputBox>
             <form>

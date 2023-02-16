@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import _ from "lodash";
 import {MdPersonPin} from "react-icons/md"
 
+//현재 참가한 인원 보여주는 컴포넌트
 function Person({ name, isHost, people }) {
   return (
     <PersonContainer people={people}>

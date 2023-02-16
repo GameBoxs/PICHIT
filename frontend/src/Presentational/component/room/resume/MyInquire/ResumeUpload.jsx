@@ -2,24 +2,21 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { PITCHIT_URL } from "../../../../../store/values";
 import axios from "axios";
-import { set } from "lodash";
 
+function ResumeUpload({ pdfhandler, token, setMemData }) {
+  // pdf 업로드 용
+  const [uploadPdf, setUploadPdf] = useState(false);
+  // pdf 파일 목록 가져옴 (내 자소서 보기 버튼 활성화)
+  const [pdfFileList, setPdfFileList] = useState([]);
 
-function ResumeUpload({pdfhandler,token,setMemData}) {
+  // 파일 업로드 했을 때 새로고침 하는 용도의 useEffect
+  useEffect(() => {
+    if (uploadPdf === true) {
+      window.location.reload();
+    }
+  }, [uploadPdf]);
 
-    // pdf 업로드 용인듯 ( 이것도 필요없을지도 )
-    const [uploadPdf, setUploadPdf] = useState(false);
-    // pdf 파일 목록 가져옴 (내 자소서 보기 버튼 활성화) 필요없을지두
-    const [pdfFileList, setPdfFileList] = useState([]);
-
-    // 파일 업로드 했을 때 새로고침 하는 용도의 useEffect
-    useEffect(() => {
-      if (uploadPdf === true) {
-        window.location.reload();
-      }
-    }, [uploadPdf]);
-
-
+  //pdf 받아오는 링크
   const getUrl = (file) => {
     const frm = new FormData();
     frm.append("file", file);
@@ -33,9 +30,8 @@ function ResumeUpload({pdfhandler,token,setMemData}) {
       data: frm,
     })
       .then((res) => {
-        setUploadPdf(true)
-        setMemData(res)
-
+        setUploadPdf(true);
+        setMemData(res);
       })
       .catch((err) => console.log(err));
   };
@@ -48,20 +44,18 @@ function ResumeUpload({pdfhandler,token,setMemData}) {
     setPdfFileList(selectedList);
   };
 
-
-
   return (
     <Container>
       <FileListBody>
         파일이 존재하지 않습니다.
         <FileResultRow>
-        <Label htmlFor="uploadFile">파일 업로드하기</Label>
-        <Input
-          id="uploadFile"
-          accept="application/pdf"
-          multiple={true}
-          onChange={onPdfFileUpload}
-        />
+          <Label htmlFor="uploadFile">파일 업로드하기</Label>
+          <Input
+            id="uploadFile"
+            accept="application/pdf"
+            multiple={true}
+            onChange={onPdfFileUpload}
+          />
         </FileResultRow>
       </FileListBody>
     </Container>
@@ -128,4 +122,4 @@ const Label = styled.label`
 
 const Container = styled.div`
   height: inherit;
-`
+`;
