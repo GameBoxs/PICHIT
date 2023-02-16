@@ -21,7 +21,6 @@ const IntervieweeCamCompo = ({info}) => {
         <UserVideoComponent streamManager={info.publisher} />
       </CamCompo>
       {info.subscribers.map((sub, i) =>
-        // sub.stream.connection.connectionId === info.interviewee ? null : (
         JSON.parse(sub.stream.connection.data).clientId.toString() ===
         info.interviewee.toString() ? null : (
           <CamCompo className="in" key={i}>

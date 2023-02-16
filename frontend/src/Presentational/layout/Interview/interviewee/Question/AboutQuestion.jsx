@@ -32,6 +32,7 @@ export default memo(AboutQuestion);
 const TipMark = styled.div`
   color: var(--greyLight-2);
   font-size: 1.2em;
+  cursor: pointer;
 
   path {
     color: var(--greyLight-2);
