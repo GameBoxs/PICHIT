@@ -1,20 +1,29 @@
 import styled, { css } from "styled-components";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import React from "react";
-import PageZero from "./PageZero";
-import Pagination from "./Pagination";
 
-//전체 데이터 길이, 페이지당 게시물 수, 현재 페이지를 계산하는 함수, 현재페이지
+// { setCurrentPage, currentPage, totalpages, step } : 현재페이지state함수, 현재페이지, 전체페이지수, 한 챕터에 나타낼 페이지수
 function PageBar({ setCurrentPage, currentPage, totalpages, step }) {
-  const steps = Number(step); // 한챕터당 페이지수
-  const mainOrReview = steps === "5" ? true : false; //메인이랑 복기 Bar길이를 위함
+  const steps = Number(step); //  한 챕터에 나타낼 페이지수
+  const mainOrReview = steps === "5" ? true : false; // 메인이랑 복기페이지를 구분해 Bar길이 조정을 위함
+
+  // 한 챕터 당 페이지번호의 최대최소
   const [page, setPage] = useState({
     min: 1,
     max: steps,
   });
   const fit = steps < totalpages; //false:페이지 더보기 없게, true:페이지 더보기 존재
-  // console.log('렌더링 확인용:::::'+steps)
+  
+  // 초기 페이지네이션으로 초기화(카테고리 및 정렬 선택시 활용) 
+  if(currentPage === 1  && page.min !== 1){
+    setPage(() => {
+      return {
+        min: 1,
+        max: steps
+      };
+    });
+  }
 
   // 챕터 리스트 생성
   let pages = [];
@@ -28,7 +37,7 @@ function PageBar({ setCurrentPage, currentPage, totalpages, step }) {
     }
   }
 
-  //챕터 이동 함수
+  //챕터 이동 함수(앞으로)
   function prev() {
     const prevtmp =
       Math.floor((Number(currentPage) - 1) / steps) * steps + 1 - steps;
@@ -43,6 +52,7 @@ function PageBar({ setCurrentPage, currentPage, totalpages, step }) {
     }
   }
 
+  //챕터 이동 함수(뒤로)
   function next() {
     const nexttmp =
       Math.floor((Number(currentPage) - 1) / steps) * steps + 1 + steps;
@@ -57,11 +67,13 @@ function PageBar({ setCurrentPage, currentPage, totalpages, step }) {
     }
   }
 
-  //현재 챕터 위치(버튼 비활성화를 위해)
+  //현재 챕터가 최소,최대 챕터인지 나타내는 state (버튼 비활성화를 위해)
   const [firstPage, setFirstPage] = useState(false);
   const [lastPage, setLastPage] = useState(false);
 
+  //현재 챕터 위치 변경 함수
   useEffect(() => {
+    // 데이터가 아예 없는 경우
     if (totalpages === 0) {
       setLastPage(true);
       setFirstPage(true);
@@ -85,7 +97,6 @@ function PageBar({ setCurrentPage, currentPage, totalpages, step }) {
             className={firstPage ? "Head" : "Prev"}
           />
         )}
-        {/* <GrFormPrevious onClick={prev} className={firstPage ? "Head":"Prev"}/> */}
         <Bar className="paginationBar" length={mainOrReview}>
           {pages.map((page, index) => {
             return (
@@ -100,7 +111,6 @@ function PageBar({ setCurrentPage, currentPage, totalpages, step }) {
         {fit && (
           <GrFormNext onClick={next} className={lastPage ? "Tail" : "Next"} />
         )}
-        {/* <GrFormNext onClick={next} className={lastPage?"Tail":"Next"}/> */}
       </PagenationBar>
     </>
   );
@@ -108,7 +118,6 @@ function PageBar({ setCurrentPage, currentPage, totalpages, step }) {
 export default React.memo(PageBar);
 
 const Bar = styled.div`
-  /* border: solid 2px skyblue; //pagination영역을 위한 border: ; */
   width: ${(props) => (props.length ? "260px" : "500px")};
   height: 23px;
   display: flex;
@@ -150,8 +159,6 @@ const PagenationBar = styled.div`
   polyline {
     stroke: var(--primary-light);
   }
-
-  /* border: solid 2px skyblue; */
   .Prev {
     font-size: 50px;
     cursor: pointer;

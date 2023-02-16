@@ -29,7 +29,6 @@ function useAxios(target, type, token, body, execute=true) {
   
   
   useEffect(() => {
-    // console.log('이펙트까진 들어옴'+execute)
     if(execute) {
       //props를 받고 실행되어야 하기 때문에/통신이기 때문에 useEffect로 감싸줌
       const sendType = type.toUpperCase(); //소문자/대문자 구별 없애기

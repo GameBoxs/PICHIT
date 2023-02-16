@@ -21,7 +21,6 @@ function ResumeUpload({pdfhandler,token,setMemData}) {
 
 
   const getUrl = (file) => {
-    console.log(file);
     const frm = new FormData();
     frm.append("file", file);
     axios({
@@ -34,7 +33,6 @@ function ResumeUpload({pdfhandler,token,setMemData}) {
       data: frm,
     })
       .then((res) => {
-        console.log(res);
         setUploadPdf(true)
         setMemData(res)
 

@@ -19,7 +19,7 @@ function QuestionItemDelete({ token, id }) {
   useEffect(() => {
     if (delRes && delRes.success) {
       window.location.reload();
-  
+
     }
     // 무한 렌더링 방지용 
     if (delError) {

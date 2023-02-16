@@ -29,35 +29,33 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   const [memData, setMemData] = useState();
 
   const [inquire, setInquire] = useState(false);
-  
-    const myInterviewJoinId =participants[0].interviewJoinId
 
-    const [errorContext, setError] = useState(null);
-    // 방에 입장 했을 때 자기소개서 파일이 있는지 조회하기 위한 axios (최초 렌더링 할 때만 실행 됨)
+  const myInterviewJoinId = participants[0].interviewJoinId;
 
-    useEffect(() => {
-      axios({
-        method: "GET",
-        url: `${PITCHIT_URL}/interviewjoins/${myInterviewJoinId}/resumes`,
-        headers: {
-          Authorization: token,
-        },
-        data: null,
+  const [errorContext, setError] = useState(null);
+  // 방에 입장 했을 때 자기소개서 파일이 있는지 조회하기 위한 axios (최초 렌더링 할 때만 실행 됨)
+
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `${PITCHIT_URL}/interviewjoins/${myInterviewJoinId}/resumes`,
+      headers: {
+        Authorization: token,
+      },
+      data: null,
+    })
+      .then((res) => {
+        setMemData(res.data);
       })
-        .then((res) => {
-            setMemData(res.data);
-        })
-        .catch((err) => {
-          console.log(err)
-          setError(err);
-          setMemData(null);
-        });
-    },[])  
-
+      .catch((err) => {
+        setError(err);
+        setMemData(null);
+      });
+  }, []);
 
   // 본인이 아닌 다른사람의 이름을 눌렀을 때 (자기소개서 유무)
   const userInquirePdf =
-    memData === null ? (
+    memData && memData.data === null ? (
       <FileListBody>등록된 자소서가 없습니다</FileListBody>
     ) : (
       <FileListBody>
@@ -68,7 +66,7 @@ function Resume({ idx, participants, setPdfHandler, pdfhandler }) {
   // 본인 이름을 눌렀을 때
   const myInquirePdf = (
     <>
-      {memData === null ? (
+      {memData && memData.data === null ? (
         <ResumeUpload
           setMemData={setMemData}
           pdfhandler={pdfhandler}
